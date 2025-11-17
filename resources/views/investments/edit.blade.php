@@ -1,0 +1,143 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Edit Investment</h1>
+        <a href="{{ route('investments.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Investments
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Investment Details</h6>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('investments.update', $investment) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group">
+                            <label for="symbol">Symbol *</label>
+                            <input type="text" class="form-control @error('symbol') is-invalid @enderror"
+                                   id="symbol" name="symbol" value="{{ old('symbol', $investment->symbol) }}" required maxlength="10">
+                            @error('symbol')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Name *</label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                   id="name" name="name" value="{{ old('name', $investment->name) }}" required maxlength="255">
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type">Type *</label>
+                            <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
+                                <option value="">Select Type</option>
+                                <option value="stock" {{ old('type', $investment->type) == 'stock' ? 'selected' : '' }}>Stock</option>
+                                <option value="mutual_fund" {{ old('type', $investment->type) == 'mutual_fund' ? 'selected' : '' }}>Mutual Fund</option>
+                                <option value="crypto" {{ old('type', $investment->type) == 'crypto' ? 'selected' : '' }}>Cryptocurrency</option>
+                                <option value="bond" {{ old('type', $investment->type) == 'bond' ? 'selected' : '' }}>Bond</option>
+                                <option value="etf" {{ old('type', $investment->type) == 'etf' ? 'selected' : '' }}>ETF</option>
+                                <option value="other" {{ old('type', $investment->type) == 'other' ? 'selected' : '' }}>Other</option>
+                            </select>
+                            @error('type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="quantity">Quantity *</label>
+                                    <input type="number" step="0.0001" class="form-control @error('quantity') is-invalid @enderror"
+                                           id="quantity" name="quantity" value="{{ old('quantity', $investment->quantity) }}" required min="0">
+                                    @error('quantity')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="purchase_price">Purchase Price per Unit *</label>
+                                    <input type="number" step="0.01" class="form-control @error('purchase_price') is-invalid @enderror"
+                                           id="purchase_price" name="purchase_price" value="{{ old('purchase_price', $investment->purchase_price) }}" required min="0">
+                                    @error('purchase_price')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="current_price">Current Price per Unit</label>
+                                    <input type="number" step="0.01" class="form-control @error('current_price') is-invalid @enderror"
+                                           id="current_price" name="current_price" value="{{ old('current_price', $investment->current_price) }}" min="0">
+                                    @error('current_price')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="purchase_date">Purchase Date *</label>
+                                    <input type="date" class="form-control @error('purchase_date') is-invalid @enderror"
+                                           id="purchase_date" name="purchase_date" value="{{ old('purchase_date', $investment->purchase_date->format('Y-m-d')) }}" required>
+                                    @error('purchase_date')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dividends_received">Dividends Received</label>
+                                    <input type="number" step="0.01" class="form-control @error('dividends_received') is-invalid @enderror"
+                                           id="dividends_received" name="dividends_received" value="{{ old('dividends_received', $investment->dividends_received) }}" min="0">
+                                    @error('dividends_received')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fees">Transaction Fees</label>
+                                    <input type="number" step="0.01" class="form-control @error('fees') is-invalid @enderror"
+                                           id="fees" name="fees" value="{{ old('fees', $investment->fees) }}" min="0">
+                                    @error('fees')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3">{{ old('notes', $investment->notes) }}</textarea>
+                            @error('notes')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Investment</button>
+                        <a href="{{ route('investments.index') }}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

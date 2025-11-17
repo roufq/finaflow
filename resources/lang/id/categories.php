@@ -1,0 +1,47 @@
+<?php
+
+return [
+    'income' => [
+        'salary' => 'Gaji',
+        'freelance' => 'Freelance',
+        'business' => 'Bisnis',
+        'investment' => 'Investasi',
+        'passive_income' => 'Pendapatan Pasif',
+        'gift' => 'Hadiah',
+        'other' => 'Pemasukan Lainnya',
+    ],
+    'expense' => [
+        'food' => 'Makanan & Minuman',
+        'transportation' => 'Transportasi',
+        'utilities' => 'Utilitas',
+        'entertainment' => 'Hiburan',
+        'shopping' => 'Belanja',
+        'healthcare' => 'Kesehatan',
+        'education' => 'Pendidikan',
+        'insurance' => 'Asuransi',
+        'housing' => 'Perumahan',
+        'personal_care' => 'Perawatan Diri',
+        'travel' => 'Perjalanan',
+        'subscription' => 'Langganan',
+        'other' => 'Pengeluaran Lainnya',
+    ],
+    'account_types' => [
+        'bank' => 'Rekening Bank',
+        'cash' => 'Tunai',
+        'credit_card' => 'Kartu Kredit',
+        'e_wallet' => 'E-Wallet',
+        'investment' => 'Rekening Investasi',
+        'savings' => 'Tabungan',
+    ],
+    'goal_categories' => [
+        'emergency_fund' => 'Dana Darurat',
+        'vacation' => 'Liburan',
+        'house' => 'Uang Muka Rumah',
+        'car' => 'Pembelian Mobil',
+        'education' => 'Pendidikan',
+        'retirement' => 'Pensiun',
+        'investment' => 'Investasi',
+        'debt_payoff' => 'Pelunasan Hutang',
+        'other' => 'Tujuan Lainnya',
+    ],
+];

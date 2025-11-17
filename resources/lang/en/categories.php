@@ -1,0 +1,47 @@
+<?php
+
+return [
+    'income' => [
+        'salary' => 'Salary',
+        'freelance' => 'Freelance',
+        'business' => 'Business',
+        'investment' => 'Investment',
+        'passive_income' => 'Passive Income',
+        'gift' => 'Gift',
+        'other' => 'Other Income',
+    ],
+    'expense' => [
+        'food' => 'Food & Dining',
+        'transportation' => 'Transportation',
+        'utilities' => 'Utilities',
+        'entertainment' => 'Entertainment',
+        'shopping' => 'Shopping',
+        'healthcare' => 'Healthcare',
+        'education' => 'Education',
+        'insurance' => 'Insurance',
+        'housing' => 'Housing',
+        'personal_care' => 'Personal Care',
+        'travel' => 'Travel',
+        'subscription' => 'Subscription',
+        'other' => 'Other Expenses',
+    ],
+    'account_types' => [
+        'bank' => 'Bank Account',
+        'cash' => 'Cash',
+        'credit_card' => 'Credit Card',
+        'e_wallet' => 'E-Wallet',
+        'investment' => 'Investment Account',
+        'savings' => 'Savings Account',
+    ],
+    'goal_categories' => [
+        'emergency_fund' => 'Emergency Fund',
+        'vacation' => 'Vacation',
+        'house' => 'House Down Payment',
+        'car' => 'Car Purchase',
+        'education' => 'Education',
+        'retirement' => 'Retirement',
+        'investment' => 'Investment',
+        'debt_payoff' => 'Debt Payoff',
+        'other' => 'Other Goals',
+    ],
+];

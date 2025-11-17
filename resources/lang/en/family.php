@@ -1,0 +1,86 @@
+<?php
+
+return [
+    'title' => 'Family Finance',
+    'dashboard_title' => 'Family Finance Dashboard',
+    'overview' => [
+        'members' => 'Family Members',
+        'shared_expenses' => 'Recent Shared Expenses',
+        'goals' => 'Active Family Goals',
+        'events' => 'Upcoming Gift Events',
+    ],
+    'buttons' => [
+        'add_member' => 'Add Member',
+        'add_expense' => 'Add Shared Expense',
+        'add_goal' => 'Add Family Goal',
+        'add_event' => 'Add Gift Event',
+        'save' => 'Save',
+        'cancel' => 'Cancel',
+        'view_all' => 'View All',
+    ],
+    'members' => [
+        'title' => 'Family Members',
+        'name' => 'Name',
+        'relationship' => 'Relationship',
+        'allowance' => 'Monthly Allowance',
+        'balance' => 'Current Balance',
+    ],
+    'shared_expenses' => [
+        'title' => 'Shared Expenses',
+        'name' => 'Expense Name',
+        'category' => 'Category',
+        'amount' => 'Total Amount',
+        'date' => 'Expense Date',
+        'participants' => 'Participants',
+        'split_method' => 'Split Method',
+        'status' => 'Status',
+    ],
+    'goals' => [
+        'title' => 'Family Goals',
+        'name' => 'Goal Name',
+        'target_amount' => 'Target Amount',
+        'target_date' => 'Target Date',
+        'contributors' => 'Contributors',
+    ],
+    'events' => [
+        'title' => 'Gift Events',
+        'name' => 'Event Name',
+        'type' => 'Event Type',
+        'date' => 'Event Date',
+        'budget' => 'Budget Amount',
+        'recipients' => 'Recipients',
+    ],
+    'empty_states' => [
+        'members' => [
+            'title' => 'No family members added yet.',
+            'description' => 'Add your first member to start tracking allowances.',
+            'cta' => 'Add First Member',
+        ],
+        'expenses' => [
+            'title' => 'No shared expenses recorded.',
+            'description' => 'Track shared spending to keep everyone aligned.',
+            'cta' => 'Add Shared Expense',
+        ],
+        'goals' => [
+            'title' => 'No family goals set yet.',
+            'description' => 'Create shared goals to stay motivated together.',
+            'cta' => 'Set First Goal',
+        ],
+        'events' => [
+            'title' => 'No upcoming gift events.',
+            'description' => 'Plan your first celebration to prepare the budget.',
+            'cta' => 'Plan First Event',
+        ],
+    ],
+    'statuses' => [
+        'settled' => 'Settled',
+        'pending' => 'Pending',
+    ],
+    'messages' => [
+        'member_created' => 'Family member added successfully.',
+        'member_updated' => 'Family member updated successfully.',
+        'expense_created' => 'Shared expense added successfully.',
+        'goal_created' => 'Family goal added successfully.',
+        'event_created' => 'Gift event added successfully.',
+    ],
+];
