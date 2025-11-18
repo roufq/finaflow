@@ -34,6 +34,7 @@ return [
         'participants' => 'Peserta',
         'split_method' => 'Metode Pembagian',
         'status' => 'Status',
+        'unknown_participant' => 'Data peserta tidak tersedia',
     ],
     'goals' => [
         'title' => 'Tujuan Keluarga',
@@ -80,7 +81,15 @@ return [
         'member_created' => 'Anggota keluarga berhasil ditambahkan.',
         'member_updated' => 'Anggota keluarga berhasil diperbarui.',
         'expense_created' => 'Pengeluaran bersama berhasil ditambahkan.',
+        'expense_updated' => 'Pengeluaran bersama berhasil diperbarui.',
+        'expense_settled' => 'Pengeluaran bersama berhasil ditandai lunas.',
         'goal_created' => 'Tujuan keluarga berhasil ditambahkan.',
+        'goal_updated' => 'Tujuan keluarga berhasil diperbarui.',
+        'goal_deleted' => 'Tujuan keluarga berhasil dihapus.',
         'event_created' => 'Acara hadiah berhasil ditambahkan.',
+        'event_updated' => 'Acara hadiah berhasil diperbarui.',
+        'event_deleted' => 'Acara hadiah berhasil dihapus.',
+        'gift_added' => 'Hadiah berhasil ditambahkan pada acara.',
+        'recipient_invalid' => 'Penerima tidak terdaftar pada acara hadiah ini.',
     ],
 ];

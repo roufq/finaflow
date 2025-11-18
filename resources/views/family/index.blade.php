@@ -196,7 +196,12 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-info">{{ __('family.goals.title') }}</h6>
-                    <a href="{{ route('family.goals.create') }}" class="btn btn-info btn-sm">{{ __('family.buttons.add_goal') }}</a>
+                    <div class="btn-group">
+                        <a href="{{ route('family.goals') }}" class="btn btn-outline-info btn-sm text-info border-info">
+                            {{ __('family.buttons.view_all') }}
+                        </a>
+                        <a href="{{ route('family.goals.create') }}" class="btn btn-info btn-sm">{{ __('family.buttons.add_goal') }}</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if($familyGoals->count() > 0)
@@ -231,7 +236,12 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-warning">{{ __('family.events.title') }}</h6>
-                    <a href="{{ route('family.gift-events.create') }}" class="btn btn-warning btn-sm">{{ __('family.buttons.add_event') }}</a>
+                    <div class="btn-group">
+                        <a href="{{ route('family.gift-events') }}" class="btn btn-light btn-sm text-warning border-warning">
+                            {{ __('family.buttons.view_all') }}
+                        </a>
+                        <a href="{{ route('family.gift-events.create') }}" class="btn btn-warning btn-sm">{{ __('family.buttons.add_event') }}</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if($upcomingEvents->count() > 0)

@@ -25,6 +25,9 @@ return [
     'api_integrations' => 'Integrasi API',
     'integration_tools' => 'Alat Integrasi',
     'privacy_settings' => 'Pengaturan Privasi',
+    'ai_insights' => 'Wawasan AI',
+    'custom_reporting' => 'Laporan Kustom',
+    'financial_education' => 'Edukasi Finansial',
     'activity_log' => 'Log Aktivitas',
     'profile' => 'Profil',
 ];

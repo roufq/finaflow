@@ -51,14 +51,18 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                 aria-labelledby="dropdownMenuLink{{ $event->id }}">
-                                                <a class="dropdown-item" href="#">
+                                                <a class="dropdown-item" href="{{ route('family.gift-events.edit', $event) }}">
                                                     <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
                                                     Edit Event
                                                 </a>
-                                                <a class="dropdown-item" href="#" onclick="return confirm('Are you sure you want to delete this event?')">
-                                                    <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
-                                                    Delete Event
-                                                </a>
+                                                <form method="POST" action="{{ route('family.gift-events.destroy', $event) }}" onsubmit="return confirm('Are you sure you want to delete this event?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                        Delete Event
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -121,11 +125,11 @@
                                             </div>
                                         </div>
 
-                                        @if($event->recipients && $event->recipients->count() > 0)
+                                        @if(optional($event->recipient_details)->count() > 0)
                                         <div class="mb-3">
                                             <div class="text-xs font-weight-bold text-uppercase mb-1">Recipients</div>
                                             <div>
-                                                @foreach($event->recipients as $recipient)
+                                                @foreach($event->recipient_details as $recipient)
                                                 <span class="badge badge-light mr-1">{{ $recipient->name }}</span>
                                                 @endforeach
                                             </div>
@@ -172,7 +176,10 @@
                                                 </button>
                                             </div>
 
-                                            @if($event->gifts && $event->gifts->count() > 0)
+                                            @php
+                                                $giftList = collect($event->gifts ?? []);
+                                            @endphp
+                                            @if($giftList->count() > 0)
                                                 <div class="table-responsive">
                                                     <table class="table table-sm">
                                                         <thead>
@@ -185,7 +192,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($event->gifts as $gift)
+                                                            @foreach($giftList as $gift)
                                                             <tr>
                                                                 <td>{{ $gift['recipient_name'] ?? 'Unknown' }}</td>
                                                                 <td>{{ $gift['gift_name'] ?? 'N/A' }}</td>
@@ -227,17 +234,19 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form method="POST" action="#">
+                                        <form method="POST" action="{{ route('family.gift-events.gifts.store', $event) }}">
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
                                                     <label for="recipient{{ $event->id }}">Recipient</label>
                                                     <select class="form-control" id="recipient{{ $event->id }}" name="recipient_id" required>
-                                                        <option value="">Select Recipient</option>
-                                                        @if($event->recipients)
-                                                            @foreach($event->recipients as $recipient)
-                                                            <option value="{{ $recipient->id }}">{{ $recipient->name }}</option>
+                                                        <option value="" disabled {{ optional($event->recipient_details)->count() ? '' : 'selected' }}>Select Recipient</option>
+                                                        @if(optional($event->recipient_details)->count() > 0)
+                                                            @foreach($event->recipient_details as $recipient)
+                                                            <option value="{{ $recipient->id }}">{{ $recipient->name }} ({{ $recipient->relationship }})</option>
                                                             @endforeach
+                                                        @else
+                                                            <option value="" disabled>No recipients available. Edit event to add family members.</option>
                                                         @endif
                                                     </select>
                                                 </div>
@@ -312,9 +321,9 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <h6>Recipients ({{ $event->recipient_count }})</h6>
-                                                    @if($event->recipients && $event->recipients->count() > 0)
+                                                    @if(optional($event->recipient_details)->count() > 0)
                                                         <ul class="list-group list-group-flush">
-                                                            @foreach($event->recipients as $recipient)
+                                                            @foreach($event->recipient_details as $recipient)
                                                             <li class="list-group-item px-0">{{ $recipient->name }} ({{ $recipient->relationship }})</li>
                                                             @endforeach
                                                         </ul>

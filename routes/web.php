@@ -1,27 +1,32 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AIInsightsController;
+use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\ApiIntegrationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\TaxDocumentController;
-use App\Http\Controllers\BehavioralController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\RewardController;
 use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\BankIntegrationController;
-use App\Http\Controllers\ApiIntegrationController;
+use App\Http\Controllers\BehavioralController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EducationController;
 use App\Http\Controllers\FamilyController;
-use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\IntegrationToolController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\PrivacyController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportingController;
+use App\Http\Controllers\RewardController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TaxDocumentController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
+
     return redirect()->route('login');
 });
 
@@ -36,6 +41,9 @@ Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('langu
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/security', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     Route::resource('settings', \App\Http\Controllers\SettingController::class);
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
@@ -128,12 +136,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/family/shared-expenses', [FamilyController::class, 'sharedExpenses'])->name('family.shared-expenses');
     Route::get('/family/shared-expenses/create', [FamilyController::class, 'createSharedExpense'])->name('family.shared-expenses.create');
     Route::post('/family/shared-expenses', [FamilyController::class, 'storeSharedExpense'])->name('family.shared-expenses.store');
+    Route::get('/family/shared-expenses/{expense}/edit', [FamilyController::class, 'editSharedExpense'])->name('family.shared-expenses.edit');
+    Route::put('/family/shared-expenses/{expense}', [FamilyController::class, 'updateSharedExpense'])->name('family.shared-expenses.update');
+    Route::patch('/family/shared-expenses', [FamilyController::class, 'settleSharedExpense'])->name('family.shared-expenses.settle');
+    Route::patch('/family/shared-expenses/{expense}/settle', [FamilyController::class, 'settleSharedExpense'])->name('family.shared-expenses.settle.direct');
     Route::get('/family/goals', [FamilyController::class, 'familyGoals'])->name('family.goals');
     Route::get('/family/goals/create', [FamilyController::class, 'createFamilyGoal'])->name('family.goals.create');
     Route::post('/family/goals', [FamilyController::class, 'storeFamilyGoal'])->name('family.goals.store');
+    Route::get('/family/goals/{goal}/edit', [FamilyController::class, 'editFamilyGoal'])->name('family.goals.edit');
+    Route::put('/family/goals/{goal}', [FamilyController::class, 'updateFamilyGoal'])->name('family.goals.update');
+    Route::delete('/family/goals/{goal}', [FamilyController::class, 'destroyFamilyGoal'])->name('family.goals.destroy');
     Route::get('/family/gift-events', [FamilyController::class, 'giftEvents'])->name('family.gift-events');
     Route::get('/family/gift-events/create', [FamilyController::class, 'createGiftEvent'])->name('family.gift-events.create');
     Route::post('/family/gift-events', [FamilyController::class, 'storeGiftEvent'])->name('family.gift-events.store');
+    Route::get('/family/gift-events/{event}/edit', [FamilyController::class, 'editGiftEvent'])->name('family.gift-events.edit');
+    Route::put('/family/gift-events/{event}', [FamilyController::class, 'updateGiftEvent'])->name('family.gift-events.update');
+    Route::delete('/family/gift-events/{event}', [FamilyController::class, 'destroyGiftEvent'])->name('family.gift-events.destroy');
+    Route::post('/family/gift-events/{event}/gifts', [FamilyController::class, 'storeGift'])->name('family.gift-events.gifts.store');
 
     // Privacy Settings Routes
     Route::get('/privacy', [PrivacyController::class, 'index'])->name('privacy.settings');
@@ -141,4 +160,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/privacy/request-deletion', [PrivacyController::class, 'requestDeletion'])->name('privacy.request-deletion');
     Route::post('/privacy/cancel-deletion', [PrivacyController::class, 'cancelDeletion'])->name('privacy.cancel-deletion');
     Route::get('/privacy/export-data', [PrivacyController::class, 'exportData'])->name('privacy.export-data');
+
+    // AI Insights Routes
+    Route::get('/insights', [AIInsightsController::class, 'index'])->name('insights.index');
+    Route::get('/insights/recommendations', [AIInsightsController::class, 'recommendations'])->name('insights.recommendations');
+    Route::post('/insights/recommendations/{recommendation}/read', [AIInsightsController::class, 'markRecommendationRead'])->name('insights.recommendations.read');
+    Route::get('/insights/anomalies', [AIInsightsController::class, 'anomalies'])->name('insights.anomalies');
+    Route::post('/insights/anomalies/{anomaly}/resolve', [AIInsightsController::class, 'resolveAnomaly'])->name('insights.anomalies.resolve');
+    Route::get('/insights/predictions', [AIInsightsController::class, 'predictions'])->name('insights.predictions');
+    Route::match(['get', 'post'], '/insights/generate', [AIInsightsController::class, 'generateInsights'])->name('insights.generate');
+
+    // Reporting Routes
+    Route::get('/reporting', [ReportingController::class, 'dashboard'])->name('reporting.dashboard');
+    Route::get('/reporting/builder/{report?}', [ReportingController::class, 'builder'])->name('reporting.builder');
+    Route::post('/reporting/reports', [ReportingController::class, 'storeReport'])->name('reporting.reports.store');
+    Route::post('/reporting/widgets', [ReportingController::class, 'storeWidget'])->name('reporting.widgets.store');
+    Route::post('/reporting/widgets/positions', [ReportingController::class, 'updateWidgetPositions'])->name('reporting.widgets.positions');
+    Route::post('/reporting/reports/{report}/export', [ReportingController::class, 'exportReport'])->name('reporting.reports.export');
+
+    // Financial Education Routes
+    Route::get('/education', [EducationController::class, 'index'])->name('education.index');
+    Route::get('/education/modules/{module}', [EducationController::class, 'showModule'])->name('education.module');
+    Route::post('/education/modules/{module}/progress', [EducationController::class, 'updateProgress'])->name('education.module.progress');
+    Route::get('/education/news', [EducationController::class, 'news'])->name('education.news');
 });

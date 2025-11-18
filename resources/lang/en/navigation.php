@@ -25,6 +25,9 @@ return [
     'api_integrations' => 'API Integrations',
     'integration_tools' => 'Integration Tools',
     'privacy_settings' => 'Privacy Settings',
+    'ai_insights' => 'AI Insights',
+    'custom_reporting' => 'Custom Reporting',
+    'financial_education' => 'Financial Education',
     'activity_log' => 'Activity Log',
     'profile' => 'Profile',
 ];

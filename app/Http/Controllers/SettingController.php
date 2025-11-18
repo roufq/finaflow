@@ -11,6 +11,7 @@ class SettingController extends Controller
     public function index()
     {
         $settings = Setting::all();
+
         return view('settings.index', compact('settings'));
     }
 
@@ -28,15 +29,23 @@ class SettingController extends Controller
             'risk_profile' => 'nullable|in:aggressive,balanced,conservative',
         ]);
 
-        Setting::create([
-            'user_id' => Auth::id(),
+        $payload = [
             'currency_symbol' => $request->currency_symbol,
             'start_month' => $request->start_month,
             'credit_score' => $request->credit_score,
             'risk_profile' => $request->risk_profile,
-        ]);
+        ];
 
-        return redirect()->route('settings.index')->with('success', 'Setting created successfully.');
+        $setting = Setting::updateOrCreate(
+            ['user_id' => Auth::id()],
+            $payload + ['user_id' => Auth::id()]
+        );
+
+        $message = $setting->wasRecentlyCreated
+            ? 'Setting created successfully.'
+            : 'Setting updated successfully.';
+
+        return redirect()->route('settings.index')->with('success', $message);
     }
 
     public function show(Setting $setting)
@@ -66,6 +75,7 @@ class SettingController extends Controller
     public function destroy(Setting $setting)
     {
         $setting->delete();
+
         return redirect()->route('settings.index')->with('success', 'Setting deleted successfully.');
     }
 }

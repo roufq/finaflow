@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Automation;
+use App\Models\Category;
 use App\Models\Transaction;
 use App\Services\EmailReceiptParser;
 use App\Services\TransactionCategorizer;
@@ -25,9 +26,12 @@ class IntegrationToolController extends Controller
 
         $parsed = $parser->parse($request->voice_text);
 
+        $categoryId = $categorizer->guessCategoryId($parsed['description'], $parsed['amount'], $parsed)
+            ?? $this->defaultExpenseCategoryId();
+
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
-            'category_id' => $categorizer->guessCategoryId($parsed['description'], $parsed['amount'], $parsed),
+            'category_id' => $categoryId,
             'transaction_date' => $parsed['date'],
             'type' => $parsed['type'],
             'amount' => $parsed['amount'],
@@ -105,5 +109,21 @@ class IntegrationToolController extends Controller
         ]);
 
         return redirect()->route('integrations.reminders')->with('success', 'Reminder created successfully.');
+    }
+
+    private function defaultExpenseCategoryId(): int
+    {
+        $category = Category::firstOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'name' => 'Uncategorized',
+                'type' => 'expense',
+            ],
+            [
+                'description' => 'Auto-generated fallback category for voice entries.',
+            ]
+        );
+
+        return $category->id;
     }
 }

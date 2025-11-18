@@ -34,6 +34,7 @@ return [
         'participants' => 'Participants',
         'split_method' => 'Split Method',
         'status' => 'Status',
+        'unknown_participant' => 'Participant data unavailable',
     ],
     'goals' => [
         'title' => 'Family Goals',
@@ -80,7 +81,15 @@ return [
         'member_created' => 'Family member added successfully.',
         'member_updated' => 'Family member updated successfully.',
         'expense_created' => 'Shared expense added successfully.',
+        'expense_updated' => 'Shared expense updated successfully.',
+        'expense_settled' => 'Shared expense marked as settled.',
         'goal_created' => 'Family goal added successfully.',
+        'goal_updated' => 'Family goal updated successfully.',
+        'goal_deleted' => 'Family goal removed successfully.',
         'event_created' => 'Gift event added successfully.',
+        'event_updated' => 'Gift event updated successfully.',
+        'event_deleted' => 'Gift event removed successfully.',
+        'gift_added' => 'Gift added to the event successfully.',
+        'recipient_invalid' => 'Recipient is not registered for this gift event.',
     ],
 ];

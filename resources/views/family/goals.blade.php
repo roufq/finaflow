@@ -51,14 +51,18 @@
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                                 aria-labelledby="dropdownMenuLink{{ $goal->id }}">
-                                                <a class="dropdown-item" href="#">
+                                                <a class="dropdown-item" href="{{ route('family.goals.edit', $goal) }}">
                                                     <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
                                                     Edit Goal
                                                 </a>
-                                                <a class="dropdown-item" href="#" onclick="return confirm('Are you sure you want to delete this goal?')">
-                                                    <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
-                                                    Delete Goal
-                                                </a>
+                                                <form method="POST" action="{{ route('family.goals.destroy', $goal) }}" onsubmit="return confirm('Are you sure you want to delete this goal?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
+                                                        Delete Goal
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>

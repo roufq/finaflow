@@ -97,7 +97,7 @@
                                                         <i class="fas fa-ellipsis-h"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">
+                                                        <a class="dropdown-item" href="{{ route('family.shared-expenses.edit', $expense) }}">
                                                             <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
                                                             Edit
                                                         </a>
@@ -110,124 +110,6 @@
                                             </div>
                                         </td>
                                     </tr>
-
-                                    <!-- Details Modal -->
-                                    <div class="modal fade" id="detailsModal{{ $expense->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel{{ $expense->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="detailsModalLabel{{ $expense->id }}">{{ $expense->expense_name }} - Details</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <h6>Expense Information</h6>
-                                                            <table class="table table-sm">
-                                                                <tr>
-                                                                    <td><strong>Name:</strong></td>
-                                                                    <td>{{ $expense->expense_name }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><strong>Category:</strong></td>
-                                                                    <td>{{ $expense->category }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><strong>Total Amount:</strong></td>
-                                                                    <td>Rp {{ number_format($expense->total_amount, 0, ',', '.') }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><strong>Split Method:</strong></td>
-                                                                    <td>{{ ucfirst($expense->split_method) }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><strong>Date:</strong></td>
-                                                                    <td>{{ $expense->expense_date->format('d M Y') }}</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><strong>Status:</strong></td>
-                                                                    <td>
-                                                                        @if($expense->is_settled)
-                                                                            <span class="badge badge-success">Settled</span>
-                                                                        @else
-                                                                            <span class="badge badge-warning">Pending</span>
-                                                                        @endif
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <h6>Participants ({{ $expense->participant_count }})</h6>
-                                                            @if($expense->participants && count($expense->participants) > 0)
-                                                                <div class="table-responsive">
-                                                                    <table class="table table-sm">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Name</th>
-                                                                                <th>Share</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            @foreach($expense->participants as $participantId => $shareAmount)
-                                                                                @php
-                                                                                    $member = \App\Models\FamilyMember::find($participantId);
-                                                                                @endphp
-                                                                                <tr>
-                                                                                    <td>{{ $member ? $member->name : 'Unknown' }}</td>
-                                                                                    <td>Rp {{ number_format($shareAmount, 0, ',', '.') }}</td>
-                                                                                </tr>
-                                                                            @endforeach
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            @else
-                                                                <p class="text-muted">No participants found</p>
-                                                            @endif
-
-                                                            @if($expense->description)
-                                                            <h6 class="mt-3">Description</h6>
-                                                            <p>{{ $expense->description }}</p>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Settle Modal -->
-                                    <div class="modal fade" id="settleModal{{ $expense->id }}" tabindex="-1" role="dialog" aria-labelledby="settleModalLabel{{ $expense->id }}" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="settleModalLabel{{ $expense->id }}">Settle Expense - {{ $expense->expense_name }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <form method="POST" action="#">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <div class="modal-body">
-                                                        <p>Mark this shared expense as settled? This indicates that all participants have paid their shares.</p>
-                                                        <div class="form-group">
-                                                            <label for="settlement_date{{ $expense->id }}">Settlement Date</label>
-                                                            <input type="date" class="form-control" id="settlement_date{{ $expense->id }}" name="settlement_date" value="{{ date('Y-m-d') }}" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <button type="submit" class="btn btn-success">Mark as Settled</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -325,6 +207,134 @@
     @endif
 
 </div>
+
+@if($expenses->count() > 0)
+    @foreach($expenses as $expense)
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal{{ $expense->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel{{ $expense->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel{{ $expense->id }}">{{ $expense->expense_name }} - Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Expense Information</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Name:</strong></td>
+                                    <td>{{ $expense->expense_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Category:</strong></td>
+                                    <td>{{ $expense->category }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Amount:</strong></td>
+                                    <td>Rp {{ number_format($expense->total_amount, 0, ',', '.') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Split Method:</strong></td>
+                                    <td>{{ ucfirst($expense->split_method) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date:</strong></td>
+                                    <td>{{ $expense->expense_date->format('d M Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td>
+                                        @if($expense->is_settled)
+                                            <span class="badge badge-success">Settled</span>
+                                        @else
+                                            <span class="badge badge-warning">Pending</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Participants ({{ $expense->participant_count }})</h6>
+                            @if(!empty($expense->participant_details))
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Share</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($expense->participant_details as $participant)
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ $participant['name'] }}</strong>
+                                                        @if(!empty($participant['relationship']))
+                                                            <br>
+                                                            <small class="text-muted">{{ ucfirst($participant['relationship']) }}</small>
+                                                        @endif
+                                                    </td>
+                                                    <td>Rp {{ number_format($participant['share'], 0, ',', '.') }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <p class="text-muted">{{ __('family.shared_expenses.unknown_participant') }}</p>
+                            @endif
+
+                            @if($expense->description)
+                            <h6 class="mt-3">Description</h6>
+                            <p>{{ $expense->description }}</p>
+                            @else
+                            <p class="text-muted mt-3">No additional description provided.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settle Modal -->
+    <div class="modal fade" id="settleModal{{ $expense->id }}" tabindex="-1" role="dialog" aria-labelledby="settleModalLabel{{ $expense->id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settleModalLabel{{ $expense->id }}">Settle Expense - {{ $expense->expense_name }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="{{ route('family.shared-expenses.settle') }}">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="expense_id" value="{{ $expense->id }}">
+                    <div class="modal-body">
+                        <p>Mark this shared expense as settled? This indicates that all participants have paid their shares.</p>
+                        <div class="form-group">
+                            <label for="settlement_date{{ $expense->id }}">Settlement Date</label>
+                            <input type="date" class="form-control" id="settlement_date{{ $expense->id }}" name="settlement_date" value="{{ date('Y-m-d') }}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Mark as Settled</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endforeach
+@endif
 
 <script>
 // Initialize DataTable if expenses exist

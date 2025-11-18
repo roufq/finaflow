@@ -73,9 +73,6 @@
                             <label>Recipients</label>
                             <div class="border rounded p-3">
                                 <p class="mb-2">Select people who will receive gifts for this event:</p>
-                                @php
-                                    $members = \App\Models\FamilyMember::where('user_id', auth()->id())->active()->get();
-                                @endphp
                                 @if($members->count() > 0)
                                     @foreach($members as $member)
                                     <div class="form-check">

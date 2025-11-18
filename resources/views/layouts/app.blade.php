@@ -204,6 +204,27 @@
                     <span>{{ __('navigation.privacy_settings') }}</span></a>
             </li>
 
+            <!-- Nav Item - AI Insights -->
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('insights.index') }}">
+                      <i class="fas fa-fw fa-brain"></i>
+                      <span>{{ __('navigation.ai_insights') }}</span></a>
+              </li>
+
+              <!-- Nav Item - Custom Reporting -->
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('reporting.dashboard') }}">
+                      <i class="fas fa-fw fa-chart-area"></i>
+                      <span>{{ __('navigation.custom_reporting') }}</span></a>
+              </li>
+
+              <!-- Nav Item - Financial Education -->
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('education.index') }}">
+                      <i class="fas fa-fw fa-graduation-cap"></i>
+                      <span>{{ __('navigation.financial_education') }}</span></a>
+              </li>
+
             <!-- Nav Item - Categories -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('categories.index') }}">
@@ -461,7 +482,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('profile.show') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     {{ __('navigation.profile') }}
                                 </a>
