@@ -224,6 +224,11 @@
                       <i class="fas fa-fw fa-graduation-cap"></i>
                       <span>{{ __('navigation.financial_education') }}</span></a>
               </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('coaching.index') }}">
+                      <i class="fas fa-fw fa-hands-helping"></i>
+                      <span>{{ __('navigation.financial_coaching') }}</span></a>
+              </li>
 
             <!-- Nav Item - Categories -->
             <li class="nav-item">

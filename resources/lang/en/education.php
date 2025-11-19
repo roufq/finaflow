@@ -9,10 +9,6 @@ return [
         'available' => 'Available Modules',
         'completion_rate' => 'Completion Rate',
     ],
-    'community' => [
-        'title' => 'Community Highlights',
-        'subtitle' => 'Peer learning stories and practical ideas.',
-    ],
     'recommendations' => [
         'title' => 'Personalized Learning Path',
         'next_module' => 'Next Module',
@@ -26,6 +22,7 @@ return [
         'category' => 'Category',
         'start' => 'Start Lesson',
         'continue' => 'Continue',
+        'language' => 'Language',
     ],
     'module' => [
         'overview' => 'Module Overview',
@@ -33,6 +30,7 @@ return [
         'resources' => 'Recommended Resources',
         'related' => 'Related Modules',
         'cta' => 'Update Progress',
+        'objectives' => 'Learning Objectives',
     ],
     'news' => [
         'title' => 'Financial News',
@@ -40,8 +38,36 @@ return [
         'view_all' => 'View All News',
         'empty' => 'No financial news stories available yet.',
         'source' => 'Source',
+        'filter_tag' => 'Filter news by tag',
+    ],
+    'filters' => [
+        'title' => 'Personalize Your Learning Path',
+        'category' => 'Category',
+        'difficulty' => 'Difficulty',
+        'language' => 'Language',
+        'tag' => 'Focus Tag',
+        'search' => 'Search',
+        'search_placeholder' => 'Search modules',
+        'apply' => 'Apply',
+        'reset' => 'Reset',
+        'all' => 'All',
     ],
     'messages' => [
         'progress_updated' => 'Module progress updated.',
+    ],
+    'community' => [
+        'title' => 'Community Highlights',
+        'subtitle' => 'Peer learning stories and practical ideas.',
+        'share_title' => 'Share Your Money Story',
+        'fields' => [
+            'display_name' => 'Display Name',
+            'display_name_placeholder' => 'Optional nickname',
+            'title' => 'Headline',
+            'achievement' => 'What did you achieve?',
+            'tip' => 'What tip would you share?',
+        ],
+        'submit' => 'Submit Story',
+        'moderation_note' => 'Stories are reviewed before appearing to everyone.',
+        'submitted' => 'Thanks! Your story is awaiting review.',
     ],
 ];

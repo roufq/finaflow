@@ -23,7 +23,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Date</th>
                             <th>Category</th>
                             <th>Type</th>
@@ -35,7 +35,7 @@
                     <tbody>
                         @foreach($transactions as $transaction)
                         <tr>
-                            <td>{{ $transaction->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $transaction->transaction_date->format('Y-m-d') }}</td>
                             <td>{{ $transaction->category->name }}</td>
                             <td>{{ $transaction->type }}</td>

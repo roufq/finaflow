@@ -42,6 +42,7 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Name</th>
                                         <th>Relationship</th>
                                         <th>Age</th>
@@ -54,6 +55,7 @@
                                 <tbody>
                                     @foreach($members as $member)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-circle bg-primary text-white mr-2" style="width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">

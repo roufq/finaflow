@@ -56,6 +56,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Nama Akun</th>
                             <th>Tipe</th>
                             <th>Saldo</th>
@@ -68,6 +69,7 @@
                     <tbody>
                         @foreach($accounts as $account)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>
                                 <a href="{{ route('accounts.show', $account) }}" class="text-decoration-none">
                                     {{ $account->name }}

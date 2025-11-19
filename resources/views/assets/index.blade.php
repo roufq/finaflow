@@ -110,6 +110,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Name</th>
                             <th>Type</th>
                             <th>Current Value</th>
@@ -122,6 +123,7 @@
                     <tbody>
                         @forelse($assets as $asset)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $asset->name }}</td>
                             <td>{{ ucfirst(str_replace('_', ' ', $asset->type)) }}</td>
                             <td>Rp {{ number_format($asset->current_value, 0, ',', '.') }}</td>
@@ -158,7 +160,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="text-center">No assets found. <a href="{{ route('assets.create') }}">Add your first asset</a></td>
+                            <td colspan="8" class="text-center">No assets found. <a href="{{ route('assets.create') }}">Add your first asset</a></td>
                         </tr>
                         @endforelse
                     </tbody>

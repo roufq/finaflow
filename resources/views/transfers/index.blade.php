@@ -37,6 +37,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Tanggal</th>
                             <th>Dari Akun</th>
                             <th>Ke Akun</th>
@@ -50,6 +51,7 @@
                     <tbody>
                         @foreach($transfers as $transfer)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $transfer->transfer_date->format('d/m/Y') }}</td>
                             <td>
                                 <a href="{{ route('accounts.show', $transfer->fromAccount) }}" class="text-decoration-none">

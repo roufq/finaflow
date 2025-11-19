@@ -22,6 +22,7 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>{{ __('behavioral.triggers.trigger_type') }}</th>
                                 <th>{{ __('behavioral.triggers.description') }}</th>
                                 <th>{{ __('behavioral.triggers.frequency') }}</th>
@@ -33,6 +34,7 @@
                         <tbody>
                             @foreach($triggers as $trigger)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $trigger->trigger_type }}</td>
                                 <td>{{ $trigger->description }}</td>
                                 <td>

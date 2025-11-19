@@ -28,6 +28,7 @@ return [
     'ai_insights' => 'Wawasan AI',
     'custom_reporting' => 'Laporan Kustom',
     'financial_education' => 'Edukasi Finansial',
+    'financial_coaching' => 'Coaching Finansial',
     'activity_log' => 'Log Aktivitas',
     'profile' => 'Profil',
 ];

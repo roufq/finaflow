@@ -1,0 +1,56 @@
+[
+    {
+        "title": "Harga Pangan Naik, Tips Menjaga Anggaran Belanja",
+        "content": "Inflasi pangan di kota-kota besar kembali meningkat 0,7% bulan ini. Pakar menyarankan keluarga untuk memetakan ulang amplop groceries dan memanfaatkan promo musiman agar arus kas tetap stabil.",
+        "source": "Finaflow Research",
+        "category": "budgeting",
+        "published_at": "2025-11-18T09:00:00+07:00",
+        "url": "https://insights.finaflow.app/budgeting/seasonal-food-cost",
+        "tags": ["budgeting", "inflation", "cash flow"]
+    },
+    {
+        "title": "Bank Sentral Tahan Suku Bunga, Deposito Tetap Kompetitif",
+        "content": "Rapat dewan gubernur kembali menahan BI rate di 6,25%. Perbankan digital mulai menawarkan deposito fleksibel yang cocok untuk dana darurat.",
+        "source": "Jakarta Finance Desk",
+        "category": "savings",
+        "published_at": "2025-11-18T07:15:00+07:00",
+        "url": "https://insights.finaflow.app/savings/rate-watch",
+        "tags": ["savings", "interest", "policy"]
+    },
+    {
+        "title": "Investor Retail Berburu Saham Dividen Menjelang Akhir Tahun",
+        "content": "Volume transaksi saham defensif meningkat setelah rilis laporan keuangan. Strategi dividend capture direkomendasikan hanya untuk profil risiko moderat-ke-atas.",
+        "source": "Equity Pulse",
+        "category": "investing",
+        "published_at": "2025-11-17T20:00:00+07:00",
+        "url": "https://insights.finaflow.app/investing/dividend-season",
+        "tags": ["investment", "portfolio", "dividend"]
+    },
+    {
+        "title": "Tips Mengendalikan Belanja Akhir Tahun Bersama Keluarga",
+        "content": "Coach finansial menyarankan ritual family money council untuk menyepakati batas hadiah, wishlist, dan tantangan zero-spend day menjelang liburan.",
+        "source": "Community Stories",
+        "category": "family_finance",
+        "published_at": "2025-11-16T10:30:00+07:00",
+        "url": "https://insights.finaflow.app/family/holiday-spending",
+        "tags": ["family", "behavioral", "budgeting"]
+    },
+    {
+        "title": "Teknologi AI Membantu Monitoring Pengeluaran Subskripsi",
+        "content": "Aplikasi perbankan mulai meluncurkan fitur deteksi subscription lupa cancel. Konsumen diminta meninjau ulang autopay setidaknya tiap kuartal.",
+        "source": "Payments Watch",
+        "category": "automation",
+        "published_at": "2025-11-15T12:05:00+07:00",
+        "url": "https://insights.finaflow.app/automation/subscription-audit",
+        "tags": ["automation", "subscriptions", "budgeting"]
+    },
+    {
+        "title": "Startup ESG Lokal Terbitkan Reksa Dana Hijau",
+        "content": "Produk reksa dana tematik berfokus pada transisi energi hadir dengan biaya rendah. Analis mengingatkan pentingnya diversifikasi lintas sektor.",
+        "source": "Impact Alpha SEA",
+        "category": "investing",
+        "published_at": "2025-11-15T08:45:00+07:00",
+        "url": "https://insights.finaflow.app/investing/impact-fund",
+        "tags": ["esg", "investment", "sustainability"]
+    }
+]

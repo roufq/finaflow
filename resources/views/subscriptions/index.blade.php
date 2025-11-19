@@ -93,6 +93,7 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>{{ __('subscriptions.table.columns.name') }}</th>
                                 <th>{{ __('subscriptions.table.columns.provider') }}</th>
                                 <th>{{ __('subscriptions.table.columns.amount') }}</th>
@@ -105,6 +106,7 @@
                         <tbody>
                             @foreach($subscriptions as $subscription)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $subscription->name }}</td>
                                 <td>{{ $subscription->provider }}</td>
                                 <td>Rp {{ number_format($subscription->amount, 0, ',', '.') }}</td>

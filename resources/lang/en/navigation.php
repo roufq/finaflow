@@ -28,6 +28,7 @@ return [
     'ai_insights' => 'AI Insights',
     'custom_reporting' => 'Custom Reporting',
     'financial_education' => 'Financial Education',
+    'financial_coaching' => 'Financial Coaching',
     'activity_log' => 'Activity Log',
     'profile' => 'Profile',
 ];

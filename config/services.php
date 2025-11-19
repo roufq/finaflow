@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'financial_news' => [
+        'endpoint' => env('FINANCIAL_NEWS_ENDPOINT'),
+        'api_key' => env('FINANCIAL_NEWS_API_KEY'),
+    ],
+
 ];

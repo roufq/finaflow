@@ -12,6 +12,17 @@ return [
     'community' => [
         'title' => 'Sorotan Komunitas',
         'subtitle' => 'Cerita belajar dan ide praktis dari komunitas.',
+        'share_title' => 'Bagikan Cerita Finansial Anda',
+        'fields' => [
+            'display_name' => 'Nama Tampilan',
+            'display_name_placeholder' => 'Julukan opsional',
+            'title' => 'Judul Cerita',
+            'achievement' => 'Pencapaian apa yang diraih?',
+            'tip' => 'Tips apa yang ingin dibagikan?',
+        ],
+        'submit' => 'Kirim Cerita',
+        'moderation_note' => 'Cerita akan direview sebelum tampil ke semua orang.',
+        'submitted' => 'Terima kasih! Cerita Anda menunggu review.',
     ],
     'recommendations' => [
         'title' => 'Jalur Belajar Personal',
@@ -26,6 +37,7 @@ return [
         'category' => 'Kategori',
         'start' => 'Mulai Pelajaran',
         'continue' => 'Lanjutkan',
+        'language' => 'Bahasa',
     ],
     'module' => [
         'overview' => 'Ringkasan Modul',
@@ -33,6 +45,7 @@ return [
         'resources' => 'Sumber Rekomendasi',
         'related' => 'Modul Terkait',
         'cta' => 'Perbarui Progres',
+        'objectives' => 'Tujuan Pembelajaran',
     ],
     'news' => [
         'title' => 'Berita Finansial',
@@ -40,6 +53,19 @@ return [
         'view_all' => 'Lihat Semua Berita',
         'empty' => 'Belum ada berita finansial.',
         'source' => 'Sumber',
+        'filter_tag' => 'Filter berita berdasarkan tag',
+    ],
+    'filters' => [
+        'title' => 'Sesuaikan Jalur Belajar Anda',
+        'category' => 'Kategori',
+        'difficulty' => 'Kesulitan',
+        'language' => 'Bahasa',
+        'tag' => 'Tag Fokus',
+        'search' => 'Cari',
+        'search_placeholder' => 'Cari modul',
+        'apply' => 'Terapkan',
+        'reset' => 'Reset',
+        'all' => 'Semua',
     ],
     'messages' => [
         'progress_updated' => 'Progres modul diperbarui.',

@@ -93,6 +93,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Symbol</th>
                             <th>Name</th>
                             <th>Type</th>
@@ -107,6 +108,7 @@
                     <tbody>
                         @forelse($investments as $investment)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $investment->symbol }}</td>
                             <td>{{ $investment->name }}</td>
                             <td>{{ ucfirst(str_replace('_', ' ', $investment->type)) }}</td>
@@ -137,7 +139,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="9" class="text-center">No investments found. <a href="{{ route('investments.create') }}">Add your first investment</a></td>
+                            <td colspan="10" class="text-center">No investments found. <a href="{{ route('investments.create') }}">Add your first investment</a></td>
                         </tr>
                         @endforelse
                     </tbody>

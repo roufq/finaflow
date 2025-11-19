@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Setting;
 use App\Models\Category;
+use App\Models\Setting;
 use App\Models\Transaction;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -140,5 +139,7 @@ class DatabaseSeeder extends Seeder
         foreach ($transactions2 as $trans) {
             Transaction::create(array_merge($trans, ['user_id' => $user2->id]));
         }
+
+        $this->call(EducationModuleSeeder::class);
     }
 }

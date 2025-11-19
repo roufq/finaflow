@@ -42,6 +42,7 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Expense Name</th>
                                         <th>Category</th>
                                         <th>Total Amount</th>
@@ -55,6 +56,7 @@
                                 <tbody>
                                     @foreach($expenses as $expense)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="font-weight-bold">{{ $expense->expense_name }}</div>
                                             @if($expense->description)

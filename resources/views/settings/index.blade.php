@@ -18,7 +18,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Currency Symbol</th>
                             <th>Start Month</th>
                             <th>Credit Score</th>
@@ -29,7 +29,7 @@
                     <tbody>
                         @foreach($settings as $setting)
                         <tr>
-                            <td>{{ $setting->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $setting->currency_symbol }}</td>
                             <td>{{ $setting->start_month }}</td>
                             <td>{{ $setting->credit_score ?? '-' }}</td>

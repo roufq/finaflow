@@ -119,6 +119,7 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Tanggal</th>
                                 <th>Tipe</th>
                                 <th>Kategori</th>
@@ -131,6 +132,7 @@
                         <tbody>
                             @foreach($transactions as $transaction)
                                 <tr>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $transaction->transaction_date->format('d M Y') }}</td>
                                     <td>
                                         <span class="badge badge-{{ $transaction->type === 'income' ? 'success' : 'danger' }}">

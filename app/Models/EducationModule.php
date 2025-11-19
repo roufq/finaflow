@@ -19,11 +19,18 @@ class EducationModule extends Model
         'order',
         'is_active',
         'metadata',
+        'language',
+        'tags',
+        'learning_objectives',
+        'resource_links',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'metadata' => 'array',
+        'tags' => 'array',
+        'learning_objectives' => 'array',
+        'resource_links' => 'array',
     ];
 
     public function learningPaths(): HasMany
@@ -39,5 +46,25 @@ class EducationModule extends Model
     public function getDifficultyLabelAttribute(): string
     {
         return ucfirst($this->difficulty);
+    }
+
+    public function getLanguageLabelAttribute(): string
+    {
+        return strtoupper($this->language ?? 'ID');
+    }
+
+    public function getTagListAttribute(): array
+    {
+        return $this->tags ?? $this->metadata['tags'] ?? [];
+    }
+
+    public function getObjectiveListAttribute(): array
+    {
+        return $this->learning_objectives ?? $this->metadata['learning_objectives'] ?? [];
+    }
+
+    public function getResourceListAttribute(): array
+    {
+        return $this->resource_links ?? $this->metadata['resources'] ?? [];
     }
 }

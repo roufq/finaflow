@@ -1,7 +1,7 @@
 
 # FinaFlow - Comprehensive Personal Finance Management System
 
-FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibangun dengan Laravel 11. Aplikasi ini membantu pengguna melacak pemasukan, pengeluaran, investasi, aset, hutang, dan mengelola seluruh aspek keuangan pribadi dengan mudah dan insightful.
+FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibangun dengan Laravel 12. Aplikasi ini membantu pengguna melacak pemasukan, pengeluaran, investasi, aset, hutang, dan mengelola seluruh aspek keuangan pribadi dengan mudah dan insightful.
 
 ## 🚀 Fitur Utama
 
@@ -42,6 +42,20 @@ FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibang
 - **Gift Events**: Planning dan tracking budget hadiah untuk acara spesial
 - **Family Members**: Manajemen anggota keluarga untuk budgeting bersama
 
+### Financial Coaching & Literacy
+- **Personalized Action Plans**: Rencana aksi bulanan otomatis dengan prioritas utang, tabungan darurat, dan investasi sesuai kondisi pengguna
+- **Weekly Accountability Checklist**: Checklist mingguan dengan status & reminder agar rencana terus berjalan
+- **Micro-Learning Hub**: Artikel, video, dan kuis singkat yang direkomendasikan berdasarkan persona finansial sekaligus tracking skor pemahaman
+- **Financial Journaling**: Catat refleksi, mood, dan komitmen yang bisa dikaitkan ke habit atau spending trigger
+- **Coach / HR Export**: Ekspor ringkasan kesehatan finansial siap kirim untuk coach, HR, atau program wellness perusahaan
+
+### Financial Education Hub
+- **Kurasi Modul Edukasi**: Library multi bahasa dengan metadata lengkap (kategori, level, estimasi waktu, tags, learning objectives, resources)
+- **Learning Path Personalization**: Engine rekomendasi yang membaca transaksi, goal, habits, triggers, serta persona finansial untuk menentukan fokus belajar berikutnya
+- **Financial News Pipeline**: Sinkronisasi otomatis berita finansial via API atau kurasi lokal dengan tagging preferensi dan jadwal cron bawaan
+- **Community Stories & Moderation**: Peer success story submissions dengan auto moderation heuristik dan riwayat approval
+- **Progress & UX Tracking**: Insight progress, profil rekomendasi, dan checklist UX yang memastikan konten edukasi selalu relevan dan actionable
+
 ### ⚙️ **Additional Features**
 - **Multi-Language Support**: Bahasa Indonesia dan English
 - **Pengaturan**: Konfigurasi mata uang dan pengaturan lainnya
@@ -51,7 +65,7 @@ FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibang
 
 ## 🛠️ Teknologi yang Digunakan
 
-- **Framework**: Laravel 11
+- **Framework**: Laravel 12
 - **Database**: MySQL/SQLite
 - **Frontend**: Bootstrap 4 (SB Admin 2 Template)
 - **Authentication**: Laravel Sanctum
@@ -84,11 +98,15 @@ FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibang
    php artisan key:generate
    ```
 
+   Set FINANCIAL_NEWS_ENDPOINT dan FINANCIAL_NEWS_API_KEY bila menggunakan sumber berita eksternal
+
 4. **Database Setup**
    ```bash
    # Konfigurasi database di file .env
    php artisan migrate
    php artisan db:seed
+   # Seed modul edukasi kurasi (opsional)
+   php artisan db:seed --class=EducationModuleSeeder
    ```
 
 5. **Compile Assets**
@@ -104,6 +122,13 @@ FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibang
    ```
 
    Akses aplikasi di: `http://localhost:8000`
+
+7. **Sinkronisasi Financial News (opsional)**
+   ```bash
+   php artisan financial:sync-news
+   ```
+
+   Jalankan perintah tersebut bila ingin segera mengisi tabel berita. Scheduler (`php artisan schedule:work`) otomatis berjalan dua kali sehari untuk menjaga konten tetap segar.
 
 ## 🔐 Akun Demo
 
@@ -126,6 +151,12 @@ Untuk testing, gunakan akun berikut:
 - **investments**: Portofolio investasi
 - **assets**: Manajemen aset fisik
 - **tags**: Tagging untuk transaksi
+- **action_plans**: Rencana aksi bulanan pengguna
+- **action_plan_tasks**: Checklist mingguan beserta status & reminder
+- **micro_learnings**: Konten micro-learning (artikel, video, kuis)
+- **micro_learning_progress**: Progres & skor pemahaman micro-learning
+- **financial_journal_entries**: Catatan refleksi & komitmen coaching
+- **community_stories**: Cerita komunitas untuk peer learning
 
 ### Tabel Behavioral Finance:
 - **spending_triggers**: Pola pemicu pengeluaran (emosi, situasi, dll)

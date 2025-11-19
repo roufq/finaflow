@@ -18,7 +18,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Name</th>
                             <th>Type</th>
                             <th>Description</th>
@@ -28,7 +28,7 @@
                     <tbody>
                         @foreach($categories as $category)
                         <tr>
-                            <td>{{ $category->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $category->name }}</td>
                             <td>{{ $category->type }}</td>
                             <td>{{ $category->description }}</td>
