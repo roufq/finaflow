@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_path',
     ];
 
     /**
@@ -43,13 +45,13 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'two_factor_secret' => 'encrypted',
+            'two_factor_backup_codes' => 'encrypted:array',
         ];
     }
 
     /**
      * Get the user's net worth.
-     *
-     * @return float
      */
     public function netWorth(): float
     {
@@ -83,5 +85,29 @@ class User extends Authenticatable
     public function debts()
     {
         return $this->hasMany(Debt::class)->withoutGlobalScopes();
+    }
+
+    /**
+     * @return HasMany<ActivityLog>
+     */
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function logActivity(string $action, ?string $description = null): void
+    {
+        $this->activityLogs()->create([
+            'action' => $action,
+            'description' => $description,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->header('User-Agent'),
+            'created_at' => now(),
+        ]);
+    }
+
+    public function hasValidTwoFactorSecret(): bool
+    {
+        return $this->two_factor_enabled && ! empty($this->two_factor_secret);
     }
 }

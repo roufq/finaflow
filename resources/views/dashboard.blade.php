@@ -1,11 +1,223 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $savingsRate = $totalIncome > 0 ? ($netBalance / $totalIncome) * 100 : 0;
+    $alerts = [];
+
+    if ($netBalance < 0) {
+        $alerts[] = [
+            'level' => 'danger',
+            'title' => 'Cash flow defisit bulan ini',
+            'detail' => 'Segera kurangi pengeluaran atau tambah pemasukan untuk menutup gap.',
+        ];
+    }
+
+    if ($totalIncome > 0 && $burnRate['average_monthly'] > ($totalIncome * 0.9)) {
+        $alerts[] = [
+            'level' => 'danger',
+            'title' => 'Burn rate mendekati total income',
+            'detail' => 'Prioritaskan pemotongan pos besar dan cek pengeluaran anomali.',
+        ];
+    }
+
+    if ($savingsRate < 20 && $totalIncome > 0) {
+        $alerts[] = [
+            'level' => 'warning',
+            'title' => 'Rasio tabungan di bawah 20%',
+            'detail' => 'Targetkan minimal 20% dengan memindahkan surplus ke tabungan/investasi.',
+        ];
+    }
+
+    if ($cashRunway['runway_months'] !== null && $cashRunway['runway_months'] < 3) {
+        $alerts[] = [
+            'level' => 'danger',
+            'title' => 'Cash runway kurang dari 3 bulan',
+            'detail' => 'Bangun buffer kas dengan menahan pengeluaran non-esensial.',
+        ];
+    } elseif ($cashRunway['runway_months'] !== null && $cashRunway['runway_months'] < 6) {
+        $alerts[] = [
+            'level' => 'warning',
+            'title' => 'Cash runway belum mencapai 6 bulan',
+            'detail' => 'Tambahkan setoran rutin ke dana darurat untuk perpanjang runway.',
+        ];
+    }
+
+    if ($emergencyFund['coverage_months'] < 3) {
+        $alerts[] = [
+            'level' => 'danger',
+            'title' => 'Dana darurat < 3 bulan pengeluaran',
+            'detail' => 'Fokus isi dana darurat hingga minimal 3 bulan.',
+        ];
+    } elseif ($emergencyFund['coverage_months'] < 6) {
+        $alerts[] = [
+            'level' => 'warning',
+            'title' => 'Dana darurat < 6 bulan pengeluaran',
+            'detail' => 'Naikkan setoran bulanan untuk capai 6 bulan proteksi.',
+        ];
+    }
+
+    if ($accountBalances->count() === 0) {
+        $alerts[] = [
+            'level' => 'info',
+            'title' => 'Belum ada akun keuangan',
+            'detail' => 'Tambahkan akun bank/cash agar saldo dan runway akurat.',
+        ];
+    }
+@endphp
 <!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">{{ __('dashboard.title') }}</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-download fa-sm text-white-50"></i> {{ __('dashboard.generate_report') }}</a>
+<div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(180deg, #f8f9fb 0%, #ffffff 100%);">
+    <div class="card-body py-3">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="mb-2">
+                <h1 class="h4 mb-1 text-gray-800">{{ __('dashboard.title') }}</h1>
+                <div class="small text-muted">Periode: {{ $periodDate->translatedFormat('F Y') }}</div>
+            </div>
+            <div class="d-flex flex-wrap align-items-center">
+                <form class="form-inline flex-wrap align-items-center mr-2 mb-0" method="GET" action="{{ route('dashboard') }}">
+                    <div class="input-group input-group-sm mr-2 mb-0">
+                        <select name="month" class="form-control" aria-label="Pilih bulan">
+                            @foreach(range(1, 12) as $monthOption)
+                                <option value="{{ $monthOption }}" {{ $monthOption === (int) $periodDate->format('n') ? 'selected' : '' }}>
+                                    {{ Carbon\Carbon::create()->month($monthOption)->translatedFormat('F') }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="input-group input-group-sm mr-2 mb-0" style="width: 110px;">
+                        <input type="number" name="year" class="form-control" min="2000" max="2100" value="{{ $periodDate->format('Y') }}" aria-label="Pilih tahun">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mr-2">Terapkan</button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+                </form>
+                <a href="#" class="btn btn-sm btn-primary shadow-sm d-inline-flex align-items-center ml-2 mb-0">
+                    <i class="fas fa-download fa-sm text-white-50 mr-1"></i> {{ __('dashboard.generate_report') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap align-items-center mb-4">
+    @php
+        $savingsBadge = $savingsRate >= 20 ? 'success' : ($savingsRate >= 10 ? 'warning' : 'danger');
+        $runwayValue = $cashRunway['runway_months'] ?? null;
+        $runwayBadge = is_null($runwayValue) ? 'success' : ($runwayValue >= 6 ? 'success' : ($runwayValue >= 3 ? 'warning' : 'danger'));
+        $emergencyBadge = $emergencyFund['coverage_months'] >= 6 ? 'success' : ($emergencyFund['coverage_months'] >= 3 ? 'warning' : 'danger');
+        $burnBadge = $burnRate['trend'] === 'decreasing' ? 'success' : ($burnRate['trend'] === 'stable' ? 'warning' : 'danger');
+    @endphp
+    <div class="badge badge-{{ $savingsBadge }} badge-pill mr-2 mb-2">
+        Savings Rate: {{ number_format($savingsRate, 1) }}%
+    </div>
+    <div class="badge badge-{{ $runwayBadge }} badge-pill mr-2 mb-2">
+        Runway: {{ $runwayValue ? $runwayValue.' bulan' : 'Stabil' }}
+    </div>
+    <div class="badge badge-{{ $emergencyBadge }} badge-pill mr-2 mb-2">
+        Dana Darurat: {{ $emergencyFund['coverage_months'] }} bln
+    </div>
+    <div class="badge badge-{{ $burnBadge }} badge-pill mr-2 mb-2 text-capitalize">
+        Burn Trend: {{ $burnRate['trend'] }}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card shadow-sm border-left-primary h-100">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Health Score</div>
+                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $debtHealth['score'] }}/100</div>
+                <small class="text-muted">Semakin tinggi semakin sehat</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card shadow-sm border-left-info h-100">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Expense / Income</div>
+                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $debtHealth['expense_to_income'] }}%</div>
+                <small class="text-muted">Ideal di bawah 70%</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card shadow-sm border-left-warning h-100">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Debt / Income</div>
+                <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $debtHealth['debt_to_income'] }}%</div>
+                <small class="text-muted">Ideal di bawah 30-40%</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body py-3">
+        <form class="form-inline flex-wrap align-items-center" method="GET" action="{{ route('transactions.index') }}">
+            <div class="input-group input-group-sm mr-2 mb-2" style="min-width: 260px;">
+                <input type="text" name="search" class="form-control" placeholder="Cari transaksi, kategori, atau nominal..." aria-label="Pencarian cepat transaksi">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm mb-2">
+                <i class="fas fa-search mr-1"></i> Cari Cepat
+            </button>
+            <small class="text-muted ml-2 mb-2">Pencarian akan membuka daftar transaksi.</small>
+        </form>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-xl-8 mb-4 mb-xl-0">
+        <div class="card shadow-sm h-100 border-0">
+            <div class="card-header py-3 d-flex align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Prioritas Finansial</h6>
+                <span class="badge badge-pill badge-{{ count($alerts) > 0 ? 'danger' : 'success' }}">
+                    {{ count($alerts) > 0 ? count($alerts).' alert' : 'Sehat' }}
+                </span>
+            </div>
+            <div class="card-body">
+                @if(count($alerts) > 0)
+                    <div class="list-group list-group-flush">
+                        @foreach($alerts as $alert)
+                            <div class="list-group-item d-flex align-items-start justify-content-between">
+                                <div class="mr-3">
+                                    <div class="font-weight-bold text-{{ $alert['level'] }}">{{ $alert['title'] }}</div>
+                                    <div class="small text-muted">{{ $alert['detail'] }}</div>
+                                </div>
+                                <span class="badge badge-{{ $alert['level'] }} text-uppercase">{{ $alert['level'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="mb-0 text-success font-weight-bold">Semua metrik utama dalam kondisi baik.</p>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card shadow-sm h-100 border-0">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Aksi Cepat</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-wrap">
+                    <a href="{{ route('transactions.create') }}" class="btn btn-primary btn-sm mr-2 mb-2">
+                        <i class="fas fa-plus-circle mr-1"></i> Catat transaksi
+                    </a>
+                    <a href="{{ route('budgets.create') }}" class="btn btn-outline-primary btn-sm mr-2 mb-2">
+                        <i class="fas fa-calculator mr-1"></i> Buat anggaran
+                    </a>
+                    <a href="{{ route('goals.create') }}" class="btn btn-outline-success btn-sm mr-2 mb-2">
+                        <i class="fas fa-bullseye mr-1"></i> Tambah goal
+                    </a>
+                    <a href="{{ route('bank-integrations.create') }}" class="btn btn-outline-info btn-sm mr-2 mb-2">
+                        <i class="fas fa-university mr-1"></i> Sambungkan bank
+                    </a>
+                    <a href="{{ route('subscriptions.index') }}" class="btn btn-outline-warning btn-sm mr-2 mb-2">
+                        <i class="fas fa-sync-alt mr-1"></i> Tinjau langganan
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Content Row -->
@@ -292,7 +504,7 @@
                                             <td>{{ $projection['date'] }}</td>
                                             <td class="text-success">Rp {{ number_format($projection['projected_income'], 0, ',', '.') }}</td>
                                             <td class="text-danger">Rp {{ number_format($projection['projected_expense'], 0, ',', '.') }}</td>
-                                            <td class="font-weight-bold ${{ $projection['projected_net'] >= 0 ? 'text-success' : 'text-danger' }}">
+                                            <td class="font-weight-bold {{ $projection['projected_net'] >= 0 ? 'text-success' : 'text-danger' }}">
                                                 Rp {{ number_format($projection['projected_net'], 0, ',', '.') }}
                                             </td>
                                         </tr>
@@ -322,7 +534,7 @@
                                             <td>{{ $projection['period'] }}</td>
                                             <td class="text-success">Rp {{ number_format($projection['projected_income'], 0, ',', '.') }}</td>
                                             <td class="text-danger">Rp {{ number_format($projection['projected_expense'], 0, ',', '.') }}</td>
-                                            <td class="font-weight-bold ${{ $projection['projected_net'] >= 0 ? 'text-success' : 'text-danger' }}">
+                                            <td class="font-weight-bold {{ $projection['projected_net'] >= 0 ? 'text-success' : 'text-danger' }}">
                                                 Rp {{ number_format($projection['projected_net'], 0, ',', '.') }}
                                             </td>
                                         </tr>
@@ -350,7 +562,7 @@
                                             <td>{{ $projection['month'] }}</td>
                                             <td class="text-success">Rp {{ number_format($projection['projected_income'], 0, ',', '.') }}</td>
                                             <td class="text-danger">Rp {{ number_format($projection['projected_expense'], 0, ',', '.') }}</td>
-                                            <td class="font-weight-bold ${{ $projection['projected_net'] >= 0 ? 'text-success' : 'text-danger' }}">
+                                            <td class="font-weight-bold {{ $projection['projected_net'] >= 0 ? 'text-success' : 'text-danger' }}">
                                                 Rp {{ number_format($projection['projected_net'], 0, ',', '.') }}
                                             </td>
                                         </tr>

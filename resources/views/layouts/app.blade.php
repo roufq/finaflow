@@ -22,6 +22,16 @@
     <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
 
     <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #f8f9fc;
+        }
+
         /* Custom scrollbar styles for minimalist elegant look */
         ::-webkit-scrollbar {
             width: 6px;
@@ -51,11 +61,51 @@
         #accordionSidebar {
             scrollbar-width: thin;
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+            height: 100vh;
+            overflow: hidden;
+            overflow-x: hidden;
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
+            display: flex;
+            flex-direction: column;
         }
 
         #content-wrapper {
             scrollbar-width: thin;
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+            flex: 1;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #pageContent {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+
+        #pageContent.content-loading::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(1px);
+            z-index: 999;
         }
 
         /* Collapsible sidebar functionality */
@@ -152,6 +202,83 @@
         .sidebar.collapsed #sidebarToggle i {
             transform: rotate(180deg);
         }
+
+        #pageContent.content-loading {
+            position: relative;
+        }
+
+        #pageContent.content-loading::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(1px);
+            z-index: 999;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            z-index: 1035;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        body.sidebar-open .sidebar-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        body.sidebar-open {
+            overflow: hidden;
+        }
+
+        @media (max-width: 991.98px) {
+            #wrapper {
+                flex-direction: column;
+            }
+
+            #accordionSidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 260px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1040;
+            }
+
+            body.sidebar-open #accordionSidebar,
+            #accordionSidebar.mobile-open {
+                transform: translateX(0);
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4);
+            }
+
+            #content-wrapper {
+                width: 100%;
+                min-height: 100vh;
+                height: auto;
+            }
+
+            .sidebar.collapsed .sidebar-brand-text,
+            .sidebar.collapsed .sidebar-heading,
+            .sidebar.collapsed .nav-link span {
+                display: inline-block !important;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .topbar .navbar-search {
+                width: 100%;
+            }
+
+            .topbar .navbar-search .input-group {
+                width: 100%;
+            }
+        }
     </style>
 
 </head>
@@ -162,7 +289,7 @@
     <div id="wrapper" class="d-flex" style="min-height: 100vh;">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="flex-shrink: 0; height: 100vh; overflow-y: auto;">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style="flex-shrink: 0;">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
@@ -172,242 +299,244 @@
                 <div class="sidebar-brand-text mx-3">FinaFlow</div>
             </a>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+            <div class="sidebar-scroll">
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ route('dashboard') }}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>{{ __('dashboard.title') }}</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Financial Management
-            </div>
-
-            <!-- Nav Item - Settings -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('settings.index') }}">
-                    <i class="fas fa-fw fa-cogs"></i>
-                    <span>{{ __('navigation.settings') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Privacy Settings -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('privacy.settings') }}">
-                    <i class="fas fa-fw fa-shield-alt"></i>
-                    <span>{{ __('navigation.privacy_settings') }}</span></a>
-            </li>
-
-            <!-- Nav Item - AI Insights -->
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ route('insights.index') }}">
-                      <i class="fas fa-fw fa-brain"></i>
-                      <span>{{ __('navigation.ai_insights') }}</span></a>
-              </li>
-
-              <!-- Nav Item - Custom Reporting -->
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ route('reporting.dashboard') }}">
-                      <i class="fas fa-fw fa-chart-area"></i>
-                      <span>{{ __('navigation.custom_reporting') }}</span></a>
-              </li>
-
-              <!-- Nav Item - Financial Education -->
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ route('education.index') }}">
-                      <i class="fas fa-fw fa-graduation-cap"></i>
-                      <span>{{ __('navigation.financial_education') }}</span></a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ route('coaching.index') }}">
-                      <i class="fas fa-fw fa-hands-helping"></i>
-                      <span>{{ __('navigation.financial_coaching') }}</span></a>
-              </li>
-
-            <!-- Nav Item - Categories -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('categories.index') }}">
-                    <i class="fas fa-fw fa-tags"></i>
-                    <span>{{ __('navigation.categories') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Accounts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('accounts.index') }}">
-                    <i class="fas fa-fw fa-wallet"></i>
-                    <span>{{ __('navigation.accounts') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Transactions -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('transactions.index') }}">
-                    <i class="fas fa-fw fa-exchange-alt"></i>
-                    <span>{{ __('transactions.title') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Transfers -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('transfers.index') }}">
-                    <i class="fas fa-fw fa-random"></i>
-                    <span>{{ __('navigation.transfers') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Goals -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('goals.index') }}">
-                    <i class="fas fa-fw fa-bullseye"></i>
-                    <span>{{ __('navigation.goals') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Budgets -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('budgets.index') }}">
-                    <i class="fas fa-fw fa-calculator"></i>
-                    <span>{{ __('navigation.budgets') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Investments -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('investments.index') }}">
-                    <i class="fas fa-fw fa-chart-line"></i>
-                    <span>{{ __('navigation.investments') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Assets -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('assets.index') }}">
-                    <i class="fas fa-fw fa-home"></i>
-                    <span>{{ __('navigation.assets') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Net Worth -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('net-worth.index') }}">
-                    <i class="fas fa-fw fa-chart-pie"></i>
-                    <span>{{ __('navigation.net_worth') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Analytics -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('analytics.index') }}">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>{{ __('navigation.analytics') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Debts -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('debts.index') }}">
-                    <i class="fas fa-fw fa-credit-card"></i>
-                    <span>{{ __('navigation.debts') }}</span></a>
-            </li>
-
-            <!-- Nav Item - Tags -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('tags.index') }}">
-                    <i class="fas fa-fw fa-hashtag"></i>
-                    <span>{{ __('navigation.tags') }}</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - Tax Documents -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('tax-documents.index') }}">
-                    <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                    <span>{{ __('navigation.tax_documents') }}</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Behavioral Finance
-            </div>
-
-            <!-- Nav Item - Behavioral -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('behavioral.index') }}">
-                    <i class="fas fa-fw fa-brain"></i>
-                    <span>{{ __('navigation.behavioral_insights') }}</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - Subscriptions -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('subscriptions.index') }}">
-                    <i class="fas fa-fw fa-sync-alt"></i>
-                    <span>{{ __('navigation.subscriptions') }}</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - Rewards -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('rewards.index') }}">
-                    <i class="fas fa-fw fa-gift"></i>
-                    <span>{{ __('navigation.rewards_loyalty') }}</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <div class="sidebar-heading">
-                Automation &amp; Integrations
-            </div>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('automations.index') }}">
-                    <i class="fas fa-fw fa-robot"></i>
-                    <span>{{ __('navigation.automations') }}</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('bank-integrations.index') }}">
-                    <i class="fas fa-fw fa-university"></i>
-                    <span>{{ __('navigation.bank_integrations') }}</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('api-integrations.index') }}">
-                    <i class="fas fa-fw fa-plug"></i>
-                    <span>{{ __('navigation.api_integrations') }}</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('integrations.voice-entry') }}">
-                    <i class="fas fa-fw fa-microphone"></i>
-                    <span>{{ __('navigation.integration_tools') }}</span>
-                </a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Family Finance
-            </div>
-
-            <!-- Nav Item - Family -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('family.index') }}">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>{{ __('navigation.family_finance') }}</span>
-                </a>
-            </li>
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('dashboard') }}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>{{ __('dashboard.title') }}</span></a>
+                </li>
 
                 <!-- Divider -->
-                <hr class="sidebar-divider d-none d-md-block">
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Financial Management
+                </div>
+
+                <!-- Nav Item - Settings -->
+                <li class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('settings.index') }}">
+                        <i class="fas fa-fw fa-cogs"></i>
+                        <span>{{ __('navigation.settings') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Privacy Settings -->
+                <li class="nav-item {{ request()->routeIs('privacy.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('privacy.settings') }}">
+                        <i class="fas fa-fw fa-shield-alt"></i>
+                        <span>{{ __('navigation.privacy_settings') }}</span></a>
+                </li>
+
+                <!-- Nav Item - AI Insights -->
+                  <li class="nav-item {{ request()->routeIs('insights.*') ? 'active' : '' }}">
+                      <a class="nav-link" href="{{ route('insights.index') }}">
+                          <i class="fas fa-fw fa-brain"></i>
+                          <span>{{ __('navigation.ai_insights') }}</span></a>
+                  </li>
+
+                  <!-- Nav Item - Custom Reporting -->
+                  <li class="nav-item {{ request()->routeIs('reporting.*') ? 'active' : '' }}">
+                      <a class="nav-link" href="{{ route('reporting.dashboard') }}">
+                          <i class="fas fa-fw fa-chart-area"></i>
+                          <span>{{ __('navigation.custom_reporting') }}</span></a>
+                  </li>
+
+                  <!-- Nav Item - Financial Education -->
+                  <li class="nav-item {{ request()->routeIs('education.*') ? 'active' : '' }}">
+                      <a class="nav-link" href="{{ route('education.index') }}">
+                          <i class="fas fa-fw fa-graduation-cap"></i>
+                          <span>{{ __('navigation.financial_education') }}</span></a>
+                  </li>
+                  <li class="nav-item {{ request()->routeIs('coaching.*') ? 'active' : '' }}">
+                      <a class="nav-link" href="{{ route('coaching.index') }}">
+                          <i class="fas fa-fw fa-hands-helping"></i>
+                          <span>{{ __('navigation.financial_coaching') }}</span></a>
+                  </li>
+
+                <!-- Nav Item - Categories -->
+                <li class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('categories.index') }}">
+                        <i class="fas fa-fw fa-tags"></i>
+                        <span>{{ __('navigation.categories') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Accounts -->
+                <li class="nav-item {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('accounts.index') }}">
+                        <i class="fas fa-fw fa-wallet"></i>
+                        <span>{{ __('navigation.accounts') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Transactions -->
+                <li class="nav-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('transactions.index') }}">
+                        <i class="fas fa-fw fa-exchange-alt"></i>
+                        <span>{{ __('transactions.title') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Transfers -->
+                <li class="nav-item {{ request()->routeIs('transfers.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('transfers.index') }}">
+                        <i class="fas fa-fw fa-random"></i>
+                        <span>{{ __('navigation.transfers') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Goals -->
+                <li class="nav-item {{ request()->routeIs('goals.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('goals.index') }}">
+                        <i class="fas fa-fw fa-bullseye"></i>
+                        <span>{{ __('navigation.goals') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Budgets -->
+                <li class="nav-item {{ request()->routeIs('budgets.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('budgets.index') }}">
+                        <i class="fas fa-fw fa-calculator"></i>
+                        <span>{{ __('navigation.budgets') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Investments -->
+                <li class="nav-item {{ request()->routeIs('investments.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('investments.index') }}">
+                        <i class="fas fa-fw fa-chart-line"></i>
+                        <span>{{ __('navigation.investments') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Assets -->
+                <li class="nav-item {{ request()->routeIs('assets.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('assets.index') }}">
+                        <i class="fas fa-fw fa-home"></i>
+                        <span>{{ __('navigation.assets') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Net Worth -->
+                <li class="nav-item {{ request()->routeIs('net-worth.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('net-worth.index') }}">
+                        <i class="fas fa-fw fa-chart-pie"></i>
+                        <span>{{ __('navigation.net_worth') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Analytics -->
+                <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('analytics.index') }}">
+                        <i class="fas fa-fw fa-chart-area"></i>
+                        <span>{{ __('navigation.analytics') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Debts -->
+                <li class="nav-item {{ request()->routeIs('debts.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('debts.index') }}">
+                        <i class="fas fa-fw fa-credit-card"></i>
+                        <span>{{ __('navigation.debts') }}</span></a>
+                </li>
+
+                <!-- Nav Item - Tags -->
+                <li class="nav-item {{ request()->routeIs('tags.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('tags.index') }}">
+                        <i class="fas fa-fw fa-hashtag"></i>
+                        <span>{{ __('navigation.tags') }}</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Tax Documents -->
+                <li class="nav-item {{ request()->routeIs('tax-documents.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('tax-documents.index') }}">
+                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                        <span>{{ __('navigation.tax_documents') }}</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Behavioral Finance
+                </div>
+
+                <!-- Nav Item - Behavioral -->
+                <li class="nav-item {{ request()->routeIs('behavioral.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('behavioral.index') }}">
+                        <i class="fas fa-fw fa-brain"></i>
+                        <span>{{ __('navigation.behavioral_insights') }}</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Subscriptions -->
+                <li class="nav-item {{ request()->routeIs('subscriptions.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('subscriptions.index') }}">
+                        <i class="fas fa-fw fa-sync-alt"></i>
+                        <span>{{ __('navigation.subscriptions') }}</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Rewards -->
+                <li class="nav-item {{ request()->routeIs('rewards.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('rewards.index') }}">
+                        <i class="fas fa-fw fa-gift"></i>
+                        <span>{{ __('navigation.rewards_loyalty') }}</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <div class="sidebar-heading">
+                    Automation &amp; Integrations
+                </div>
+
+                <li class="nav-item {{ request()->routeIs('automations.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('automations.index') }}">
+                        <i class="fas fa-fw fa-robot"></i>
+                        <span>{{ __('navigation.automations') }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('bank-integrations.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('bank-integrations.index') }}">
+                        <i class="fas fa-fw fa-university"></i>
+                        <span>{{ __('navigation.bank_integrations') }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('api-integrations.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('api-integrations.index') }}">
+                        <i class="fas fa-fw fa-plug"></i>
+                        <span>{{ __('navigation.api_integrations') }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('integrations.voice-entry') }}">
+                        <i class="fas fa-fw fa-microphone"></i>
+                        <span>{{ __('navigation.integration_tools') }}</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Family Finance
+                </div>
+
+                <!-- Nav Item - Family -->
+                <li class="nav-item {{ request()->routeIs('family.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('family.index') }}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>{{ __('navigation.family_finance') }}</span>
+                    </a>
+                </li>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
 
                 <!-- Sidebar Toggler (Sidebar) -->
                 <div class="text-center d-none d-md-inline">
@@ -420,7 +549,7 @@
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column flex-grow-1" style="overflow-y: auto; height: 100vh;">
+        <div id="content-wrapper" class="d-flex flex-column flex-grow-1">
 
             <!-- Main Content -->
             <div id="content">
@@ -481,8 +610,11 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::check() ? Auth::user()->name : 'Guest' }}</span>
+                                @php
+                                    $authAvatarUrl = Auth::user()?->avatar_path ? asset('storage/'.Auth::user()->avatar_path) : asset('img/undraw_profile.svg');
+                                @endphp
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="{{ $authAvatarUrl }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -491,15 +623,19 @@
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     {{ __('navigation.profile') }}
                                 </a>
-                                <a class="dropdown-item" href="{{ route('privacy.settings') }}">
-                                    <i class="fas fa-shield-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    {{ __('navigation.privacy_settings') }}
-                                </a>
-                                <a class="dropdown-item" href="{{ route('settings.index') }}">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    {{ __('navigation.settings') }}
-                                </a>
-                                <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{ route('privacy.settings') }}">
+                            <i class="fas fa-shield-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            {{ __('navigation.privacy_settings') }}
+                        </a>
+                        <a class="dropdown-item" href="{{ route('twofactor.setup') }}">
+                            <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Two-Factor Auth
+                        </a>
+                        <a class="dropdown-item" href="{{ route('settings.index') }}">
+                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                            {{ __('navigation.settings') }}
+                        </a>
+                                <a class="dropdown-item" href="{{ route('activity-log.index') }}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     {{ __('navigation.activity_log') }}
                                 </a>
@@ -520,7 +656,7 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
-                <div class="container-fluid" style="padding-bottom: 2rem;">
+                <div id="pageContent" class="container-fluid" style="padding-bottom: 2rem;">
                     @yield('content')
                 </div>
                 <!-- /.container-fluid -->
@@ -544,6 +680,8 @@
     </div>
     <!-- End of Page Wrapper -->
 
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
@@ -561,13 +699,137 @@
 
     <!-- Custom sidebar toggle script -->
     <script>
+        function updateSidebarActiveState(doc) {
+            const sidebarLinks = document.querySelectorAll('#accordionSidebar .nav-link');
+            sidebarLinks.forEach(link => link.parentElement.classList.remove('active'));
+
+            const newActiveLink = doc.querySelector('#accordionSidebar .nav-item.active .nav-link');
+            if (!newActiveLink) {
+                return;
+            }
+
+            const activeHref = newActiveLink.getAttribute('href');
+            sidebarLinks.forEach(link => {
+                if (link.getAttribute('href') === activeHref) {
+                    link.parentElement.classList.add('active');
+                }
+            });
+        }
+
+        function loadPage(url, pushToHistory = true) {
+            const contentContainer = document.getElementById('pageContent');
+
+            if (!contentContainer) {
+                window.location.href = url;
+                return;
+            }
+
+            contentContainer.classList.add('content-loading');
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to load content');
+                }
+
+                return response.text();
+            }).then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContent = doc.getElementById('pageContent');
+
+                if (!newContent) {
+                    window.location.href = url;
+                    return;
+                }
+
+                contentContainer.innerHTML = newContent.innerHTML;
+
+                const newTitle = doc.querySelector('title');
+                if (newTitle) {
+                    document.title = newTitle.textContent;
+                }
+
+                updateSidebarActiveState(doc);
+
+                if (pushToHistory) {
+                    history.pushState({ url }, '', url);
+                }
+
+                if (typeof contentContainer.scrollTo === 'function') {
+                    contentContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    contentContainer.scrollTop = 0;
+                }
+            }).catch(() => {
+                window.location.href = url;
+            }).finally(() => {
+                contentContainer.classList.remove('content-loading');
+            });
+        }
+
         $(document).ready(function() {
-            // Function to toggle sidebar
+            const $sidebar = $('#accordionSidebar');
+            const $sidebarOverlay = $('#sidebarOverlay');
+            const $body = $('body');
+
+            function isMobileView() {
+                return window.matchMedia('(max-width: 991.98px)').matches;
+            }
+
+            function openMobileSidebar() {
+                $body.addClass('sidebar-open sidebar-toggled');
+                $sidebar.addClass('mobile-open');
+            }
+
+            function closeMobileSidebar() {
+                $body.removeClass('sidebar-open sidebar-toggled');
+                $sidebar.removeClass('mobile-open');
+            }
+
             function toggleSidebar() {
-                $('#accordionSidebar').toggleClass('collapsed');
-                // Store the state in localStorage
-                const isCollapsed = $('#accordionSidebar').hasClass('collapsed');
+                if (isMobileView()) {
+                    if ($sidebar.hasClass('mobile-open')) {
+                        closeMobileSidebar();
+                    } else {
+                        openMobileSidebar();
+                    }
+
+                    return;
+                }
+
+                $sidebar.toggleClass('collapsed');
+                const isCollapsed = $sidebar.hasClass('collapsed');
                 localStorage.setItem('sidebarCollapsed', isCollapsed);
+                if (isCollapsed) {
+                    $body.addClass('sidebar-toggled');
+                } else {
+                    $body.removeClass('sidebar-toggled');
+                }
+            }
+
+            function applyStoredSidebarState() {
+                const storedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (storedCollapsed) {
+                    $sidebar.addClass('collapsed');
+                    $body.addClass('sidebar-toggled');
+                } else {
+                    $sidebar.removeClass('collapsed');
+                    $body.removeClass('sidebar-toggled');
+                }
+            }
+
+            function handleResponsiveSidebar() {
+                if (isMobileView()) {
+                    $sidebar.removeClass('collapsed');
+                    closeMobileSidebar();
+                } else {
+                    closeMobileSidebar();
+                    applyStoredSidebarState();
+                }
             }
 
             // Sidebar toggle button in sidebar
@@ -585,10 +847,44 @@
                 toggleSidebar();
             });
 
-            // Restore sidebar state on page load
-            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            if (sidebarCollapsed) {
-                $('#accordionSidebar').addClass('collapsed');
+            handleResponsiveSidebar();
+
+            $(window).on('resize', function() {
+                handleResponsiveSidebar();
+            });
+
+            $sidebarOverlay.on('click', function() {
+                closeMobileSidebar();
+            });
+
+            if (!history.state || !history.state.url) {
+                history.replaceState({ url: window.location.href }, '', window.location.href);
             }
+
+            $('#accordionSidebar').on('click', '.nav-link', function(event) {
+                if (event.ctrlKey || event.metaKey || event.shiftKey || event.which === 2 || this.target === '_blank') {
+                    return;
+                }
+
+                const href = this.getAttribute('href');
+
+                if (!href || href.startsWith('#')) {
+                    return;
+                }
+
+                event.preventDefault();
+                if (isMobileView()) {
+                    closeMobileSidebar();
+                }
+
+                loadPage(this.href);
+            });
+
+            window.addEventListener('popstate', function(event) {
+                if (event.state && event.state.url) {
+                    closeMobileSidebar();
+                    loadPage(event.state.url, false);
+                }
+            });
         });
     </script>

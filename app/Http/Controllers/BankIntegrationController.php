@@ -14,6 +14,7 @@ class BankIntegrationController extends Controller
     public function index()
     {
         $integrations = BankIntegration::where('user_id', Auth::id())->get();
+
         return view('bank-integrations.index', compact('integrations'));
     }
 
@@ -53,6 +54,8 @@ class BankIntegrationController extends Controller
             'notes' => $request->notes,
         ]);
 
+        $request->user()->logActivity('bank_integration_created', "Created integration {$request->bank_name}");
+
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration created successfully.');
     }
 
@@ -62,6 +65,7 @@ class BankIntegrationController extends Controller
     public function show(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
+
         return view('bank-integrations.show', compact('bankIntegration'));
     }
 
@@ -71,6 +75,7 @@ class BankIntegrationController extends Controller
     public function edit(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
+
         return view('bank-integrations.edit', compact('bankIntegration'));
     }
 
@@ -94,8 +99,10 @@ class BankIntegrationController extends Controller
 
         $bankIntegration->update($request->only([
             'bank_name', 'account_number', 'account_type', 'integration_type',
-            'credentials', 'settings', 'is_active', 'notes'
+            'credentials', 'settings', 'is_active', 'notes',
         ]));
+
+        $request->user()->logActivity('bank_integration_updated', "Updated integration {$bankIntegration->bank_name}");
 
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration updated successfully.');
     }
@@ -107,6 +114,8 @@ class BankIntegrationController extends Controller
     {
         $this->ensureOwner($bankIntegration);
         $bankIntegration->delete();
+
+        $request->user()->logActivity('bank_integration_deleted', "Deleted integration {$bankIntegration->bank_name}");
 
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration deleted successfully.');
     }
@@ -124,12 +133,12 @@ class BankIntegrationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => $result['message'],
-                'transactions_imported' => $result['transactions_imported']
+                'transactions_imported' => $result['transactions_imported'],
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => $result['message']
+                'message' => $result['message'],
             ], 500);
         }
     }
@@ -150,7 +159,7 @@ class BankIntegrationController extends Controller
             $path = $file->store('temp');
 
             // Parse CSV and import transactions
-            $transactions = $this->parseCsvFile(storage_path('app/' . $path));
+            $transactions = $this->parseCsvFile(storage_path('app/'.$path));
 
             // Check for duplicates
             $duplicates = $bankIntegration->findDuplicateTransactions($transactions);
@@ -161,18 +170,20 @@ class BankIntegrationController extends Controller
             // Clean up temp file
             \Storage::delete($path);
 
+            $request->user()->logActivity('bank_integration_csv_upload', "Imported CSV for {$bankIntegration->bank_name}");
+
             return response()->json([
                 'success' => true,
                 'imported' => $importResult['imported'],
                 'skipped' => $importResult['skipped'],
                 'duplicates' => count($duplicates),
-                'errors' => count($importResult['errors'])
+                'errors' => count($importResult['errors']),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'CSV upload failed: ' . $e->getMessage()
+                'message' => 'CSV upload failed: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -201,6 +212,7 @@ class BankIntegrationController extends Controller
         }
 
         fclose($handle);
+
         return $transactions;
     }
 

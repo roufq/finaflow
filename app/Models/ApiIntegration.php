@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
 class ApiIntegration extends Model
@@ -26,6 +25,7 @@ class ApiIntegration extends Model
         'is_active' => 'boolean',
         'rate_limit_remaining' => 'integer',
         'rate_limit_reset_at' => 'datetime',
+        'api_key' => 'encrypted',
     ];
 
     public function user(): BelongsTo
@@ -38,7 +38,7 @@ class ApiIntegration extends Model
      */
     public function syncData(): array
     {
-        if (!$this->is_active) {
+        if (! $this->is_active) {
             return ['success' => false, 'message' => 'Integration is not active'];
         }
 
@@ -67,15 +67,15 @@ class ApiIntegration extends Model
             return [
                 'success' => true,
                 'data' => $data,
-                'message' => "Successfully synced {$this->provider}"
+                'message' => "Successfully synced {$this->provider}",
             ];
 
         } catch (\Exception $e) {
-            \Log::error("API sync failed for {$this->provider}: " . $e->getMessage());
+            \Log::error("API sync failed for {$this->provider}: ".$e->getMessage());
 
             return [
                 'success' => false,
-                'message' => 'Sync failed: ' . $e->getMessage()
+                'message' => 'Sync failed: '.$e->getMessage(),
             ];
         }
     }
@@ -105,7 +105,7 @@ class ApiIntegration extends Model
                 'payment_history' => rand(1, 100),
                 'credit_utilization' => rand(1, 100),
                 'credit_age' => rand(1, 100),
-            ]
+            ],
         ];
 
         Cache::put($cacheKey, $data, now()->addHours(24));
@@ -134,18 +134,18 @@ class ApiIntegration extends Model
                 'sp500' => [
                     'value' => rand(4000, 5000),
                     'change' => rand(-50, 50),
-                    'change_percent' => rand(-2, 2)
+                    'change_percent' => rand(-2, 2),
                 ],
                 'nasdaq' => [
                     'value' => rand(13000, 16000),
                     'change' => rand(-100, 100),
-                    'change_percent' => rand(-2, 2)
-                ]
+                    'change_percent' => rand(-2, 2),
+                ],
             ],
             'currencies' => [
                 'usd_idr' => rand(14000, 16000),
-                'eur_usd' => rand(1, 2)
-            ]
+                'eur_usd' => rand(1, 2),
+            ],
         ];
 
         Cache::put($cacheKey, $data, now()->addMinutes(15));
@@ -175,15 +175,15 @@ class ApiIntegration extends Model
                 'summary' => 'Technology stocks showed strong performance today...',
                 'source' => 'Financial Times',
                 'published_at' => now()->subHours(2)->format('Y-m-d H:i:s'),
-                'url' => 'https://example.com/news/1'
+                'url' => 'https://example.com/news/1',
             ],
             [
                 'title' => 'Federal Reserve Signals Interest Rate Decision',
                 'summary' => 'The Federal Reserve indicated potential changes...',
                 'source' => 'Reuters',
                 'published_at' => now()->subHours(4)->format('Y-m-d H:i:s'),
-                'url' => 'https://example.com/news/2'
-            ]
+                'url' => 'https://example.com/news/2',
+            ],
         ];
 
         Cache::put($cacheKey, $news, now()->addHours(1));
@@ -216,22 +216,22 @@ class ApiIntegration extends Model
                 'condition' => $weatherConditions[array_rand($weatherConditions)],
                 'temperature' => $temperatures[array_rand($temperatures)],
                 'humidity' => rand(60, 90),
-                'last_updated' => now()->format('Y-m-d H:i:s')
+                'last_updated' => now()->format('Y-m-d H:i:s'),
             ],
             'forecast' => [
                 [
                     'date' => now()->addDay()->format('Y-m-d'),
                     'condition' => $weatherConditions[array_rand($weatherConditions)],
                     'temp_min' => rand(24, 28),
-                    'temp_max' => rand(29, 33)
+                    'temp_max' => rand(29, 33),
                 ],
                 [
                     'date' => now()->addDays(2)->format('Y-m-d'),
                     'condition' => $weatherConditions[array_rand($weatherConditions)],
                     'temp_min' => rand(24, 28),
-                    'temp_max' => rand(29, 33)
-                ]
-            ]
+                    'temp_max' => rand(29, 33),
+                ],
+            ],
         ];
 
         Cache::put($cacheKey, $data, now()->addHours(3));
@@ -244,12 +244,13 @@ class ApiIntegration extends Model
      */
     public function checkRateLimit(): bool
     {
-        if (!$this->rate_limit_reset_at || now()->isAfter($this->rate_limit_reset_at)) {
+        if (! $this->rate_limit_reset_at || now()->isAfter($this->rate_limit_reset_at)) {
             // Reset rate limit
             $this->update([
                 'rate_limit_remaining' => $this->getMaxRequests(),
-                'rate_limit_reset_at' => now()->addHour()
+                'rate_limit_reset_at' => now()->addHour(),
             ]);
+
             return true;
         }
 
@@ -271,7 +272,7 @@ class ApiIntegration extends Model
      */
     private function getMaxRequests(): int
     {
-        return match($this->provider) {
+        return match ($this->provider) {
             'credit_score' => 10,
             'investment_data' => 100,
             'news' => 50,

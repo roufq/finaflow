@@ -11,6 +11,7 @@ use App\Models\Subscription;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -37,6 +38,7 @@ class ProfileController extends Controller
             filled($user->email),
             filled(optional($settings)->currency_symbol),
             filled(optional($settings)->risk_profile),
+            filled($user->avatar_path),
         ];
 
         $profileCompletion = (int) round((collect($completionSegments)->filter()->count() / count($completionSegments)) * 100);
@@ -55,7 +57,19 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar_path) {
+                Storage::disk('public')->delete($user->avatar_path);
+            }
+
+            $data['avatar_path'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        $user->update($data);
+
+        $user->logActivity('profile_update', 'Updated profile information');
 
         return redirect()
             ->route('profile.show')
@@ -71,6 +85,8 @@ class ProfileController extends Controller
         $user->update([
             'password' => Hash::make($request->validated()['new_password']),
         ]);
+
+        $user->logActivity('password_update', 'Updated account password');
 
         return redirect()
             ->route('profile.show')

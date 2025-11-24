@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Transaction;
-use App\Models\Category;
 use App\Models\Account;
+use App\Models\Category;
+use App\Models\Debt;
+use App\Models\Transaction;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Get current month and year
-        $currentMonth = now()->month;
-        $currentYear = now()->year;
+        $validated = $request->validate([
+            'month' => 'nullable|integer|min:1|max:12',
+            'year' => 'nullable|integer|min:2000|max:2100',
+        ]);
+
+        $currentMonth = $validated['month'] ?? now()->month;
+        $currentYear = $validated['year'] ?? now()->year;
+        $periodDate = Carbon::createFromDate($currentYear, $currentMonth, 1);
 
         // Calculate total income and expense for current month
         $totalIncome = Transaction::where('type', 'income')
@@ -74,7 +81,7 @@ class DashboardController extends Controller
 
             $cashFlow[] = [
                 'month' => $date->format('M Y'),
-                'net' => $income - $expense
+                'net' => $income - $expense,
             ];
         }
 
@@ -90,6 +97,8 @@ class DashboardController extends Controller
         // Emergency Fund Tracking
         $emergencyFund = $this->calculateEmergencyFund();
 
+        $debtHealth = $this->calculateDebtHealth($totalIncome, $totalExpense);
+
         // Account Balances Summary
         $accountBalances = Account::active()->get();
 
@@ -104,7 +113,9 @@ class DashboardController extends Controller
             'burnRate',
             'cashRunway',
             'emergencyFund',
-            'accountBalances'
+            'debtHealth',
+            'accountBalances',
+            'periodDate'
         ));
     }
 
@@ -125,7 +136,7 @@ class DashboardController extends Controller
                 'date' => $date->format('M d'),
                 'projected_income' => $avgDailyIncome,
                 'projected_expense' => $avgDailyExpense,
-                'projected_net' => $avgDailyIncome - $avgDailyExpense
+                'projected_net' => $avgDailyIncome - $avgDailyExpense,
             ];
         }
 
@@ -139,11 +150,11 @@ class DashboardController extends Controller
             $avgWeeklyExpense = $this->getAverageWeeklyAmount('expense');
 
             $weeklyProjections[] = [
-                'week' => 'Week ' . ($i + 1),
-                'period' => $weekStart->format('M d') . ' - ' . $weekEnd->format('M d'),
+                'week' => 'Week '.($i + 1),
+                'period' => $weekStart->format('M d').' - '.$weekEnd->format('M d'),
                 'projected_income' => $avgWeeklyIncome,
                 'projected_expense' => $avgWeeklyExpense,
-                'projected_net' => $avgWeeklyIncome - $avgWeeklyExpense
+                'projected_net' => $avgWeeklyIncome - $avgWeeklyExpense,
             ];
         }
 
@@ -159,14 +170,50 @@ class DashboardController extends Controller
                 'month' => $month->format('M Y'),
                 'projected_income' => $avgMonthlyIncome,
                 'projected_expense' => $avgMonthlyExpense,
-                'projected_net' => $avgMonthlyIncome - $avgMonthlyExpense
+                'projected_net' => $avgMonthlyIncome - $avgMonthlyExpense,
             ];
         }
 
         return [
             'daily' => $projections,
             'weekly' => $weeklyProjections,
-            'monthly' => $monthlyProjections
+            'monthly' => $monthlyProjections,
+        ];
+    }
+
+    private function calculateDebtHealth(float $monthlyIncome, float $monthlyExpense): array
+    {
+        $totalDebtBalance = Debt::sum('current_balance');
+        $totalMinPayment = Debt::sum('minimum_payment');
+
+        $expenseToIncome = $monthlyIncome > 0 ? ($monthlyExpense / $monthlyIncome) * 100 : 0;
+        $debtToIncome = $monthlyIncome > 0 ? ($totalMinPayment / $monthlyIncome) * 100 : 0;
+        $savingsRate = $monthlyIncome > 0 ? (($monthlyIncome - $monthlyExpense) / $monthlyIncome) * 100 : 0;
+
+        $score = 100;
+        if ($savingsRate < 20) {
+            $score -= 10;
+        }
+        if ($expenseToIncome > 80) {
+            $score -= 15;
+        } elseif ($expenseToIncome > 70) {
+            $score -= 8;
+        }
+        if ($debtToIncome > 40) {
+            $score -= 20;
+        } elseif ($debtToIncome > 30) {
+            $score -= 12;
+        }
+
+        $score = max(0, min(100, round($score)));
+
+        return [
+            'total_debt_balance' => $totalDebtBalance,
+            'total_min_payment' => $totalMinPayment,
+            'expense_to_income' => round($expenseToIncome, 1),
+            'debt_to_income' => round($debtToIncome, 1),
+            'savings_rate' => round($savingsRate, 1),
+            'score' => $score,
         ];
     }
 
@@ -190,7 +237,7 @@ class DashboardController extends Controller
             $last6Months[] = [
                 'month' => $date->format('M Y'),
                 'net_cash_flow' => $net,
-                'burn_rate' => $net < 0 ? abs($net) : 0
+                'burn_rate' => $net < 0 ? abs($net) : 0,
             ];
         }
 
@@ -205,7 +252,7 @@ class DashboardController extends Controller
             'monthly_history' => $last6Months,
             'average_monthly' => $avgMonthlyBurnRate,
             'current' => $currentBurnRate,
-            'trend' => $this->calculateTrend($last6Months, 'burn_rate')
+            'trend' => $this->calculateTrend($last6Months, 'burn_rate'),
         ];
     }
 
@@ -229,7 +276,7 @@ class DashboardController extends Controller
         $scenarios = [
             'conservative' => $burnRate * 1.2, // 20% higher burn rate
             'optimistic' => $burnRate * 0.8,   // 20% lower burn rate
-            'current' => $burnRate
+            'current' => $burnRate,
         ];
 
         $runwayScenarios = [];
@@ -239,13 +286,13 @@ class DashboardController extends Controller
                 $runwayScenarios[$scenario] = [
                     'months' => round($months, 1),
                     'days' => round($months * 30),
-                    'date' => $rate > 0 ? now()->addMonths($months)->format('M Y') : 'Never'
+                    'date' => $rate > 0 ? now()->addMonths($months)->format('M Y') : 'Never',
                 ];
             } else {
                 $runwayScenarios[$scenario] = [
                     'months' => 'Infinite',
                     'days' => 'Infinite',
-                    'date' => 'Never'
+                    'date' => 'Never',
                 ];
             }
         }
@@ -256,7 +303,7 @@ class DashboardController extends Controller
             'runway_months' => $runwayMonths ? round($runwayMonths, 1) : null,
             'runway_days' => $runwayDays ? round($runwayDays) : null,
             'estimated_date' => $runwayMonths ? now()->addMonths($runwayMonths)->format('M Y') : 'Never',
-            'scenarios' => $runwayScenarios
+            'scenarios' => $runwayScenarios,
         ];
     }
 
@@ -302,7 +349,7 @@ class DashboardController extends Controller
             'coverage_percentage' => round($coveragePercentage, 1),
             'status' => $status,
             'status_text' => $statusText,
-            'accounts' => $emergencyAccounts
+            'accounts' => $emergencyAccounts,
         ];
     }
 
@@ -356,7 +403,9 @@ class DashboardController extends Controller
 
     private function calculateTrend($data, $field)
     {
-        if (count($data) < 2) return 'stable';
+        if (count($data) < 2) {
+            return 'stable';
+        }
 
         $firstHalf = array_slice($data, 0, count($data) / 2);
         $secondHalf = array_slice($data, count($data) / 2);
@@ -366,8 +415,13 @@ class DashboardController extends Controller
 
         $change = (($secondAvg - $firstAvg) / ($firstAvg ?: 1)) * 100;
 
-        if ($change > 10) return 'increasing';
-        if ($change < -10) return 'decreasing';
+        if ($change > 10) {
+            return 'increasing';
+        }
+        if ($change < -10) {
+            return 'decreasing';
+        }
+
         return 'stable';
     }
 }

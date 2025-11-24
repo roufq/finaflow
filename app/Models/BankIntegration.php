@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\Transaction;
 
 class BankIntegration extends Model
 {
@@ -60,7 +58,7 @@ class BankIntegration extends Model
                     break;
             }
 
-            if (!empty($transactions)) {
+            if (! empty($transactions)) {
                 $importResult = $this->importTransactions($transactions, true);
                 $transactionsImported = $importResult['imported'];
             } else {
@@ -77,15 +75,15 @@ class BankIntegration extends Model
             return [
                 'success' => true,
                 'transactions_imported' => $transactionsImported,
-                'message' => "Successfully synced {$this->bank_name}"
+                'message' => "Successfully synced {$this->bank_name}",
             ];
 
         } catch (\Exception $e) {
-            \Log::error("Bank sync failed for {$this->bank_name}: " . $e->getMessage());
+            \Log::error("Bank sync failed for {$this->bank_name}: ".$e->getMessage());
 
             return [
                 'success' => false,
-                'message' => 'Sync failed: ' . $e->getMessage()
+                'message' => 'Sync failed: '.$e->getMessage(),
             ];
         }
     }
@@ -127,7 +125,7 @@ class BankIntegration extends Model
             if ($existing) {
                 $duplicates[] = [
                     'new' => $transaction,
-                    'existing' => $existing
+                    'existing' => $existing,
                 ];
             }
         }
@@ -143,6 +141,8 @@ class BankIntegration extends Model
         $imported = 0;
         $skipped = 0;
         $errors = [];
+        $accountId = $this->findTargetAccountId();
+        $account = $accountId ? Account::find($accountId) : null;
 
         foreach ($transactions as $transactionData) {
             try {
@@ -156,31 +156,41 @@ class BankIntegration extends Model
 
                     if ($duplicate) {
                         $skipped++;
+
                         continue;
                     }
                 }
 
+                $type = $transactionData['type'] ?? 'expense';
+                $amount = $transactionData['amount'];
+                $description = $transactionData['description'];
+
                 // Create transaction
-                Transaction::create([
+                $transaction = Transaction::create([
                     'user_id' => $this->user_id,
                     'category_id' => $this->guessCategory($transactionData),
+                    'account_id' => $accountId,
                     'transaction_date' => $transactionData['date'],
-                    'type' => $transactionData['type'] ?? 'expense',
-                    'amount' => $transactionData['amount'],
-                    'description' => $transactionData['description'],
+                    'type' => $type,
+                    'amount' => $amount,
+                    'description' => $description,
                     'location_metadata' => [
                         'bank_integration_id' => $this->id,
                         'imported_at' => now(),
-                        'raw_data' => $transactionData
-                    ]
+                        'raw_data' => $transactionData,
+                    ],
                 ]);
+
+                if ($account) {
+                    $account->updateBalance($amount, $type === 'income' ? 'add' : 'subtract');
+                }
 
                 $imported++;
 
             } catch (\Exception $e) {
                 $errors[] = [
                     'transaction' => $transactionData,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
@@ -188,8 +198,29 @@ class BankIntegration extends Model
         return [
             'imported' => $imported,
             'skipped' => $skipped,
-            'errors' => $errors
+            'errors' => $errors,
         ];
+    }
+
+    private function findTargetAccountId(): ?int
+    {
+        $query = Account::active();
+
+        if ($this->account_number) {
+            $matched = $query->where('account_number', $this->account_number)->value('id');
+            if ($matched) {
+                return $matched;
+            }
+        }
+
+        if ($this->bank_name) {
+            $matched = $query->where('bank_name', $this->bank_name)->value('id');
+            if ($matched) {
+                return $matched;
+            }
+        }
+
+        return $query->value('id');
     }
 
     /**
@@ -229,7 +260,7 @@ class BankIntegration extends Model
     {
         $merchants = [
             'Indomaret', 'Alfamart', 'Grab', 'Gojek', 'Tokopedia',
-            'Shopee', 'Starbucks', 'KFC', 'Pertamina', 'BPJS'
+            'Shopee', 'Starbucks', 'KFC', 'Pertamina', 'BPJS',
         ];
 
         $transactions = [];

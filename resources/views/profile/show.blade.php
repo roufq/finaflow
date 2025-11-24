@@ -43,7 +43,10 @@
                     </span>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('profile.update') }}">
+                    @php
+                        $avatarUrl = $user->avatar_path ? asset('storage/'.$user->avatar_path) : asset('img/undraw_profile.svg');
+                    @endphp
+                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -67,6 +70,22 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avatar">Profile Photo</label>
+                            <div class="d-flex align-items-center">
+                                <img src="{{ $avatarUrl }}" alt="Profile avatar" class="rounded-circle mr-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div class="flex-fill">
+                                    <input type="file" id="avatar" name="avatar" class="form-control-file @error('avatar') is-invalid @enderror" accept="image/*">
+                                    <small class="text-muted d-block">JPG/PNG up to 2MB.</small>
+                                    @error('avatar')
+                                        <span class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">

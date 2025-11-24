@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AIInsightsController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\ApiIntegrationController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\ReportingController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TaxDocumentController;
+use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -40,11 +42,23 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
 
+// Two Factor Auth
+Route::middleware('auth')->group(function () {
+    Route::get('/twofactor/setup', [TwoFactorController::class, 'showSetup'])->name('twofactor.setup');
+    Route::post('/twofactor/enable', [TwoFactorController::class, 'enable'])->name('twofactor.enable');
+    Route::post('/twofactor/disable', [TwoFactorController::class, 'disable'])->name('twofactor.disable');
+    Route::post('/twofactor/backup/regenerate', [TwoFactorController::class, 'regenerateBackupCodes'])->name('twofactor.backup.regenerate');
+});
+
+Route::get('/twofactor/challenge', [TwoFactorController::class, 'showChallenge'])->name('twofactor.challenge');
+Route::post('/twofactor/challenge', [TwoFactorController::class, 'verifyChallenge'])->name('twofactor.challenge.verify');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/security', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
     Route::resource('settings', \App\Http\Controllers\SettingController::class);
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);

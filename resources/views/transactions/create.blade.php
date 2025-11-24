@@ -14,6 +14,15 @@
             <form action="{{ route('transactions.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
+                    <label for="account_id">Account</label>
+                    <select class="form-control" id="account_id" name="account_id" required>
+                        <option value="">Select Account</option>
+                        @foreach($accounts as $account)
+                        <option value="{{ $account->id }}" {{ old('account_id') == $account->id ? 'selected' : '' }}>{{ $account->name }} ({{ $account->type_label }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="category_id">Category</label>
                     <select class="form-control" id="category_id" name="category_id" required>
                         <option value="">Select Category</option>

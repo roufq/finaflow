@@ -293,6 +293,14 @@ php artisan route:clear
 php artisan view:clear
 ```
 
+### Perintah tambahan
+- `php artisan bank:sync-integrations` — Sinkronisasi transaksi & saldo integrasi bank aktif (juga berjalan via scheduler hourly).
+
+### Two-Factor Authentication (TOTP)
+- Setup: login → menu profil → Two-Factor Auth (`/twofactor/setup`), scan QR di aplikasi authenticator, masukkan kode 6 digit untuk aktivasi. Backup codes tersedia di halaman yang sama.
+- Login: jika 2FA aktif dan perangkat belum diingat, masukkan kode 6 digit atau backup code. Centang “Remember this device” untuk skip OTP 30 hari.
+- Jika QR gagal dimuat, gunakan secret/URI yang ditampilkan untuk menambah akun di aplikasi authenticator.
+
 ## 📱 API Endpoints
 
 Aplikasi ini menggunakan RESTful routes Laravel dengan middleware auth:

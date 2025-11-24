@@ -2,13 +2,48 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Transactions</h1>
-        <div>
-            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" data-toggle="modal" data-target="#receiptModal">
+    <div class="d-sm-flex align-items-start justify-content-between flex-wrap mb-4">
+        <div class="mb-2">
+            <h1 class="h3 mb-0 text-gray-800">Transactions</h1>
+            @if(request('search') || request('type') || request('account_id') || request('start_date') || request('end_date'))
+                <div class="small text-muted">
+                    Filter aktif:
+                    @if(request('search')) <span class="badge badge-light">Cari: "{{ request('search') }}"</span> @endif
+                    @if(request('type')) <span class="badge badge-light">Tipe: {{ request('type') }}</span> @endif
+                    @if(request('account_id')) <span class="badge badge-light">Akun: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}</span> @endif
+                    @if(request('start_date')) <span class="badge badge-light">Dari: {{ request('start_date') }}</span> @endif
+                    @if(request('end_date')) <span class="badge badge-light">Sampai: {{ request('end_date') }}</span> @endif
+                </div>
+            @endif
+        </div>
+        <div class="d-flex flex-wrap align-items-start">
+            <form class="form-inline flex-wrap mr-2 mb-2" method="GET" action="{{ route('transactions.index') }}">
+                <div class="input-group input-group-sm mr-2 mb-2" style="min-width: 240px;">
+                    <input type="text" name="search" class="form-control" placeholder="Cari transaksi/kategori/nominal..." value="{{ request('search') }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                <select name="type" class="form-control form-control-sm mr-2 mb-2">
+                    <option value="">Semua tipe</option>
+                    <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Income</option>
+                    <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
+                </select>
+                <select name="account_id" class="form-control form-control-sm mr-2 mb-2">
+                    <option value="">Semua akun</option>
+                    @foreach($accounts as $account)
+                        <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
+                    @endforeach
+                </select>
+                <input type="date" name="start_date" class="form-control form-control-sm mr-2 mb-2" value="{{ request('start_date') }}" placeholder="Dari">
+                <input type="date" name="end_date" class="form-control form-control-sm mr-2 mb-2" value="{{ request('end_date') }}" placeholder="Sampai">
+                <button class="btn btn-outline-secondary btn-sm mb-2 mr-2" type="submit">Terapkan</button>
+                <a href="{{ route('transactions.index') }}" class="btn btn-link btn-sm mb-2">Reset</a>
+            </form>
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm mr-2 mb-2" data-toggle="modal" data-target="#receiptModal">
                 <i class="fas fa-camera fa-sm text-white-50"></i> Scan Receipt
             </button>
-            <a href="{{ route('transactions.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <a href="{{ route('transactions.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mb-2">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Add Transaction
             </a>
         </div>
@@ -25,6 +60,7 @@
                         <tr>
                             <th>No</th>
                             <th>Date</th>
+                            <th>Account</th>
                             <th>Category</th>
                             <th>Type</th>
                             <th>Amount</th>
@@ -37,6 +73,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $transaction->transaction_date->format('Y-m-d') }}</td>
+                            <td>{{ $transaction->account->name ?? '—' }}</td>
                             <td>{{ $transaction->category->name }}</td>
                             <td>{{ $transaction->type }}</td>
                             <td>{{ $transaction->amount }}</td>
