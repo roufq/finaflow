@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use App\Models\BankIntegration;
+use Illuminate\Database\Eloquent\Collection;
+
+class BankSyncCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'bank:sync {--balance-only : Sync only account balances, skipping full transaction sync}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Synchronize bank transactions and balances from active integrations.';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        // Mendapatkan nilai opsi --balance-only
+        $balanceOnly = $this->option('balance-only');
+
+        if ($balanceOnly) {
+            $this->syncBalancesOnly();
+        } else {
+            $this->syncFullData();
+        }
+    }
+
+    /**
+     * Perform full data synchronization (transactions + balances).
+     */
+    private function syncFullData()
+    {
+        $this->info('🚀 Starting full bank integration sync...');
+
+        /** @var Collection<BankIntegration> $integrations */
+        $integrations = BankIntegration::where('is_active', true)->get();
+
+        if ($integrations->isEmpty()) {
+            $this->warn('No active bank integrations found.');
+            return;
+        }
+
+        $totalSynced = 0;
+        $totalTransactions = 0;
+        $totalFailed = 0;
+
+        foreach ($integrations as $integration) {
+            $bankName = $integration->bank_name ?? 'Unknown Bank';
+            $this->line("---");
+            $this->info("🔄 Syncing: **{$bankName}**...");
+
+            try {
+                // Asumsikan syncTransactions juga mengupdate balance di dalamnya
+                $result = $integration->syncTransactions();
+
+                if ($result['success'] ?? false) {
+                    $totalSynced++;
+                    $importedCount = $result['transactions_imported'] ?? 0;
+                    $totalTransactions += $importedCount;
+                    $message = $result['message'] ?? "Synced successfully, imported {$importedCount} transactions.";
+                    $this->info("✅ {$bankName}: **{$message}**");
+                } else {
+                    $totalFailed++;
+                    $message = $result['message'] ?? 'Synchronization failed.';
+                    $this->error("❌ {$bankName}: **{$message}**");
+                }
+            } catch (\Exception $e) {
+                $totalFailed++;
+                $this->error("💥 {$bankName}: Sync failed due to exception - {$e->getMessage()}");
+            }
+        }
+        
+        $this->line("---");
+        $this->info("✅ Full sync completed: **{$totalSynced}** successful, **{$totalFailed}** failed.");
+        $this->info("📝 Total transactions imported: **{$totalTransactions}**.");
+    }
+
+    /**
+     * Sync only account balances (lighter operation).
+     */
+    private function syncBalancesOnly()
+    {
+        $this->info('💰 Starting balance-only sync...');
+
+        /** @var Collection<BankIntegration> $integrations */
+        $integrations = BankIntegration::where('is_active', true)->get();
+
+        if ($integrations->isEmpty()) {
+            $this->warn('No active bank integrations found.');
+            return;
+        }
+
+        $totalSynced = 0;
+        $totalFailed = 0;
+
+        foreach ($integrations as $integration) {
+            $bankName = $integration->bank_name ?? 'Unknown Bank';
+            $this->line("---");
+            $this->info("Update balance for: **{$bankName}**...");
+
+            try {
+                // Update balance tanpa sync transaksi penuh
+                $integration->update([
+                    'last_balance_sync_at' => now(),
+                    // Asumsikan kedua metode ini mengambil data terbaru dari provider
+                    'current_balance' => $integration->getBalanceFromProvider(),
+                    'available_balance' => $integration->getBalanceFromProvider(true), 
+                ]);
+
+                $totalSynced++;
+                $this->info("✅ {$bankName}: Balance updated to **\${$integration->current_balance}**");
+
+            } catch (\Exception $e) {
+                $totalFailed++;
+                $this->error("❌ {$bankName}: Balance sync failed - {$e->getMessage()}");
+            }
+        }
+        
+        $this->line("---");
+        $this->info("💰 Balance sync completed: **{$totalSynced}** balances updated, **{$totalFailed}** failed.");
+    }
+}

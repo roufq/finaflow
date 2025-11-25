@@ -53,6 +53,9 @@ class BankIntegration extends Model
                 case 'csv':
                     $transactions = $this->syncViaCsv();
                     break;
+                case 'ofx':
+                    $transactions = $this->syncViaOfx();
+                    break;
                 case 'manual':
                     // Manual sync - no automatic import
                     break;
@@ -103,34 +106,46 @@ class BankIntegration extends Model
      */
     private function syncViaCsv(): array
     {
-        \Log::info("CSV sync attempted for {$this->bank_name}");
+        $csvPath = $this->settings['csv_file_path'] ?? null;
 
-        return $this->generateSimulatedTransactions(rand(3, 8));
+        if (!$csvPath || !file_exists(storage_path('app/' . $csvPath))) {
+            throw new \Exception("CSV file not found or not configured");
+        }
+
+        $parser = app(\App\Services\CsvParser::class);
+        $result = $parser->parseFile(storage_path('app/' . $csvPath));
+
+        if (!$result['success']) {
+            throw new \Exception("CSV parsing failed: " . ($result['error'] ?? 'Unknown error'));
+        }
+
+        return $result['transactions'];
     }
 
     /**
-     * Check for duplicate transactions
+     * Sync via OFX file
      */
-    public function findDuplicateTransactions(array $transactions): array
+    private function syncViaOfx(): array
     {
-        $duplicates = [];
+        $ofxPath = $this->settings['ofx_file_path'] ?? null;
 
-        foreach ($transactions as $transaction) {
-            $existing = Transaction::where('user_id', $this->user_id)
-                ->where('transaction_date', $transaction['date'])
-                ->where('amount', $transaction['amount'])
-                ->where('description', $transaction['description'])
-                ->first();
-
-            if ($existing) {
-                $duplicates[] = [
-                    'new' => $transaction,
-                    'existing' => $existing,
-                ];
-            }
+        if (!$ofxPath || !file_exists(storage_path('app/' . $ofxPath))) {
+            throw new \Exception("OFX file not found or not configured");
         }
 
-        return $duplicates;
+        $ofxContent = file_get_contents(storage_path('app/' . $ofxPath));
+        if (!$ofxContent) {
+            throw new \Exception("Unable to read OFX file");
+        }
+
+        $parser = app(\App\Services\OfxParser::class);
+        $result = $parser->parse($ofxContent);
+
+        if (!empty($result['errors'])) {
+            \Log::warning("OFX parsing warnings for {$this->bank_name}: " . implode(', ', $result['errors']));
+        }
+
+        return $result['transactions'];
     }
 
     /**
@@ -141,8 +156,6 @@ class BankIntegration extends Model
         $imported = 0;
         $skipped = 0;
         $errors = [];
-        $accountId = $this->findTargetAccountId();
-        $account = $accountId ? Account::find($accountId) : null;
 
         foreach ($transactions as $transactionData) {
             try {
@@ -156,34 +169,19 @@ class BankIntegration extends Model
 
                     if ($duplicate) {
                         $skipped++;
-
                         continue;
                     }
                 }
 
-                $type = $transactionData['type'] ?? 'expense';
-                $amount = $transactionData['amount'];
-                $description = $transactionData['description'];
-
                 // Create transaction
-                $transaction = Transaction::create([
+                Transaction::create([
                     'user_id' => $this->user_id,
-                    'category_id' => $this->guessCategory($transactionData),
-                    'account_id' => $accountId,
+                    'account_id' => $this->account_id,
                     'transaction_date' => $transactionData['date'],
-                    'type' => $type,
-                    'amount' => $amount,
-                    'description' => $description,
-                    'location_metadata' => [
-                        'bank_integration_id' => $this->id,
-                        'imported_at' => now(),
-                        'raw_data' => $transactionData,
-                    ],
+                    'type' => $transactionData['type'] ?? 'expense',
+                    'amount' => $transactionData['amount'],
+                    'description' => $transactionData['description'],
                 ]);
-
-                if ($account) {
-                    $account->updateBalance($amount, $type === 'income' ? 'add' : 'subtract');
-                }
 
                 $imported++;
 
@@ -200,41 +198,6 @@ class BankIntegration extends Model
             'skipped' => $skipped,
             'errors' => $errors,
         ];
-    }
-
-    private function findTargetAccountId(): ?int
-    {
-        $query = Account::active();
-
-        if ($this->account_number) {
-            $matched = $query->where('account_number', $this->account_number)->value('id');
-            if ($matched) {
-                return $matched;
-            }
-        }
-
-        if ($this->bank_name) {
-            $matched = $query->where('bank_name', $this->bank_name)->value('id');
-            if ($matched) {
-                return $matched;
-            }
-        }
-
-        return $query->value('id');
-    }
-
-    /**
-     * Guess transaction category based on description
-     */
-    private function guessCategory(array $transactionData): ?int
-    {
-        $categorizer = app(\App\Services\TransactionCategorizer::class);
-
-        return $categorizer->guessCategoryId(
-            $transactionData['description'],
-            $transactionData['amount'],
-            $transactionData
-        );
     }
 
     /**

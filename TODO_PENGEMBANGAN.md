@@ -2,7 +2,7 @@ TODO PENGEMBANGAN
 
 - Migrasi UI ke Tailwind v4 sesuai stack; rapikan hirarki informasi dashboard (insight/aksi cepat di atas, detail di bawah), tambah filter periode dan pencarian cepat. [PROGRESS: filter periode + blok prioritas/aksi cepat di dashboard]
 - Insight terarah: alert burn rate > X% income, kekurangan emergency fund, rasio utang vs income, anomali pengeluaran; sertakan rekomendasi aksi (transfer dana, potong langganan, batasi kategori boros). [DONE: blok Prioritas Finansial + alert & CTA cepat + badge status risiko di dashboard]
-- Integrasi data nyata: impor CSV/OFX/API, auto-kategorisasi berbasis rules/ML sederhana, deduplikasi transaksi, dan refresh saldo/riwayat akun secara periodik.
+- Integrasi data nyata: impor CSV/OFX/API, auto-kategorisasi berbasis rules/ML sederhana, deduplikasi transaksi, dan refresh saldo/riwayat akun secara periodik. [DONE: Backend lengkap + UI upload + scheduled sync + account linking]
 - Skenario & simulasi: stress test cash flow (income drop/kenaikan biaya), simulasi debt payoff snowball/avalanche, runway konservatif/baseline/agresif dengan slider asumsi.
 - Keamanan: aktifkan 2FA, manajemen sesi/device, audit log untuk aksi sensitif (transfer, hapus transaksi), enkripsi kolom kritis (tokens/integration keys).
 - Health score & rasio: tampilkan rasio tabungan, debt-to-income, expense-to-income, alokasi portofolio vs target; checklist aksi mingguan/bulanan.

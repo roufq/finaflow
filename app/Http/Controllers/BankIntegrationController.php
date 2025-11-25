@@ -14,7 +14,6 @@ class BankIntegrationController extends Controller
     public function index()
     {
         $integrations = BankIntegration::where('user_id', Auth::id())->get();
-
         return view('bank-integrations.index', compact('integrations'));
     }
 
@@ -35,7 +34,7 @@ class BankIntegrationController extends Controller
             'bank_name' => 'required|string|max:255',
             'account_number' => 'nullable|string|max:255',
             'account_type' => 'required|in:checking,savings,credit_card',
-            'integration_type' => 'required|in:api,csv,manual',
+            'integration_type' => 'required|in:api,csv,ofx,manual',
             'credentials' => 'nullable|array',
             'settings' => 'nullable|array',
             'is_active' => 'boolean',
@@ -54,8 +53,6 @@ class BankIntegrationController extends Controller
             'notes' => $request->notes,
         ]);
 
-        $request->user()->logActivity('bank_integration_created', "Created integration {$request->bank_name}");
-
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration created successfully.');
     }
 
@@ -65,7 +62,6 @@ class BankIntegrationController extends Controller
     public function show(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
-
         return view('bank-integrations.show', compact('bankIntegration'));
     }
 
@@ -75,7 +71,6 @@ class BankIntegrationController extends Controller
     public function edit(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
-
         return view('bank-integrations.edit', compact('bankIntegration'));
     }
 
@@ -90,19 +85,23 @@ class BankIntegrationController extends Controller
             'bank_name' => 'required|string|max:255',
             'account_number' => 'nullable|string|max:255',
             'account_type' => 'required|in:checking,savings,credit_card',
-            'integration_type' => 'required|in:api,csv,manual',
+            'integration_type' => 'required|in:api,csv,ofx,manual',
             'credentials' => 'nullable|array',
             'settings' => 'nullable|array',
             'is_active' => 'boolean',
             'notes' => 'nullable|string',
         ]);
 
-        $bankIntegration->update($request->only([
-            'bank_name', 'account_number', 'account_type', 'integration_type',
-            'credentials', 'settings', 'is_active', 'notes',
-        ]));
-
-        $request->user()->logActivity('bank_integration_updated', "Updated integration {$bankIntegration->bank_name}");
+        $bankIntegration->update([
+            'bank_name' => $request->bank_name,
+            'account_number' => $request->account_number,
+            'account_type' => $request->account_type,
+            'integration_type' => $request->integration_type,
+            'credentials' => $request->credentials,
+            'settings' => $request->settings,
+            'is_active' => $request->boolean('is_active', true),
+            'notes' => $request->notes,
+        ]);
 
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration updated successfully.');
     }
@@ -113,15 +112,14 @@ class BankIntegrationController extends Controller
     public function destroy(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
-        $bankIntegration->delete();
 
-        $request->user()->logActivity('bank_integration_deleted', "Deleted integration {$bankIntegration->bank_name}");
+        $bankIntegration->delete();
 
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration deleted successfully.');
     }
 
     /**
-     * Sync transactions from bank
+     * Sync data from bank integration
      */
     public function sync(BankIntegration $bankIntegration)
     {
@@ -133,87 +131,58 @@ class BankIntegrationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => $result['message'],
-                'transactions_imported' => $result['transactions_imported'],
+                'data' => $result
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => $result['message'],
+                'message' => $result['message']
             ], 500);
         }
     }
 
     /**
-     * Upload CSV file for transaction import
+     * Upload and process OFX file
      */
-    public function uploadCsv(Request $request, BankIntegration $bankIntegration)
+    public function uploadOfx(Request $request, BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
 
         $request->validate([
-            'csv_file' => 'required|file|mimes:csv,txt|max:5120', // 5MB max
+            'ofx_file' => 'required|file|mimes:ofx,qfx|max:10240', // 10MB max
         ]);
 
         try {
-            $file = $request->file('csv_file');
-            $path = $file->store('temp');
+            $file = $request->file('ofx_file');
+            $fileName = 'ofx_' . $bankIntegration->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('ofx-files', $fileName);
 
-            // Parse CSV and import transactions
-            $transactions = $this->parseCsvFile(storage_path('app/'.$path));
+            // Update integration settings with file path
+            $settings = $bankIntegration->settings ?? [];
+            $settings['ofx_file_path'] = $filePath;
+            $bankIntegration->update(['settings' => $settings]);
 
-            // Check for duplicates
-            $duplicates = $bankIntegration->findDuplicateTransactions($transactions);
-
-            // Import transactions (skip duplicates by default)
-            $importResult = $bankIntegration->importTransactions($transactions, true);
-
-            // Clean up temp file
-            \Storage::delete($path);
-
-            $request->user()->logActivity('bank_integration_csv_upload', "Imported CSV for {$bankIntegration->bank_name}");
+            // Parse and validate the OFX file
+            $ofxContent = file_get_contents(storage_path('app/' . $filePath));
+            $parser = app(\App\Services\OfxParser::class);
+            $result = $parser->parse($ofxContent);
 
             return response()->json([
                 'success' => true,
-                'imported' => $importResult['imported'],
-                'skipped' => $importResult['skipped'],
-                'duplicates' => count($duplicates),
-                'errors' => count($importResult['errors']),
+                'message' => 'OFX file uploaded successfully',
+                'data' => [
+                    'file_path' => $filePath,
+                    'transactions_found' => count($result['transactions']),
+                    'errors' => $result['errors'],
+                ]
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'CSV upload failed: '.$e->getMessage(),
+                'message' => 'OFX upload failed: ' . $e->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Parse CSV file and extract transactions
-     */
-    private function parseCsvFile(string $filePath): array
-    {
-        $transactions = [];
-        $handle = fopen($filePath, 'r');
-
-        // Skip header row
-        fgetcsv($handle);
-
-        while (($data = fgetcsv($handle)) !== false) {
-            // Assuming CSV format: date,description,amount,type
-            if (count($data) >= 4) {
-                $transactions[] = [
-                    'date' => $data[0],
-                    'description' => $data[1],
-                    'amount' => (float) str_replace(['Rp', 'IDR', ',', '.'], '', $data[2]),
-                    'type' => $data[3] === 'credit' ? 'income' : 'expense',
-                ];
-            }
-        }
-
-        fclose($handle);
-
-        return $transactions;
     }
 
     /**
