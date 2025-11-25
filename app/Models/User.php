@@ -106,6 +106,14 @@ class User extends Authenticatable
         ]);
     }
 
+    /**
+     * Get the user's accounts.
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
+
     public function hasValidTwoFactorSecret(): bool
     {
         return $this->two_factor_enabled && ! empty($this->two_factor_secret);

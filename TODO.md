@@ -274,3 +274,14 @@ Mengembangkan aplikasi web manajemen keuangan pribadi yang komprehensif untuk me
 ### 12.3 Coach & Accountability Tools
 - [x] Fitur journaling keuangan (catatan refleksi, komitmen) yang tersinkron dengan kebiasaan/trigger
 - [x] Ekspor ringkasan kesehatan finansial yang siap dibagikan ke coach/HR sebagai bagian program financial wellness perusahaan besar
+
+## Completed Tasks
+- [x] Identified the error: `foreach() argument must be of type array|object, null given` in `resources/views/bank-integrations/create.blade.php` at line 20
+- [x] Found root cause: Missing `accounts` relationship in `User` model
+- [x] Added `accounts()` relationship method to `User` model
+
+## Pending Tasks
+- [ ] Test the bank integration create page to ensure `$accounts` is populated and foreach loop works
+- [ ] Verify account selection dropdown populates correctly
+- [ ] Clean up any redundant code or fix pre-existing errors (e.g., DB type hint)
+
