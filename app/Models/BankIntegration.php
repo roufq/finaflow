@@ -38,6 +38,11 @@ class BankIntegration extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
+    }
+
     /**
      * Sync transactions from bank
      */
