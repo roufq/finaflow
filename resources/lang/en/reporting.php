@@ -71,6 +71,8 @@ return [
     'messages' => [
         'report_created' => 'Report created successfully.',
         'widget_created' => 'Widget added successfully.',
+        'widget_updated' => 'Widget updated successfully.',
+        'widget_deleted' => 'Widget removed.',
         'layout_saved' => 'Layout updated.',
     ],
     'buttons' => [

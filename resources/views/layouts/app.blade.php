@@ -518,6 +518,31 @@
                     </a>
                 </li>
 
+                @role('admin')
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    Admin
+                </div>
+                <li class="nav-item {{ request()->routeIs('admin.education.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('admin.education.index') }}">
+                        <i class="fas fa-fw fa-book"></i>
+                        <span>Education Admin</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('admin.education-categories.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('admin.education-categories.index') }}">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Education Categories</span>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('admin.news.index') }}">
+                        <i class="fas fa-fw fa-newspaper"></i>
+                        <span>News Admin</span>
+                    </a>
+                </li>
+                @endrole
+
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -688,14 +713,15 @@
     </a>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
-    <script src="{{asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="{{asset('vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{{asset('js/sb-admin-2.min.js')}}"></script>
+    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
     <!-- Custom sidebar toggle script -->
     <script>
@@ -714,6 +740,56 @@
                     link.parentElement.classList.add('active');
                 }
             });
+        }
+
+        function executePageScripts(container) {
+            const scripts = Array.from(container.querySelectorAll('script'));
+
+            const loadScript = function (index) {
+                if (index >= scripts.length) {
+                    return;
+                }
+
+                const script = scripts[index];
+
+                if (script.src && document.querySelector(`script[src="${script.src}"]`)) {
+                    loadScript(index + 1);
+                    return;
+                }
+
+                const newScript = document.createElement('script');
+                newScript.async = false;
+
+                if (script.src) {
+                    newScript.src = script.src;
+                } else {
+                    newScript.textContent = script.textContent;
+                }
+
+                [...script.attributes].forEach((attribute) => {
+                    if (attribute.name === 'src' && script.src) {
+                        return;
+                    }
+
+                    newScript.setAttribute(attribute.name, attribute.value);
+                });
+
+                newScript.onload = function () {
+                    loadScript(index + 1);
+                };
+
+                newScript.onerror = function () {
+                    loadScript(index + 1);
+                };
+
+                document.body.appendChild(newScript);
+
+                if (!script.src) {
+                    loadScript(index + 1);
+                }
+            };
+
+            loadScript(0);
         }
 
         function loadPage(url, pushToHistory = true) {
@@ -747,6 +823,7 @@
                 }
 
                 contentContainer.innerHTML = newContent.innerHTML;
+                executePageScripts(contentContainer);
 
                 const newTitle = doc.querySelector('title');
                 if (newTitle) {
@@ -888,3 +965,8 @@
             });
         });
     </script>
+    @yield('scripts')
+
+</body>
+
+</html>

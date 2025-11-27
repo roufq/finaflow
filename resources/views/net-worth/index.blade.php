@@ -235,9 +235,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
 <script>
 // Asset Breakdown Chart
 var ctxAsset = document.getElementById("assetBreakdownChart");

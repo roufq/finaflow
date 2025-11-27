@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBankIntegrationRequest;
+use App\Http\Requests\UpdateBankIntegrationRequest;
 use App\Models\BankIntegration;
+use App\Services\EventTracker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +16,10 @@ class BankIntegrationController extends Controller
      */
     public function index()
     {
-        $integrations = BankIntegration::where('user_id', Auth::id())->get();
+        $integrations = BankIntegration::with('account')
+            ->where('user_id', Auth::id())
+            ->get();
+
         return view('bank-integrations.index', compact('integrations'));
     }
 
@@ -23,33 +29,22 @@ class BankIntegrationController extends Controller
     public function create()
     {
         $accounts = Auth::user()->accounts;
+
         return view('bank-integrations.create', compact('accounts'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreBankIntegrationRequest $request, EventTracker $events)
     {
-        $request->validate([
-            'account_id' => 'required|exists:accounts,id',
-            'bank_name' => 'required|string|max:255',
-            'account_number' => 'nullable|string|max:255',
-            'account_type' => 'required|in:checking,savings,credit_card',
-            'integration_type' => 'required|in:api,csv,ofx,manual',
-            'credentials' => 'nullable|array',
-            'settings' => 'nullable|array',
-            'is_active' => 'boolean',
-            'notes' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
-        // Filter out empty credentials
-        $credentials = $request->credentials;
+        $credentials = $validated['credentials'] ?? null;
         if ($credentials) {
             $credentials = array_filter($credentials, function ($value) {
-                return !empty($value) && $value !== '';
+                return ! empty($value) && $value !== '';
             });
-            // If all credentials are empty, set to null
             if (empty($credentials)) {
                 $credentials = null;
             }
@@ -57,16 +52,26 @@ class BankIntegrationController extends Controller
 
         BankIntegration::create([
             'user_id' => Auth::id(),
-            'account_id' => $request->account_id,
-            'bank_name' => $request->bank_name,
-            'account_number' => $request->account_number,
-            'account_type' => $request->account_type,
-            'integration_type' => $request->integration_type,
+            'account_id' => $validated['account_id'],
+            'bank_name' => $validated['bank_name'],
+            'account_number' => $validated['account_number'],
+            'account_type' => $validated['account_type'],
+            'integration_type' => $validated['integration_type'],
             'credentials' => $credentials,
-            'settings' => $request->settings,
+            'settings' => $validated['settings'] ?? null,
             'is_active' => $request->boolean('is_active', true),
-            'notes' => $request->notes,
+            'notes' => $validated['notes'] ?? null,
         ]);
+
+        $events->log(
+            'bank_integration.created',
+            [
+                'integration_type' => $validated['integration_type'],
+                'account_id' => $validated['account_id'],
+            ],
+            $request,
+            Auth::id()
+        );
 
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration created successfully.');
     }
@@ -77,6 +82,7 @@ class BankIntegrationController extends Controller
     public function show(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
+
         return view('bank-integrations.show', compact('bankIntegration'));
     }
 
@@ -87,51 +93,51 @@ class BankIntegrationController extends Controller
     {
         $this->ensureOwner($bankIntegration);
         $accounts = Auth::user()->accounts;
+
         return view('bank-integrations.edit', compact('bankIntegration', 'accounts'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BankIntegration $bankIntegration)
+    public function update(UpdateBankIntegrationRequest $request, BankIntegration $bankIntegration, EventTracker $events)
     {
         $this->ensureOwner($bankIntegration);
 
-        $request->validate([
-            'account_id' => 'required|exists:accounts,id',
-            'bank_name' => 'required|string|max:255',
-            'account_number' => 'nullable|string|max:255',
-            'account_type' => 'required|in:checking,savings,credit_card',
-            'integration_type' => 'required|in:api,csv,ofx,manual',
-            'credentials' => 'nullable|array',
-            'settings' => 'nullable|array',
-            'is_active' => 'boolean',
-            'notes' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
-        // Filter out empty credentials
-        $credentials = $request->credentials;
+        $credentials = $validated['credentials'] ?? null;
         if ($credentials) {
             $credentials = array_filter($credentials, function ($value) {
-                return !empty($value) && $value !== '';
+                return ! empty($value) && $value !== '';
             });
-            // If all credentials are empty, set to null
             if (empty($credentials)) {
                 $credentials = null;
             }
         }
 
         $bankIntegration->update([
-            'account_id' => $request->account_id,
-            'bank_name' => $request->bank_name,
-            'account_number' => $request->account_number,
-            'account_type' => $request->account_type,
-            'integration_type' => $request->integration_type,
+            'account_id' => $validated['account_id'],
+            'bank_name' => $validated['bank_name'],
+            'account_number' => $validated['account_number'],
+            'account_type' => $validated['account_type'],
+            'integration_type' => $validated['integration_type'],
             'credentials' => $credentials,
-            'settings' => $request->settings,
+            'settings' => $validated['settings'] ?? null,
             'is_active' => $request->boolean('is_active', true),
-            'notes' => $request->notes,
+            'notes' => $validated['notes'] ?? null,
         ]);
+
+        $events->log(
+            'bank_integration.updated',
+            [
+                'integration_type' => $validated['integration_type'],
+                'account_id' => $validated['account_id'],
+                'integration_id' => $bankIntegration->id,
+            ],
+            $request,
+            Auth::id()
+        );
 
         return redirect()->route('bank-integrations.index')->with('success', 'Bank integration updated successfully.');
     }
@@ -142,6 +148,16 @@ class BankIntegrationController extends Controller
     public function destroy(BankIntegration $bankIntegration)
     {
         $this->ensureOwner($bankIntegration);
+
+        app(EventTracker::class)->log(
+            'bank_integration.deleted',
+            [
+                'integration_id' => $bankIntegration->id,
+                'integration_type' => $bankIntegration->integration_type,
+            ],
+            request(),
+            Auth::id()
+        );
 
         $bankIntegration->delete();
 
@@ -161,12 +177,12 @@ class BankIntegrationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => $result['message'],
-                'data' => $result
+                'data' => $result,
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => $result['message']
+                'message' => $result['message'],
             ], 500);
         }
     }
@@ -184,7 +200,7 @@ class BankIntegrationController extends Controller
 
         try {
             $file = $request->file('ofx_file');
-            $fileName = 'ofx_' . $bankIntegration->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $fileName = 'ofx_'.$bankIntegration->id.'_'.time().'.'.$file->getClientOriginalExtension();
             $filePath = $file->storeAs('ofx-files', $fileName);
 
             // Update integration settings with file path
@@ -193,7 +209,7 @@ class BankIntegrationController extends Controller
             $bankIntegration->update(['settings' => $settings]);
 
             // Parse and validate the OFX file
-            $ofxContent = file_get_contents(storage_path('app/' . $filePath));
+            $ofxContent = file_get_contents(storage_path('app/'.$filePath));
             $parser = app(\App\Services\OfxParser::class);
             $result = $parser->parse($ofxContent);
 
@@ -204,15 +220,43 @@ class BankIntegrationController extends Controller
                     'file_path' => $filePath,
                     'transactions_found' => count($result['transactions']),
                     'errors' => $result['errors'],
-                ]
+                ],
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'OFX upload failed: ' . $e->getMessage()
+                'message' => 'OFX upload failed: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Upload and store CSV file
+     */
+    public function uploadCsv(Request $request, BankIntegration $bankIntegration)
+    {
+        $this->ensureOwner($bankIntegration);
+
+        $request->validate([
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:10240'],
+        ]);
+
+        $file = $request->file('csv_file');
+        $fileName = 'csv_'.$bankIntegration->id.'_'.time().'.'.$file->getClientOriginalExtension();
+        $filePath = $file->storeAs('csv-files', $fileName);
+
+        $settings = $bankIntegration->settings ?? [];
+        $settings['csv_file_path'] = $filePath;
+        $bankIntegration->update(['settings' => $settings]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'CSV file uploaded successfully',
+            'data' => [
+                'file_path' => $filePath,
+            ],
+        ]);
     }
 
     /**

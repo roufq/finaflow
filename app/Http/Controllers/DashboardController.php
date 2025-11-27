@@ -8,6 +8,7 @@ use App\Models\Debt;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -22,14 +23,17 @@ class DashboardController extends Controller
         $currentMonth = $validated['month'] ?? now()->month;
         $currentYear = $validated['year'] ?? now()->year;
         $periodDate = Carbon::createFromDate($currentYear, $currentMonth, 1);
+        $userId = Auth::id();
 
         // Calculate total income and expense for current month
         $totalIncome = Transaction::where('type', 'income')
+            ->where('user_id', $userId)
             ->whereYear('transaction_date', $currentYear)
             ->whereMonth('transaction_date', $currentMonth)
             ->sum('amount');
 
         $totalExpense = Transaction::where('type', 'expense')
+            ->where('user_id', $userId)
             ->whereYear('transaction_date', $currentYear)
             ->whereMonth('transaction_date', $currentMonth)
             ->sum('amount');
@@ -37,30 +41,28 @@ class DashboardController extends Controller
         $netBalance = $totalIncome - $totalExpense;
 
         // Income distribution by category
-        $incomeCategories = DB::select("
-            SELECT c.name, SUM(t.amount) as total
-            FROM transactions t
-            INNER JOIN categories c ON t.category_id = c.id
-            WHERE t.type = 'income'
-            AND t.user_id = ?
-            AND c.user_id = ?
-            AND YEAR(t.transaction_date) = ?
-            AND MONTH(t.transaction_date) = ?
-            GROUP BY c.name
-        ", [auth()->id(), auth()->id(), $currentYear, $currentMonth]);
+        $incomeCategories = DB::table('transactions as t')
+            ->selectRaw('c.name, SUM(t.amount) as total')
+            ->join('categories as c', 't.category_id', '=', 'c.id')
+            ->where('t.type', 'income')
+            ->where('t.user_id', $userId)
+            ->where('c.user_id', $userId)
+            ->whereYear('t.transaction_date', $currentYear)
+            ->whereMonth('t.transaction_date', $currentMonth)
+            ->groupBy('c.name')
+            ->get();
 
         // Expense distribution by category
-        $expenseCategories = DB::select("
-            SELECT c.name, SUM(t.amount) as total
-            FROM transactions t
-            INNER JOIN categories c ON t.category_id = c.id
-            WHERE t.type = 'expense'
-            AND t.user_id = ?
-            AND c.user_id = ?
-            AND YEAR(t.transaction_date) = ?
-            AND MONTH(t.transaction_date) = ?
-            GROUP BY c.name
-        ", [auth()->id(), auth()->id(), $currentYear, $currentMonth]);
+        $expenseCategories = DB::table('transactions as t')
+            ->selectRaw('c.name, SUM(t.amount) as total')
+            ->join('categories as c', 't.category_id', '=', 'c.id')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', $userId)
+            ->where('c.user_id', $userId)
+            ->whereYear('t.transaction_date', $currentYear)
+            ->whereMonth('t.transaction_date', $currentMonth)
+            ->groupBy('c.name')
+            ->get();
 
         // Cash flow for the last 12 months
         $cashFlow = [];
@@ -70,11 +72,13 @@ class DashboardController extends Controller
             $year = $date->year;
 
             $income = Transaction::where('type', 'income')
+                ->where('user_id', $userId)
                 ->whereYear('transaction_date', $year)
                 ->whereMonth('transaction_date', $date->month)
                 ->sum('amount');
 
             $expense = Transaction::where('type', 'expense')
+                ->where('user_id', $userId)
                 ->whereYear('transaction_date', $year)
                 ->whereMonth('transaction_date', $date->month)
                 ->sum('amount');
@@ -86,21 +90,21 @@ class DashboardController extends Controller
         }
 
         // Cash Flow Projections
-        $cashFlowProjections = $this->calculateCashFlowProjections();
+        $cashFlowProjections = $this->calculateCashFlowProjections($userId);
 
         // Burn Rate Calculations
-        $burnRate = $this->calculateBurnRate();
+        $burnRate = $this->calculateBurnRate($userId);
 
         // Cash Runway Predictions
-        $cashRunway = $this->calculateCashRunway();
+        $cashRunway = $this->calculateCashRunway($userId);
 
         // Emergency Fund Tracking
-        $emergencyFund = $this->calculateEmergencyFund();
+        $emergencyFund = $this->calculateEmergencyFund($userId);
 
-        $debtHealth = $this->calculateDebtHealth($totalIncome, $totalExpense);
+        $debtHealth = $this->calculateDebtHealth($totalIncome, $totalExpense, $userId);
 
         // Account Balances Summary
-        $accountBalances = Account::active()->get();
+        $accountBalances = Account::active()->where('user_id', $userId)->get();
 
         return view('dashboard', compact(
             'totalIncome',
@@ -119,7 +123,7 @@ class DashboardController extends Controller
         ));
     }
 
-    private function calculateCashFlowProjections()
+    private function calculateCashFlowProjections(int $userId)
     {
         $projections = [];
 
@@ -129,8 +133,8 @@ class DashboardController extends Controller
             $dayOfWeek = $date->dayOfWeek;
 
             // Get average daily income/expense based on historical data
-            $avgDailyIncome = $this->getAverageDailyAmount('income', $dayOfWeek);
-            $avgDailyExpense = $this->getAverageDailyAmount('expense', $dayOfWeek);
+            $avgDailyIncome = $this->getAverageDailyAmount('income', $dayOfWeek, $userId);
+            $avgDailyExpense = $this->getAverageDailyAmount('expense', $dayOfWeek, $userId);
 
             $projections[] = [
                 'date' => $date->format('M d'),
@@ -146,8 +150,8 @@ class DashboardController extends Controller
             $weekStart = now()->addWeeks($i)->startOfWeek();
             $weekEnd = $weekStart->copy()->endOfWeek();
 
-            $avgWeeklyIncome = $this->getAverageWeeklyAmount('income');
-            $avgWeeklyExpense = $this->getAverageWeeklyAmount('expense');
+            $avgWeeklyIncome = $this->getAverageWeeklyAmount('income', $userId);
+            $avgWeeklyExpense = $this->getAverageWeeklyAmount('expense', $userId);
 
             $weeklyProjections[] = [
                 'week' => 'Week '.($i + 1),
@@ -163,8 +167,8 @@ class DashboardController extends Controller
         for ($i = 0; $i < 6; $i++) {
             $month = now()->addMonths($i);
 
-            $avgMonthlyIncome = $this->getAverageMonthlyAmount('income');
-            $avgMonthlyExpense = $this->getAverageMonthlyAmount('expense');
+            $avgMonthlyIncome = $this->getAverageMonthlyAmount('income', $userId);
+            $avgMonthlyExpense = $this->getAverageMonthlyAmount('expense', $userId);
 
             $monthlyProjections[] = [
                 'month' => $month->format('M Y'),
@@ -181,10 +185,10 @@ class DashboardController extends Controller
         ];
     }
 
-    private function calculateDebtHealth(float $monthlyIncome, float $monthlyExpense): array
+    private function calculateDebtHealth(float $monthlyIncome, float $monthlyExpense, int $userId): array
     {
-        $totalDebtBalance = Debt::sum('current_balance');
-        $totalMinPayment = Debt::sum('minimum_payment');
+        $totalDebtBalance = Debt::where('user_id', $userId)->sum('current_balance');
+        $totalMinPayment = Debt::where('user_id', $userId)->sum('minimum_payment');
 
         $expenseToIncome = $monthlyIncome > 0 ? ($monthlyExpense / $monthlyIncome) * 100 : 0;
         $debtToIncome = $monthlyIncome > 0 ? ($totalMinPayment / $monthlyIncome) * 100 : 0;
@@ -217,18 +221,20 @@ class DashboardController extends Controller
         ];
     }
 
-    private function calculateBurnRate()
+    private function calculateBurnRate(int $userId)
     {
         // Calculate monthly burn rate (negative cash flow)
         $last6Months = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
             $income = Transaction::where('type', 'income')
+                ->where('user_id', $userId)
                 ->whereYear('transaction_date', $date->year)
                 ->whereMonth('transaction_date', $date->month)
                 ->sum('amount');
 
             $expense = Transaction::where('type', 'expense')
+                ->where('user_id', $userId)
                 ->whereYear('transaction_date', $date->year)
                 ->whereMonth('transaction_date', $date->month)
                 ->sum('amount');
@@ -256,13 +262,13 @@ class DashboardController extends Controller
         ];
     }
 
-    private function calculateCashRunway()
+    private function calculateCashRunway(int $userId)
     {
         // Get total cash available (sum of all account balances)
-        $totalCash = Account::active()->sum('balance');
+        $totalCash = Account::active()->where('user_id', $userId)->sum('balance');
 
         // Get average monthly burn rate
-        $burnRate = $this->calculateBurnRate()['average_monthly'];
+        $burnRate = $this->calculateBurnRate($userId)['average_monthly'];
 
         if ($burnRate > 0) {
             $runwayMonths = $totalCash / $burnRate;
@@ -307,19 +313,22 @@ class DashboardController extends Controller
         ];
     }
 
-    private function calculateEmergencyFund()
+    private function calculateEmergencyFund(int $userId)
     {
         // Get total emergency fund (accounts marked as savings or emergency)
         $emergencyAccounts = Account::active()
+            ->where('user_id', $userId)
             ->whereIn('type', ['savings', 'bank'])
-            ->where('name', 'like', '%emergency%')
-            ->orWhere('name', 'like', '%darurat%')
+            ->where(function ($query) {
+                $query->where('name', 'like', '%emergency%')
+                    ->orWhere('name', 'like', '%darurat%');
+            })
             ->get();
 
         $totalEmergencyFund = $emergencyAccounts->sum('balance');
 
         // Calculate recommended emergency fund (3-6 months of expenses)
-        $avgMonthlyExpense = $this->getAverageMonthlyAmount('expense');
+        $avgMonthlyExpense = $this->getAverageMonthlyAmount('expense', $userId);
         $recommendedMin = $avgMonthlyExpense * 3; // 3 months minimum
         $recommendedMax = $avgMonthlyExpense * 6; // 6 months maximum
 
@@ -353,7 +362,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getAverageDailyAmount($type, $dayOfWeek)
+    private function getAverageDailyAmount($type, $dayOfWeek, int $userId)
     {
         // Get transactions for the same day of week over last 3 months
         $amounts = [];
@@ -361,6 +370,7 @@ class DashboardController extends Controller
             $date = now()->subWeeks($i);
             if ($date->dayOfWeek === $dayOfWeek) {
                 $amount = Transaction::where('type', $type)
+                    ->where('user_id', $userId)
                     ->whereDate('transaction_date', $date->toDateString())
                     ->sum('amount');
                 $amounts[] = $amount;
@@ -370,7 +380,7 @@ class DashboardController extends Controller
         return count($amounts) > 0 ? array_sum($amounts) / count($amounts) : 0;
     }
 
-    private function getAverageWeeklyAmount($type)
+    private function getAverageWeeklyAmount($type, int $userId)
     {
         $amounts = [];
         for ($i = 0; $i < 12; $i++) { // Last 12 weeks
@@ -378,6 +388,7 @@ class DashboardController extends Controller
             $weekEnd = $weekStart->copy()->endOfWeek();
 
             $amount = Transaction::where('type', $type)
+                ->where('user_id', $userId)
                 ->whereBetween('transaction_date', [$weekStart, $weekEnd])
                 ->sum('amount');
             $amounts[] = $amount;
@@ -386,12 +397,13 @@ class DashboardController extends Controller
         return count($amounts) > 0 ? array_sum($amounts) / count($amounts) : 0;
     }
 
-    private function getAverageMonthlyAmount($type)
+    private function getAverageMonthlyAmount($type, int $userId)
     {
         $amounts = [];
         for ($i = 0; $i < 6; $i++) { // Last 6 months
             $date = now()->subMonths($i);
             $amount = Transaction::where('type', $type)
+                ->where('user_id', $userId)
                 ->whereYear('transaction_date', $date->year)
                 ->whereMonth('transaction_date', $date->month)
                 ->sum('amount');

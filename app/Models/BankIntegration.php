@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BankIntegration extends Model
 {
+    use UserScope;
+
     protected $fillable = [
         'user_id',
+        'account_id',
         'bank_name',
         'account_number',
         'account_type',
@@ -41,6 +46,11 @@ class BankIntegration extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function importLogs(): HasMany
+    {
+        return $this->hasMany(ImportLog::class);
     }
 
     /**
@@ -80,6 +90,17 @@ class BankIntegration extends Model
                 'available_balance' => $this->getBalanceFromProvider(true),
             ]);
 
+            ImportLog::create([
+                'user_id' => $this->user_id,
+                'bank_integration_id' => $this->id,
+                'status' => 'success',
+                'source' => $this->integration_type,
+                'message' => "Synced {$this->bank_name}",
+                'context' => [
+                    'transactions_imported' => $transactionsImported,
+                ],
+            ]);
+
             return [
                 'success' => true,
                 'transactions_imported' => $transactionsImported,
@@ -88,6 +109,15 @@ class BankIntegration extends Model
 
         } catch (\Exception $e) {
             \Log::error("Bank sync failed for {$this->bank_name}: ".$e->getMessage());
+
+            ImportLog::create([
+                'user_id' => $this->user_id,
+                'bank_integration_id' => $this->id,
+                'status' => 'failed',
+                'source' => $this->integration_type,
+                'message' => 'Sync failed: '.$e->getMessage(),
+                'context' => [],
+            ]);
 
             return [
                 'success' => false,
@@ -113,15 +143,15 @@ class BankIntegration extends Model
     {
         $csvPath = $this->settings['csv_file_path'] ?? null;
 
-        if (!$csvPath || !file_exists(storage_path('app/' . $csvPath))) {
-            throw new \Exception("CSV file not found or not configured");
+        if (! $csvPath || ! file_exists(storage_path('app/'.$csvPath))) {
+            throw new \Exception('CSV file not found or not configured');
         }
 
         $parser = app(\App\Services\CsvParser::class);
-        $result = $parser->parseFile(storage_path('app/' . $csvPath));
+        $result = $parser->parseFile(storage_path('app/'.$csvPath));
 
-        if (!$result['success']) {
-            throw new \Exception("CSV parsing failed: " . ($result['error'] ?? 'Unknown error'));
+        if (! $result['success']) {
+            throw new \Exception('CSV parsing failed: '.($result['error'] ?? 'Unknown error'));
         }
 
         return $result['transactions'];
@@ -134,20 +164,20 @@ class BankIntegration extends Model
     {
         $ofxPath = $this->settings['ofx_file_path'] ?? null;
 
-        if (!$ofxPath || !file_exists(storage_path('app/' . $ofxPath))) {
-            throw new \Exception("OFX file not found or not configured");
+        if (! $ofxPath || ! file_exists(storage_path('app/'.$ofxPath))) {
+            throw new \Exception('OFX file not found or not configured');
         }
 
-        $ofxContent = file_get_contents(storage_path('app/' . $ofxPath));
-        if (!$ofxContent) {
-            throw new \Exception("Unable to read OFX file");
+        $ofxContent = file_get_contents(storage_path('app/'.$ofxPath));
+        if (! $ofxContent) {
+            throw new \Exception('Unable to read OFX file');
         }
 
         $parser = app(\App\Services\OfxParser::class);
         $result = $parser->parse($ofxContent);
 
-        if (!empty($result['errors'])) {
-            \Log::warning("OFX parsing warnings for {$this->bank_name}: " . implode(', ', $result['errors']));
+        if (! empty($result['errors'])) {
+            \Log::warning("OFX parsing warnings for {$this->bank_name}: ".implode(', ', $result['errors']));
         }
 
         return $result['transactions'];
@@ -167,6 +197,7 @@ class BankIntegration extends Model
                 // Check for duplicates if enabled
                 if ($skipDuplicates) {
                     $duplicate = Transaction::where('user_id', $this->user_id)
+                        ->where('account_id', $this->account_id)
                         ->where('transaction_date', $transactionData['date'])
                         ->where('amount', $transactionData['amount'])
                         ->where('description', $transactionData['description'])
@@ -174,6 +205,7 @@ class BankIntegration extends Model
 
                     if ($duplicate) {
                         $skipped++;
+
                         continue;
                     }
                 }

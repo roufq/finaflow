@@ -19,7 +19,12 @@
                     <select name="account_id" id="account_id" class="form-control @error('account_id') is-invalid @enderror" required>
                         <option value="">-- Pilih Akun --</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->id }}" {{ old('account_id') == $account->id ? 'selected' : '' }}>
+                            <option
+                                value="{{ $account->id }}"
+                                data-bank-name="{{ $account->bank_name }}"
+                                data-account-number="{{ $account->account_number }}"
+                                {{ old('account_id') == $account->id ? 'selected' : '' }}
+                            >
                                 {{ $account->name }} ({{ $account->account_number ?? 'No Account Number' }})
                             </option>
                         @endforeach
@@ -147,6 +152,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const csvUpload = document.getElementById('csv-upload');
     const ofxUpload = document.getElementById('ofx-upload');
     const apiSettings = document.getElementById('api-settings');
+    const accountSelect = document.getElementById('account_id');
+    const bankNameInput = document.getElementById('bank_name');
+    const accountNumberInput = document.getElementById('account_number');
+
+    function autofillAccountDetails(force = false) {
+        const selectedOption = accountSelect.options[accountSelect.selectedIndex];
+        if (!selectedOption) {
+            return;
+        }
+
+        const bankName = selectedOption.dataset.bankName || '';
+        const accountNumber = selectedOption.dataset.accountNumber || '';
+
+        if (force || !bankNameInput.value) {
+            bankNameInput.value = bankName;
+        }
+        if (force || !accountNumberInput.value) {
+            accountNumberInput.value = accountNumber;
+        }
+    }
 
     function toggleUploadFields() {
         const selectedType = integrationTypeSelect.value;
@@ -170,9 +195,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     integrationTypeSelect.addEventListener('change', toggleUploadFields);
+    accountSelect.addEventListener('change', function() {
+        autofillAccountDetails(true);
+    });
 
     // Initialize on page load
     toggleUploadFields();
+    autofillAccountDetails();
 });
 </script>
 @endsection

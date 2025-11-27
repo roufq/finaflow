@@ -148,7 +148,12 @@
                                 <a href="{{ route('bank-integrations.show', $integration) }}" class="btn btn-info btn-sm">Lihat</a>
                                 <a href="{{ route('bank-integrations.edit', $integration) }}" class="btn btn-warning btn-sm">Edit</a>
                                 @if($integration->is_active)
-                                <button type="button" class="btn btn-success btn-sm sync-btn" data-id="{{ $integration->id }}" title="Sync Data">
+                                <button
+                                    type="button"
+                                    class="btn btn-success btn-sm sync-btn"
+                                    data-sync-url="{{ route('bank-integrations.sync', $integration) }}"
+                                    title="Sync Data"
+                                >
                                     <i class="fas fa-sync"></i>
                                 </button>
                                 @endif
@@ -207,12 +212,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     syncButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const integrationId = this.getAttribute('data-id');
-            syncIntegration(integrationId);
+            const syncUrl = this.getAttribute('data-sync-url');
+            syncIntegration(syncUrl);
         });
     });
 
-    function syncIntegration(integrationId) {
+    function syncIntegration(syncUrl) {
         const modal = new bootstrap.Modal(document.getElementById('syncModal'));
         const progressDiv = document.getElementById('sync-progress');
         const resultDiv = document.getElementById('sync-result');
@@ -223,19 +228,26 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.show();
 
         // Make sync request
-        fetch(`/bank-integrations/${integrationId}/sync`, {
+        fetch(syncUrl, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(async response => {
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                throw new Error('Invalid response');
+            }
+
             progressDiv.classList.add('d-none');
 
-            if (data.success) {
+            if (response.ok && data.success) {
                 resultDiv.innerHTML = `
                     <div class="alert alert-success">
                         <h6>Sinkronisasi Berhasil!</h6>
@@ -249,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 resultDiv.innerHTML = `
                     <div class="alert alert-danger">
                         <h6>Sinkronisasi Gagal</h6>
-                        <p>${data.message}</p>
+                        <p>${data.message || 'Terjadi kesalahan saat menyinkronkan.'}</p>
                     </div>
                 `;
             }
@@ -260,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="alert alert-danger">
                     <h6>Kesalahan Jaringan</h6>
                     <p>Terjadi kesalahan saat menyinkronkan. Silakan coba lagi.</p>
+                    <small class="text-muted">${error.message || ''}</small>
                 </div>
             `;
             console.error('Sync error:', error);

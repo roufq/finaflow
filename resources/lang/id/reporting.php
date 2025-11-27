@@ -71,6 +71,8 @@ return [
     'messages' => [
         'report_created' => 'Laporan berhasil dibuat.',
         'widget_created' => 'Widget berhasil ditambahkan.',
+        'widget_updated' => 'Widget berhasil diperbarui.',
+        'widget_deleted' => 'Widget berhasil dihapus.',
         'layout_saved' => 'Tata letak diperbarui.',
     ],
     'buttons' => [

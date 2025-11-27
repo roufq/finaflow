@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('import_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('bank_integration_id')->constrained()->onDelete('cascade');
+            $table->string('status'); // success, failed
+            $table->string('source')->nullable(); // api, csv, ofx, manual
+            $table->string('message')->nullable();
+            $table->json('context')->nullable(); // details: counts, errors
             $table->timestamps();
+
+            $table->index(['user_id', 'bank_integration_id']);
+            $table->index(['status', 'created_at']);
         });
     }
 

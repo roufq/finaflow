@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreWidgetRequest;
+use App\Http\Requests\UpdateWidgetRequest;
 use App\Models\Budget;
 use App\Models\Goal;
 use App\Models\Report;
@@ -80,14 +82,9 @@ class ReportingController extends Controller
             ->with('success', __('reporting.messages.report_created'));
     }
 
-    public function storeWidget(Request $request): RedirectResponse
+    public function storeWidget(StoreWidgetRequest $request): RedirectResponse|JsonResponse
     {
-        $data = $request->validate([
-            'type' => 'required|string|in:cash_flow,spending_category,goal_progress,budget_health,net_worth,custom',
-            'title' => 'nullable|string|max:255',
-            'report_id' => 'nullable|exists:reports,id',
-            'size' => 'nullable|in:small,medium,large',
-        ]);
+        $data = $request->validated();
 
         $reportId = $data['report_id'] ?? null;
         if ($reportId) {
@@ -112,7 +109,65 @@ class ReportingController extends Controller
             'size' => $data['size'] ?? 'medium',
         ]);
 
-        return back()->with('success', __('reporting.messages.widget_created'));
+        $message = __('reporting.messages.widget_created');
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message], 201);
+        }
+
+        return back()->with('success', $message);
+    }
+
+    public function updateWidget(UpdateWidgetRequest $request, Widget $widget): RedirectResponse|JsonResponse
+    {
+        if ($widget->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $config = $widget->config ?? [];
+        $validated = $request->validated();
+
+        if ($request->has('title')) {
+            $config['title'] = $validated['title'] ?? ($this->availableWidgets()[$widget->type]['title'] ?? ucfirst($widget->type));
+        }
+
+        if ($request->has('notes')) {
+            $config['notes'] = $validated['notes'] ?? null;
+        }
+
+        if ($request->has('filters')) {
+            $config['filters'] = $validated['filters'] ?? [];
+        }
+
+        $widget->update([
+            'size' => $validated['size'] ?? $widget->size,
+            'config' => $config,
+        ]);
+
+        $message = __('reporting.messages.widget_updated');
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message]);
+        }
+
+        return back()->with('success', $message);
+    }
+
+    public function destroyWidget(Request $request, Widget $widget): RedirectResponse|JsonResponse
+    {
+        if ($widget->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $widget->delete();
+
+        $message = __('reporting.messages.widget_deleted');
+
+        if ($request->wantsJson()) {
+            return response()->json(['message' => $message]);
+        }
+
+        return back()->with('success', $message);
     }
 
     public function updateWidgetPositions(Request $request): JsonResponse

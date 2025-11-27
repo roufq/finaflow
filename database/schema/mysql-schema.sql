@@ -176,6 +176,7 @@ DROP TABLE IF EXISTS `bank_integrations`;
 CREATE TABLE `bank_integrations` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint unsigned NOT NULL,
+  `account_id` bigint unsigned NOT NULL,
   `bank_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `account_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -192,7 +193,9 @@ CREATE TABLE `bank_integrations` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `bank_integrations_user_id_foreign` (`user_id`),
-  CONSTRAINT `bank_integrations_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `bank_integrations_account_id_foreign` (`account_id`),
+  CONSTRAINT `bank_integrations_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `bank_integrations_account_id_foreign` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `budgets`;
@@ -1102,5 +1105,4 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (53,'2025_11_21_125
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (54,'2025_11_22_000000_make_account_on_transactions_required_and_backfill',5);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (55,'2025_11_22_010000_add_two_factor_to_users_table',5);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (56,'2025_11_22_010010_create_two_factor_remember_tokens_table',5);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (57,'2025_11_25_030722_add_missing_fields_to_bank_integrations_table',6);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (58,'2025_11_25_044621_add_account_id_to_bank_integrations_table',6);

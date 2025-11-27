@@ -129,11 +129,28 @@
                                             <span class="widget-drag text-muted mr-2" title="Drag to reorder"><i class="fas fa-arrows-alt"></i></span>
                                             <strong>{{ $widget->config['title'] ?? ucfirst($widget->type) }}</strong>
                                         </div>
-                                        <select class="custom-select custom-select-sm widget-size" data-widget-id="{{ $widget->id }}">
-                                            @foreach(['small', 'medium', 'large'] as $size)
-                                                <option value="{{ $size }}" @selected($widget->size === $size)>{{ ucfirst($size) }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="d-flex align-items-center">
+                                            <select class="custom-select custom-select-sm widget-size mr-2" data-widget-id="{{ $widget->id }}">
+                                                @foreach(['small', 'medium', 'large'] as $size)
+                                                    <option value="{{ $size }}" @selected($widget->size === $size)>{{ ucfirst($size) }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="btn-group btn-group-sm" role="group" aria-label="Widget actions">
+                                                <button type="button"
+                                                    class="btn btn-outline-secondary edit-widget"
+                                                    data-widget-id="{{ $widget->id }}"
+                                                    data-widget-title="{{ $widget->config['title'] ?? '' }}"
+                                                    data-widget-notes="{{ $widget->config['notes'] ?? '' }}"
+                                                    data-widget-size="{{ $widget->size }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-outline-danger delete-widget"
+                                                    data-widget-id="{{ $widget->id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <p class="text-muted small mb-2">{{ trans('reporting.widgets.' . $widget->type . '.description') }}</p>
@@ -164,52 +181,165 @@
 </div>
 
 @if($report)
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<div class="modal fade" id="widgetEditModal" tabindex="-1" role="dialog" aria-labelledby="widgetEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="widgetEditModalLabel">{{ __('reporting.forms.widget_title') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="widgetEditForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="widget-edit-title">{{ __('reporting.forms.widget_title') }}</label>
+                        <input type="text" name="title" id="widget-edit-title" class="form-control" maxlength="255">
+                    </div>
+                    <div class="form-group">
+                        <label for="widget-edit-notes">{{ __('reporting.forms.notes') }}</label>
+                        <textarea name="notes" id="widget-edit-notes" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="widget-edit-size">{{ __('reporting.forms.widget_size') }}</label>
+                        <select name="size" id="widget-edit-size" class="form-control">
+                            @foreach(['small', 'medium', 'large'] as $size)
+                                <option value="{{ $size }}">{{ ucfirst($size) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+@if($report)
 <script>
     (function () {
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const reportId = @json($report?->id);
-        const widgetStoreUrl = @json(route('reporting.widgets.store'));
+        const initBuilder = function () {
+            const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+            const token = tokenMeta ? tokenMeta.getAttribute('content') : '';
+            const reportId = @json($report?->id);
+            const widgetStoreUrl = @json(route('reporting.widgets.store'));
+            const widgetUpdateUrlTemplate = @json(route('reporting.widgets.update', ['widget' => '__WIDGET__']));
+            const widgetDeleteUrlTemplate = @json(route('reporting.widgets.destroy', ['widget' => '__WIDGET__']));
 
-        const persistLayout = function () {
-            const payload = [];
-            $('#widget-canvas .report-widget').each(function (index, element) {
-                payload.push({
-                    id: $(element).data('widget-id'),
-                    position: index + 1,
-                    size: $(element).find('.widget-size').val(),
+            const persistLayout = function () {
+                const payload = [];
+                $('#widget-canvas .report-widget').each(function (index, element) {
+                    payload.push({
+                        id: $(element).data('widget-id'),
+                        position: index + 1,
+                        size: $(element).find('.widget-size').val(),
+                    });
+                });
+
+                if (!payload.length) {
+                    return;
+                }
+
+                $.post($('#widget-canvas').data('update-url'), {
+                    _token: token,
+                    widgets: payload,
+                });
+            };
+
+            $('#widget-canvas').sortable({
+                handle: '.widget-drag',
+                placeholder: 'sortable-placeholder col-md-6 mb-4',
+                update: persistLayout,
+            });
+
+            $('.widget-size').on('change', persistLayout);
+
+            $('.add-widget').on('click', function (event) {
+                event.preventDefault();
+                const type = $(this).data('widget-type');
+                $.post(widgetStoreUrl, {
+                    _token: token,
+                    report_id: reportId,
+                    type: type,
+                }).done(function () {
+                    window.location.reload();
                 });
             });
 
-            if (!payload.length) {
-                return;
-            }
+            $('#widget-canvas').on('click', '.edit-widget', function () {
+                const widgetId = $(this).data('widget-id');
+                const title = $(this).data('widget-title') || '';
+                const notes = $(this).data('widget-notes') || '';
+                const size = $(this).data('widget-size') || 'medium';
 
-            $.post($('#widget-canvas').data('update-url'), {
-                _token: token,
-                widgets: payload,
+                const action = widgetUpdateUrlTemplate.replace('__WIDGET__', widgetId);
+                $('#widgetEditForm').attr('action', action);
+                $('#widget-edit-title').val(title);
+                $('#widget-edit-notes').val(notes);
+                $('#widget-edit-size').val(size);
+                $('#widgetEditModal').modal('show');
+            });
+
+            $('#widgetEditForm').on('submit', function (event) {
+                event.preventDefault();
+                const action = $(this).attr('action');
+                const data = $(this).serialize();
+
+                $.post(action, data).done(function () {
+                    window.location.reload();
+                }).fail(function () {
+                    alert('Unable to update widget. Please try again.');
+                });
+            });
+
+            $('#widget-canvas').on('click', '.delete-widget', function () {
+                const widgetId = $(this).data('widget-id');
+                if (!confirm('Delete this widget?')) {
+                    return;
+                }
+
+                const action = widgetDeleteUrlTemplate.replace('__WIDGET__', widgetId);
+
+                $.post(action, {
+                    _token: token,
+                    _method: 'DELETE',
+                }).done(function () {
+                    window.location.reload();
+                }).fail(function () {
+                    alert('Unable to delete widget. Please try again.');
+                });
             });
         };
 
-        $('#widget-canvas').sortable({
-            handle: '.widget-drag',
-            placeholder: 'sortable-placeholder col-md-6 mb-4',
-            update: persistLayout,
-        });
+        const loadAndInit = function () {
+            if (!window.jQuery) {
+                window.setTimeout(loadAndInit, 50);
+                return;
+            }
 
-        $('.widget-size').on('change', persistLayout);
+            if (typeof window.$.fn.sortable === 'function') {
+                initBuilder();
+                return;
+            }
 
-        $('.add-widget').on('click', function (event) {
-            event.preventDefault();
-            const type = $(this).data('widget-type');
-            $.post(widgetStoreUrl, {
-                _token: token,
-                report_id: reportId,
-                type: type,
-            }).done(function () {
-                window.location.reload();
-            });
-        });
+            const script = document.createElement('script');
+            script.src = 'https://code.jquery.com/ui/1.13.2/jquery-ui.min.js';
+            script.onload = initBuilder;
+            script.onerror = initBuilder;
+            document.body.appendChild(script);
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadAndInit);
+        } else {
+            loadAndInit();
+        }
     })();
 </script>
 @endif

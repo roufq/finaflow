@@ -16,13 +16,13 @@ return new class extends Migration
             $table->foreignId('account_id')->after('user_id')->constrained()->onDelete('cascade');
 
             // Ensure balance fields exist (in case they were dropped)
-            if (!Schema::hasColumn('bank_integrations', 'current_balance')) {
+            if (! Schema::hasColumn('bank_integrations', 'current_balance')) {
                 $table->decimal('current_balance', 15, 2)->nullable()->after('is_active');
             }
-            if (!Schema::hasColumn('bank_integrations', 'available_balance')) {
+            if (! Schema::hasColumn('bank_integrations', 'available_balance')) {
                 $table->decimal('available_balance', 15, 2)->nullable()->after('current_balance');
             }
-            if (!Schema::hasColumn('bank_integrations', 'last_balance_sync_at')) {
+            if (! Schema::hasColumn('bank_integrations', 'last_balance_sync_at')) {
                 $table->timestamp('last_balance_sync_at')->nullable()->after('last_sync_at');
             }
         });
@@ -34,8 +34,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bank_integrations', function (Blueprint $table) {
-            $table->dropForeign(['account_id']);
-            $table->dropColumn(['account_id', 'current_balance', 'available_balance', 'last_balance_sync_at']);
+            if (Schema::hasColumn('bank_integrations', 'account_id')) {
+                $table->dropForeign(['account_id']);
+                $table->dropColumn('account_id');
+            }
         });
     }
 };

@@ -425,7 +425,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                <div class="chart-area">
+                <div class="chart-area" style="height: 280px;">
                     <canvas id="cashFlowChart"></canvas>
                 </div>
             </div>
@@ -581,37 +581,36 @@
 <div class="row">
     <div class="col-12">
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
+            <div class="card-header py-3 d-flex align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">{{ __('dashboard.burn_rate_analysis') }}</h6>
+                <span class="badge badge-light text-capitalize">{{ ucfirst($burnRate['trend']) }}</span>
             </div>
             <div class="card-body">
                 <div class="chart-area mb-4">
                     <canvas id="burnRateChart" style="height: 300px;"></canvas>
+                    <div id="burnRateEmpty" class="text-center text-muted py-5 d-none">
+                        <i class="fas fa-chart-line fa-2x mb-3 text-gray-300"></i>
+                        <p class="mb-0">{{ __('dashboard.no_data') ?? 'No burn rate data yet.' }}</p>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card border-left-danger">
-                            <div class="card-body">
-                                <h6>{{ __('dashboard.average_monthly_burn_rate') }}</h6>
-                                <h4 class="text-danger">Rp {{ number_format($burnRate['average_monthly'], 0, ',', '.') }}</h4>
-                            </div>
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded h-100">
+                            <div class="text-muted small mb-1">{{ __('dashboard.average_monthly_burn_rate') }}</div>
+                            <div class="h5 text-danger mb-0">Rp {{ number_format($burnRate['average_monthly'], 0, ',', '.') }}</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card border-left-warning">
-                            <div class="card-body">
-                                <h6>{{ __('dashboard.current_month_burn_rate') }}</h6>
-                                <h4 class="text-warning">Rp {{ number_format($burnRate['current'], 0, ',', '.') }}</h4>
-                            </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded h-100">
+                            <div class="text-muted small mb-1">{{ __('dashboard.current_month_burn_rate') }}</div>
+                            <div class="h5 text-warning mb-0">Rp {{ number_format($burnRate['current'], 0, ',', '.') }}</div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card border-left-info">
-                            <div class="card-body">
-                                <h6>{{ __('dashboard.burn_rate_trend') }}</h6>
-                                <h4 class="text-{{ $burnRate['trend'] === 'increasing' ? 'danger' : ($burnRate['trend'] === 'decreasing' ? 'success' : 'info') }}">
-                                    {{ ucfirst($burnRate['trend']) }}
-                                </h4>
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 border rounded h-100">
+                            <div class="text-muted small mb-1">{{ __('dashboard.burn_rate_trend') }}</div>
+                            <div class="h5 text-{{ $burnRate['trend'] === 'increasing' ? 'danger' : ($burnRate['trend'] === 'decreasing' ? 'success' : 'info') }} mb-0">
+                                {{ ucfirst($burnRate['trend']) }}
                             </div>
                         </div>
                     </div>
@@ -650,82 +649,111 @@
     </div>
 </div>
 
-@endsection
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Cash Flow Chart
-    const cashFlowCtx = document.getElementById('cashFlowChart').getContext('2d');
+(function () {
     const cashFlowData = @json($cashFlow);
-    const cashFlowLabels = cashFlowData.map(item => item.month);
-    const cashFlowValues = cashFlowData.map(item => item.net);
+    const burnRateHistory = @json($burnRate['monthly_history']);
 
-    new Chart(cashFlowCtx, {
-        type: 'line',
-        data: {
-            labels: cashFlowLabels,
-            datasets: [{
-                label: '{{ __('dashboard.net_cash_flow') }}',
-                data: cashFlowValues,
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: '{{ __('dashboard.monthly_cash_flow') }}'
-                }
-            }
+    const initCharts = function () {
+        if (!window.Chart) {
+            window.setTimeout(initCharts, 50);
+            return;
         }
-    });
 
-    // Burn Rate Chart
-    const burnRateCtx = document.getElementById('burnRateChart').getContext('2d');
-    const burnRateData = @json($burnRate['monthly_history']);
-    const burnRateLabels = burnRateData.map(item => item.month);
-    const burnRateValues = burnRateData.map(item => item.burn_rate);
+        const cashFlowCanvas = document.getElementById('cashFlowChart');
+        if (cashFlowCanvas) {
+            const ctx = cashFlowCanvas.getContext('2d');
+            const labels = cashFlowData.map(item => item.month);
+            const values = cashFlowData.map(item => item.net);
 
-    new Chart(burnRateCtx, {
-        type: 'bar',
-        data: {
-            labels: burnRateLabels,
-            datasets: [{
-                label: '{{ __('dashboard.burn_rate') }}',
-                data: burnRateValues,
-                backgroundColor: 'rgba(220, 53, 69, 0.8)',
-                borderColor: 'rgba(220, 53, 69, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return 'Rp ' + value.toLocaleString('id-ID');
-                        }
+            if (cashFlowCanvas._chartInstance) {
+                cashFlowCanvas._chartInstance.destroy();
+            }
+
+            cashFlowCanvas._chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '{{ __('dashboard.net_cash_flow') }}',
+                        data: values,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: '{{ __('dashboard.monthly_cash_flow') }}' }
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: '{{ __('dashboard.monthly_burn_rate_analysis') }}'
-                }
-            }
+            });
         }
-    });
-});
+
+        const burnCanvas = document.getElementById('burnRateChart');
+        const emptyState = document.getElementById('burnRateEmpty');
+        if (burnCanvas) {
+            const labels = burnRateHistory.map(item => item.month);
+            const values = burnRateHistory.map(item => item.burn_rate);
+            const hasData = values.some(value => Number(value) !== 0);
+
+            if (!hasData) {
+                burnCanvas.classList.add('d-none');
+                if (emptyState) {
+                    emptyState.classList.remove('d-none');
+                }
+                return;
+            }
+
+            burnCanvas.classList.remove('d-none');
+            if (emptyState) {
+                emptyState.classList.add('d-none');
+            }
+
+            const ctx = burnCanvas.getContext('2d');
+
+            if (burnCanvas._chartInstance) {
+                burnCanvas._chartInstance.destroy();
+            }
+
+            burnCanvas._chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '{{ __('dashboard.burn_rate') }}',
+                        data: values,
+                        backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + Number(value).toLocaleString('id-ID');
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: '{{ __('dashboard.monthly_burn_rate_analysis') }}' }
+                    }
+                }
+            });
+        }
+    };
+
+    initCharts();
+})();
 </script>
+@endsection

@@ -190,6 +190,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/reporting/builder/{report?}', [ReportingController::class, 'builder'])->name('reporting.builder');
     Route::post('/reporting/reports', [ReportingController::class, 'storeReport'])->name('reporting.reports.store');
     Route::post('/reporting/widgets', [ReportingController::class, 'storeWidget'])->name('reporting.widgets.store');
+    Route::put('/reporting/widgets/{widget}', [ReportingController::class, 'updateWidget'])->name('reporting.widgets.update');
+    Route::delete('/reporting/widgets/{widget}', [ReportingController::class, 'destroyWidget'])->name('reporting.widgets.destroy');
     Route::post('/reporting/widgets/positions', [ReportingController::class, 'updateWidgetPositions'])->name('reporting.widgets.positions');
     Route::post('/reporting/reports/{report}/export', [ReportingController::class, 'exportReport'])->name('reporting.reports.export');
 
@@ -206,4 +208,29 @@ Route::middleware('auth')->group(function () {
     Route::post('/coaching/micro-learning/{lesson}', [FinancialCoachingController::class, 'updateLessonProgress'])->name('coaching.lessons.update');
     Route::post('/coaching/journal', [FinancialCoachingController::class, 'storeJournalEntry'])->name('coaching.journal.store');
     Route::get('/coaching/export', [FinancialCoachingController::class, 'exportSummary'])->name('coaching.export');
+
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/education', [\App\Http\Controllers\Admin\EducationAdminController::class, 'index'])->name('education.index');
+        Route::get('/education/create', [\App\Http\Controllers\Admin\EducationAdminController::class, 'create'])->name('education.create');
+        Route::get('/education/{module}', [\App\Http\Controllers\Admin\EducationAdminController::class, 'show'])->name('education.show');
+        Route::get('/education/{module}/edit', [\App\Http\Controllers\Admin\EducationAdminController::class, 'edit'])->name('education.edit');
+        Route::post('/education', [\App\Http\Controllers\Admin\EducationAdminController::class, 'store'])->name('education.store');
+        Route::put('/education/{module}', [\App\Http\Controllers\Admin\EducationAdminController::class, 'update'])->name('education.update');
+        Route::delete('/education/{module}', [\App\Http\Controllers\Admin\EducationAdminController::class, 'destroy'])->name('education.destroy');
+
+        Route::get('/news', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'index'])->name('news.index');
+        Route::get('/news/create', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'create'])->name('news.create');
+        Route::get('/news/{news}', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'show'])->name('news.show');
+        Route::get('/news/{news}/edit', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'edit'])->name('news.edit');
+        Route::post('/news', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'store'])->name('news.store');
+        Route::put('/news/{news}', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'update'])->name('news.update');
+        Route::delete('/news/{news}', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'destroy'])->name('news.destroy');
+
+        Route::get('/education-categories', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'index'])->name('education-categories.index');
+        Route::get('/education-categories/create', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'create'])->name('education-categories.create');
+        Route::post('/education-categories', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'store'])->name('education-categories.store');
+        Route::get('/education-categories/{educationCategory}/edit', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'edit'])->name('education-categories.edit');
+        Route::put('/education-categories/{educationCategory}', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'update'])->name('education-categories.update');
+        Route::delete('/education-categories/{educationCategory}', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'destroy'])->name('education-categories.destroy');
+    });
 });

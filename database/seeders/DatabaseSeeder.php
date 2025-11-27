@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
 use App\Models\Category;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(RolesAndPermissionsSeeder::class);
+
         // Create dummy users
         $user1 = User::firstOrCreate([
             'email' => 'john@example.com',
@@ -31,19 +35,63 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $userRole = Role::firstOrCreate(['name' => 'user']);
+
+        $user1->syncRoles([$adminRole]);
+        $user2->syncRoles([$userRole]);
+
+        // Default admin & user accounts for quick login
+        $seedAdmin = User::firstOrCreate([
+            'email' => 'admin@finaflow.test',
+        ], [
+            'name' => 'Admin Finaflow',
+            'password' => Hash::make('password'),
+        ]);
+        $seedAdmin->syncRoles([$adminRole]);
+
+        $seedUser = User::firstOrCreate([
+            'email' => 'user@finaflow.test',
+        ], [
+            'name' => 'User Finaflow',
+            'password' => Hash::make('password'),
+        ]);
+        $seedUser->syncRoles([$userRole]);
+
         // Create settings for users
-        Setting::firstOrCreate([
+        Setting::withoutGlobalScopes()->updateOrCreate([
             'user_id' => $user1->id,
         ], [
             'currency_symbol' => 'Rp',
             'start_month' => 1,
         ]);
 
-        Setting::firstOrCreate([
+        Setting::withoutGlobalScopes()->updateOrCreate([
             'user_id' => $user2->id,
         ], [
             'currency_symbol' => '$',
             'start_month' => 1,
+        ]);
+
+        // Create base accounts
+        $account1 = Account::withoutGlobalScopes()->create([
+            'user_id' => $user1->id,
+            'name' => 'Primary Account',
+            'type' => 'bank',
+            'account_number' => '000111222',
+            'bank_name' => 'Sample Bank',
+            'balance' => 0,
+            'is_active' => true,
+        ]);
+
+        $account2 = Account::withoutGlobalScopes()->create([
+            'user_id' => $user2->id,
+            'name' => 'Business Account',
+            'type' => 'bank',
+            'account_number' => '999888777',
+            'bank_name' => 'Business Bank',
+            'balance' => 0,
+            'is_active' => true,
         ]);
 
         // Create enhanced categories for user1 (Personal Finance)
@@ -124,7 +172,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($transactions1 as $trans) {
-            Transaction::create(array_merge($trans, ['user_id' => $user1->id]));
+            Transaction::create(array_merge($trans, [
+                'user_id' => $user1->id,
+                'account_id' => $account1->id,
+            ]));
         }
 
         // Create transactions for user2
@@ -137,7 +188,10 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($transactions2 as $trans) {
-            Transaction::create(array_merge($trans, ['user_id' => $user2->id]));
+            Transaction::create(array_merge($trans, [
+                'user_id' => $user2->id,
+                'account_id' => $account2->id,
+            ]));
         }
 
         $this->call(EducationModuleSeeder::class);

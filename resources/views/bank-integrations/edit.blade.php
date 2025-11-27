@@ -20,7 +20,12 @@
                     <select name="account_id" id="account_id" class="form-control @error('account_id') is-invalid @enderror" required>
                         <option value="">-- Pilih Akun --</option>
                         @foreach($accounts as $account)
-                            <option value="{{ $account->id }}" {{ old('account_id', $bankIntegration->account_id) == $account->id ? 'selected' : '' }}>
+                            <option
+                                value="{{ $account->id }}"
+                                data-bank-name="{{ $account->bank_name }}"
+                                data-account-number="{{ $account->account_number }}"
+                                {{ old('account_id', $bankIntegration->account_id) == $account->id ? 'selected' : '' }}
+                            >
                                 {{ $account->name }} ({{ $account->account_number ?? 'No Account Number' }})
                             </option>
                         @endforeach
@@ -113,13 +118,41 @@
 </div>
 
 <script>
-document.getElementById('integration_type').addEventListener('change', function() {
-    const apiCredentials = document.getElementById('api_credentials');
-    if (this.value === 'api') {
-        apiCredentials.style.display = 'block';
-    } else {
-        apiCredentials.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    const integrationTypeSelect = document.getElementById('integration_type');
+    const apiSettings = document.getElementById('api-settings');
+    const accountSelect = document.getElementById('account_id');
+    const bankNameInput = document.getElementById('bank_name');
+    const accountNumberInput = document.getElementById('account_number');
+
+    function toggleApiSettings() {
+        apiSettings.style.display = integrationTypeSelect.value === 'api' ? 'block' : 'none';
     }
+
+    function autofillAccountDetails(force = false) {
+        const selectedOption = accountSelect.options[accountSelect.selectedIndex];
+        if (!selectedOption) {
+            return;
+        }
+
+        const bankName = selectedOption.dataset.bankName || '';
+        const accountNumber = selectedOption.dataset.accountNumber || '';
+
+        if (force || !bankNameInput.value) {
+            bankNameInput.value = bankName;
+        }
+        if (force || !accountNumberInput.value) {
+            accountNumberInput.value = accountNumber;
+        }
+    }
+
+    integrationTypeSelect.addEventListener('change', toggleApiSettings);
+    accountSelect.addEventListener('change', function() {
+        autofillAccountDetails(true);
+    });
+
+    toggleApiSettings();
+    autofillAccountDetails();
 });
 </script>
 @endsection

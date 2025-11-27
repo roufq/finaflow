@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Account;
 use App\Models\Category;
 use App\Models\EducationModule;
 use App\Models\Goal;
@@ -38,9 +39,19 @@ class EducationPersonalizationTest extends TestCase
             'description' => 'Everyday spending',
         ]);
 
+        $account = Account::create([
+            'user_id' => $user->id,
+            'name' => 'Primary Account',
+            'type' => 'bank',
+            'account_number' => '1234567890',
+            'bank_name' => 'Test Bank',
+            'balance' => 0,
+        ]);
+
         Transaction::create([
             'user_id' => $user->id,
             'category_id' => $incomeCategory->id,
+            'account_id' => $account->id,
             'transaction_date' => now(),
             'type' => 'income',
             'amount' => 5_000_000,
@@ -50,6 +61,7 @@ class EducationPersonalizationTest extends TestCase
         Transaction::create([
             'user_id' => $user->id,
             'category_id' => $expenseCategory->id,
+            'account_id' => $account->id,
             'transaction_date' => now(),
             'type' => 'expense',
             'amount' => 6_000_000,
