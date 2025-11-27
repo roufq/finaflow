@@ -32,7 +32,12 @@ FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibang
 
 ### Automation & Integration
 - **Smart Automation**: Builder kondisi/aksi, manual run & toggle, serta reminder tagihan otomatis
-- **Bank Integration**: CRUD koneksi bank, impor CSV/API, sinkron saldo, auto-category, dan deteksi duplikat
+- **Bank Integration**:
+  - CRUD koneksi bank dengan multiple account types (checking, savings, credit_card)
+  - Impor transaksi via CSV, OFX, atau API dengan auto-categorization
+  - Sinkron saldo real-time dengan deteksi duplikat transaksi
+  - Dashboard integrasi dengan status sync dan balance tracking
+  - Support untuk berbagai bank Indonesia (BCA, Mandiri, BRI, dll)
 - **API Integrations**: Integrasi kredit skor, data investasi, berita finansial, dan cuaca dengan rate limit tracking
 - **Integration Tools**: OCR struk, voice-to-text, parser email/invoice, dan quick entry lainnya
 
