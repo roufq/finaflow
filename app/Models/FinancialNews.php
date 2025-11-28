@@ -9,15 +9,7 @@ class FinancialNews extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'content',
-        'source',
-        'category',
-        'published_at',
-        'url',
-        'tags',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'published_at' => 'datetime',

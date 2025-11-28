@@ -7,16 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Anomaly extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'transaction_id',
-        'anomaly_type',
-        'description',
-        'severity',
-        'is_resolved',
-        'metadata',
-        'detected_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'is_resolved' => 'boolean',

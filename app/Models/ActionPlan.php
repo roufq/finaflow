@@ -11,16 +11,7 @@ class ActionPlan extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'plan_month',
-        'focus_priorities',
-        'recommended_actions',
-        'summary_notes',
-        'savings_target',
-        'debt_repayment_target',
-        'investment_target',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'plan_month' => 'date',

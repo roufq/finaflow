@@ -11,22 +11,7 @@ class BankIntegration extends Model
 {
     use UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'account_id',
-        'bank_name',
-        'account_number',
-        'account_type',
-        'integration_type',
-        'credentials',
-        'settings',
-        'last_sync_at',
-        'last_balance_sync_at',
-        'is_active',
-        'current_balance',
-        'available_balance',
-        'notes',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'credentials' => 'encrypted:array',

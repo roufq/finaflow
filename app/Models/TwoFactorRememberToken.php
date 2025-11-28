@@ -7,13 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TwoFactorRememberToken extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'token_hash',
-        'user_agent',
-        'ip_address',
-        'expires_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'expires_at' => 'datetime',

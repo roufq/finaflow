@@ -10,16 +10,7 @@ class FinancialPersonality extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'personality_type',
-        'risk_tolerance',
-        'spending_style',
-        'saving_habits',
-        'scores',
-        'assessment_date',
-        'recommendations',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'risk_tolerance' => 'integer',

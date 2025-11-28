@@ -7,14 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ImportLog extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'bank_integration_id',
-        'status',
-        'source',
-        'message',
-        'context',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'context' => 'array',

@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Category;
-use App\Models\Gamification;
-use App\Models\SpendingTrigger;
 use App\Models\Transaction;
+use App\Services\Finance\ReceiptScannerService;
+use App\Services\Finance\TransactionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use thiagoalessio\TesseractOCR\TesseractOCR;
-
-// use Google\Cloud\Vision\V1\ImageAnnotatorClient;
-// use Google\Cloud\Vision\V1\Feature\Type;
 
 class TransactionController extends Controller
 {
+    public function __construct(
+        private TransactionService $transactionService,
+        private ReceiptScannerService $receiptScannerService
+    ) {}
+
     public function index(Request $request)
     {
         $validated = $request->validate([
@@ -33,8 +34,10 @@ class TransactionController extends Controller
         $accountId = $validated['account_id'] ?? null;
         $startDate = $validated['start_date'] ?? null;
         $endDate = $validated['end_date'] ?? null;
+        $userId = Auth::id();
 
         $transactions = Transaction::with(['category', 'account'])
+            ->where('user_id', $userId)
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($inner) use ($search) {
                     $inner->where('description', 'like', '%'.$search.'%')
@@ -60,9 +63,10 @@ class TransactionController extends Controller
                 $query->whereDate('transaction_date', '<=', $endDate);
             })
             ->orderBy('transaction_date', 'desc')
-            ->get();
-        $categories = Category::where('user_id', Auth::id())->get();
-        $accounts = Account::active()->get();
+            ->paginate(15)
+            ->withQueryString();
+        $categories = Category::where('user_id', $userId)->get();
+        $accounts = Account::active()->where('user_id', $userId)->get();
 
         return view('transactions.index', compact('transactions', 'categories', 'accounts'));
     }
@@ -92,38 +96,30 @@ class TransactionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        DB::transaction(function () use ($request) {
-            $transaction = Transaction::create([
-                'user_id' => Auth::id(),
-                'account_id' => $request->account_id,
-                'category_id' => $request->category_id,
-                'transaction_date' => $request->transaction_date,
-                'type' => $request->type,
-                'amount' => $request->amount,
-                'description' => $request->description,
-            ]);
-
-            $account = Account::findOrFail($request->account_id);
-            $this->applyAccountBalanceChange($account, (float) $request->amount, $request->type, 'apply');
-
-            if ($request->type === 'expense') {
-                $this->checkSpendingTriggers($transaction);
-                $this->awardGamificationPoints($transaction);
-            }
-        });
+        $this->transactionService->create([
+            'user_id' => Auth::id(),
+            'account_id' => $request->account_id,
+            'category_id' => $request->category_id,
+            'transaction_date' => $request->transaction_date,
+            'type' => $request->type,
+            'amount' => (float) $request->amount,
+            'description' => $request->description,
+        ]);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
     }
 
     public function show(Transaction $transaction)
     {
+        $transaction->load(['category', 'account']);
+
         return view('transactions.show', compact('transaction'));
     }
 
     public function edit(Transaction $transaction)
     {
         $categories = Category::where('user_id', Auth::id())->get();
-        $accounts = Account::active()->get();
+        $accounts = Account::active()->where('user_id', Auth::id())->get();
 
         return view('transactions.edit', compact('transaction', 'categories', 'accounts'));
     }
@@ -145,64 +141,38 @@ class TransactionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        DB::transaction(function () use ($request, $transaction) {
-            $originalAccount = $transaction->account;
-            $originalAmount = (float) $transaction->amount;
-            $originalType = $transaction->type;
-
-            $transaction->update($request->only(['category_id', 'account_id', 'transaction_date', 'type', 'amount', 'description']));
-
-            if ($originalAccount) {
-                $this->applyAccountBalanceChange($originalAccount, $originalAmount, $originalType, 'reverse');
-            }
-
-            $updatedAccount = Account::findOrFail($request->account_id);
-            $this->applyAccountBalanceChange($updatedAccount, (float) $request->amount, $request->type, 'apply');
-        });
+        $this->transactionService->update($transaction, [
+            'category_id' => $request->category_id,
+            'account_id' => $request->account_id,
+            'transaction_date' => $request->transaction_date,
+            'type' => $request->type,
+            'amount' => (float) $request->amount,
+            'description' => $request->description,
+        ]);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }
 
     public function destroy(Transaction $transaction)
     {
-        DB::transaction(function () use ($transaction) {
-            $account = $transaction->account;
-
-            if ($account) {
-                $this->applyAccountBalanceChange($account, (float) $transaction->amount, $transaction->type, 'reverse');
-            }
-
-            $transaction->delete();
-        });
+        $this->transactionService->delete($transaction);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully.');
     }
 
     public function scanReceipt(Request $request)
     {
-        // Skip CSRF validation for this endpoint
         $request->validate([
-            'receipt_image' => 'required|image|mimes:jpeg,png,jpg|max:5120', // 5MB max
+            'receipt_image' => 'required|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
         try {
             $image = $request->file('receipt_image');
-            $imagePath = $image->getPathname();
-
-            // Use Tesseract OCR to extract text from the actual uploaded receipt image
-            $tesseract = new TesseractOCR($imagePath);
-            $tesseract->executable('C:\Program Files\Tesseract-OCR\tesseract.exe');
-            $tesseract->tessdataDir('C:\Program Files\Tesseract-OCR\tessdata');
-            $tesseract->lang('eng'); // Use English for OCR
-            $extractedText = $tesseract->run();
-
-            // If no text was extracted, provide fallback
-            if (empty(trim($extractedText))) {
-                $extractedText = 'No text could be extracted from the image. Please ensure the receipt image is clear and well-lit.';
-            }
-
-            // Parse the extracted text to find transaction details
-            $extractedData = $this->parseReceiptText($extractedText);
+            $storedPath = $image->store('receipts/temp');
+            $absolutePath = Storage::path($storedPath);
+            $this->assertSafeImage($absolutePath);
+            $extractedData = $this->receiptScannerService->extract($absolutePath);
+            Storage::delete($storedPath);
 
             return response()->json([
                 'success' => true,
@@ -210,15 +180,8 @@ class TransactionController extends Controller
                 'amount' => $extractedData['amount'],
                 'merchant' => $extractedData['merchant'],
                 'description' => $extractedData['description'],
-                'raw_text' => $extractedText, // Include raw extracted text for debugging
+                'raw_text' => $extractedData['raw_text'],
             ]);
-
-        } catch (\thiagoalessio\TesseractOCR\TesseractOcrException $e) {
-            // Handle Tesseract-specific errors
-            return response()->json([
-                'success' => false,
-                'message' => 'OCR processing failed: '.$e->getMessage(),
-            ], 500);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -227,136 +190,16 @@ class TransactionController extends Controller
         }
     }
 
-    private function parseReceiptText($text)
+    private function assertSafeImage(string $path): void
     {
-        $lines = explode("\n", $text);
-        $data = [
-            'date' => now()->format('Y-m-d'),
-            'amount' => null,
-            'merchant' => 'Unknown Merchant',
-            'description' => 'Receipt transaction',
-        ];
-
-        // Extract merchant name from the first few lines of the receipt
-        // Typically, the merchant name appears at the top of the receipt
-        $potentialMerchantLines = array_slice($lines, 0, 5); // Check first 5 lines
-
-        foreach ($potentialMerchantLines as $line) {
-            $line = trim($line);
-            if (! empty($line) && strlen($line) > 2 && ! is_numeric($line)) {
-                // Skip lines that are just numbers, dates, or too short
-                if (! preg_match('/^\d/', $line) && ! preg_match('/^\d{1,2}[\/\-]\d{1,2}/', $line)) {
-                    // Clean up the merchant name
-                    $merchant = preg_replace('/[^a-zA-Z\s&\'-]/', '', $line);
-                    $merchant = trim($merchant);
-                    if (strlen($merchant) > 2) {
-                        $data['merchant'] = ucwords(strtolower($merchant));
-                        $data['description'] = 'Purchase at '.$data['merchant'];
-                        break;
-                    }
-                }
-            }
+        $info = @getimagesize($path);
+        if ($info === false || empty($info['mime'])) {
+            throw new \RuntimeException('Invalid image content.');
         }
 
-        // Look for date patterns (DD/MM/YYYY, DD-MM-YYYY, etc.)
-        $datePatterns = [
-            '/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/',
-            '/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/',
-            '/(\d{1,2})\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+(\d{4})/i',
-        ];
-
-        foreach ($lines as $line) {
-            foreach ($datePatterns as $pattern) {
-                if (preg_match($pattern, $line, $matches)) {
-                    try {
-                        if (count($matches) >= 4) {
-                            $data['date'] = date('Y-m-d', strtotime($matches[0]));
-                        }
-                    } catch (\Exception $e) {
-                        // Keep default date if parsing fails
-                    }
-                    break 2;
-                }
-            }
+        $allowedMimes = ['image/jpeg', 'image/png'];
+        if (! in_array($info['mime'], $allowedMimes, true)) {
+            throw new \RuntimeException('Unsupported image type.');
         }
-
-        // Look for amount patterns (IDR, Rp, USD, $, etc.)
-        $amountPatterns = [
-            '/(?:rp|idr|rupiah|\$|usd)\s*([\d,]+(?:\.\d{2})?)/i',
-            '/total\s*[:\-]?\s*(?:rp|idr|rupiah|\$|usd)?\s*([\d,]+(?:\.\d{2})?)/i',
-            '/jumlah\s*[:\-]?\s*(?:rp|idr|rupiah|\$|usd)?\s*([\d,]+(?:\.\d{2})?)/i',
-            '/bayar\s*[:\-]?\s*(?:rp|idr|rupiah|\$|usd)?\s*([\d,]+(?:\.\d{2})?)/i',
-            '/([\d,]+(?:\.\d{2})?)\s*(?:rp|idr|rupiah|\$|usd)/i',
-        ];
-
-        foreach ($lines as $line) {
-            foreach ($amountPatterns as $pattern) {
-                if (preg_match($pattern, $line, $matches)) {
-                    $amount = str_replace(',', '', $matches[1]);
-                    if (is_numeric($amount)) {
-                        $data['amount'] = (float) $amount;
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Check for spending triggers based on transaction
-     */
-    private function checkSpendingTriggers(Transaction $transaction): void
-    {
-        $triggers = SpendingTrigger::where('user_id', $transaction->user_id)->get();
-
-        foreach ($triggers as $trigger) {
-            if ($trigger->matchesTransaction($transaction)) {
-                $trigger->incrementFrequency();
-
-                // Log the trigger activation
-                \Log::info("Spending trigger activated: {$trigger->description} for transaction ID {$transaction->id}");
-            }
-        }
-    }
-
-    /**
-     * Award gamification points for transactions
-     */
-    private function awardGamificationPoints(Transaction $transaction): void
-    {
-        $gamification = Gamification::firstOrCreate(
-            ['user_id' => $transaction->user_id],
-            ['points' => 0, 'level' => 1, 'streak_days' => 0]
-        );
-
-        // Award points based on transaction amount (1 point per 1000 spent)
-        $pointsEarned = floor($transaction->amount / 1000);
-        if ($pointsEarned > 0) {
-            $gamification->addPoints($pointsEarned);
-
-            // Award achievement for first transaction of the day
-            $todayTransactions = Transaction::where('user_id', $transaction->user_id)
-                ->whereDate('transaction_date', today())
-                ->count();
-
-            if ($todayTransactions === 1) {
-                $gamification->awardAchievement('First Transaction of the Day');
-            }
-        }
-    }
-
-    private function applyAccountBalanceChange(Account $account, float $amount, string $type, string $operation = 'apply'): void
-    {
-        $delta = $type === 'income' ? $amount : -$amount;
-
-        if ($operation === 'reverse') {
-            $delta = -$delta;
-        }
-
-        $account->update([
-            'balance' => $account->balance + $delta,
-        ]);
     }
 }

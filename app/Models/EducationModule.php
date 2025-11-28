@@ -10,20 +10,7 @@ class EducationModule extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'content',
-        'category',
-        'difficulty',
-        'estimated_time',
-        'order',
-        'is_active',
-        'metadata',
-        'language',
-        'tags',
-        'learning_objectives',
-        'resource_links',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'is_active' => 'boolean',

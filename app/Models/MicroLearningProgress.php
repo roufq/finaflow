@@ -10,14 +10,7 @@ class MicroLearningProgress extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'micro_learning_id',
-        'user_id',
-        'status',
-        'comprehension_score',
-        'last_accessed_at',
-        'completed_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'last_accessed_at' => 'datetime',

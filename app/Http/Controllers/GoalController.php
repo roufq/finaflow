@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Goal;
+use App\Models\GoalProgress;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -65,7 +67,12 @@ class GoalController extends Controller
     public function show(Goal $goal)
     {
         $this->authorize('view', $goal);
-        return view('goals.show', compact('goal'));
+        $goal->load(['progressEntries.user']);
+
+        return view('goals.show', [
+            'goal' => $goal,
+            'progressEntries' => $goal->progressEntries,
+        ]);
     }
 
     /**
@@ -122,10 +129,22 @@ class GoalController extends Controller
         $this->authorize('update', $goal);
 
         $request->validate([
-            'current_amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:1',
+            'note' => 'nullable|string|max:255',
         ]);
 
-        $goal->update(['current_amount' => $request->current_amount]);
+        DB::transaction(function () use ($goal, $request) {
+            $goal->lockForUpdate();
+            $goal->increment('current_amount', $request->amount);
+
+            $goal->progressEntries()->create([
+                'user_id' => Auth::id(),
+                'amount' => $request->amount,
+                'note' => $request->note,
+            ]);
+        });
+
+        $goal->refresh();
 
         return response()->json(['success' => true, 'progress' => $goal->progress_percentage]);
     }

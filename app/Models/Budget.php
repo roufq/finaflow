@@ -9,26 +9,14 @@ class Budget extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'description',
-        'type',
-        'period',
-        'start_date',
-        'end_date',
-        'total_budget',
-        'spent_amount',
-        'status',
-        'category_allocations'
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'total_budget' => 'decimal:2',
         'spent_amount' => 'decimal:2',
-        'category_allocations' => 'array'
+        'category_allocations' => 'array',
     ];
 
     public function user(): BelongsTo
@@ -58,18 +46,21 @@ class Budget extends Model
     public function getDaysRemainingAttribute(): int
     {
         $endDate = $this->end_date ?? now()->addDays(30); // Default to 30 days if no end date
+
         return max(0, now()->diffInDays($endDate, false));
     }
 
     public function getDailyBudgetAttribute(): float
     {
         $totalDays = $this->getPeriodDays();
+
         return $totalDays > 0 ? $this->total_budget / $totalDays : 0;
     }
 
     public function getAverageDailySpendAttribute(): float
     {
         $daysElapsed = max(1, now()->diffInDays($this->start_date));
+
         return $this->spent_amount / $daysElapsed;
     }
 
@@ -92,7 +83,7 @@ class Budget extends Model
     // Accessors for labels
     public function getTypeLabelAttribute()
     {
-        return match($this->type) {
+        return match ($this->type) {
             'zero_based' => 'Zero Based',
             'envelope' => 'Envelope',
             'percentage_based' => 'Persentase',
@@ -103,7 +94,7 @@ class Budget extends Model
 
     public function getPeriodLabelAttribute()
     {
-        return match($this->period) {
+        return match ($this->period) {
             'weekly' => 'Mingguan',
             'monthly' => 'Bulanan',
             'quarterly' => 'Triwulanan',
@@ -114,7 +105,7 @@ class Budget extends Model
 
     public function getStatusLabelAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => 'Aktif',
             'completed' => 'Selesai',
             'paused' => 'Dijeda',
@@ -125,7 +116,7 @@ class Budget extends Model
 
     public function getStatusColorAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => 'success',
             'completed' => 'primary',
             'paused' => 'warning',

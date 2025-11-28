@@ -2,20 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Scopes\UserScope;
+use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
     use UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'currency_symbol',
-        'start_month',
-        'credit_score',
-        'risk_profile',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public function user()
     {

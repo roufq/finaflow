@@ -2,26 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class LoyaltyProgram extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'program_name',
-        'program_type',
-        'points_balance',
-        'tier_level',
-        'benefits',
-        'expiry_date',
-        'membership_number',
-        'redemption_history',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'points_balance' => 'decimal:2',
@@ -48,12 +38,13 @@ class LoyaltyProgram extends Model
     /**
      * Redeem points
      */
-    public function redeemPoints(float $points, string $rewardDescription = null): bool
+    public function redeemPoints(float $points, ?string $rewardDescription = null): bool
     {
         if ($this->points_balance >= $points) {
             $this->decrement('points_balance', $points);
             $this->addRedemptionHistory($points, $rewardDescription);
             $this->save();
+
             return true;
         }
 
@@ -63,7 +54,7 @@ class LoyaltyProgram extends Model
     /**
      * Add redemption to history
      */
-    private function addRedemptionHistory(float $points, string $description = null): void
+    private function addRedemptionHistory(float $points, ?string $description = null): void
     {
         $history = $this->redemption_history ?? [];
         $history[] = [
@@ -132,6 +123,7 @@ class LoyaltyProgram extends Model
 
         if ($currentIndex !== false && isset($tiers[$currentIndex + 1])) {
             $nextTier = $tiers[$currentIndex + 1];
+
             return $tierThresholds[$nextTier] - $this->points_balance;
         }
 
@@ -174,6 +166,7 @@ class LoyaltyProgram extends Model
     public function calculatePotentialPoints(float $transactionAmount): float
     {
         $earningRate = self::getEarningRate($this->program_type);
+
         return $transactionAmount * $earningRate;
     }
 
@@ -184,7 +177,7 @@ class LoyaltyProgram extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('expiry_date')
-              ->orWhere('expiry_date', '>', Carbon::now());
+                ->orWhere('expiry_date', '>', Carbon::now());
         });
     }
 }

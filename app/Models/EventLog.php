@@ -7,14 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventLog extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'name',
-        'source',
-        'properties',
-        'ip_address',
-        'user_agent',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'properties' => 'array',

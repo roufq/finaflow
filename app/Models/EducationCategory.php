@@ -6,12 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EducationCategory extends Model
 {
-    protected $fillable = [
-        'name',
-        'description',
-        'order',
-        'is_active',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'order' => 'integer',

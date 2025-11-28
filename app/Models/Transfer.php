@@ -9,17 +9,7 @@ class Transfer extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'from_account_id',
-        'to_account_id',
-        'amount',
-        'fee',
-        'transfer_date',
-        'description',
-        'reference_number',
-        'status',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'amount' => 'decimal:2',
@@ -77,7 +67,7 @@ class Transfer extends Model
 
     public function getStatusLabelAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => 'Pending',
             'completed' => 'Completed',
             'failed' => 'Failed',
@@ -88,7 +78,7 @@ class Transfer extends Model
 
     public function getStatusColorAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => 'warning',
             'completed' => 'success',
             'failed' => 'danger',

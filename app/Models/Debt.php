@@ -9,21 +9,7 @@ class Debt extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'description',
-        'type',
-        'lender',
-        'original_amount',
-        'current_balance',
-        'interest_rate',
-        'minimum_payment',
-        'due_date',
-        'status',
-        'payoff_strategy',
-        'payment_history'
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'original_amount' => 'decimal:2',
@@ -31,7 +17,7 @@ class Debt extends Model
         'interest_rate' => 'decimal:2',
         'minimum_payment' => 'decimal:2',
         'due_date' => 'date',
-        'payment_history' => 'array'
+        'payment_history' => 'array',
     ];
 
     public function user(): BelongsTo
@@ -73,6 +59,7 @@ class Debt extends Model
         }
 
         $months = -(log(1 - ($principal * $monthlyRate) / $monthlyPayment)) / log(1 + $monthlyRate);
+
         return (int) ceil($months);
     }
 
@@ -90,6 +77,7 @@ class Debt extends Model
     {
         $months = $this->estimated_payoff_months;
         $monthlyInterest = $this->monthly_interest;
+
         return $monthlyInterest * $months;
     }
 
@@ -98,6 +86,7 @@ class Debt extends Model
         if ($this->estimated_total_payment <= 0) {
             return 0;
         }
+
         return ($this->estimated_total_interest / $this->estimated_total_payment) * 100;
     }
 
@@ -128,7 +117,7 @@ class Debt extends Model
     // Accessors for labels
     public function getTypeLabelAttribute()
     {
-        return match($this->type) {
+        return match ($this->type) {
             'credit_card' => 'Kartu Kredit',
             'personal_loan' => 'Pinjaman Pribadi',
             'student_loan' => 'Pinjaman Pendidikan',
@@ -142,7 +131,7 @@ class Debt extends Model
 
     public function getStatusLabelAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => 'Aktif',
             'paid_off' => 'Lunas',
             'defaulted' => 'Macet',
@@ -154,7 +143,7 @@ class Debt extends Model
 
     public function getStatusColorAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'active' => 'warning',
             'paid_off' => 'success',
             'defaulted' => 'danger',
@@ -166,7 +155,7 @@ class Debt extends Model
 
     public function getPayoffStrategyLabelAttribute()
     {
-        return match($this->payoff_strategy) {
+        return match ($this->payoff_strategy) {
             'avalanche' => 'Avalanche (Bunga Tertinggi)',
             'snowball' => 'Snowball (Saldo Terkecil)',
             'custom' => 'Kustom',

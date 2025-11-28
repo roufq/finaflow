@@ -2,26 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Reward extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'card_type',
-        'reward_type',
-        'points_earned',
-        'points_redeemed',
-        'cashback_amount',
-        'expiry_date',
-        'status',
-        'transaction_history',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'points_earned' => 'decimal:2',
@@ -63,6 +53,7 @@ class Reward extends Model
             $this->increment('points_redeemed', $points);
             $this->addTransactionHistory('redeemed', $points);
             $this->save();
+
             return true;
         }
 
@@ -125,7 +116,7 @@ class Reward extends Model
     /**
      * Calculate potential rewards for a transaction
      */
-    public function calculatePotentialReward(float $transactionAmount, string $category = null): array
+    public function calculatePotentialReward(float $transactionAmount, ?string $category = null): array
     {
         $rewards = [];
 
@@ -152,9 +143,9 @@ class Reward extends Model
     public function scopeActive($query)
     {
         return $query->where('status', 'active')
-                    ->where(function ($q) {
-                        $q->whereNull('expiry_date')
-                          ->orWhere('expiry_date', '>', Carbon::now());
-                    });
+            ->where(function ($q) {
+                $q->whereNull('expiry_date')
+                    ->orWhere('expiry_date', '>', Carbon::now());
+            });
     }
 }

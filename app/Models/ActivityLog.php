@@ -10,17 +10,7 @@ class ActivityLog extends Model
 {
     use HasFactory;
 
-    /**
-     * @var list<string>
-     */
-    protected $fillable = [
-        'user_id',
-        'action',
-        'description',
-        'ip_address',
-        'user_agent',
-        'created_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public $timestamps = false;
 

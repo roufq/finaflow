@@ -7,15 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Prediction extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'category',
-        'predicted_amount',
-        'confidence',
-        'period',
-        'prediction_date',
-        'factors',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'predicted_amount' => 'decimal:2',

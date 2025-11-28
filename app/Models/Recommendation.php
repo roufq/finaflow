@@ -7,14 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Recommendation extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'type',
-        'content',
-        'priority',
-        'is_read',
-        'metadata',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'is_read' => 'boolean',

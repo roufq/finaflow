@@ -11,7 +11,8 @@ Analisis mendalam terhadap codebase FinaFlow telah mengidentifikasi **beberapa i
 **Location**: `app/Http/Controllers/TransactionController.php` - `scanReceipt()` method
 **Issue**: Endpoint `/scan-receipt` tidak memiliki CSRF protection
 **Risk**: Cross-Site Request Forgery attacks
-**Impact**: Attacker dapat memaksa user upload receipt tanpa consent
+**Impact**: Attacker dapat memaksa user upload receipt tanpa consent  
+**Status**: ✅ Completed (CSRF aktif pada route scan-receipt)
 **Fix Required**:
 ```php
 // Add to routes/web.php
@@ -26,7 +27,8 @@ Route::post('/scan-receipt', [TransactionController::class, 'scanReceipt'])->mid
 - ❌ No malware scanning
 - ❌ No filename sanitization
 **Risk**: Remote Code Execution, malware upload
-**Impact**: Server compromise, data breach
+**Impact**: Server compromise, data breach  
+**Status**: ⚠️ Partially completed (mime/size validation + temp storage & cleanup; malware scanning belum)
 
 #### 3. Hardcoded OS-Specific Paths
 **Location**: `app/Http/Controllers/TransactionController.php` - OCR processing
@@ -36,13 +38,15 @@ Route::post('/scan-receipt', [TransactionController::class, 'scanReceipt'])->mid
 $tesseractPath = 'C:\Program Files\Tesseract-OCR\tesseract.exe';
 ```
 **Risk**: Deployment failure di Linux/Unix servers
-**Impact**: Application tidak bisa berjalan di production environment
+**Impact**: Application tidak bisa berjalan di production environment  
+**Status**: ✅ Completed (path via `config/services.php`)
 
 #### 4. Mass Assignment Vulnerabilities
 **Location**: Multiple models missing fillable/guarded arrays
 **Issue**: Models tanpa proper mass assignment protection
 **Risk**: Unauthorized data modification
-**Impact**: Data tampering, privilege escalation
+**Impact**: Data tampering, privilege escalation  
+**Status**: ✅ Completed (semua model telah di-guarded)
 
 ### 🟠 PERFORMANCE ISSUES (Priority: HIGH)
 
@@ -81,7 +85,8 @@ foreach ($transactions as $transaction) {
 **Location**: `app/Http/Controllers/TransactionController.php` - `applyAccountBalanceChange()`
 **Issue**: Balance updates tanpa proper database locking
 **Risk**: Incorrect account balances, financial data corruption
-**Impact**: Wrong financial reporting, user trust loss
+**Impact**: Wrong financial reporting, user trust loss  
+**Status**: ✅ Completed (balance updates lockForUpdate di TransactionService)
 
 #### 10. Division by Zero Vulnerabilities
 **Location**: `app/Http/Controllers/DashboardController.php` - trend calculations
@@ -89,13 +94,15 @@ foreach ($transactions as $transaction) {
 ```php
 $change = (($secondAvg - $firstAvg) / ($firstAvg ?: 1)) * 100; // Partial fix
 ```
-**Risk**: Division by zero errors, application crashes
+**Risk**: Division by zero errors, application crashes  
+**Status**: ✅ Completed (guard ditambahkan di DashboardCalculationService)
 
 #### 11. Missing Foreign Key Constraints
 **Location**: Database migrations
 **Issue**: No foreign key constraints enforced at database level
 **Risk**: Orphaned records, data inconsistency
-**Impact**: Data corruption, reporting errors
+**Impact**: Data corruption, reporting errors  
+**Status**: ✅ Completed (FK transactions diterapkan; migrasi skip di SQLite tests)
 
 ### 🟡 CODE QUALITY ISSUES (Priority: MEDIUM)
 
@@ -222,17 +229,17 @@ Schema::table('transactions', function (Blueprint $table) {
 ## 🔍 VERIFICATION CHECKLIST
 
 ### Post-Fix Testing
-- [ ] Security scan dengan OWASP ZAP
-- [ ] Performance testing dengan load simulator
-- [ ] Database integrity checks
-- [ ] Cross-platform deployment testing
-- [ ] Memory usage monitoring
+- [ ] Security scan dengan OWASP ZAP *(belum dijalankan)*
+- [ ] Performance testing dengan load simulator *(belum dijalankan)*
+- [ ] Database integrity checks *(belum dijalankan)*
+- [ ] Cross-platform deployment testing *(belum dijalankan)*
+- [ ] Memory usage monitoring *(belum dijalankan)*
 
 ### Monitoring Setup
-- [ ] Query performance monitoring
-- [ ] Error rate tracking
-- [ ] Security incident monitoring
-- [ ] User experience metrics
+- [ ] Query performance monitoring *(belum dijalankan)*
+- [ ] Error rate tracking *(belum dijalankan)*
+- [ ] Security incident monitoring *(belum dijalankan)*
+- [ ] User experience metrics *(belum dijalankan)*
 
 ## 🎯 FINAL RECOMMENDATION
 

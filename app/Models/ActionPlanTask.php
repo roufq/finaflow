@@ -10,15 +10,7 @@ class ActionPlanTask extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'action_plan_id',
-        'title',
-        'week_index',
-        'status',
-        'due_date',
-        'reminder_at',
-        'notes',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'due_date' => 'date',

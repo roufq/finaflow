@@ -7,18 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GiftEvent extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'event_name',
-        'event_type',
-        'event_date',
-        'budget_amount',
-        'spent_amount',
-        'recipients',
-        'gifts',
-        'notes',
-        'is_completed',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'event_date' => 'date',
@@ -41,7 +30,10 @@ class GiftEvent extends Model
 
     public function getBudgetUsedPercentageAttribute(): float
     {
-        if ($this->budget_amount == 0) return 0;
+        if ($this->budget_amount == 0) {
+            return 0;
+        }
+
         return min(100, ($this->spent_amount / $this->budget_amount) * 100);
     }
 

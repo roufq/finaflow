@@ -10,14 +10,7 @@ class LearningPath extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'education_module_id',
-        'progress',
-        'started_at',
-        'completed_at',
-        'recommendations',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'started_at' => 'datetime',

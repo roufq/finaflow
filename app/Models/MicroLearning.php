@@ -10,18 +10,7 @@ class MicroLearning extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'format',
-        'language',
-        'duration_minutes',
-        'difficulty',
-        'summary',
-        'content',
-        'content_url',
-        'persona_tags',
-        'is_active',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'persona_tags' => 'array',

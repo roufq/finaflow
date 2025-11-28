@@ -7,18 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SharedExpense extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'expense_name',
-        'description',
-        'total_amount',
-        'category',
-        'expense_date',
-        'participants',
-        'split_method',
-        'is_settled',
-        'settlement_date',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
@@ -40,7 +29,10 @@ class SharedExpense extends Model
 
     public function getAverageShareAttribute(): float
     {
-        if ($this->participant_count === 0) return 0;
+        if ($this->participant_count === 0) {
+            return 0;
+        }
+
         return $this->total_amount / $this->participant_count;
     }
 

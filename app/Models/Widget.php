@@ -10,14 +10,7 @@ class Widget extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'report_id',
-        'type',
-        'config',
-        'position',
-        'size',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'config' => 'array',

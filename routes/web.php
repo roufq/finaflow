@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AIInsightsController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\ApiIntegrationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -63,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('settings', \App\Http\Controllers\SettingController::class);
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
     Route::resource('transactions', \App\Http\Controllers\TransactionController::class);
-    Route::post('transactions/scan-receipt', [\App\Http\Controllers\TransactionController::class, 'scanReceipt'])->name('transactions.scanReceipt')->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class, 'auth']);
+    Route::post('transactions/scan-receipt', [\App\Http\Controllers\TransactionController::class, 'scanReceipt'])->name('transactions.scanReceipt');
     Route::resource('accounts', \App\Http\Controllers\AccountController::class);
     Route::resource('transfers', \App\Http\Controllers\TransferController::class);
     Route::resource('goals', \App\Http\Controllers\GoalController::class);
@@ -194,6 +195,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/reporting/widgets/{widget}', [ReportingController::class, 'destroyWidget'])->name('reporting.widgets.destroy');
     Route::post('/reporting/widgets/positions', [ReportingController::class, 'updateWidgetPositions'])->name('reporting.widgets.positions');
     Route::post('/reporting/reports/{report}/export', [ReportingController::class, 'exportReport'])->name('reporting.reports.export');
+
+    // API v1 (authenticated)
+    Route::prefix('api/v1')->name('api.v1.')->middleware('throttle:60,1')->group(function () {
+        Route::get('/transactions', [TransactionApiController::class, 'index'])->name('transactions.index');
+    });
 
     // Financial Education Routes
     Route::get('/education', [EducationController::class, 'index'])->name('education.index');

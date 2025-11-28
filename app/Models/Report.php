@@ -11,13 +11,7 @@ class Report extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'config',
-        'schedule',
-        'format',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'config' => 'array',

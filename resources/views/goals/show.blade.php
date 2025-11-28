@@ -95,10 +95,33 @@
                     <h6 class="m-0 font-weight-bold text-primary">Riwayat Progress</h6>
                 </div>
                 <div class="card-body">
-                    <div class="text-center text-muted">
-                        <i class="fas fa-chart-line fa-3x mb-3"></i>
-                        <p>Riwayat progress akan ditampilkan di sini</p>
-                    </div>
+                    @if($progressEntries->isEmpty())
+                        <div class="text-center text-muted">
+                            <i class="fas fa-chart-line fa-3x mb-3"></i>
+                            <p>Belum ada riwayat progress</p>
+                        </div>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Jumlah</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($progressEntries as $entry)
+                                        <tr>
+                                            <td>{{ $entry->created_at->format('d M Y') }}</td>
+                                            <td class="text-success font-weight-bold">+ Rp {{ number_format($entry->amount, 0, ',', '.') }}</td>
+                                            <td>{{ $entry->note ?: '—' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -144,7 +167,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="progress_amount">Jumlah Progress (Rp)</label>
-                        <input type="number" class="form-control" id="progress_amount" name="current_amount" min="0" required>
+                        <input type="number" class="form-control" id="progress_amount" name="amount" min="1" step="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="progress_note">Catatan (opsional)</label>
+                        <input type="text" class="form-control" id="progress_note" name="note" maxlength="255" placeholder="Contoh: setoran gaji bulan ini">
                     </div>
                 </div>
                 <div class="modal-footer">

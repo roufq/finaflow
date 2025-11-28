@@ -40,4 +40,9 @@ return [
         'api_key' => env('FINANCIAL_NEWS_API_KEY'),
     ],
 
+    'tesseract' => [
+        'path' => env('TESSERACT_PATH'),
+        'tessdata' => env('TESSDATA_PATH'),
+    ],
+
 ];

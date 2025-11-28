@@ -2,25 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Gamification extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'points',
-        'level',
-        'badges',
-        'achievements',
-        'streak_days',
-        'last_activity',
-        'progress',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'points' => 'integer',
@@ -71,7 +62,7 @@ class Gamification extends Model
 
         if ($this->last_activity && $this->last_activity->isYesterday()) {
             $this->increment('streak_days');
-        } elseif (!$this->last_activity || !$this->last_activity->isToday()) {
+        } elseif (! $this->last_activity || ! $this->last_activity->isToday()) {
             $this->streak_days = 1;
         }
 
@@ -105,7 +96,7 @@ class Gamification extends Model
     public function awardAchievement(string $achievement): void
     {
         $achievements = $this->achievements ?? [];
-        if (!in_array($achievement, $achievements)) {
+        if (! in_array($achievement, $achievements)) {
             $achievements[] = $achievement;
             $this->achievements = $achievements;
             $this->addPoints(500); // Bonus points for achievements

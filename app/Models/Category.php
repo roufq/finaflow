@@ -2,19 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Scopes\UserScope;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    use HasFactory;
     use UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'type',
-        'description',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public function user()
     {

@@ -4,34 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Goal extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'description',
-        'category',
-        'type',
-        'target_amount',
-        'current_amount',
-        'target_date',
-        'status',
-        'milestones'
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'target_amount' => 'decimal:2',
         'current_amount' => 'decimal:2',
         'target_date' => 'date',
-        'milestones' => 'array'
+        'milestones' => 'array',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function progressEntries(): HasMany
+    {
+        return $this->hasMany(GoalProgress::class)->latest();
     }
 
     public function getProgressPercentageAttribute(): float
@@ -66,6 +61,7 @@ class Goal extends Model
         }
 
         $monthsRemaining = $daysRemaining / 30; // Approximate
+
         return $this->remaining_amount / max(1, $monthsRemaining);
     }
 
@@ -80,7 +76,7 @@ class Goal extends Model
             'education' => 'Pendidikan',
             'health' => 'Kesehatan',
             'emergency' => 'Dana Darurat',
-            'other' => 'Lainnya'
+            'other' => 'Lainnya',
         ];
 
         return $categories[$this->category] ?? 'Lainnya';
@@ -91,7 +87,7 @@ class Goal extends Model
         $types = [
             'short_term' => 'Jangka Pendek',
             'medium_term' => 'Jangka Menengah',
-            'long_term' => 'Jangka Panjang'
+            'long_term' => 'Jangka Panjang',
         ];
 
         return $types[$this->type] ?? 'Jangka Pendek';
@@ -103,7 +99,7 @@ class Goal extends Model
             'active' => 'Aktif',
             'completed' => 'Selesai',
             'paused' => 'Ditunda',
-            'cancelled' => 'Dibatalkan'
+            'cancelled' => 'Dibatalkan',
         ];
 
         return $statuses[$this->status] ?? 'Aktif';
@@ -115,7 +111,7 @@ class Goal extends Model
             'active' => 'primary',
             'completed' => 'success',
             'paused' => 'warning',
-            'cancelled' => 'danger'
+            'cancelled' => 'danger',
         ];
 
         return $colors[$this->status] ?? 'primary';

@@ -10,12 +10,7 @@ class Tag extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'color',
-        'description',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'color' => 'string',
@@ -30,7 +25,7 @@ class Tag extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'transaction_tags')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     // Scopes

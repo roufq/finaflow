@@ -8,16 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ApiIntegration extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'provider',
-        'api_key',
-        'settings',
-        'last_sync_at',
-        'is_active',
-        'rate_limit_remaining',
-        'rate_limit_reset_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'settings' => 'array',

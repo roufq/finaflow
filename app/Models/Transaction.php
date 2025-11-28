@@ -2,28 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Models\Scopes\UserScope;
 
 class Transaction extends Model
 {
+    use HasFactory;
     use UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'account_id',
-        'category_id',
-        'transaction_date',
-        'type',
-        'amount',
-        'description',
-        'latitude',
-        'longitude',
-        'location_name',
-        'location_metadata',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'transaction_date' => 'date',
@@ -52,7 +42,7 @@ class Transaction extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'transaction_tags')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     // Accessors
@@ -68,7 +58,7 @@ class Transaction extends Model
 
     public function getHasLocationAttribute()
     {
-        return !is_null($this->latitude) && !is_null($this->longitude);
+        return ! is_null($this->latitude) && ! is_null($this->longitude);
     }
 
     public function getLocationUrlAttribute()
@@ -76,6 +66,7 @@ class Transaction extends Model
         if ($this->has_location) {
             return "https://www.google.com/maps?q={$this->latitude},{$this->longitude}";
         }
+
         return null;
     }
 
@@ -85,7 +76,7 @@ class Transaction extends Model
         $this->tags()->sync($tagIds);
     }
 
-    public function detachTags(array $tagIds = null)
+    public function detachTags(?array $tagIds = null)
     {
         if ($tagIds) {
             $this->tags()->detach($tagIds);

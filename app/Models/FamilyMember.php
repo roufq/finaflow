@@ -7,16 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FamilyMember extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'name',
-        'relationship',
-        'date_of_birth',
-        'monthly_allowance',
-        'current_balance',
-        'is_active',
-        'preferences',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'date_of_birth' => 'date',

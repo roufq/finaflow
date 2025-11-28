@@ -2,27 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Habit extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'habit_name',
-        'category',
-        'target_amount',
-        'current_streak',
-        'best_streak',
-        'start_date',
-        'last_achieved',
-        'is_active',
-        'progress_data',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'target_amount' => 'decimal:2',
@@ -54,7 +43,7 @@ class Habit extends Model
     {
         $today = Carbon::today();
 
-        if (!$this->isAchievedToday()) {
+        if (! $this->isAchievedToday()) {
             if ($this->last_achieved && $this->last_achieved->isYesterday()) {
                 $this->increment('current_streak');
             } else {
@@ -76,7 +65,7 @@ class Habit extends Model
      */
     public function checkStreak(): void
     {
-        if ($this->last_achieved && !$this->last_achieved->isToday() && !$this->last_achieved->isYesterday()) {
+        if ($this->last_achieved && ! $this->last_achieved->isToday() && ! $this->last_achieved->isYesterday()) {
             $this->current_streak = 0;
             $this->save();
         }

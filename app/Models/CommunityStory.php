@@ -10,19 +10,7 @@ class CommunityStory extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'display_name',
-        'title',
-        'achievement',
-        'tip',
-        'status',
-        'moderated_by',
-        'moderated_at',
-        'moderation_flags',
-        'moderator_notes',
-        'submitted_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'submitted_at' => 'datetime',

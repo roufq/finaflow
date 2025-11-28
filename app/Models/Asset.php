@@ -2,29 +2,15 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Asset extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'type',
-        'name',
-        'description',
-        'purchase_value',
-        'current_value',
-        'purchase_date',
-        'depreciation_rate',
-        'monthly_income',
-        'location',
-        'serial_number',
-        'insurance_expiry',
-        'notes',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'purchase_value' => 'decimal:2',
@@ -43,7 +29,7 @@ class Asset extends Model
     // Calculate depreciated value based on time passed
     public function getDepreciatedValueAttribute(): float
     {
-        if (!$this->depreciation_rate || !$this->purchase_date) {
+        if (! $this->depreciation_rate || ! $this->purchase_date) {
             return $this->current_value;
         }
 
@@ -56,7 +42,10 @@ class Asset extends Model
     // Calculate annual depreciation amount
     public function getAnnualDepreciationAttribute(): float
     {
-        if (!$this->depreciation_rate) return 0;
+        if (! $this->depreciation_rate) {
+            return 0;
+        }
+
         return $this->purchase_value * ($this->depreciation_rate / 100);
     }
 

@@ -7,15 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserPrivacySetting extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'data_analytics',
-        'behavioral_insights',
-        'third_party_sharing',
-        'data_anonymization',
-        'account_deletion',
-        'custom_settings',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'data_analytics' => 'boolean',

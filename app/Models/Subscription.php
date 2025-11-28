@@ -2,28 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class Subscription extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'provider',
-        'amount',
-        'frequency',
-        'next_billing_date',
-        'category',
-        'auto_renewal',
-        'status',
-        'notes',
-        'metadata',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'amount' => 'decimal:2',
@@ -72,7 +60,7 @@ class Subscription extends Model
      */
     public function updateNextBillingDate(): void
     {
-        if (!$this->next_billing_date) {
+        if (! $this->next_billing_date) {
             return;
         }
 
@@ -129,6 +117,6 @@ class Subscription extends Model
     public function scopeDueSoon($query, $days = 7)
     {
         return $query->where('next_billing_date', '<=', Carbon::now()->addDays($days))
-                    ->where('next_billing_date', '>', Carbon::now());
+            ->where('next_billing_date', '>', Carbon::now());
     }
 }

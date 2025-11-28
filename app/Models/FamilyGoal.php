@@ -7,18 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FamilyGoal extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'goal_name',
-        'description',
-        'target_amount',
-        'current_amount',
-        'target_date',
-        'goal_type',
-        'contributors',
-        'is_achieved',
-        'achieved_date',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'target_amount' => 'decimal:2',
@@ -36,7 +25,10 @@ class FamilyGoal extends Model
 
     public function getProgressPercentageAttribute(): float
     {
-        if ($this->target_amount == 0) return 0;
+        if ($this->target_amount == 0) {
+            return 0;
+        }
+
         return min(100, ($this->current_amount / $this->target_amount) * 100);
     }
 
@@ -47,7 +39,10 @@ class FamilyGoal extends Model
 
     public function getDaysRemainingAttribute(): ?int
     {
-        if (!$this->target_date) return null;
+        if (! $this->target_date) {
+            return null;
+        }
+
         return now()->diffInDays($this->target_date, false);
     }
 

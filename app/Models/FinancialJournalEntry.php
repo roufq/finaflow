@@ -10,16 +10,7 @@ class FinancialJournalEntry extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'habit_id',
-        'spending_trigger_id',
-        'mood',
-        'reflection',
-        'commitment',
-        'insights',
-        'logged_at',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'logged_at' => 'datetime',

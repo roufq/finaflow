@@ -7,10 +7,13 @@ use App\Models\Category;
 use App\Models\Debt;
 use App\Models\Setting;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
+    private array $monthlyTotalsCache = [];
+
     public function index()
     {
         $currentMonthExpense = $this->getCurrentMonthAmount('expense');
@@ -92,47 +95,40 @@ class AnalyticsController extends Controller
 
     private function getWeeklySpending(): array
     {
-        $data = [];
+        $startOfWeek = now()->startOfWeek()->subWeeks(11);
+        $rows = Transaction::selectRaw('YEAR(transaction_date) as year, WEEK(transaction_date, 3) as week, MIN(transaction_date) as week_start, SUM(amount) as total')
+            ->where('type', 'expense')
+            ->where('transaction_date', '>=', $startOfWeek)
+            ->groupByRaw('YEAR(transaction_date), WEEK(transaction_date, 3)')
+            ->orderBy('week_start')
+            ->get();
 
-        for ($i = 11; $i >= 0; $i--) {
-            $startOfWeek = now()->subWeeks($i)->startOfWeek();
-            $endOfWeek = $startOfWeek->copy()->endOfWeek();
+        $mapped = [];
+        foreach ($rows as $row) {
+            $mapped[sprintf('%d-%02d', $row->year, $row->week)] = (float) $row->total;
+        }
 
-            $total = Transaction::where('type', 'expense')
-                ->whereBetween('transaction_date', [$startOfWeek, $endOfWeek])
-                ->sum('amount');
+        $labels = [];
+        $values = [];
 
-            $data[] = [
-                'label' => $startOfWeek->format('d M') . ' - ' . $endOfWeek->format('d M'),
-                'total' => (float) $total,
-            ];
+        for ($i = 0; $i < 12; $i++) {
+            $weekStart = $startOfWeek->copy()->addWeeks($i);
+            $key = sprintf('%s-%02d', $weekStart->format('o'), $weekStart->isoWeek());
+            $weekEnd = $weekStart->copy()->endOfWeek();
+
+            $labels[] = $weekStart->format('d M').' - '.$weekEnd->format('d M');
+            $values[] = $mapped[$key] ?? 0.0;
         }
 
         return [
-            'labels' => array_column($data, 'label'),
-            'values' => array_column($data, 'total'),
+            'labels' => $labels,
+            'values' => $values,
         ];
     }
 
     private function getMonthlySpending(): array
     {
-        $data = [];
-
-        for ($i = 11; $i >= 0; $i--) {
-            $date = now()->subMonths($i);
-
-            $total = Transaction::where('type', 'expense')
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
-
-            $data[] = [
-                'label' => $date->format('M Y'),
-                'total' => (float) $total,
-            ];
-        }
-
-        return $data;
+        return $this->getMonthlyTotals('expense', 12);
     }
 
     private function getSeasonalInsights(array $monthlySpending): array
@@ -179,18 +175,10 @@ class AnalyticsController extends Controller
     {
         $userAvg = $this->getAverageMonthlyAmount('expense');
 
-        $globalTotals = [];
-        for ($i = 0; $i < 6; $i++) {
-            $date = now()->subMonths($i);
-            $amount = DB::table('transactions')
-                ->where('type', 'expense')
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
-            $globalTotals[] = (float) $amount;
-        }
+        $globalTotals = $this->getMonthlyTotals('expense', 6, false);
+        $globalValues = array_column($globalTotals, 'total');
 
-        $globalAvg = count($globalTotals) > 0 ? array_sum($globalTotals) / count($globalTotals) : 0;
+        $globalAvg = count($globalValues) > 0 ? array_sum($globalValues) / count($globalValues) : 0;
 
         $difference = $globalAvg > 0 ? (($userAvg - $globalAvg) / $globalAvg) * 100 : 0;
         $relative = $difference > 10 ? 'above' : ($difference < -10 ? 'below' : 'similar');
@@ -222,6 +210,7 @@ class AnalyticsController extends Controller
                     'total' => $average,
                 ];
             }
+
             return $predictions;
         }
 
@@ -250,6 +239,7 @@ class AnalyticsController extends Controller
                     'total' => $average,
                 ];
             }
+
             return $predictions;
         }
 
@@ -296,21 +286,13 @@ class AnalyticsController extends Controller
 
     private function calculateSavingsRate(): float
     {
+        $incomeTotals = $this->getMonthlyTotals('income', 6);
+        $expenseTotals = $this->getMonthlyTotals('expense', 6);
+
         $monthlyRates = [];
-
-        for ($i = 0; $i < 6; $i++) {
-            $date = now()->subMonths($i);
-
-            $income = Transaction::where('type', 'income')
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
-
-            $expense = Transaction::where('type', 'expense')
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
-
+        foreach (range(0, 5) as $i) {
+            $income = $incomeTotals[$i]['total'] ?? 0.0;
+            $expense = $expenseTotals[$i]['total'] ?? 0.0;
             $savings = $income - $expense;
             $monthlyRates[] = $income > 0 ? ($savings / $income) * 100 : 0;
         }
@@ -343,17 +325,8 @@ class AnalyticsController extends Controller
             })
             ->sum('balance');
 
-        $totalExpenses = 0;
-        for ($i = 0; $i < 6; $i++) {
-            $date = now()->subMonths($i);
-            $expense = Transaction::where('type', 'expense')
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
-            $totalExpenses += $expense;
-        }
-
-        $avgMonthlyExpense = $totalExpenses / 6;
+        $expenseTotals = $this->getMonthlyTotals('expense', 6);
+        $avgMonthlyExpense = count($expenseTotals) > 0 ? array_sum(array_column($expenseTotals, 'total')) / count($expenseTotals) : 0.0;
 
         if ($avgMonthlyExpense <= 0) {
             return 0.0;
@@ -442,7 +415,7 @@ class AnalyticsController extends Controller
                 ];
 
                 foreach ($keywords as $keyword) {
-                    $query->orWhere('name', 'like', '%' . $keyword . '%');
+                    $query->orWhere('name', 'like', '%'.$keyword.'%');
                 }
             })
             ->pluck('id');
@@ -491,19 +464,11 @@ class AnalyticsController extends Controller
 
     private function getAverageMonthlyAmount(string $type): float
     {
-        $amounts = [];
+        $totals = $this->getMonthlyTotals($type, 6);
+        $values = array_column($totals, 'total');
 
-        for ($i = 0; $i < 6; $i++) {
-            $date = now()->subMonths($i);
-            $amount = Transaction::where('type', $type)
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
-            $amounts[] = (float) $amount;
-        }
-
-        return count($amounts) > 0
-            ? array_sum($amounts) / count($amounts)
+        return count($values) > 0
+            ? array_sum($values) / count($values)
             : 0.0;
     }
 
@@ -538,5 +503,45 @@ class AnalyticsController extends Controller
         }
 
         return 'stable';
+    }
+
+    private function getMonthlyTotals(string $type, int $months, bool $useCache = true): array
+    {
+        $cacheKey = $type.':'.$months;
+        if ($useCache && isset($this->monthlyTotalsCache[$cacheKey])) {
+            return $this->monthlyTotalsCache[$cacheKey];
+        }
+
+        $start = now()->startOfMonth()->subMonths($months - 1);
+
+        $rows = Transaction::selectRaw('YEAR(transaction_date) as year, MONTH(transaction_date) as month, SUM(amount) as total')
+            ->where('type', $type)
+            ->where('transaction_date', '>=', $start)
+            ->groupByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+            ->orderByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+            ->get();
+
+        $mapped = [];
+        foreach ($rows as $row) {
+            $period = Carbon::create((int) $row->year, (int) $row->month, 1)->format('Y-m');
+            $mapped[$period] = (float) $row->total;
+        }
+
+        $totals = [];
+        for ($i = 0; $i < $months; $i++) {
+            $periodDate = $start->copy()->addMonths($i);
+            $key = $periodDate->format('Y-m');
+
+            $totals[] = [
+                'label' => $periodDate->format('M Y'),
+                'total' => $mapped[$key] ?? 0.0,
+            ];
+        }
+
+        if ($useCache) {
+            $this->monthlyTotalsCache[$cacheKey] = $totals;
+        }
+
+        return $totals;
     }
 }

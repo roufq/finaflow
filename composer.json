@@ -74,6 +74,9 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "security:audit": [
+            "composer audit --ansi"
         ]
     },
     "extra": {
@@ -93,7 +96,7 @@
             "ignore": [
                 "PKSA-365x-2zjk-pt47"
             ],
-            "block-insecure": false
+            "block-insecure": true
         }
     },
     "minimum-stability": "stable",

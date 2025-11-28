@@ -9,19 +9,7 @@ class Investment extends Model
 {
     use \App\Models\Scopes\UserScope;
 
-    protected $fillable = [
-        'user_id',
-        'symbol',
-        'name',
-        'type',
-        'quantity',
-        'purchase_price',
-        'current_price',
-        'purchase_date',
-        'dividends_received',
-        'fees',
-        'notes',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'quantity' => 'decimal:8',
@@ -58,7 +46,10 @@ class Investment extends Model
     // Calculate ROI percentage
     public function getRoiPercentageAttribute(): float
     {
-        if ($this->total_purchase_value == 0) return 0;
+        if ($this->total_purchase_value == 0) {
+            return 0;
+        }
+
         return (($this->current_value - $this->total_purchase_value) / $this->total_purchase_value) * 100;
     }
 
@@ -71,7 +62,10 @@ class Investment extends Model
     // Calculate total return percentage
     public function getTotalReturnPercentageAttribute(): float
     {
-        if ($this->total_purchase_value == 0) return 0;
+        if ($this->total_purchase_value == 0) {
+            return 0;
+        }
+
         return ($this->total_return / $this->total_purchase_value) * 100;
     }
 }

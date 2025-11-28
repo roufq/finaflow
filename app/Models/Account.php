@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,19 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Account extends Model
 {
     use \App\Models\Scopes\UserScope;
+    use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'type',
-        'account_number',
-        'bank_name',
-        'balance',
-        'credit_limit',
-        'opening_date',
-        'notes',
-        'is_active',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'balance' => 'decimal:2',
@@ -96,7 +87,7 @@ class Account extends Model
 
     public function getTypeLabelAttribute()
     {
-        return match($this->type) {
+        return match ($this->type) {
             'bank' => 'Bank Account',
             'cash' => 'Cash',
             'credit_card' => 'Credit Card',

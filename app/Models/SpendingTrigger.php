@@ -10,14 +10,7 @@ class SpendingTrigger extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'trigger_type',
-        'description',
-        'frequency',
-        'amount_threshold',
-        'metadata',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'amount_threshold' => 'decimal:2',

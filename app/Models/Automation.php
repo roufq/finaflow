@@ -4,21 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Transaction;
 
 class Automation extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'name',
-        'description',
-        'type',
-        'conditions',
-        'actions',
-        'is_active',
-        'last_run_at',
-        'run_count',
-    ];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'conditions' => 'array',
@@ -41,7 +30,7 @@ class Automation extends Model
         $conditions = $this->conditions ?? [];
 
         foreach ($conditions as $condition) {
-            if (!$this->evaluateCondition($condition, $context)) {
+            if (! $this->evaluateCondition($condition, $context)) {
                 return false;
             }
         }
@@ -145,7 +134,8 @@ class Automation extends Model
                 'description' => $params['description'] ?? 'Automated transaction',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Automation create transaction failed: ' . $e->getMessage());
+            \Log::error('Automation create transaction failed: '.$e->getMessage());
+
             return null;
         }
     }
@@ -158,10 +148,12 @@ class Automation extends Model
         try {
             // Implementation for sending notifications
             // This could integrate with email, SMS, or push notifications
-            \Log::info('Automation notification: ' . ($params['message'] ?? 'No message'));
+            \Log::info('Automation notification: '.($params['message'] ?? 'No message'));
+
             return true;
         } catch (\Exception $e) {
-            \Log::error('Automation send notification failed: ' . $e->getMessage());
+            \Log::error('Automation send notification failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -173,10 +165,12 @@ class Automation extends Model
     {
         try {
             // Implementation for updating budgets
-            \Log::info('Automation budget update: ' . json_encode($params));
+            \Log::info('Automation budget update: '.json_encode($params));
+
             return true;
         } catch (\Exception $e) {
-            \Log::error('Automation update budget failed: ' . $e->getMessage());
+            \Log::error('Automation update budget failed: '.$e->getMessage());
+
             return false;
         }
     }
@@ -188,10 +182,12 @@ class Automation extends Model
     {
         try {
             // Implementation for generating reports
-            \Log::info('Automation report generation: ' . json_encode($params));
+            \Log::info('Automation report generation: '.json_encode($params));
+
             return true;
         } catch (\Exception $e) {
-            \Log::error('Automation generate report failed: ' . $e->getMessage());
+            \Log::error('Automation generate report failed: '.$e->getMessage());
+
             return false;
         }
     }
