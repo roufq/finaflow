@@ -39,6 +39,10 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $userRole->syncPermissions([
             'access dashboard',
+            'manage transactions',
+            'manage accounts',
+            'manage budgets',
+            'manage goals',
         ]);
     }
 }

@@ -72,4 +72,24 @@ return Application::configure(basePath: dirname(__DIR__))
 
             return redirect()->route('login')->with('error', 'Sesi Anda berakhir karena aksi tidak diizinkan.');
         });
+
+        $exceptions->render(function (\Throwable $exception, $request) {
+            // Tangani CSRF/token expiration (HTTP 419) dengan redirect ke login
+            if ($request->expectsJson()) {
+                return null;
+            }
+
+            $status = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : null;
+            if ($status === 419) {
+                if (Auth::check()) {
+                    Auth::logout();
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                }
+
+                return redirect()->route('login')->with('error', 'Sesi telah kedaluwarsa. Silakan login kembali.');
+            }
+
+            return null;
+        });
     })->create();

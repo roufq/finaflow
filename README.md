@@ -144,6 +144,7 @@ Untuk testing, gunakan akun berikut:
 ## 🔐 Role & Access Control
 
 - Default role **user** hanya memiliki akses dashboard; izin lain diberikan per pengguna oleh admin.
+- Pengguna baru otomatis memiliki akses dasar: Dashboard, Transaksi/Tag, Akun/Transfer, Anggaran, dan Goals. Admin bisa mempersempit lewat halaman Kelola Pengguna.
 - Admin dapat mengelola peran, mengaktifkan/nonaktifkan user, dan membatasi menu sidebar per pengguna di halaman **Admin → Kelola Pengguna** (`/admin/users`).
 - Permission yang tersedia dan menu yang dilindungi:
   - `access dashboard`: Dashboard.

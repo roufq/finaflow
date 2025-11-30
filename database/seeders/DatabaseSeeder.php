@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\DefaultCategoriesCreator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $categoryCreator = app(DefaultCategoriesCreator::class);
         $this->call(RolesAndPermissionsSeeder::class);
 
         // Create dummy users
@@ -41,6 +43,8 @@ class DatabaseSeeder extends Seeder
 
         $user1->syncRoles([$adminRole]);
         $user2->syncRoles([$userRole]);
+        $categoryCreator->createFor($user1);
+        $categoryCreator->createFor($user2);
 
         // Default admin & user accounts for quick login
         $seedAdmin = User::firstOrCreate([
@@ -50,6 +54,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $seedAdmin->syncRoles([$adminRole]);
+        $categoryCreator->createFor($seedAdmin);
 
         $seedUser = User::firstOrCreate([
             'email' => 'user@finaflow.test',
@@ -58,6 +63,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $seedUser->syncRoles([$userRole]);
+        $categoryCreator->createFor($seedUser);
 
         // Create settings for users
         Setting::withoutGlobalScopes()->updateOrCreate([

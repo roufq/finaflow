@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\DefaultCategoriesCreator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
+    public function __construct(public DefaultCategoriesCreator $defaultCategoriesCreator) {}
+
     public function showRegistrationForm()
     {
         return view('auth.register');
@@ -30,6 +33,7 @@ class RegisterController extends Controller
         ]);
 
         $user->assignRole('user');
+        $this->defaultCategoriesCreator->createFor($user);
 
         Auth::login($user);
 

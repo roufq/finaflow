@@ -621,22 +621,22 @@
                     </li>
                 @endcan
                 @endcan
-
+                
+                @can('manage family')
                 <!-- Divider -->
                 <hr class="sidebar-divider">
-
-                <!-- Heading -->
-                <div class="sidebar-heading">
-                    Family Finance
-                </div>
-
-                <!-- Nav Item - Family -->
-                <li class="nav-item {{ request()->routeIs('family.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('family.index') }}">
-                        <i class="fas fa-fw fa-users"></i>
-                        <span>{{ __('navigation.family_finance') }}</span>
-                    </a>
-                </li>
+                    <!-- Heading -->
+                    <div class="sidebar-heading">
+                        Family Finance
+                    </div>
+                    <!-- Nav Item - Family -->
+                    <li class="nav-item {{ request()->routeIs('family.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('family.index') }}">
+                            <i class="fas fa-fw fa-users"></i>
+                            <span>{{ __('navigation.family_finance') }}</span>
+                        </a>
+                    </li>
+                @endcan
             </div>
 
             <!-- Divider -->
