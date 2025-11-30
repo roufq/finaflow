@@ -141,6 +141,22 @@ Untuk testing, gunakan akun berikut:
 - **Email**: `john@example.com` atau `jane@example.com`
 - **Password**: `password`
 
+## 🔐 Role & Access Control
+
+- Default role **user** hanya memiliki akses dashboard; izin lain diberikan per pengguna oleh admin.
+- Admin dapat mengelola peran, mengaktifkan/nonaktifkan user, dan membatasi menu sidebar per pengguna di halaman **Admin → Kelola Pengguna** (`/admin/users`).
+- Permission yang tersedia dan menu yang dilindungi:
+  - `access dashboard`: Dashboard.
+  - `manage transactions`: Transaksi & Tag.
+  - `manage accounts`: Akun & Transfer.
+  - `manage budgets`: Anggaran & Utang.
+  - `manage goals`: Goals.
+  - `view reports`: Reporting, Analytics, Investments, Assets, Net Worth, Tax Documents.
+  - `manage automations`: Automations & Integrations.
+  - `manage family`: Subscriptions & Rewards/Loyalty.
+  - `manage behavioral`: Behavioral Insights, Education, Coaching.
+- User yang dinonaktifkan tetap bisa login, tetapi melihat overlay peringatan dan tidak dapat mengakses halaman.
+
 ## 📊 Struktur Database
 
 ### Tabel Utama:

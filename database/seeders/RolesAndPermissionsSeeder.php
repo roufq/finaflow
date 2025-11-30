@@ -13,6 +13,16 @@ class RolesAndPermissionsSeeder extends Seeder
         app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
         $permissions = [
+            'access dashboard',
+            'manage users',
+            'manage transactions',
+            'manage accounts',
+            'manage budgets',
+            'manage goals',
+            'view reports',
+            'manage automations',
+            'manage family',
+            'manage behavioral',
             'manage education',
             'manage news',
             'access admin',
@@ -26,6 +36,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $userRole = Role::firstOrCreate(['name' => 'user']);
 
         $adminRole->givePermissionTo($permissions);
-        $userRole->syncPermissions([]);
+
+        $userRole->syncPermissions([
+            'access dashboard',
+        ]);
     }
 }

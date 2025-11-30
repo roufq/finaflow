@@ -68,31 +68,41 @@
 <!-- Page Heading -->
 <div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(180deg, #f8f9fb 0%, #ffffff 100%);">
     <div class="card-body py-3">
-        <div class="d-flex flex-wrap align-items-center justify-content-between">
-            <div class="mb-2">
+        <div class="row align-items-center">
+            <div class="col-lg-4 mb-3 mb-lg-0">
                 <h1 class="h4 mb-1 text-gray-800">{{ __('dashboard.title') }}</h1>
                 <div class="small text-muted">Periode: {{ $periodDate->translatedFormat('F Y') }}</div>
             </div>
-            <div class="d-flex flex-wrap align-items-center">
-                <form class="form-inline flex-wrap align-items-center mr-2 mb-0" method="GET" action="{{ route('dashboard') }}">
-                    <div class="input-group input-group-sm mr-2 mb-0">
-                        <select name="month" class="form-control" aria-label="Pilih bulan">
-                            @foreach(range(1, 12) as $monthOption)
-                                <option value="{{ $monthOption }}" {{ $monthOption === (int) $periodDate->format('n') ? 'selected' : '' }}>
-                                    {{ Carbon\Carbon::create()->month($monthOption)->translatedFormat('F') }}
-                                </option>
-                            @endforeach
-                        </select>
+            <div class="col-lg-8">
+                <div class="row align-items-end">
+                    <div class="col-md-7 mb-2">
+                        <form class="form-row" method="GET" action="{{ route('dashboard') }}">
+                            <div class="col-12 col-md-6 mb-2 mb-md-0">
+                                <select name="month" class="form-control form-control-sm" aria-label="Pilih bulan">
+                                    @foreach(range(1, 12) as $monthOption)
+                                        <option value="{{ $monthOption }}" {{ $monthOption === (int) $periodDate->format('n') ? 'selected' : '' }}>
+                                            {{ Carbon\Carbon::create()->month($monthOption)->translatedFormat('F') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6 mb-2 mb-md-0">
+                                <input type="number" name="year" class="form-control form-control-sm" min="2000" max="2100" value="{{ $periodDate->format('Y') }}" aria-label="Pilih tahun">
+                            </div>
+                            <div class="col-6 mt-2">
+                                <button type="submit" class="btn btn-primary btn-sm btn-block">Terapkan</button>
+                            </div>
+                            <div class="col-6 mt-2">
+                                <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm btn-block">Reset</a>
+                            </div>
+                        </form>
                     </div>
-                    <div class="input-group input-group-sm mr-2 mb-0" style="width: 110px;">
-                        <input type="number" name="year" class="form-control" min="2000" max="2100" value="{{ $periodDate->format('Y') }}" aria-label="Pilih tahun">
+                    <div class="col-md-5 mb-2">
+                        <a href="#" class="btn btn-sm btn-primary shadow-sm d-inline-flex align-items-center w-100">
+                            <i class="fas fa-download fa-sm text-white-50 mr-1"></i> {{ __('dashboard.generate_report') }}
+                        </a>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm mr-2">Terapkan</button>
-                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
-                </form>
-                <a href="#" class="btn btn-sm btn-primary shadow-sm d-inline-flex align-items-center ml-2 mb-0">
-                    <i class="fas fa-download fa-sm text-white-50 mr-1"></i> {{ __('dashboard.generate_report') }}
-                </a>
+                </div>
             </div>
         </div>
     </div>
@@ -152,14 +162,14 @@
 
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-body py-3">
-        <form class="form-inline flex-wrap align-items-center" method="GET" action="{{ route('transactions.index') }}">
-            <div class="input-group input-group-sm mr-2 mb-2" style="min-width: 260px;">
+        <form class="form-inline flex-wrap align-items-center w-100" method="GET" action="{{ route('transactions.index') }}">
+            <div class="input-group input-group-sm mr-md-2 mb-2 w-100 w-md-auto">
                 <input type="text" name="search" class="form-control" placeholder="Cari transaksi, kategori, atau nominal..." aria-label="Pencarian cepat transaksi">
             </div>
-            <button type="submit" class="btn btn-primary btn-sm mb-2">
+            <button type="submit" class="btn btn-primary btn-sm mb-2 w-100 w-sm-auto">
                 <i class="fas fa-search mr-1"></i> Cari Cepat
             </button>
-            <small class="text-muted ml-2 mb-2">Pencarian akan membuka daftar transaksi.</small>
+            <small class="text-muted ml-md-2 mb-2 d-block">Pencarian akan membuka daftar transaksi.</small>
         </form>
     </div>
 </div>
@@ -199,19 +209,19 @@
             </div>
             <div class="card-body">
                 <div class="d-flex flex-wrap">
-                    <a href="{{ route('transactions.create') }}" class="btn btn-primary btn-sm mr-2 mb-2">
+                    <a href="{{ route('transactions.create') }}" class="btn btn-primary btn-sm mr-2 mb-2 w-100 w-sm-auto">
                         <i class="fas fa-plus-circle mr-1"></i> Catat transaksi
                     </a>
-                    <a href="{{ route('budgets.create') }}" class="btn btn-outline-primary btn-sm mr-2 mb-2">
+                    <a href="{{ route('budgets.create') }}" class="btn btn-outline-primary btn-sm mr-2 mb-2 w-100 w-sm-auto">
                         <i class="fas fa-calculator mr-1"></i> Buat anggaran
                     </a>
-                    <a href="{{ route('goals.create') }}" class="btn btn-outline-success btn-sm mr-2 mb-2">
+                    <a href="{{ route('goals.create') }}" class="btn btn-outline-success btn-sm mr-2 mb-2 w-100 w-sm-auto">
                         <i class="fas fa-bullseye mr-1"></i> Tambah goal
                     </a>
-                    <a href="{{ route('bank-integrations.create') }}" class="btn btn-outline-info btn-sm mr-2 mb-2">
+                    <a href="{{ route('bank-integrations.create') }}" class="btn btn-outline-info btn-sm mr-2 mb-2 w-100 w-sm-auto">
                         <i class="fas fa-university mr-1"></i> Sambungkan bank
                     </a>
-                    <a href="{{ route('subscriptions.index') }}" class="btn btn-outline-warning btn-sm mr-2 mb-2">
+                    <a href="{{ route('subscriptions.index') }}" class="btn btn-outline-warning btn-sm mr-2 mb-2 w-100 w-sm-auto">
                         <i class="fas fa-sync-alt mr-1"></i> Tinjau langganan
                     </a>
                 </div>
@@ -425,8 +435,9 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                <div class="chart-area" style="height: 280px;">
-                    <canvas id="cashFlowChart"></canvas>
+                <div class="chart-area chart-wrapper loading" style="height: clamp(220px, 30vh, 420px);">
+                    <div class="skeleton-box"></div>
+                    <canvas id="cashFlowChart" data-cash-flow='@json($cashFlow)'></canvas>
                 </div>
             </div>
         </div>
@@ -586,8 +597,9 @@
                 <span class="badge badge-light text-capitalize">{{ ucfirst($burnRate['trend']) }}</span>
             </div>
             <div class="card-body">
-                <div class="chart-area mb-4">
-                    <canvas id="burnRateChart" style="height: 300px;"></canvas>
+                <div class="chart-area chart-wrapper loading mb-4">
+                    <div class="skeleton-box"></div>
+                    <canvas id="burnRateChart" style="height: clamp(220px, 30vh, 420px);" data-burn-rate='@json($burnRate['monthly_history'])'></canvas>
                     <div id="burnRateEmpty" class="text-center text-muted py-5 d-none">
                         <i class="fas fa-chart-line fa-2x mb-3 text-gray-300"></i>
                         <p class="mb-0">{{ __('dashboard.no_data') ?? 'No burn rate data yet.' }}</p>
@@ -653,15 +665,16 @@
 (function () {
     const cashFlowData = @json($cashFlow);
     const burnRateHistory = @json($burnRate['monthly_history']);
+    const isMobileViewport = window.matchMedia('(max-width: 767.98px)').matches;
 
     const initCharts = function () {
         if (!window.Chart) {
-            window.setTimeout(initCharts, 50);
             return;
         }
 
         const cashFlowCanvas = document.getElementById('cashFlowChart');
         if (cashFlowCanvas) {
+            cashFlowCanvas.closest('.chart-wrapper')?.classList.remove('loading');
             const ctx = cashFlowCanvas.getContext('2d');
             const labels = cashFlowData.map(item => item.month);
             const values = cashFlowData.map(item => item.net);
@@ -686,7 +699,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'top' },
+                        legend: { display: !isMobileViewport, position: 'top' },
                         title: { display: true, text: '{{ __('dashboard.monthly_cash_flow') }}' }
                     }
                 }
@@ -696,6 +709,7 @@
         const burnCanvas = document.getElementById('burnRateChart');
         const emptyState = document.getElementById('burnRateEmpty');
         if (burnCanvas) {
+            burnCanvas.closest('.chart-wrapper')?.classList.remove('loading');
             const labels = burnRateHistory.map(item => item.month);
             const values = burnRateHistory.map(item => item.burn_rate);
             const hasData = values.some(value => Number(value) !== 0);
@@ -745,7 +759,7 @@
                         }
                     },
                     plugins: {
-                        legend: { position: 'top' },
+                        legend: { display: !isMobileViewport, position: 'top' },
                         title: { display: true, text: '{{ __('dashboard.monthly_burn_rate_analysis') }}' }
                     }
                 }

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="container-fluid">
@@ -31,12 +31,12 @@
                         <tbody>
                             @foreach($logs as $log)
                                 <tr>
-                                    <td>{{ optional($log->created_at)->format('Y-m-d H:i:s') ?? '—' }}</td>
+                                    <td>{{ optional($log->created_at)->format('Y-m-d H:i:s') ?? 'â€”' }}</td>
                                     <td class="text-capitalize">{{ str_replace('_', ' ', $log->action) }}</td>
-                                    <td>{{ $log->description ?? '—' }}</td>
-                                    <td>{{ $log->ip_address ?? '—' }}</td>
-                                    <td class="text-truncate" style="max-width: 240px;" title="{{ $log->user_agent }}">
-                                        {{ $log->user_agent ?? '—' }}
+                                    <td>{{ $log->description ?? 'â€”' }}</td>
+                                    <td>{{ $log->ip_address ?? 'â€”' }}</td>
+                                    <td class="text-break small" title="{{ $log->user_agent }}">
+                                        {{ $log->user_agent ?? 'â€”' }}
                                     </td>
                                 </tr>
                             @endforeach

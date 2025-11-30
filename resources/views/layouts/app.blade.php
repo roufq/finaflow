@@ -203,6 +203,27 @@
             transform: rotate(180deg);
         }
 
+        .account-locked-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.85);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .account-locked-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+
         #pageContent.content-loading {
             position: relative;
         }
@@ -285,6 +306,21 @@
 
 <body id="page-top">
 
+    @if(Auth::check() && ! Auth::user()->is_active)
+        <div class="account-locked-overlay">
+            <div class="account-locked-card">
+                <h4 class="mb-2 text-danger">Akses Dinonaktifkan</h4>
+                <p class="mb-3">{{ session('account_inactive_message') ?? 'Akun Anda dinonaktifkan. Hubungi admin untuk mengaktifkan kembali.' }}</p>
+                <a href="{{ route('logout') }}"
+                   onclick="event.preventDefault(); document.getElementById('logout-form-overlay').submit();"
+                   class="btn btn-primary btn-sm">Keluar</a>
+                <form id="logout-form-overlay" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            </div>
+        </div>
+    @endif
+
     <!-- Page Wrapper -->
     <div id="wrapper" class="d-flex" style="min-height: 100vh;">
 
@@ -303,20 +339,24 @@
                 <!-- Divider -->
                 <hr class="sidebar-divider my-0">
 
-                <!-- Nav Item - Dashboard -->
-                <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('dashboard') }}">
-                        <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>{{ __('dashboard.title') }}</span></a>
-                </li>
+                @can('access dashboard')
+                    <!-- Nav Item - Dashboard -->
+                    <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('dashboard') }}">
+                            <i class="fas fa-fw fa-tachometer-alt"></i>
+                            <span>{{ __('dashboard.title') }}</span></a>
+                    </li>
+                @endcan
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
-                <!-- Heading -->
-                <div class="sidebar-heading">
-                    Financial Management
-                </div>
+                @can('access dashboard')
+                    <!-- Heading -->
+                    <div class="sidebar-heading">
+                        Financial Management
+                    </div>
+                @endcan
 
                 <!-- Nav Item - Settings -->
                 <li class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
@@ -339,118 +379,141 @@
                           <span>{{ __('navigation.ai_insights') }}</span></a>
                   </li>
 
-                  <!-- Nav Item - Custom Reporting -->
-                  <li class="nav-item {{ request()->routeIs('reporting.*') ? 'active' : '' }}">
-                      <a class="nav-link" href="{{ route('reporting.dashboard') }}">
-                          <i class="fas fa-fw fa-chart-area"></i>
-                          <span>{{ __('navigation.custom_reporting') }}</span></a>
-                  </li>
+                  @can('view reports')
+                      <!-- Nav Item - Custom Reporting -->
+                      <li class="nav-item {{ request()->routeIs('reporting.*') ? 'active' : '' }}">
+                          <a class="nav-link" href="{{ route('reporting.dashboard') }}">
+                              <i class="fas fa-fw fa-chart-area"></i>
+                              <span>{{ __('navigation.custom_reporting') }}</span></a>
+                      </li>
+                  @endcan
 
-                  <!-- Nav Item - Financial Education -->
-                  <li class="nav-item {{ request()->routeIs('education.*') ? 'active' : '' }}">
-                      <a class="nav-link" href="{{ route('education.index') }}">
-                          <i class="fas fa-fw fa-graduation-cap"></i>
-                          <span>{{ __('navigation.financial_education') }}</span></a>
-                  </li>
-                  <li class="nav-item {{ request()->routeIs('coaching.*') ? 'active' : '' }}">
-                      <a class="nav-link" href="{{ route('coaching.index') }}">
-                          <i class="fas fa-fw fa-hands-helping"></i>
-                          <span>{{ __('navigation.financial_coaching') }}</span></a>
-                  </li>
+                  @can('manage behavioral')
+                      <!-- Nav Item - Financial Education -->
+                      <li class="nav-item {{ request()->routeIs('education.*') ? 'active' : '' }}">
+                          <a class="nav-link" href="{{ route('education.index') }}">
+                              <i class="fas fa-fw fa-graduation-cap"></i>
+                              <span>{{ __('navigation.financial_education') }}</span></a>
+                      </li>
+                      <li class="nav-item {{ request()->routeIs('coaching.*') ? 'active' : '' }}">
+                          <a class="nav-link" href="{{ route('coaching.index') }}">
+                              <i class="fas fa-fw fa-hands-helping"></i>
+                              <span>{{ __('navigation.financial_coaching') }}</span></a>
+                      </li>
+                  @endcan
 
-                <!-- Nav Item - Categories -->
-                <li class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('categories.index') }}">
-                        <i class="fas fa-fw fa-tags"></i>
-                        <span>{{ __('navigation.categories') }}</span></a>
-                </li>
+                 <!-- Nav Item - Categories -->
+                 <li class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                     <a class="nav-link" href="{{ route('categories.index') }}">
+                         <i class="fas fa-fw fa-tags"></i>
+                         <span>{{ __('navigation.categories') }}</span></a>
+                 </li>
 
-                <!-- Nav Item - Accounts -->
-                <li class="nav-item {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('accounts.index') }}">
-                        <i class="fas fa-fw fa-wallet"></i>
-                        <span>{{ __('navigation.accounts') }}</span></a>
-                </li>
+                 @can('manage accounts')
+                     <!-- Nav Item - Accounts -->
+                     <li class="nav-item {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('accounts.index') }}">
+                             <i class="fas fa-fw fa-wallet"></i>
+                             <span>{{ __('navigation.accounts') }}</span></a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Transactions -->
-                <li class="nav-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('transactions.index') }}">
-                        <i class="fas fa-fw fa-exchange-alt"></i>
-                        <span>{{ __('transactions.title') }}</span></a>
-                </li>
+                 @can('manage transactions')
+                     <!-- Nav Item - Transactions -->
+                     <li class="nav-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('transactions.index') }}">
+                             <i class="fas fa-fw fa-exchange-alt"></i>
+                             <span>{{ __('transactions.title') }}</span></a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Transfers -->
-                <li class="nav-item {{ request()->routeIs('transfers.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('transfers.index') }}">
-                        <i class="fas fa-fw fa-random"></i>
-                        <span>{{ __('navigation.transfers') }}</span></a>
-                </li>
+                 @canany(['manage accounts', 'manage transactions'])
+                     <!-- Nav Item - Transfers -->
+                     <li class="nav-item {{ request()->routeIs('transfers.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('transfers.index') }}">
+                             <i class="fas fa-fw fa-random"></i>
+                             <span>{{ __('navigation.transfers') }}</span></a>
+                     </li>
+                 @endcanany
 
-                <!-- Nav Item - Goals -->
-                <li class="nav-item {{ request()->routeIs('goals.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('goals.index') }}">
-                        <i class="fas fa-fw fa-bullseye"></i>
-                        <span>{{ __('navigation.goals') }}</span></a>
-                </li>
+                 @can('manage goals')
+                     <!-- Nav Item - Goals -->
+                     <li class="nav-item {{ request()->routeIs('goals.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('goals.index') }}">
+                             <i class="fas fa-fw fa-bullseye"></i>
+                             <span>{{ __('navigation.goals') }}</span></a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Budgets -->
-                <li class="nav-item {{ request()->routeIs('budgets.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('budgets.index') }}">
-                        <i class="fas fa-fw fa-calculator"></i>
-                        <span>{{ __('navigation.budgets') }}</span></a>
-                </li>
+                 @can('manage budgets')
+                     <!-- Nav Item - Budgets -->
+                     <li class="nav-item {{ request()->routeIs('budgets.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('budgets.index') }}">
+                             <i class="fas fa-fw fa-calculator"></i>
+                             <span>{{ __('navigation.budgets') }}</span></a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Investments -->
-                <li class="nav-item {{ request()->routeIs('investments.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('investments.index') }}">
-                        <i class="fas fa-fw fa-chart-line"></i>
-                        <span>{{ __('navigation.investments') }}</span></a>
-                </li>
+                 @can('view reports')
+                     <!-- Nav Item - Investments -->
+                     <li class="nav-item {{ request()->routeIs('investments.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('investments.index') }}">
+                             <i class="fas fa-fw fa-chart-line"></i>
+                             <span>{{ __('navigation.investments') }}</span></a>
+                     </li>
 
-                <!-- Nav Item - Assets -->
-                <li class="nav-item {{ request()->routeIs('assets.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('assets.index') }}">
-                        <i class="fas fa-fw fa-home"></i>
-                        <span>{{ __('navigation.assets') }}</span></a>
-                </li>
+                     <!-- Nav Item - Assets -->
+                     <li class="nav-item {{ request()->routeIs('assets.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('assets.index') }}">
+                             <i class="fas fa-fw fa-home"></i>
+                             <span>{{ __('navigation.assets') }}</span></a>
+                     </li>
 
-                <!-- Nav Item - Net Worth -->
-                <li class="nav-item {{ request()->routeIs('net-worth.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('net-worth.index') }}">
-                        <i class="fas fa-fw fa-chart-pie"></i>
-                        <span>{{ __('navigation.net_worth') }}</span></a>
-                </li>
+                     <!-- Nav Item - Net Worth -->
+                     <li class="nav-item {{ request()->routeIs('net-worth.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('net-worth.index') }}">
+                             <i class="fas fa-fw fa-chart-pie"></i>
+                             <span>{{ __('navigation.net_worth') }}</span></a>
+                     </li>
 
-                <!-- Nav Item - Analytics -->
-                <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('analytics.index') }}">
-                        <i class="fas fa-fw fa-chart-area"></i>
-                        <span>{{ __('navigation.analytics') }}</span></a>
-                </li>
+                     <!-- Nav Item - Analytics -->
+                     <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('analytics.index') }}">
+                             <i class="fas fa-fw fa-chart-area"></i>
+                             <span>{{ __('navigation.analytics') }}</span></a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Debts -->
-                <li class="nav-item {{ request()->routeIs('debts.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('debts.index') }}">
-                        <i class="fas fa-fw fa-credit-card"></i>
-                        <span>{{ __('navigation.debts') }}</span></a>
-                </li>
+                 @can('manage budgets')
+                     <!-- Nav Item - Debts -->
+                     <li class="nav-item {{ request()->routeIs('debts.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('debts.index') }}">
+                             <i class="fas fa-fw fa-credit-card"></i>
+                             <span>{{ __('navigation.debts') }}</span></a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Tags -->
-                <li class="nav-item {{ request()->routeIs('tags.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('tags.index') }}">
-                        <i class="fas fa-fw fa-hashtag"></i>
-                        <span>{{ __('navigation.tags') }}</span>
-                    </a>
-                </li>
+                 @can('manage transactions')
+                     <!-- Nav Item - Tags -->
+                     <li class="nav-item {{ request()->routeIs('tags.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('tags.index') }}">
+                             <i class="fas fa-fw fa-hashtag"></i>
+                             <span>{{ __('navigation.tags') }}</span>
+                         </a>
+                     </li>
+                 @endcan
 
-                <!-- Nav Item - Tax Documents -->
-                <li class="nav-item {{ request()->routeIs('tax-documents.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('tax-documents.index') }}">
-                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>{{ __('navigation.tax_documents') }}</span>
-                    </a>
-                </li>
-
+                 @can('view reports')
+                     <!-- Nav Item - Tax Documents -->
+                     <li class="nav-item {{ request()->routeIs('tax-documents.*') ? 'active' : '' }}">
+                         <a class="nav-link" href="{{ route('tax-documents.index') }}">
+                             <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                             <span>{{ __('navigation.tax_documents') }}</span>
+                         </a>
+                     </li>
+                 @endcan
+                 
+@can('manage behavioral')
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -458,90 +521,106 @@
                 <div class="sidebar-heading">
                     Behavioral Finance
                 </div>
+                    <!-- Nav Item - Behavioral -->
+                    <li class="nav-item {{ request()->routeIs('behavioral.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('behavioral.index') }}">
+                            <i class="fas fa-fw fa-brain"></i>
+                            <span>{{ __('navigation.behavioral_insights') }}</span>
+                        </a>
+                    </li>
+                @endcan
 
-                <!-- Nav Item - Behavioral -->
-                <li class="nav-item {{ request()->routeIs('behavioral.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('behavioral.index') }}">
-                        <i class="fas fa-fw fa-brain"></i>
-                        <span>{{ __('navigation.behavioral_insights') }}</span>
-                    </a>
-                </li>
+                @can('manage family')
+                    <!-- Nav Item - Subscriptions -->
+                    <li class="nav-item {{ request()->routeIs('subscriptions.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('subscriptions.index') }}">
+                            <i class="fas fa-fw fa-sync-alt"></i>
+                            <span>{{ __('navigation.subscriptions') }}</span>
+                        </a>
+                    </li>
 
-                <!-- Nav Item - Subscriptions -->
-                <li class="nav-item {{ request()->routeIs('subscriptions.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('subscriptions.index') }}">
-                        <i class="fas fa-fw fa-sync-alt"></i>
-                        <span>{{ __('navigation.subscriptions') }}</span>
-                    </a>
-                </li>
-
-                <!-- Nav Item - Rewards -->
-                <li class="nav-item {{ request()->routeIs('rewards.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('rewards.index') }}">
-                        <i class="fas fa-fw fa-gift"></i>
-                        <span>{{ __('navigation.rewards_loyalty') }}</span>
-                    </a>
-                </li>
+                    <!-- Nav Item - Rewards -->
+                    <li class="nav-item {{ request()->routeIs('rewards.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('rewards.index') }}">
+                            <i class="fas fa-fw fa-gift"></i>
+                            <span>{{ __('navigation.rewards_loyalty') }}</span>
+                        </a>
+                    </li>
+                @endcan
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
-                <div class="sidebar-heading">
-                    Automation &amp; Integrations
-                </div>
+                @can('manage automations')
+                    <div class="sidebar-heading">
+                        Automation &amp; Integrations
+                    </div>
 
-                <li class="nav-item {{ request()->routeIs('automations.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('automations.index') }}">
-                        <i class="fas fa-fw fa-robot"></i>
-                        <span>{{ __('navigation.automations') }}</span>
-                    </a>
-                </li>
+                    <li class="nav-item {{ request()->routeIs('automations.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('automations.index') }}">
+                            <i class="fas fa-fw fa-robot"></i>
+                            <span>{{ __('navigation.automations') }}</span>
+                        </a>
+                    </li>
 
-                <li class="nav-item {{ request()->routeIs('bank-integrations.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('bank-integrations.index') }}">
-                        <i class="fas fa-fw fa-university"></i>
-                        <span>{{ __('navigation.bank_integrations') }}</span>
-                    </a>
-                </li>
+                    <li class="nav-item {{ request()->routeIs('bank-integrations.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('bank-integrations.index') }}">
+                            <i class="fas fa-fw fa-university"></i>
+                            <span>{{ __('navigation.bank_integrations') }}</span>
+                        </a>
+                    </li>
 
-                <li class="nav-item {{ request()->routeIs('api-integrations.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('api-integrations.index') }}">
-                        <i class="fas fa-fw fa-plug"></i>
-                        <span>{{ __('navigation.api_integrations') }}</span>
-                    </a>
-                </li>
+                    <li class="nav-item {{ request()->routeIs('api-integrations.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('api-integrations.index') }}">
+                            <i class="fas fa-fw fa-plug"></i>
+                            <span>{{ __('navigation.api_integrations') }}</span>
+                        </a>
+                    </li>
 
-                <li class="nav-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('integrations.voice-entry') }}">
-                        <i class="fas fa-fw fa-microphone"></i>
-                        <span>{{ __('navigation.integration_tools') }}</span>
-                    </a>
-                </li>
+                    <li class="nav-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('integrations.voice-entry') }}">
+                            <i class="fas fa-fw fa-microphone"></i>
+                            <span>{{ __('navigation.integration_tools') }}</span>
+                        </a>
+                    </li>
+                @endcan
 
-                @role('admin')
+                @can('access admin')
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading">
                     Admin
                 </div>
-                <li class="nav-item {{ request()->routeIs('admin.education.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('admin.education.index') }}">
-                        <i class="fas fa-fw fa-book"></i>
-                        <span>Education Admin</span>
-                    </a>
-                </li>
-                <li class="nav-item {{ request()->routeIs('admin.education-categories.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('admin.education-categories.index') }}">
-                        <i class="fas fa-fw fa-list"></i>
-                        <span>Education Categories</span>
-                    </a>
-                </li>
-                <li class="nav-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('admin.news.index') }}">
-                        <i class="fas fa-fw fa-newspaper"></i>
-                        <span>News Admin</span>
-                    </a>
-                </li>
-                @endrole
+                @can('manage users')
+                    <li class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.users.index') }}">
+                            <i class="fas fa-fw fa-user-shield"></i>
+                            <span>Kelola Pengguna</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('manage education')
+                    <li class="nav-item {{ request()->routeIs('admin.education.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.education.index') }}">
+                            <i class="fas fa-fw fa-book"></i>
+                            <span>Education Admin</span>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ request()->routeIs('admin.education-categories.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.education-categories.index') }}">
+                            <i class="fas fa-fw fa-list"></i>
+                            <span>Education Categories</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('manage news')
+                    <li class="nav-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.news.index') }}">
+                            <i class="fas fa-fw fa-newspaper"></i>
+                            <span>News Admin</span>
+                        </a>
+                    </li>
+                @endcan
+                @endcan
 
                 <!-- Divider -->
                 <hr class="sidebar-divider">
@@ -794,6 +873,8 @@
 
         function loadPage(url, pushToHistory = true) {
             const contentContainer = document.getElementById('pageContent');
+            const sidebarScroll = document.querySelector('.sidebar-scroll');
+            const sidebarScrollTop = sidebarScroll ? sidebarScroll.scrollTop : 0;
 
             if (!contentContainer) {
                 window.location.href = url;
@@ -831,6 +912,10 @@
                 }
 
                 updateSidebarActiveState(doc);
+                if (sidebarScroll) {
+                    sidebarScroll.scrollTop = sidebarScrollTop;
+                    window.sessionStorage.setItem('sidebarScrollTop', String(sidebarScrollTop));
+                }
 
                 if (pushToHistory) {
                     history.pushState({ url }, '', url);
@@ -957,10 +1042,77 @@
                 loadPage(this.href);
             });
 
+            // Handle ajax form submissions inside pageContent to avoid full reload
+            $('#pageContent').on('submit', 'form.page-form', function(event) {
+                event.preventDefault();
+                const form = this;
+                const action = form.getAttribute('action') || window.location.href;
+                const method = (form.getAttribute('method') || 'GET').toUpperCase();
+                const formData = new FormData(form);
+                const contentContainer = document.getElementById('pageContent');
+
+                contentContainer?.classList.add('content-loading');
+
+                fetch(action, {
+                    method: method,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: method === 'GET' ? null : formData,
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return null;
+                    }
+                    if (!response.ok) {
+                        throw new Error('Failed to load content');
+                    }
+                    return response.text();
+                }).then(html => {
+                    if (!html) {
+                        return;
+                    }
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newContent = doc.getElementById('pageContent');
+
+                    if (!newContent) {
+                        window.location.href = action;
+                        return;
+                    }
+
+                    contentContainer.innerHTML = newContent.innerHTML;
+                    executePageScripts(contentContainer);
+
+                    const newTitle = doc.querySelector('title');
+                    if (newTitle) {
+                        document.title = newTitle.textContent;
+                    }
+
+                    updateSidebarActiveState(doc);
+                }).catch(() => {
+                    window.location.href = action;
+                }).finally(() => {
+                    contentContainer?.classList.remove('content-loading');
+                });
+            });
+
             window.addEventListener('popstate', function(event) {
                 if (event.state && event.state.url) {
                     closeMobileSidebar();
                     loadPage(event.state.url, false);
+                }
+            });
+
+            const savedSidebarScroll = window.sessionStorage.getItem('sidebarScrollTop');
+            if (savedSidebarScroll && document.querySelector('.sidebar-scroll')) {
+                document.querySelector('.sidebar-scroll').scrollTop = Number(savedSidebarScroll);
+            }
+
+            window.addEventListener('pagehide', () => {
+                const sidebar = document.querySelector('.sidebar-scroll');
+                if (sidebar) {
+                    window.sessionStorage.setItem('sidebarScrollTop', String(sidebar.scrollTop));
                 }
             });
         });

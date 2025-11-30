@@ -35,8 +35,9 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $userRole = Role::firstOrCreate(['name' => 'user']);
+        // Ensure roles (with permissions from RolesAndPermissionsSeeder) are loaded
+        $adminRole = Role::findByName('admin');
+        $userRole = Role::findByName('user');
 
         $user1->syncRoles([$adminRole]);
         $user2->syncRoles([$userRole]);

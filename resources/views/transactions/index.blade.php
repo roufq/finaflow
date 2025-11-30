@@ -16,36 +16,54 @@
                 </div>
             @endif
         </div>
-        <div class="d-flex flex-wrap align-items-start">
-            <form class="form-inline flex-wrap mr-2 mb-2" method="GET" action="{{ route('transactions.index') }}">
-                <div class="input-group input-group-sm mr-2 mb-2" style="min-width: 240px;">
-                    <input type="text" name="search" class="form-control" placeholder="Cari transaksi/kategori/nominal..." value="{{ request('search') }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+        <div class="row align-items-start">
+            <div class="col-lg-7 mb-3 mb-lg-0">
+                <form class="form-row" method="GET" action="{{ route('transactions.index') }}">
+                    <div class="col-md-6 mb-2">
+                        <div class="input-group input-group-sm">
+                            <input type="text" name="search" class="form-control" placeholder="Cari transaksi/kategori/nominal..." value="{{ request('search') }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <select name="type" class="form-control form-control-sm mr-2 mb-2">
-                    <option value="">Semua tipe</option>
-                    <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Income</option>
-                    <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
-                </select>
-                <select name="account_id" class="form-control form-control-sm mr-2 mb-2">
-                    <option value="">Semua akun</option>
-                    @foreach($accounts as $account)
-                        <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
-                    @endforeach
-                </select>
-                <input type="date" name="start_date" class="form-control form-control-sm mr-2 mb-2" value="{{ request('start_date') }}" placeholder="Dari">
-                <input type="date" name="end_date" class="form-control form-control-sm mr-2 mb-2" value="{{ request('end_date') }}" placeholder="Sampai">
-                <button class="btn btn-outline-secondary btn-sm mb-2 mr-2" type="submit">Terapkan</button>
-                <a href="{{ route('transactions.index') }}" class="btn btn-link btn-sm mb-2">Reset</a>
-            </form>
-            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm mr-2 mb-2" data-toggle="modal" data-target="#receiptModal">
-                <i class="fas fa-camera fa-sm text-white-50"></i> Scan Receipt
-            </button>
-            <a href="{{ route('transactions.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mb-2">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Add Transaction
-            </a>
+                    <div class="col-md-3 mb-2">
+                        <select name="type" class="form-control form-control-sm">
+                            <option value="">Semua tipe</option>
+                            <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Income</option>
+                            <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <select name="account_id" class="form-control form-control-sm">
+                            <option value="">Semua akun</option>
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="date" name="start_date" class="form-control form-control-sm" value="{{ request('start_date') }}" placeholder="Dari">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <input type="date" name="end_date" class="form-control form-control-sm" value="{{ request('end_date') }}" placeholder="Sampai">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <button class="btn btn-outline-secondary btn-sm btn-block" type="submit">Terapkan</button>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{{ route('transactions.index') }}" class="btn btn-link btn-sm btn-block">Reset</a>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-5 d-flex flex-column flex-lg-row align-items-stretch">
+                <button type="button" class="btn btn-sm btn-success shadow-sm mb-2 mb-lg-0 mr-lg-2 w-100" data-toggle="modal" data-target="#receiptModal">
+                    <i class="fas fa-camera fa-sm text-white-50"></i> Scan Receipt
+                </button>
+                <a href="{{ route('transactions.create') }}" class="btn btn-sm btn-primary shadow-sm w-100">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Add Transaction
+                </a>
+            </div>
         </div>
     </div>
 
@@ -53,8 +71,8 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Transactions List</h6>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
+                <div class="card-body">
+            <div class="table-responsive d-none d-md-block">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -73,7 +91,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $transaction->transaction_date->format('Y-m-d') }}</td>
-                            <td>{{ $transaction->account->name ?? '—' }}</td>
+                            <td>{{ $transaction->account->name ?? '?' }}</td>
                             <td>{{ $transaction->category->name }}</td>
                             <td>{{ $transaction->type }}</td>
                             <td>{{ $transaction->amount }}</td>
@@ -92,8 +110,43 @@
                     </tbody>
                 </table>
             </div>
+            <div class="d-md-none">
+                @forelse($transactions as $transaction)
+                    <div class="card border mb-3 shadow-sm">
+                        <div class="card-body py-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <div class="font-weight-bold">{{ $transaction->transaction_date->format('Y-m-d') }}</div>
+                                    <div class="small text-muted">{{ $transaction->account->name ?? '?' }}</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-weight-bold">{{ $transaction->amount }}</div>
+                                    <span class="badge badge-{{ $transaction->type === 'income' ? 'success' : 'danger' }}">{{ $transaction->type }}</span>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="small text-muted">Kategori</div>
+                                <div class="font-weight-semibold">{{ $transaction->category->name }}</div>
+                            </div>
+                            @if($transaction->description)
+                                <p class="mb-3 text-muted">{{ $transaction->description }}</p>
+                            @endif
+                            <div class="d-flex flex-wrap">
+                                <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-info btn-sm mr-sm-2 mb-2 w-100 w-sm-auto">View</a>
+                                <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-warning btn-sm mr-sm-2 mb-2 w-100 w-sm-auto">Edit</a>
+                                <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" class="w-100 w-sm-auto mb-2">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-muted mb-0">Belum ada transaksi.</p>
+                @endforelse
+            </div>
         </div>
-    </div>
 </div>
 
 <!-- Receipt Scan Modal -->
