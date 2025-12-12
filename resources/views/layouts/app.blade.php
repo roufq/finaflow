@@ -493,6 +493,13 @@
                      </li>
                  @endcan
 
+                <!-- Nav Item - Category Reports -->
+                <li class="nav-item {{ request()->routeIs('reports.categories.*') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('reports.categories.index') }}">
+                        <i class="fas fa-fw fa-chart-bar"></i>
+                        <span>{{ __('navigation.category_reports') }}</span></a>
+                </li>
+
                  @can('manage transactions')
                      <!-- Nav Item - Tags -->
                      <li class="nav-item {{ request()->routeIs('tags.*') ? 'active' : '' }}">

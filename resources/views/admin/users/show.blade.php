@@ -35,38 +35,51 @@
                     Hak akses admin tidak dapat diubah di halaman ini. Admin selalu mendapatkan semua fitur.
                 </div>
             @else
+                @php
+                    $selectedPlan = old('plan', $activePlan !== 'custom' ? $activePlan : null);
+                @endphp
                 <form method="POST" action="{{ route('admin.users.permissions', $user) }}">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">
-                        <h6 class="font-weight-bold">Hak Akses Sidebar</h6>
-                        <p class="text-muted small mb-2">Aktifkan fitur yang perlu untuk membatasi akses pengguna.</p>
-                        <ul class="text-muted small mb-3">
-                            <li>Access Dashboard: halaman Dashboard.</li>
-                            <li>Manage Transactions: menu Transaksi & Tag.</li>
-                            <li>Manage Accounts: menu Akun & Transfer.</li>
-                            <li>Manage Budgets: menu Anggaran & Utang.</li>
-                            <li>Manage Goals: menu Goals.</li>
-                            <li>View Reports: Reporting, Analytics, Investments, Assets, Net Worth, Tax Documents.</li>
-                            <li>Manage Automations: Automations & Integrations.</li>
-                            <li>Manage Family: Subscriptions & Rewards/Loyalty.</li>
-                            <li>Manage Behavioral: Behavioral Insights, Education, Coaching.</li>
-                        </ul>
+                        <h6 class="font-weight-bold">Hak Akses Sidebar (SaaS Plan)</h6>
+                        <p class="text-muted small mb-2">Pilih paket akses sesuai tier di SAAS.md. Paket akan otomatis mengatur izin pengguna.</p>
+                        @if($activePlan === 'custom')
+                            <div class="alert alert-warning small">
+                                Hak akses pengguna ini belum sesuai paket manapun. Pilih salah satu paket untuk menyesuaikan sesuai SaaS tier.
+                            </div>
+                        @endif
                         <div class="row">
-                            @foreach($availablePermissions as $permission)
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="permissions[]" id="perm-{{ Str::slug($permission) }}" value="{{ $permission }}"
-                                            {{ in_array($permission, $userPermissions, true) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="perm-{{ Str::slug($permission) }}">
-                                            {{ ucwords(str_replace('_', ' ', $permission)) }}
-                                        </label>
+                            @foreach($plans as $planKey => $plan)
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <div class="card h-100 {{ $selectedPlan === $planKey ? 'border-primary' : '' }}">
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <div>
+                                                    <h5 class="card-title mb-1">{{ $plan['label'] }}</h5>
+                                                    <p class="card-subtitle mb-0 text-muted small">{{ $plan['description'] }}</p>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="plan" id="plan-{{ $planKey }}" value="{{ $planKey }}" {{ $selectedPlan === $planKey ? 'checked' : '' }}>
+                                                    <label class="form-check-label small" for="plan-{{ $planKey }}">Pilih</label>
+                                                </div>
+                                            </div>
+                                            <ul class="mb-0 small text-muted">
+                                                @foreach($plan['features'] as $feature)
+                                                    <li>{{ $feature }}</li>
+                                                @endforeach
+                                            </ul>
+                                            @if($activePlan === $planKey)
+                                                <span class="badge badge-primary align-self-start mt-2">Sedang dipakai</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
+                        <p class="text-muted small mb-0">Perubahan paket akan memperbarui izin sidebar sesuai daftar fitur pada tier yang dipilih.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary">Simpan Hak Akses</button>
+                    <button type="submit" class="btn btn-primary">Simpan Paket Akses</button>
                 </form>
             @endif
 

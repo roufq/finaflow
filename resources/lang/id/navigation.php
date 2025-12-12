@@ -13,6 +13,7 @@ return [
     'assets' => 'Aset',
     'net_worth' => 'Nilai Bersih',
     'analytics' => 'Analitik',
+    'category_reports' => 'Laporan Kategori',
     'debts' => 'Hutang',
     'tags' => 'Tag',
     'tax_documents' => 'Dokumen Pajak',

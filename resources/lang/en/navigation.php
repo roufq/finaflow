@@ -13,6 +13,7 @@ return [
     'assets' => 'Assets',
     'net_worth' => 'Net Worth',
     'analytics' => 'Analytics',
+    'category_reports' => 'Category Reports',
     'debts' => 'Debts',
     'tags' => 'Tags',
     'tax_documents' => 'Tax Documents',

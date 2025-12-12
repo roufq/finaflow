@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\Gamification;
 use App\Models\SpendingTrigger;
 use App\Models\Transaction;
+use App\Services\Reports\CategoryReportService;
 use Carbon\Carbon;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
@@ -44,6 +45,7 @@ class TransactionService
             }
 
             $this->invalidateDashboardCache($transaction->user_id, $transaction->transaction_date);
+            $this->invalidateCategoryReportCache($transaction->user_id);
         });
     }
 
@@ -75,6 +77,7 @@ class TransactionService
 
             $this->invalidateDashboardCache($transaction->user_id, $transaction->transaction_date);
             $this->invalidateDashboardCache($transaction->user_id, $originalDate);
+            $this->invalidateCategoryReportCache($transaction->user_id);
         });
     }
 
@@ -95,6 +98,7 @@ class TransactionService
             $transaction->delete();
 
             $this->invalidateDashboardCache($userId, $date);
+            $this->invalidateCategoryReportCache($userId);
         });
     }
 
@@ -166,6 +170,11 @@ class TransactionService
             'user_id' => $userId,
             'period' => $date->format('Y-m'),
         ]);
+    }
+
+    private function invalidateCategoryReportCache(int $userId): void
+    {
+        app(CategoryReportService::class)->bumpCacheVersion($userId);
     }
 
     private function resolveCacheStore(CacheManager $cacheManager): CacheRepository

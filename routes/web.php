@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\BankIntegrationController;
 use App\Http\Controllers\BehavioralController;
+use App\Http\Controllers\CategoryReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\FamilyController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportingController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\StorageAccessController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TaxDocumentController;
 use App\Http\Controllers\TwoFactorController;
@@ -43,6 +45,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
+Route::get('/storage/{path}', StorageAccessController::class)->where('path', '.*');
 
 // Two Factor Auth
 Route::middleware('auth')->group(function () {
@@ -70,6 +73,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/security', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index')->middleware('permission:view reports');
+    Route::get('/reports/categories', [CategoryReportController::class, 'index'])->name('reports.categories.index');
+    Route::get('/reports/categories/export/pdf', [CategoryReportController::class, 'export'])->name('reports.categories.export');
+    Route::get('/reports/categories/{category}/detail', [CategoryReportController::class, 'detail'])->name('reports.categories.detail');
     Route::resource('settings', \App\Http\Controllers\SettingController::class);
     Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 
