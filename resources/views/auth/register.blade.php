@@ -23,6 +23,20 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                                     </div>
+                                    @if(session('success'))
+                                        <div class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                    @endif
+                                    @if($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul class="mb-0">
+                                                @foreach($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <form class="user" method="POST" action="{{ route('register') }}">
                                         @csrf
                                         <div class="form-group row">
@@ -39,6 +53,7 @@
                                             <div class="col-sm-6 mb-3 mb-sm-0">
                                                 <input type="password" class="form-control form-control-user"
                                                     id="exampleInputPassword" placeholder="Password" name="password" required>
+                                                <small class="text-muted d-block mt-1">Min 8 karakter, huruf besar & kecil, angka, dan simbol.</small>
                                             </div>
                                             <div class="col-sm-6">
                                                 <input type="password" class="form-control form-control-user"

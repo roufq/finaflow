@@ -28,7 +28,8 @@
         }
 
         body {
-            overflow: hidden;
+            min-height: 100%;
+            overflow-x: hidden;
             background-color: #f8f9fc;
         }
 
@@ -61,26 +62,38 @@
         #accordionSidebar {
             scrollbar-width: thin;
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+            width: 260px;
+            max-width: 100%;
             height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            max-height: 100dvh;
             overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             position: sticky;
             top: 0;
+            flex-shrink: 0;
             align-self: flex-start;
             display: flex;
             flex-direction: column;
+        }
+
+        #accordionSidebar .nav-link span {
+            white-space: normal;
+            line-height: 1.2;
         }
 
         #content-wrapper {
             scrollbar-width: thin;
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
             flex: 1;
-            height: 100vh;
+            min-height: 100vh;
+            height: auto;
             overflow: hidden;
         }
 
         #content {
-            height: 100%;
+            min-height: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -108,68 +121,70 @@
             z-index: 999;
         }
 
-        /* Collapsible sidebar functionality */
-        .sidebar.collapsed .sidebar-brand-text,
-        .sidebar.collapsed .sidebar-heading,
-        .sidebar.collapsed .nav-link span {
-            display: none !important;
-        }
+        /* Collapsible sidebar functionality (desktop only) */
+        @media (min-width: 992px) {
+            .sidebar.collapsed .sidebar-brand-text,
+            .sidebar.collapsed .sidebar-heading,
+            .sidebar.collapsed .nav-link span {
+                display: none !important;
+            }
 
-        .sidebar.collapsed .nav-link {
-            text-align: center;
-            padding: 0.75rem 0.5rem;
-            position: relative;
-            display: block !important;
-            min-height: 50px;
-        }
+            .sidebar.collapsed .nav-link {
+                text-align: center;
+                padding: 0.75rem 0.5rem;
+                position: relative;
+                display: block !important;
+                min-height: 50px;
+            }
 
-        .sidebar.collapsed .nav-link i {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            font-size: 1.5rem !important;
-            color: rgba(255, 255, 255, 0.9) !important;
-            margin: 0 auto !important;
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            background: transparent !important;
-            border: none !important;
-        }
+            .sidebar.collapsed .nav-link i {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                font-size: 1.5rem !important;
+                color: rgba(255, 255, 255, 0.9) !important;
+                margin: 0 auto !important;
+                width: 24px;
+                height: 24px;
+                line-height: 24px;
+                background: transparent !important;
+                border: none !important;
+            }
 
-        .sidebar.collapsed {
-            width: 70px !important;
-        }
+            .sidebar.collapsed {
+                width: 70px !important;
+            }
 
-        .sidebar.collapsed .sidebar-brand-icon {
-            margin-right: 0;
-        }
+            .sidebar.collapsed .sidebar-brand-icon {
+                margin-right: 0;
+            }
 
-        /* Enhanced visibility for icons in collapsed sidebar */
-        .sidebar.collapsed .nav-link {
-            position: relative;
-            transition: all 0.3s ease;
-            min-height: 50px;
-            text-align: left;
-            padding-left: 1rem;
-        }
+            /* Enhanced visibility for icons in collapsed sidebar */
+            .sidebar.collapsed .nav-link {
+                position: relative;
+                transition: all 0.3s ease;
+                min-height: 50px;
+                text-align: left;
+                padding-left: 1rem;
+            }
 
-        .sidebar.collapsed .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-        }
+            .sidebar.collapsed .nav-link:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+            }
 
-        .sidebar.collapsed .nav-link:hover i {
-            font-size: 1.4rem;
-            color: rgba(255, 255, 255, 0.9);
-            transform: scale(1.1);
-        }
+            .sidebar.collapsed .nav-link:hover i {
+                font-size: 1.4rem;
+                color: rgba(255, 255, 255, 0.9);
+                transform: scale(1.1);
+            }
 
-        .sidebar.collapsed .nav-link i {
-            transition: all 0.3s ease;
-            line-height: 1;
-            float: left;
-            margin-right: 0;
+            .sidebar.collapsed .nav-link i {
+                transition: all 0.3s ease;
+                line-height: 1;
+                float: left;
+                margin-right: 0;
+            }
         }
 
         /* Toggle button styling */
@@ -265,11 +280,17 @@
                 position: fixed;
                 top: 0;
                 left: 0;
-                height: 100vh;
-                width: 260px;
+                height: 100dvh;
+                max-height: 100dvh;
+                width: clamp(220px, 70vw, 280px);
+                max-width: clamp(220px, 70vw, 280px);
+                padding-top: env(safe-area-inset-top, 1rem);
+                padding-bottom: env(safe-area-inset-bottom, 1rem);
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
                 z-index: 1040;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             body.sidebar-open #accordionSidebar,
@@ -669,7 +690,7 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 shadow" style="position: sticky; top: 0; z-index: 1030;">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <button id="sidebarToggleTop" type="button" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
 
@@ -768,6 +789,22 @@
 
                 <!-- Begin Page Content -->
                 <div id="pageContent" class="container-fluid" style="padding-bottom: 2rem;">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     @yield('content')
                 </div>
                 <!-- /.container-fluid -->
@@ -944,6 +981,7 @@
             const $sidebar = $('#accordionSidebar');
             const $sidebarOverlay = $('#sidebarOverlay');
             const $body = $('body');
+            let wasMobileView = isMobileView();
 
             function isMobileView() {
                 return window.matchMedia('(max-width: 991.98px)').matches;
@@ -992,13 +1030,19 @@
             }
 
             function handleResponsiveSidebar() {
-                if (isMobileView()) {
+                const mobileView = isMobileView();
+
+                if (mobileView && !wasMobileView) {
                     $sidebar.removeClass('collapsed');
                     closeMobileSidebar();
-                } else {
+                } else if (!mobileView && wasMobileView) {
                     closeMobileSidebar();
                     applyStoredSidebarState();
+                } else if (!mobileView) {
+                    applyStoredSidebarState();
                 }
+
+                wasMobileView = mobileView;
             }
 
             // Sidebar toggle button in sidebar
@@ -1012,7 +1056,9 @@
             });
 
             // Sidebar toggle button in topbar (mobile)
-            $('#sidebarToggleTop').on('click', function() {
+            $('#sidebarToggleTop').on('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
                 toggleSidebar();
             });
 
