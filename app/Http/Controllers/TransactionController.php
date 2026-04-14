@@ -63,7 +63,7 @@ class TransactionController extends Controller
                 $query->whereDate('transaction_date', '<=', $endDate);
             })
             ->orderBy('transaction_date', 'desc')
-            ->paginate(15)
+            ->paginate(25)
             ->withQueryString();
         $categories = Category::where('user_id', $userId)->get();
         $accounts = Account::active()->where('user_id', $userId)->get();

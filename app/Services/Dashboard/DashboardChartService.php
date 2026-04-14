@@ -36,6 +36,17 @@ class DashboardChartService
         );
 
         $accountBalances = $this->dataService->getAccountBalances($userId);
+        $recentTransactions = $this->dataService->getRecentTransactions($userId);
+
+        // Multi-currency: Get the primary symbol
+        $primarySetting = \App\Models\Setting::where('user_id', $userId)->where('is_default', true)->first()
+            ?? \App\Models\Setting::where('user_id', $userId)->first();
+        $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
+
+        // Previous month's health metrics for trend comparison
+        $lastMonth = $periodDate->copy()->subMonth();
+        $lastMonthTotals = $this->dataService->getMonthlyTotals($userId, $lastMonth);
+        $netWorthTrend = $lastMonthTotals['income'] > 0 ? (($monthlyTotals['income'] - $lastMonthTotals['income']) / $lastMonthTotals['income']) * 100 : 0;
 
         return [
             'totalIncome' => $monthlyTotals['income'],
@@ -50,7 +61,11 @@ class DashboardChartService
             'emergencyFund' => $emergencyFund,
             'debtHealth' => $debtHealth,
             'accountBalances' => $accountBalances,
+            'recentTransactions' => $recentTransactions,
+            'netWorthTrend' => $netWorthTrend,
+            'totalCash' => $totalCash,
             'periodDate' => $periodDate,
+            'currencySymbol' => $currencySymbol,
         ];
     }
 }

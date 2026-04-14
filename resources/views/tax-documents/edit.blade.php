@@ -25,7 +25,7 @@
                 <div class="form-group">
                     <label for="category">Category (optional)</label>
                     <select class="form-control" id="category" name="category">
-                        <option value="">Pilih kategori</option>
+                        <option value="">Select Category</option>
                         <option value="income_proof" {{ old('category', $document->category) === 'income_proof' ? 'selected' : '' }}>Income Proof</option>
                         <option value="expense_receipt" {{ old('category', $document->category) === 'expense_receipt' ? 'selected' : '' }}>Expense Receipt</option>
                         <option value="tax_form" {{ old('category', $document->category) === 'tax_form' ? 'selected' : '' }}>Tax Form</option>

@@ -6,7 +6,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Edit Budget: {{ $budget->name }}</h1>
         <a href="{{ route('budgets.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
         </a>
     </div>
 
@@ -129,18 +129,18 @@
                                             </select>
                                             <input type="number" class="form-control" name="category_allocations[{{ $categoryId }}][amount]" value="{{ $allocation }}" placeholder="Jumlah (Rp)" min="0">
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-danger remove-allocation" type="button">Hapus</button>
+                                                <button class="btn btn-outline-danger remove-allocation" type="button">Delete</button>
                                             </div>
                                         </div>
                                     @endforeach
                                 @endif
                             </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-allocation">Tambah Alokasi Kategori</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-allocation">Add Category Allocation</button>
                         </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update Budget</button>
-                            <a href="{{ route('budgets.index') }}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ route('budgets.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </select>
             <input type="number" class="form-control" name="category_allocations[${allocationIndex}][amount]" placeholder="Jumlah (Rp)" min="0" required>
             <div class="input-group-append">
-                <button class="btn btn-outline-danger remove-allocation" type="button">Hapus</button>
+                <button class="btn btn-outline-danger remove-allocation" type="button">Delete</button>
             </div>
         `;
         container.appendChild(div);

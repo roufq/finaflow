@@ -23,13 +23,13 @@ class TransactionService
         $this->cache = $this->resolveCacheStore($cacheManager);
     }
 
-    public function create(array $data): void
+    public function create(array $data): Transaction
     {
-        DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
             $transaction = Transaction::create([
                 'user_id' => $data['user_id'],
                 'account_id' => $data['account_id'],
-                'category_id' => $data['category_id'],
+                'category_id' => $data['category_id'] ?? null,
                 'transaction_date' => $data['transaction_date'],
                 'type' => $data['type'],
                 'amount' => $data['amount'],
@@ -46,6 +46,8 @@ class TransactionService
 
             $this->invalidateDashboardCache($transaction->user_id, $transaction->transaction_date);
             $this->invalidateCategoryReportCache($transaction->user_id);
+
+            return $transaction;
         });
     }
 
@@ -140,7 +142,10 @@ class TransactionService
             ['points' => 0, 'level' => 1, 'streak_days' => 0]
         );
 
-        $pointsEarned = (int) floor($transaction->amount / self::POINTS_PER_UNIT);
+        $transaction->loadMissing('account.setting');
+        $rate = $transaction->account->setting->exchange_rate ?? 1.0;
+        $normalizedAmount = (float) $transaction->amount * $rate;
+        $pointsEarned = (int) floor($normalizedAmount / self::POINTS_PER_UNIT);
         if ($pointsEarned > 0) {
             $gamification->addPoints($pointsEarned);
 

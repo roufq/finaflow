@@ -19,12 +19,18 @@ class Account extends Model
         'credit_limit' => 'decimal:2',
         'opening_date' => 'date',
         'is_active' => 'boolean',
+        'setting_id' => 'integer',
     ];
 
     // Relationships
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function setting(): BelongsTo
+    {
+        return $this->belongsTo(Setting::class);
     }
 
     public function transactions(): HasMany

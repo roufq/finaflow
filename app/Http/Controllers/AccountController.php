@@ -13,15 +13,29 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = Account::where('user_id', Auth::id())
+        $accounts = Account::with('setting')
+            ->where('user_id', Auth::id())
             ->active()
             ->orderBy('type')
             ->orderBy('name')
             ->get();
 
-        $totalBalance = $accounts->sum('balance');
+        $primarySetting = \App\Models\Setting::where('user_id', Auth::id())->where('is_default', true)->first()
+            ?? \App\Models\Setting::where('user_id', Auth::id())->first();
+        $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
 
-        return view('accounts.index', compact('accounts', 'totalBalance'));
+        $totalBalance = $accounts->sum(function ($account) use ($primarySetting) {
+            // If it's the primary currency, don't apply exchange rate to avoid "000" multiplier bugs
+            if ($primarySetting && $account->setting_id === $primarySetting->id) {
+                return (float) $account->balance;
+            }
+
+            $rate = $account->setting->exchange_rate ?? 1.0;
+
+            return (float) $account->balance * $rate;
+        });
+
+        return view('accounts.index', compact('accounts', 'totalBalance', 'currencySymbol'));
     }
 
     /**
@@ -39,7 +53,9 @@ class AccountController extends Controller
             'savings' => 'Savings Account',
         ];
 
-        return view('accounts.create', compact('accountTypes'));
+        $settings = \App\Models\Setting::where('user_id', Auth::id())->get();
+
+        return view('accounts.create', compact('accountTypes', 'settings'));
     }
 
     /**
@@ -50,9 +66,10 @@ class AccountController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:bank,cash,credit_card,e_wallet,investment,loan,savings',
+            'setting_id' => 'required|exists:settings,id,user_id,'.Auth::id(),
             'account_number' => 'nullable|string|max:255',
             'bank_name' => 'nullable|string|max:255',
-            'balance' => 'required|numeric|min:0',
+            'balance' => 'required|numeric',
             'credit_limit' => 'nullable|numeric|min:0',
             'opening_date' => 'nullable|date',
             'notes' => 'nullable|string',
@@ -115,7 +132,9 @@ class AccountController extends Controller
             'savings' => 'Savings Account',
         ];
 
-        return view('accounts.edit', compact('account', 'accountTypes'));
+        $settings = \App\Models\Setting::where('user_id', Auth::id())->get();
+
+        return view('accounts.edit', compact('account', 'accountTypes', 'settings'));
     }
 
     /**
@@ -130,6 +149,7 @@ class AccountController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:bank,cash,credit_card,e_wallet,investment,loan,savings',
+            'setting_id' => 'required|exists:settings,id,user_id,'.Auth::id(),
             'account_number' => 'nullable|string|max:255',
             'bank_name' => 'nullable|string|max:255',
             'balance' => 'required|numeric',

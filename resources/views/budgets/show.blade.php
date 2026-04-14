@@ -10,7 +10,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit
             </a>
             <a href="{{ route('budgets.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
         </div>
     </div>
@@ -158,7 +158,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> Hapus Budget
+                                    <i class="fas fa-trash"></i> Delete Budget
                                 </button>
                             </form>
                         </div>
@@ -188,7 +188,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>

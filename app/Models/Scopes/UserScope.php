@@ -13,13 +13,16 @@ trait UserScope
      */
     public static function bootUserScope()
     {
-        static::addGlobalScope(new class implements Scope {
+        static::addGlobalScope(new class implements Scope
+        {
             /**
              * Apply the scope to a given Eloquent query builder.
              */
             public function apply(Builder $builder, Model $model): void
             {
-                $builder->where('user_id', auth()->id());
+                if (auth()->check()) {
+                    $builder->where($model->getTable().'.user_id', auth()->id());
+                }
             }
         });
     }

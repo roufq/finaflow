@@ -10,9 +10,116 @@ use App\Services\TransactionCategorizer;
 use App\Services\VoiceEntryParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class IntegrationToolController extends Controller
 {
+    public function telegramBot()
+    {
+        $user = Auth::user();
+
+        if (empty($user->remember_token)) {
+            $user->update(['remember_token' => \Illuminate\Support\Str::random(60)]);
+        }
+
+        // Ensure user has a webhook token for their custom bot
+        if (! $user->telegram_webhook_token) {
+            $user->update([
+                'telegram_webhook_token' => \Illuminate\Support\Str::random(40),
+            ]);
+        }
+
+        $isBotConfigured = $user->telegram_bot_token && $user->telegram_bot_username;
+        $botName = $user->telegram_bot_username ?? config('services.telegram.bot_name');
+
+        // Fetch Last 10 Telegram Bot Activities
+        $activities = $user->activityLogs()
+            ->where('action', 'like', 'Telegram%')
+            ->orderByDesc('id')
+            ->limit(10)
+            ->get();
+
+        return view('integrations.bot', [
+            'user' => $user,
+            'telegramToken' => $user->remember_token,
+            'telegramBotName' => $botName ?? 'FinaFlow_Bot',
+            'isBotConfigured' => ! empty($isBotConfigured) || (! empty(config('services.telegram.bot_token'))),
+            'usingCustomBot' => ! empty($isBotConfigured),
+            'activities' => $activities,
+        ]);
+    }
+
+    public function saveBotSettings(Request $request)
+    {
+        $request->validate([
+            'telegram_bot_token' => 'required|string|max:100',
+            'telegram_bot_username' => 'required|string|max:100',
+            'telegram_proxy_url' => 'nullable|url|max:200',
+        ]);
+
+        $user = Auth::user();
+        $user->update([
+            'telegram_bot_token' => $request->telegram_bot_token,
+            'telegram_bot_username' => ltrim(trim($request->telegram_bot_username), '@'),
+            'telegram_proxy_url' => rtrim(trim($request->telegram_proxy_url), '/'),
+        ]);
+
+        $user->logActivity('Telegram Bot Settings Updated', 'User updated custom bot settings.');
+
+        return back()->with('success', 'Telegram Bot settings saved successfully.');
+    }
+
+    public function setWebhook()
+    {
+        $user = Auth::user();
+        if (! $user->telegram_bot_token || ! $user->telegram_webhook_token) {
+            return back()->with('error', 'Bot Token not configured.');
+        }
+
+        $appWebhookUrl = url("/telegram/webhook/{$user->telegram_webhook_token}");
+
+        // If user has a proxy URL, use it as the webhook URL for Telegram,
+        // appending the user token as a path or query if needed.
+        // We assume the user follows the format: https://worker.dev/bot-webhook-jembatan
+        $webhookUrl = $user->telegram_proxy_url
+            ? "{$user->telegram_proxy_url}/{$user->telegram_webhook_token}"
+            : $appWebhookUrl;
+
+        $baseUrl = config('services.telegram.base_url', 'https://api.telegram.org');
+        $url = "{$baseUrl}/bot{$user->telegram_bot_token}/setWebhook?url={$webhookUrl}";
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::withoutVerifying()->get($url);
+            if ($response->successful()) {
+                $user->logActivity('Telegram Webhook Registered', 'Webhook registered to '.($user->telegram_proxy_url ? "Proxy: {$user->telegram_proxy_url}" : "App: {$appWebhookUrl}"));
+
+                return back()->with('success', 'Webhook set successfully! Your bot is now live.');
+            }
+
+            $errorMessage = $response->json()['description'] ?? 'Unknown error';
+            Log::error("Telegram Webhook Error: {$errorMessage}", ['url' => $url, 'response' => $response->body()]);
+
+            return back()->with('error', 'Telegram API error: '.$errorMessage);
+        } catch (\Exception $e) {
+            Log::error('Telegram Webhook Exception: '.$e->getMessage());
+
+            return back()->with('error', 'Connection error: '.$e->getMessage());
+        }
+    }
+
+    public function disconnect()
+    {
+        $user = Auth::user();
+        $user->update([
+            'telegram_id' => null,
+            'telegram_chat_id' => null,
+        ]);
+
+        $user->logActivity('Telegram Bot Disconnected', 'User manually disconnected the bot.');
+
+        return back()->with('success', 'Telegram Bot has been disconnected from your account.');
+    }
+
     public function voiceEntry()
     {
         return view('integrations.voice-entry');

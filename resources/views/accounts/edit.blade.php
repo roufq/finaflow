@@ -101,7 +101,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update Akun</button>
-                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Batal</a>
+                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

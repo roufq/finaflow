@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h4 mb-0 text-gray-800">Create Module</h1>
-            <p class="text-muted small mb-0">Tambah materi edukasi baru.</p>
+            <p class="text-muted small mb-0">Add new education material.</p>
         </div>
         <a href="{{ route('admin.education.index') }}" class="btn btn-sm btn-secondary">Back</a>
     </div>

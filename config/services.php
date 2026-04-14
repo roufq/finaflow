@@ -45,4 +45,10 @@ return [
         'tessdata' => env('TESSDATA_PATH'),
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'bot_name' => env('TELEGRAM_BOT_NAME'),
+        'base_url' => env('TELEGRAM_BASE_URL', 'https://api.telegram.org'),
+    ],
+
 ];

@@ -216,7 +216,7 @@
                         <i class="fas fa-calculator mr-1"></i> Buat anggaran
                     </a>
                     <a href="{{ route('goals.create') }}" class="btn btn-outline-success btn-sm mr-2 mb-2 w-100 w-sm-auto">
-                        <i class="fas fa-bullseye mr-1"></i> Tambah goal
+                        <i class="fas fa-bullseye mr-1"></i> Add goal
                     </a>
                     <a href="{{ route('bank-integrations.create') }}" class="btn btn-outline-info btn-sm mr-2 mb-2 w-100 w-sm-auto">
                         <i class="fas fa-university mr-1"></i> Sambungkan bank

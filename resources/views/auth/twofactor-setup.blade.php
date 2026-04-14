@@ -8,7 +8,7 @@
         <div class="card-body">
             <p class="mb-2">Scan QR atau masukkan secret ini di aplikasi authenticator:</p>
             <div class="mb-3">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($otpAuth) }}" alt="QR code for TOTP" width="200" height="200" onerror="this.replaceWith(document.createTextNode('Gagal memuat QR, gunakan secret di atas.'));">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($otpAuth) }}" alt="QR code for TOTP" width="200" height="200" onerror="this.replaceWith(document.createTextNode('Failed to load QR, use the secret above.'));">
             </div>
             <div class="alert alert-secondary"><strong>Secret:</strong> {{ $secret }}</div>
             <p class="mb-2">URI (salin jika butuh):</p>
@@ -34,7 +34,7 @@
         <div class="card">
             <div class="card-header">Backup Codes</div>
             <div class="card-body">
-                <p class="small text-muted">Simpan kode di tempat aman. Setiap kode hanya bisa dipakai sekali.</p>
+                <p class="small text-muted">Keep codes in a safe place. Each code can only be used once.</p>
                 <div class="d-flex flex-wrap">
                     @foreach($backupCodes as $code)
                         <span class="badge badge-light mr-2 mb-2">{{ $code }}</span>

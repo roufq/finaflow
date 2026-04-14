@@ -7,7 +7,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Buat Tag Baru</h1>
         <a href="{{ route('tags.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
         </a>
     </div>
 
@@ -61,10 +61,10 @@
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save fa-sm text-white-50"></i> Simpan Tag
+                                <i class="fas fa-save fa-sm text-white-50"></i> Save Tag
                             </button>
                             <a href="{{ route('tags.index') }}" class="btn btn-secondary ml-2">
-                                <i class="fas fa-times fa-sm text-white-50"></i> Batal
+                                <i class="fas fa-times fa-sm text-white-50"></i> Cancel
                             </a>
                         </div>
                     </form>
@@ -100,7 +100,7 @@
                     <ul class="list-unstyled small">
                         <li class="mb-2">
                             <i class="fas fa-lightbulb text-warning mr-2"></i>
-                            Gunakan tag untuk mengelompokkan transaksi berdasarkan konteks (business, personal, dll.)
+                            Use tags to group transactions based on context (business, personal, etc.)
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-lightbulb text-warning mr-2"></i>

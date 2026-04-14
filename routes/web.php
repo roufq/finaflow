@@ -25,9 +25,24 @@ use App\Http\Controllers\RewardController;
 use App\Http\Controllers\StorageAccessController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TaxDocumentController;
+use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\InstallerController;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('install')->name('installer.')->group(function () {
+    Route::get('/', [InstallerController::class, 'index'])->name('index');
+    Route::get('/permissions', [InstallerController::class, 'permissions'])->name('permissions');
+    Route::get('/environment', [InstallerController::class, 'environment'])->name('environment');
+    Route::post('/environment', [InstallerController::class, 'saveEnvironment'])->name('saveEnvironment');
+    Route::get('/database', [InstallerController::class, 'database'])->name('database');
+    Route::post('/database', [InstallerController::class, 'runDatabase'])->name('runDatabase');
+    Route::get('/finish', [InstallerController::class, 'finish'])->name('finish');
+});
+
+Route::match(['get', 'post'], '/telegram/webhook', [TelegramController::class, 'webhook'])->name('telegram.webhook');
+Route::match(['get', 'post'], '/telegram/webhook/{token}', [TelegramController::class, 'webhook'])->name('telegram.webhook.custom');
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -167,6 +182,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/integrations/voice-entry', [IntegrationToolController::class, 'storeVoiceEntry'])->name('integrations.voice-entry.store');
         Route::get('/integrations/email-parser', [IntegrationToolController::class, 'emailParser'])->name('integrations.email-parser');
         Route::post('/integrations/email-parser', [IntegrationToolController::class, 'parseEmail'])->name('integrations.email-parser.store');
+        Route::get('/integrations/telegram-bot', [IntegrationToolController::class, 'telegramBot'])->name('integrations.telegram-bot');
+        Route::post('/integrations/telegram-bot/settings', [IntegrationToolController::class, 'saveBotSettings'])->name('integrations.telegram-bot.settings');
+        Route::post('/integrations/telegram-bot/webhook/set', [IntegrationToolController::class, 'setWebhook'])->name('integrations.telegram-bot.webhook.set');
+        Route::post('/integrations/telegram-bot/disconnect', [IntegrationToolController::class, 'disconnect'])->name('integrations.telegram-bot.disconnect');
         Route::get('/integrations/reminders', [IntegrationToolController::class, 'reminders'])->name('integrations.reminders');
         Route::post('/integrations/reminders', [IntegrationToolController::class, 'storeReminder'])->name('integrations.reminders.store');
     });

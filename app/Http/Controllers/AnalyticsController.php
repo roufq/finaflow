@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
 use App\Models\Category;
 use App\Models\Debt;
 use App\Models\Setting;
-use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
@@ -18,6 +17,10 @@ class AnalyticsController extends Controller
     {
         $currentMonthExpense = $this->getCurrentMonthAmount('expense');
         $currentMonthIncome = $this->getCurrentMonthAmount('income');
+
+        $primarySetting = Setting::where('user_id', Auth::id())->where('is_default', true)->first()
+            ?? Setting::where('user_id', Auth::id())->first();
+        $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
 
         $dailySpending = $this->getDailySpending();
         $weeklySpending = $this->getWeeklySpending();
@@ -45,7 +48,8 @@ class AnalyticsController extends Controller
             'healthMetrics',
             'advice',
             'riskProfile',
-            'taxInsights'
+            'taxInsights',
+            'currencySymbol'
         ));
     }
 
@@ -53,20 +57,29 @@ class AnalyticsController extends Controller
     {
         $date = now();
 
-        return (float) Transaction::where('type', $type)
-            ->whereYear('transaction_date', $date->year)
-            ->whereMonth('transaction_date', $date->month)
-            ->sum('amount');
+        return (float) DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', $type)
+            ->where('t.user_id', Auth::id())
+            ->whereYear('t.transaction_date', $date->year)
+            ->whereMonth('t.transaction_date', $date->month)
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
     }
 
     private function getDailySpending(): array
     {
         $startDate = now()->subDays(29)->startOfDay();
 
-        $rows = Transaction::select(DB::raw('DATE(transaction_date) as date'), DB::raw('SUM(amount) as total'))
-            ->where('type', 'expense')
-            ->where('transaction_date', '>=', $startDate)
-            ->groupBy(DB::raw('DATE(transaction_date)'))
+        $rows = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->selectRaw('DATE(t.transaction_date) as date, SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', Auth::id())
+            ->where('t.transaction_date', '>=', $startDate)
+            ->groupBy(DB::raw('DATE(t.transaction_date)'))
             ->orderBy('date')
             ->get();
 
@@ -96,10 +109,14 @@ class AnalyticsController extends Controller
     private function getWeeklySpending(): array
     {
         $startOfWeek = now()->startOfWeek()->subWeeks(11);
-        $rows = Transaction::selectRaw('YEAR(transaction_date) as year, WEEK(transaction_date, 3) as week, MIN(transaction_date) as week_start, SUM(amount) as total')
-            ->where('type', 'expense')
-            ->where('transaction_date', '>=', $startOfWeek)
-            ->groupByRaw('YEAR(transaction_date), WEEK(transaction_date, 3)')
+        $rows = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->selectRaw('YEAR(t.transaction_date) as year, WEEK(t.transaction_date, 3) as week, MIN(t.transaction_date) as week_start, SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', Auth::id())
+            ->where('t.transaction_date', '>=', $startOfWeek)
+            ->groupByRaw('YEAR(t.transaction_date), WEEK(t.transaction_date, 3)')
             ->orderBy('week_start')
             ->get();
 
@@ -266,7 +283,8 @@ class AnalyticsController extends Controller
         $debtToIncome = $this->calculateDebtToIncomeRatio();
         $emergencyFundRatio = $this->calculateEmergencyFundRatio();
 
-        $setting = Setting::query()->first();
+        $setting = Setting::where('user_id', Auth::id())->where('is_default', true)->first()
+            ?? Setting::where('user_id', Auth::id())->first();
 
         $creditScore = $setting && $setting->credit_score !== null
             ? (int) $setting->credit_score
@@ -306,7 +324,7 @@ class AnalyticsController extends Controller
     {
         $avgMonthlyIncome = $this->getAverageMonthlyAmount('income');
 
-        $totalMinimumPayments = Debt::where('status', 'active')->sum('minimum_payment');
+        $totalMinimumPayments = Debt::where('user_id', Auth::id())->where('status', 'active')->sum('minimum_payment');
 
         if ($avgMonthlyIncome <= 0) {
             return 0.0;
@@ -317,13 +335,17 @@ class AnalyticsController extends Controller
 
     private function calculateEmergencyFundRatio(): float
     {
-        $emergencyAccounts = Account::active()
-            ->whereIn('type', ['savings', 'bank'])
+        $emergencyAccounts = DB::table('accounts as a')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('a.is_active', true)
+            ->where('a.user_id', Auth::id())
+            ->whereIn('a.type', ['savings', 'bank'])
             ->where(function ($query) {
-                $query->where('name', 'like', '%emergency%')
-                    ->orWhere('name', 'like', '%darurat%');
+                $query->where('a.name', 'like', '%emergency%')
+                    ->orWhere('a.name', 'like', '%darurat%');
             })
-            ->sum('balance');
+            ->selectRaw('SUM(a.balance * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
 
         $expenseTotals = $this->getMonthlyTotals('expense', 6);
         $avgMonthlyExpense = count($expenseTotals) > 0 ? array_sum(array_column($expenseTotals, 'total')) / count($expenseTotals) : 0.0;
@@ -391,13 +413,23 @@ class AnalyticsController extends Controller
     {
         $year = now()->year;
 
-        $totalIncome = Transaction::where('type', 'income')
-            ->whereYear('transaction_date', $year)
-            ->sum('amount');
+        $totalIncome = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'income')
+            ->where('t.user_id', Auth::id())
+            ->whereYear('t.transaction_date', $year)
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
 
-        $totalExpense = Transaction::where('type', 'expense')
-            ->whereYear('transaction_date', $year)
-            ->sum('amount');
+        $totalExpense = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', Auth::id())
+            ->whereYear('t.transaction_date', $year)
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
 
         $deductibleCategories = Category::where('type', 'expense')
             ->where(function ($query) {
@@ -420,10 +452,15 @@ class AnalyticsController extends Controller
             })
             ->pluck('id');
 
-        $deductibleExpenses = Transaction::where('type', 'expense')
-            ->whereYear('transaction_date', $year)
-            ->whereIn('category_id', $deductibleCategories)
-            ->sum('amount');
+        $deductibleExpenses = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', Auth::id())
+            ->whereYear('t.transaction_date', $year)
+            ->whereIn('t.category_id', $deductibleCategories)
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
 
         $taxableIncome = max(0, $totalIncome - $deductibleExpenses);
 
@@ -514,11 +551,15 @@ class AnalyticsController extends Controller
 
         $start = now()->startOfMonth()->subMonths($months - 1);
 
-        $rows = Transaction::selectRaw('YEAR(transaction_date) as year, MONTH(transaction_date) as month, SUM(amount) as total')
-            ->where('type', $type)
-            ->where('transaction_date', '>=', $start)
-            ->groupByRaw('YEAR(transaction_date), MONTH(transaction_date)')
-            ->orderByRaw('YEAR(transaction_date), MONTH(transaction_date)')
+        $rows = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->selectRaw('YEAR(t.transaction_date) as year, MONTH(t.transaction_date) as month, SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->where('t.type', $type)
+            ->where('t.user_id', Auth::id())
+            ->where('t.transaction_date', '>=', $start)
+            ->groupByRaw('YEAR(t.transaction_date), MONTH(t.transaction_date)')
+            ->orderByRaw('YEAR(t.transaction_date), MONTH(t.transaction_date)')
             ->get();
 
         $mapped = [];

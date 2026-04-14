@@ -19,6 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\EnsureUserIsActive::class,
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\SecurityHeaders::class,
+            \App\Http\Middleware\InstallerMiddleware::class,
+        ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'telegram/webhook',
+            'telegram/webhook/*',
         ]);
 
         $middleware->alias([
@@ -47,8 +53,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
             $status = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
             $message = $status >= 500
-                ? 'Terjadi kesalahan pada server. Silakan coba lagi.'
-                : ($exception->getMessage() ?: 'Permintaan tidak dapat diproses.');
+                ? 'A server error occurred. Please try again.'
+                : ($exception->getMessage() ?: 'The request could not be processed.');
 
             return response()->json([
                 'success' => false,
@@ -70,7 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 $request->session()->regenerateToken();
             }
 
-            return redirect()->route('login')->with('error', 'Sesi Anda berakhir karena aksi tidak diizinkan.');
+            return redirect()->route('login')->with('error', 'Your session ended because the action is unauthorized.');
         });
 
         $exceptions->render(function (\Throwable $exception, $request) {
@@ -87,7 +93,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     $request->session()->regenerateToken();
                 }
 
-                return redirect()->route('login')->with('error', 'Sesi telah kedaluwarsa. Silakan login kembali.');
+                return redirect()->route('login')->with('error', 'Session has expired. Please log in again.');
             }
 
             return null;

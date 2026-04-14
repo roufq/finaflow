@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Category;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BudgetController extends Controller
 {
@@ -22,7 +22,11 @@ class BudgetController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('budgets.index', compact('budgets'));
+        $primarySetting = \App\Models\Setting::where('user_id', Auth::id())->where('is_default', true)->first()
+            ?? \App\Models\Setting::where('user_id', Auth::id())->first();
+        $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
+
+        return view('budgets.index', compact('budgets', 'currencySymbol'));
     }
 
     /**
@@ -31,6 +35,7 @@ class BudgetController extends Controller
     public function create()
     {
         $categories = Category::where('user_id', Auth::id())->get();
+
         return view('budgets.create', compact('categories'));
     }
 
@@ -71,6 +76,7 @@ class BudgetController extends Controller
     public function show(Budget $budget)
     {
         $this->authorize('view', $budget);
+
         return view('budgets.show', compact('budget'));
     }
 
@@ -81,6 +87,7 @@ class BudgetController extends Controller
     {
         $this->authorize('update', $budget);
         $categories = Category::where('user_id', Auth::id())->get();
+
         return view('budgets.edit', compact('budget', 'categories'));
     }
 
@@ -106,7 +113,7 @@ class BudgetController extends Controller
 
         $budget->update($request->only([
             'name', 'description', 'type', 'period', 'start_date',
-            'end_date', 'total_budget', 'spent_amount', 'status', 'category_allocations'
+            'end_date', 'total_budget', 'spent_amount', 'status', 'category_allocations',
         ]));
 
         return redirect()->route('budgets.index')->with('success', 'Budget updated successfully!');
@@ -139,7 +146,7 @@ class BudgetController extends Controller
         return response()->json([
             'success' => true,
             'spent_percentage' => $budget->spent_percentage,
-            'remaining_amount' => $budget->remaining_amount
+            'remaining_amount' => $budget->remaining_amount,
         ]);
     }
 }

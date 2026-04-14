@@ -334,7 +334,7 @@
                 <p class="mb-3">{{ session('account_inactive_message') ?? 'Akun Anda dinonaktifkan. Hubungi admin untuk mengaktifkan kembali.' }}</p>
                 <a href="{{ route('logout') }}"
                    onclick="event.preventDefault(); document.getElementById('logout-form-overlay').submit();"
-                   class="btn btn-primary btn-sm">Keluar</a>
+                   class="btn btn-primary btn-sm">Logout</a>
                 <form id="logout-form-overlay" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>

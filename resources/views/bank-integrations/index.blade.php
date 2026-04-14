@@ -6,7 +6,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Integrasi Bank</h1>
         <a href="{{ route('bank-integrations.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Integrasi
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add Integration
         </a>
     </div>
 
@@ -160,7 +160,7 @@
                                 <form action="{{ route('bank-integrations.destroy', $integration) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus integrasi ini?')">Hapus</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this integration?')">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok && data.success) {
                 resultDiv.innerHTML = `
                     <div class="alert alert-success">
-                        <h6>Sinkronisasi Berhasil!</h6>
+                        <h6>Sync Successful!</h6>
                         <p>${data.message}</p>
                         ${data.data && data.data.transactions_imported ? `<p>Transaksi diimpor: ${data.data.transactions_imported}</p>` : ''}
                     </div>
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 resultDiv.innerHTML = `
                     <div class="alert alert-danger">
-                        <h6>Sinkronisasi Gagal</h6>
+                        <h6>Sync Failed</h6>
                         <p>${data.message || 'Terjadi kesalahan saat menyinkronkan.'}</p>
                     </div>
                 `;

@@ -82,7 +82,7 @@
 
                 <!-- API Settings (shown for API) -->
                 <div id="api-settings" class="form-group" style="display: none;">
-                    <label>Pengaturan API</label>
+                    <label>API Settings</label>
                     <div class="row">
                         <div class="col-md-6">
                             <input type="text" name="credentials[api_key]" class="form-control" placeholder="API Key" value="{{ old('credentials.api_key', $bankIntegration->credentials['api_key'] ?? '') }}">
@@ -111,7 +111,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update Integrasi</button>
-                <a href="{{ route('bank-integrations.index') }}" class="btn btn-secondary ml-2">Batal</a>
+                <a href="{{ route('bank-integrations.index') }}" class="btn btn-secondary ml-2">Cancel</a>
             </form>
         </div>
     </div>

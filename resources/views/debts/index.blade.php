@@ -6,7 +6,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Hutang</h1>
         <a href="{{ route('debts.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Hutang Baru
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add New Debt
         </a>
     </div>
 
@@ -63,7 +63,7 @@
                     <i class="fas fa-credit-card fa-3x text-gray-300 mb-3"></i>
                     <h5 class="text-gray-500">Belum ada hutang</h5>
                     <p class="text-gray-500">Mulai catat hutang pertama Anda untuk melacak pembayaran</p>
-                    <a href="{{ route('debts.create') }}" class="btn btn-primary">Tambah Hutang Pertama</a>
+                    <a href="{{ route('debts.create') }}" class="btn btn-primary">Add First Debt</a>
                 </div>
             </div>
         </div>

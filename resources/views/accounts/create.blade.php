@@ -3,12 +3,12 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Tambah Akun Baru</h1>
+        <h1 class="h3 mb-0 text-gray-800">Add New Account</h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Form Tambah Akun</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Add Account Form</h6>
         </div>
         <div class="card-body">
             <form action="{{ route('accounts.store') }}" method="POST">
@@ -99,8 +99,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Simpan Akun</button>
-                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary">Save Account</button>
+                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

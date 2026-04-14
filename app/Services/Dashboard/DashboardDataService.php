@@ -16,20 +16,28 @@ class DashboardDataService
         $periodStart = $period->copy()->startOfMonth();
         $periodEnd = $period->copy()->endOfMonth();
 
-        $income = Transaction::where('type', 'income')
-            ->where('user_id', $userId)
-            ->whereBetween('transaction_date', [$periodStart, $periodEnd])
-            ->sum('amount');
+        $income = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'income')
+            ->where('t.user_id', $userId)
+            ->whereBetween('t.transaction_date', [$periodStart, $periodEnd])
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0;
 
-        $expense = Transaction::where('type', 'expense')
-            ->where('user_id', $userId)
-            ->whereBetween('transaction_date', [$periodStart, $periodEnd])
-            ->sum('amount');
+        $expense = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', $userId)
+            ->whereBetween('t.transaction_date', [$periodStart, $periodEnd])
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0;
 
         return [
-            'income' => $income,
-            'expense' => $expense,
-            'net' => $income - $expense,
+            'income' => (float) $income,
+            'expense' => (float) $expense,
+            'net' => (float) ($income - $expense),
         ];
     }
 
@@ -39,8 +47,10 @@ class DashboardDataService
         $periodEnd = $period->copy()->endOfMonth();
 
         return DB::table('transactions as t')
-            ->selectRaw('c.name, SUM(t.amount) as total')
             ->join('categories as c', 't.category_id', '=', 'c.id')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->selectRaw('c.name, SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
             ->where('t.type', $type)
             ->where('t.user_id', $userId)
             ->where('c.user_id', $userId)
@@ -55,17 +65,26 @@ class DashboardDataService
 
         for ($i = $months - 1; $i >= 0; $i--) {
             $date = now()->subMonths($i);
-            $income = Transaction::where('type', 'income')
-                ->where('user_id', $userId)
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
 
-            $expense = Transaction::where('type', 'expense')
-                ->where('user_id', $userId)
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
+            $income = DB::table('transactions as t')
+                ->join('accounts as a', 't.account_id', '=', 'a.id')
+                ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+                ->where('t.user_id', $userId)
+                ->where('t.type', 'income')
+                ->whereYear('t.transaction_date', $date->year)
+                ->whereMonth('t.transaction_date', $date->month)
+                ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+                ->value('total') ?? 0;
+
+            $expense = DB::table('transactions as t')
+                ->join('accounts as a', 't.account_id', '=', 'a.id')
+                ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+                ->where('t.user_id', $userId)
+                ->where('t.type', 'expense')
+                ->whereYear('t.transaction_date', $date->year)
+                ->whereMonth('t.transaction_date', $date->month)
+                ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+                ->value('total') ?? 0;
 
             $cashFlow[] = [
                 'month' => $date->format('M Y'),
@@ -81,15 +100,23 @@ class DashboardDataService
         $periodStart = $period->copy()->startOfMonth();
         $periodEnd = $period->copy()->endOfMonth();
 
-        $income = Transaction::where('type', 'income')
-            ->where('user_id', $userId)
-            ->whereBetween('transaction_date', [$periodStart, $periodEnd])
-            ->sum('amount');
+        $income = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'income')
+            ->where('t.user_id', $userId)
+            ->whereBetween('t.transaction_date', [$periodStart, $periodEnd])
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0;
 
-        $expense = Transaction::where('type', 'expense')
-            ->where('user_id', $userId)
-            ->whereBetween('transaction_date', [$periodStart, $periodEnd])
-            ->sum('amount');
+        $expense = DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', $userId)
+            ->whereBetween('t.transaction_date', [$periodStart, $periodEnd])
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0;
 
         return $income - $expense;
     }
@@ -113,7 +140,12 @@ class DashboardDataService
 
     public function getTotalCash(int $userId): float
     {
-        return Account::active()->where('user_id', $userId)->sum('balance');
+        return DB::table('accounts as a')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('a.is_active', true)
+            ->where('a.user_id', $userId)
+            ->selectRaw('SUM(a.balance * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
     }
 
     public function getAverageDailyAmount(string $type, int $userId, int $dayOfWeek): float
@@ -123,10 +155,14 @@ class DashboardDataService
         for ($i = 0; $i < 12; $i++) {
             $date = now()->subWeeks($i);
             if ($date->dayOfWeek === $dayOfWeek) {
-                $amounts[] = Transaction::where('type', $type)
-                    ->where('user_id', $userId)
-                    ->whereDate('transaction_date', $date->toDateString())
-                    ->sum('amount');
+                $amounts[] = DB::table('transactions as t')
+                    ->join('accounts as a', 't.account_id', '=', 'a.id')
+                    ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+                    ->where('t.type', $type)
+                    ->where('t.user_id', $userId)
+                    ->whereDate('t.transaction_date', $date->toDateString())
+                    ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+                    ->value('total') ?? 0;
             }
         }
 
@@ -141,10 +177,14 @@ class DashboardDataService
             $weekStart = now()->subWeeks($i)->startOfWeek();
             $weekEnd = $weekStart->copy()->endOfWeek();
 
-            $amounts[] = Transaction::where('type', $type)
-                ->where('user_id', $userId)
-                ->whereBetween('transaction_date', [$weekStart, $weekEnd])
-                ->sum('amount');
+            $amounts[] = DB::table('transactions as t')
+                ->join('accounts as a', 't.account_id', '=', 'a.id')
+                ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+                ->where('t.type', $type)
+                ->where('t.user_id', $userId)
+                ->whereBetween('t.transaction_date', [$weekStart, $weekEnd])
+                ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+                ->value('total') ?? 0;
         }
 
         return count($amounts) > 0 ? array_sum($amounts) / count($amounts) : 0.0;
@@ -157,13 +197,27 @@ class DashboardDataService
         for ($i = 0; $i < $months; $i++) {
             $date = now()->subMonths($i);
 
-            $amounts[] = Transaction::where('type', $type)
-                ->where('user_id', $userId)
-                ->whereYear('transaction_date', $date->year)
-                ->whereMonth('transaction_date', $date->month)
-                ->sum('amount');
+            $amounts[] = DB::table('transactions as t')
+                ->join('accounts as a', 't.account_id', '=', 'a.id')
+                ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+                ->where('t.type', $type)
+                ->where('t.user_id', $userId)
+                ->whereYear('t.transaction_date', $date->year)
+                ->whereMonth('t.transaction_date', $date->month)
+                ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+                ->value('total') ?? 0;
         }
 
         return count($amounts) > 0 ? array_sum($amounts) / count($amounts) : 0.0;
+    }
+
+    public function getRecentTransactions(int $userId, int $limit = 10): Collection
+    {
+        return Transaction::with(['category', 'account'])
+            ->where('user_id', $userId)
+            ->orderBy('transaction_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
     }
 }

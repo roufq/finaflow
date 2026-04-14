@@ -30,15 +30,16 @@ class CategoryReportService
 
         return $this->cache->remember($cacheKey, $this->ttl(), function () use ($filters, $userId) {
             return Transaction::query()
-                ->selectRaw('category_id, SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income_total, SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense_total, COUNT(*) as transactions_count')
-                ->where('user_id', $userId)
-                ->where('type', 'expense')
-                ->when($filters['category_id'], fn (Builder $query, int $categoryId) => $query->where('category_id', $categoryId))
-                ->when($filters['account_id'], fn (Builder $query, int $accountId) => $query->where('account_id', $accountId))
-                ->whereBetween('transaction_date', [$filters['start'], $filters['end']])
-                ->groupBy('category_id')
+                ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
+                ->leftJoin('settings', 'accounts.setting_id', '=', 'settings.id')
+                ->selectRaw('transactions.category_id, SUM(CASE WHEN transactions.type = "income" THEN transactions.amount * COALESCE(settings.exchange_rate, 1.0) ELSE 0 END) as income_total, SUM(CASE WHEN transactions.type = "expense" THEN transactions.amount * COALESCE(settings.exchange_rate, 1.0) ELSE 0 END) as expense_total, COUNT(transactions.id) as transactions_count')
+                ->where('transactions.user_id', $userId)
+                ->when($filters['category_id'], fn (Builder $query, int $categoryId) => $query->where('transactions.category_id', $categoryId))
+                ->when($filters['account_id'], fn (Builder $query, int $accountId) => $query->where('transactions.account_id', $accountId))
+                ->whereBetween('transactions.transaction_date', [$filters['start'], $filters['end']])
+                ->groupBy('transactions.category_id')
                 ->with('category')
-                ->orderByDesc(DB::raw('SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END)'))
+                ->orderByDesc(DB::raw('SUM(CASE WHEN transactions.type = "expense" THEN transactions.amount * COALESCE(settings.exchange_rate, 1.0) ELSE 0 END)'))
                 ->get()
                 ->map(function (Transaction $transaction) {
                     return [
@@ -66,13 +67,15 @@ class CategoryReportService
             $monthExpression = $this->monthSelectExpression();
 
             $rows = Transaction::query()
-                ->selectRaw("{$monthExpression} as month_key, category_id, SUM(amount) as total")
-                ->where('user_id', $userId)
-                ->where('type', 'expense')
-                ->when($filters['category_id'], fn (Builder $query, int $categoryId) => $query->where('category_id', $categoryId))
-                ->when($filters['account_id'], fn (Builder $query, int $accountId) => $query->where('account_id', $accountId))
-                ->whereBetween('transaction_date', [$start, $end])
-                ->groupBy('month_key', 'category_id')
+                ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
+                ->leftJoin('settings', 'accounts.setting_id', '=', 'settings.id')
+                ->selectRaw("{$monthExpression} as month_key, transactions.category_id, SUM(transactions.amount * COALESCE(settings.exchange_rate, 1.0)) as total")
+                ->where('transactions.user_id', $userId)
+                ->where('transactions.type', 'expense')
+                ->when($filters['category_id'], fn (Builder $query, int $categoryId) => $query->where('transactions.category_id', $categoryId))
+                ->when($filters['account_id'], fn (Builder $query, int $accountId) => $query->where('transactions.account_id', $accountId))
+                ->whereBetween('transactions.transaction_date', [$start, $end])
+                ->groupBy('month_key', 'transactions.category_id')
                 ->orderBy('month_key')
                 ->get();
 
@@ -163,12 +166,14 @@ class CategoryReportService
     public function summarizeCategory(int $userId, int $categoryId, array $filters): array
     {
         $totals = Transaction::query()
-            ->selectRaw('SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income_total, SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense_total, COUNT(*) as transactions_count')
-            ->where('user_id', $userId)
-            ->where('category_id', $categoryId)
-            ->where('type', 'expense')
-            ->when($filters['account_id'], fn (Builder $query, int $accountId) => $query->where('account_id', $accountId))
-            ->whereBetween('transaction_date', [$filters['start'], $filters['end']])
+            ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
+            ->leftJoin('settings', 'accounts.setting_id', '=', 'settings.id')
+            ->selectRaw('SUM(CASE WHEN transactions.type = "income" THEN transactions.amount * COALESCE(settings.exchange_rate, 1.0) ELSE 0 END) as income_total, SUM(CASE WHEN transactions.type = "expense" THEN transactions.amount * COALESCE(settings.exchange_rate, 1.0) ELSE 0 END) as expense_total, COUNT(transactions.id) as transactions_count')
+            ->where('transactions.user_id', $userId)
+            ->where('transactions.category_id', $categoryId)
+            ->where('transactions.type', 'expense')
+            ->when($filters['account_id'], fn (Builder $query, int $accountId) => $query->where('transactions.account_id', $accountId))
+            ->whereBetween('transactions.transaction_date', [$filters['start'], $filters['end']])
             ->first();
 
         return [

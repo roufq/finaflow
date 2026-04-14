@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Laporan Kategori</h1>
+            <h1 class="h3 mb-0 text-gray-800">Category Report</h1>
             <div class="d-flex">
                 <a href="{{ route('reports.categories.export', request()->except('page')) }}" class="btn btn-sm btn-primary">
                     <i class="fas fa-file-pdf fa-sm text-white-50"></i> Export PDF
@@ -276,7 +276,7 @@
                         document.getElementById('categoryDetailModalLabel').textContent = `Detail ${button.dataset.categoryName}`;
                     })
                     .catch(() => {
-                        detailBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Gagal memuat detail.</td></tr>';
+                        detailBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Failed to load details.</td></tr>';
                     });
             });
         });

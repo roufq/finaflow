@@ -32,4 +32,5 @@ return [
     'financial_coaching' => 'Coaching Finansial',
     'activity_log' => 'Log Aktivitas',
     'profile' => 'Profil',
+    'telegram_bot' => 'Telegram Bot',
 ];

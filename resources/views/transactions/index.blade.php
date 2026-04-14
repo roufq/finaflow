@@ -7,12 +7,12 @@
             <h1 class="h3 mb-0 text-gray-800">Transactions</h1>
             @if(request('search') || request('type') || request('account_id') || request('start_date') || request('end_date'))
                 <div class="small text-muted">
-                    Filter aktif:
-                    @if(request('search')) <span class="badge badge-light">Cari: "{{ request('search') }}"</span> @endif
-                    @if(request('type')) <span class="badge badge-light">Tipe: {{ request('type') }}</span> @endif
-                    @if(request('account_id')) <span class="badge badge-light">Akun: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}</span> @endif
-                    @if(request('start_date')) <span class="badge badge-light">Dari: {{ request('start_date') }}</span> @endif
-                    @if(request('end_date')) <span class="badge badge-light">Sampai: {{ request('end_date') }}</span> @endif
+                    Active Filters:
+                    @if(request('search')) <span class="badge badge-light">Search: "{{ request('search') }}"</span> @endif
+                    @if(request('type')) <span class="badge badge-light">Type: {{ request('type') }}</span> @endif
+                    @if(request('account_id')) <span class="badge badge-light">Account: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}</span> @endif
+                    @if(request('start_date')) <span class="badge badge-light">From: {{ request('start_date') }}</span> @endif
+                    @if(request('end_date')) <span class="badge badge-light">To: {{ request('end_date') }}</span> @endif
                 </div>
             @endif
         </div>
@@ -21,7 +21,7 @@
                 <form class="form-row" method="GET" action="{{ route('transactions.index') }}">
                     <div class="col-md-6 mb-2">
                         <div class="input-group input-group-sm">
-                            <input type="text" name="search" class="form-control" placeholder="Cari transaksi/kategori/nominal..." value="{{ request('search') }}">
+                            <input type="text" name="search" class="form-control" placeholder="Search transaction/category/amount..." value="{{ request('search') }}">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
                             </div>
@@ -29,27 +29,27 @@
                     </div>
                     <div class="col-md-3 mb-2">
                         <select name="type" class="form-control form-control-sm">
-                            <option value="">Semua tipe</option>
+                            <option value="">All Types</option>
                             <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Income</option>
                             <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
                         </select>
                     </div>
                     <div class="col-md-3 mb-2">
                         <select name="account_id" class="form-control form-control-sm">
-                            <option value="">Semua akun</option>
+                            <option value="">All Accounts</option>
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-md-3 mb-2">
-                        <input type="date" name="start_date" class="form-control form-control-sm" value="{{ request('start_date') }}" placeholder="Dari">
+                        <input type="date" name="start_date" class="form-control form-control-sm" value="{{ request('start_date') }}" placeholder="From">
                     </div>
                     <div class="col-md-3 mb-2">
-                        <input type="date" name="end_date" class="form-control form-control-sm" value="{{ request('end_date') }}" placeholder="Sampai">
+                        <input type="date" name="end_date" class="form-control form-control-sm" value="{{ request('end_date') }}" placeholder="To">
                     </div>
                     <div class="col-md-3 mb-2">
-                        <button class="btn btn-outline-secondary btn-sm btn-block" type="submit">Terapkan</button>
+                        <button class="btn btn-outline-secondary btn-sm btn-block" type="submit">Apply</button>
                     </div>
                     <div class="col-md-3 mb-2">
                         <a href="{{ route('transactions.index') }}" class="btn btn-link btn-sm btn-block">Reset</a>
@@ -125,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="mb-2">
-                                <div class="small text-muted">Kategori</div>
+                                <div class="small text-muted">Category</div>
                                 <div class="font-weight-semibold">{{ $transaction->category->name }}</div>
                             </div>
                             @if($transaction->description)
@@ -143,7 +143,7 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-muted mb-0">Belum ada transaksi.</p>
+                    <p class="text-muted mb-0">No transactions yet.</p>
                 @endforelse
             </div>
         </div>

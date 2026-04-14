@@ -9,7 +9,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit Akun
             </a>
             <a href="{{ route('accounts.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
         </div>
     </div>
@@ -212,7 +212,7 @@
                         <div class="timeline-item">
                             <div class="timeline-marker bg-danger"></div>
                             <div class="timeline-content">
-                                <h6 class="timeline-title">Transfer Keluar</h6>
+                                <h6 class="timeline-title">Transfer Out</h6>
                                 <p class="text-muted">{{ $transfer->transfer_date->format('d/m/Y') }}</p>
                                 <p>Rp {{ number_format($transfer->amount, 0, ',', '.') }} ke {{ $transfer->toAccount->name }}</p>
                             </div>
@@ -223,7 +223,7 @@
                         <div class="timeline-item">
                             <div class="timeline-marker bg-success"></div>
                             <div class="timeline-content">
-                                <h6 class="timeline-title">Transfer Masuk</h6>
+                                <h6 class="timeline-title">Transfer In</h6>
                                 <p class="text-muted">{{ $transfer->transfer_date->format('d/m/Y') }}</p>
                                 <p>Rp {{ number_format($transfer->amount, 0, ',', '.') }} dari {{ $transfer->fromAccount->name }}</p>
                             </div>

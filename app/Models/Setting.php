@@ -11,6 +11,11 @@ class Setting extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
+    protected $casts = [
+        'exchange_rate' => 'decimal:6',
+        'is_default' => 'boolean',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -6,7 +6,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Edit Goal: {{ $goal->name }}</h1>
         <a href="{{ route('goals.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
         </a>
     </div>
 
@@ -113,7 +113,7 @@
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update Goal</button>
-                            <a href="{{ route('goals.index') }}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ route('goals.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

@@ -17,3 +17,9 @@ Schedule::command('bank:sync-integrations')
     ->hourly()
     ->withoutOverlapping()
     ->description('Refresh transactions and balances for active bank integrations');
+
+Schedule::command('telegram:poll')
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->runInBackground()
+    ->description('Automatically run Telegram bot polling in the background');

@@ -25,12 +25,12 @@
                 <div class="form-group">
                     <label for="credit_score">Credit Score (optional)</label>
                     <input type="number" class="form-control" id="credit_score" name="credit_score" min="300" max="900" value="{{ old('credit_score', $setting->credit_score) }}">
-                    <small class="form-text text-muted">Masukkan credit score terbaru Anda jika tersedia (manual input, tidak terhubung ke biro kredit).</small>
+                    <small class="form-text text-muted">Enter your latest credit score if available (manual input, not connected to credit bureaus).</small>
                 </div>
                 <div class="form-group">
                     <label for="risk_profile">Risk Profile (optional)</label>
                     <select class="form-control" id="risk_profile" name="risk_profile">
-                        <option value="">Pilih profil risiko</option>
+                        <option value="">Select risk profile</option>
                         <option value="conservative" {{ old('risk_profile', $setting->risk_profile) === 'conservative' ? 'selected' : '' }}>Conservative</option>
                         <option value="balanced" {{ old('risk_profile', $setting->risk_profile) === 'balanced' ? 'selected' : '' }}>Balanced</option>
                         <option value="aggressive" {{ old('risk_profile', $setting->risk_profile) === 'aggressive' ? 'selected' : '' }}>Aggressive</option>

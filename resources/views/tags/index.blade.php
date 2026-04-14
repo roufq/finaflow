@@ -7,7 +7,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Tags</h1>
         <a href="{{ route('tags.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Tag
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add Tag
         </a>
     </div>
 
@@ -42,7 +42,7 @@
                                     </span>
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $tag->getTransactionsCount() }} transaksi
+                                    {{ $tag->getTransactionsCount() }} transactions
                                 </div>
                                 @if($tag->description)
                                     <div class="text-xs text-muted mt-1">
@@ -73,7 +73,7 @@
                                             <button type="submit" class="dropdown-item text-danger"
                                                     onclick="return confirm('Apakah Anda yakin ingin menghapus tag ini?')">
                                                 <i class="fas fa-trash fa-sm fa-fw mr-2"></i>
-                                                Hapus
+                                                Delete
                                             </button>
                                         </form>
                                     </div>
@@ -89,7 +89,7 @@
                     <div class="card-body text-center py-5">
                         <i class="fas fa-tags fa-3x text-gray-300 mb-3"></i>
                         <h5 class="text-gray-500">Belum ada tag</h5>
-                        <p class="text-gray-400 mb-4">Buat tag pertama Anda untuk mengorganisir transaksi dengan lebih baik.</p>
+                        <p class="text-gray-400 mb-4">Create your first tag to organize transactions better.</p>
                         <a href="{{ route('tags.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus fa-sm text-white-50"></i> Buat Tag Pertama
                         </a>

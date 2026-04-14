@@ -63,7 +63,6 @@
        <tr><td><a href="ScheduleBankSyncs.php.html#9">App\Console\Commands\ScheduleBankSyncs</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="SyncBankIntegrations.php.html#8">App\Console\Commands\SyncBankIntegrations</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#9">App\Console\Commands\SyncBankIntegrationsCommand</a></td><td class="text-right">0%</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#9">App\Console\Commands\SyncFinancialNews</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceipt.php.html#8">App\Console\Commands\TestScanReceipt</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceiptEndpoint.php.html#9">App\Console\Commands\TestScanReceiptEndpoint</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceiptWithApi.php.html#11">App\Console\Commands\TestScanReceiptWithApi</a></td><td class="text-right">0%</td></tr>
@@ -71,6 +70,7 @@
        <tr><td><a href="TestScanReceiptWithBrowser.php.html#11">App\Console\Commands\TestScanReceiptWithBrowser</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceiptWithCsrf.php.html#11">App\Console\Commands\TestScanReceiptWithCsrf</a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceiptWithSession.php.html#11">App\Console\Commands\TestScanReceiptWithSession</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="TelegramPollCommand.php.html#9">App\Console\Commands\TelegramPollCommand</a></td><td class="text-right">7%</td></tr>
 
        </tbody>
       </table>
@@ -89,9 +89,9 @@
        <tbody>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#9">App\Console\Commands\SyncBankIntegrationsCommand</a></td><td class="text-right">132</td></tr>
        <tr><td><a href="DebugSeeder.php.html#9">App\Console\Commands\DebugSeeder</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="TelegramPollCommand.php.html#9">App\Console\Commands\TelegramPollCommand</a></td><td class="text-right">90</td></tr>
        <tr><td><a href="TestScanReceiptWithBrowser.php.html#11">App\Console\Commands\TestScanReceiptWithBrowser</a></td><td class="text-right">72</td></tr>
        <tr><td><a href="ScheduleBankSyncs.php.html#9">App\Console\Commands\ScheduleBankSyncs</a></td><td class="text-right">42</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#9">App\Console\Commands\SyncFinancialNews</a></td><td class="text-right">42</td></tr>
        <tr><td><a href="TestScanReceiptWithSession.php.html#11">App\Console\Commands\TestScanReceiptWithSession</a></td><td class="text-right">42</td></tr>
        <tr><td><a href="TestScanReceiptWithApi.php.html#11">App\Console\Commands\TestScanReceiptWithApi</a></td><td class="text-right">30</td></tr>
        <tr><td><a href="TestScanReceiptWithCsrf.php.html#11">App\Console\Commands\TestScanReceiptWithCsrf</a></td><td class="text-right">30</td></tr>
@@ -142,10 +142,8 @@
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#24"><abbr title="App\Console\Commands\SyncBankIntegrationsCommand::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#40"><abbr title="App\Console\Commands\SyncBankIntegrationsCommand::syncFullData">syncFullData</abbr></a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#90"><abbr title="App\Console\Commands\SyncBankIntegrationsCommand::syncBalancesOnly">syncBalancesOnly</abbr></a></td><td class="text-right">0%</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#27"><abbr title="App\Console\Commands\SyncFinancialNews::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#36"><abbr title="App\Console\Commands\SyncFinancialNews::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#55"><abbr title="App\Console\Commands\SyncFinancialNews::defaultTags">defaultTags</abbr></a></td><td class="text-right">0%</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#74"><abbr title="App\Console\Commands\SyncFinancialNews::defaultCategories">defaultCategories</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="TelegramPollCommand.php.html#23"><abbr title="App\Console\Commands\TelegramPollCommand::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="TelegramPollCommand.php.html#49"><abbr title="App\Console\Commands\TelegramPollCommand::pollBot">pollBot</abbr></a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceipt.php.html#27"><abbr title="App\Console\Commands\TestScanReceipt::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceiptEndpoint.php.html#28"><abbr title="App\Console\Commands\TestScanReceiptEndpoint::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
        <tr><td><a href="TestScanReceiptWithApi.php.html#30"><abbr title="App\Console\Commands\TestScanReceiptWithApi::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
@@ -174,12 +172,13 @@
        <tr><td><a href="ScheduleBankSyncs.php.html#26"><abbr title="App\Console\Commands\ScheduleBankSyncs::handle">handle</abbr></a></td><td class="text-right">42</td></tr>
        <tr><td><a href="TestScanReceiptWithSession.php.html#30"><abbr title="App\Console\Commands\TestScanReceiptWithSession::handle">handle</abbr></a></td><td class="text-right">42</td></tr>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#40"><abbr title="App\Console\Commands\SyncBankIntegrationsCommand::syncFullData">syncFullData</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="TelegramPollCommand.php.html#23"><abbr title="App\Console\Commands\TelegramPollCommand::handle">handle</abbr></a></td><td class="text-right">30</td></tr>
        <tr><td><a href="TestScanReceiptWithApi.php.html#30"><abbr title="App\Console\Commands\TestScanReceiptWithApi::handle">handle</abbr></a></td><td class="text-right">30</td></tr>
        <tr><td><a href="TestScanReceiptWithCsrf.php.html#30"><abbr title="App\Console\Commands\TestScanReceiptWithCsrf::handle">handle</abbr></a></td><td class="text-right">30</td></tr>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#90"><abbr title="App\Console\Commands\SyncBankIntegrationsCommand::syncBalancesOnly">syncBalancesOnly</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="TelegramPollCommand.php.html#49"><abbr title="App\Console\Commands\TelegramPollCommand::pollBot">pollBot</abbr></a></td><td class="text-right">20</td></tr>
        <tr><td><a href="TestScanReceiptEndpoint.php.html#28"><abbr title="App\Console\Commands\TestScanReceiptEndpoint::handle">handle</abbr></a></td><td class="text-right">20</td></tr>
        <tr><td><a href="SyncBankIntegrations.php.html#27"><abbr title="App\Console\Commands\SyncBankIntegrations::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
-       <tr><td><a href="SyncFinancialNews.php.html#36"><abbr title="App\Console\Commands\SyncFinancialNews::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
        <tr><td><a href="TestScanReceipt.php.html#27"><abbr title="App\Console\Commands\TestScanReceipt::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
        <tr><td><a href="TestScanReceiptWithAuth.php.html#29"><abbr title="App\Console\Commands\TestScanReceiptWithAuth::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
        <tr><td><a href="SyncBankIntegrationsCommand.php.html#24"><abbr title="App\Console\Commands\SyncBankIntegrationsCommand::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
@@ -192,7 +191,7 @@
    <footer>
     <hr/>
     <p>
-     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 11.0.11</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.13</a> and <a href="https://phpunit.de/">PHPUnit 11.5.44</a> at Fri Nov 28 0:54:53 UTC 2025.</small>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 11.0.11</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.13</a> and <a href="https://phpunit.de/">PHPUnit 11.5.46</a> at Tue Apr 14 2:29:43 UTC 2026.</small>
     </p>
    </footer>
   </div>
@@ -211,7 +210,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#classCoverageDistribution svg')
-      .datum(getCoverageDistributionData([12,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .datum(getCoverageDistributionData([11,1,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -229,7 +228,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#methodCoverageDistribution svg')
-      .datum(getCoverageDistributionData([17,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .datum(getCoverageDistributionData([15,0,0,0,0,0,0,0,0,0,0,5], "Method Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -279,7 +278,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Cyclomatic Complexity');
 
     d3.select('#classComplexity svg')
-      .datum(getComplexityData([[0,10,"<a href=\"DebugSeeder.php.html#9\">App\\Console\\Commands\\DebugSeeder<\/a>"],[0,6,"<a href=\"ScheduleBankSyncs.php.html#9\">App\\Console\\Commands\\ScheduleBankSyncs<\/a>"],[0,3,"<a href=\"SyncBankIntegrations.php.html#8\">App\\Console\\Commands\\SyncBankIntegrations<\/a>"],[0,11,"<a href=\"SyncBankIntegrationsCommand.php.html#9\">App\\Console\\Commands\\SyncBankIntegrationsCommand<\/a>"],[0,6,"<a href=\"SyncFinancialNews.php.html#9\">App\\Console\\Commands\\SyncFinancialNews<\/a>"],[0,3,"<a href=\"TestScanReceipt.php.html#8\">App\\Console\\Commands\\TestScanReceipt<\/a>"],[0,4,"<a href=\"TestScanReceiptEndpoint.php.html#9\">App\\Console\\Commands\\TestScanReceiptEndpoint<\/a>"],[0,5,"<a href=\"TestScanReceiptWithApi.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithApi<\/a>"],[0,3,"<a href=\"TestScanReceiptWithAuth.php.html#10\">App\\Console\\Commands\\TestScanReceiptWithAuth<\/a>"],[0,8,"<a href=\"TestScanReceiptWithBrowser.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithBrowser<\/a>"],[0,5,"<a href=\"TestScanReceiptWithCsrf.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithCsrf<\/a>"],[0,6,"<a href=\"TestScanReceiptWithSession.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithSession<\/a>"]], 'Class Complexity'))
+      .datum(getComplexityData([[0,10,"<a href=\"DebugSeeder.php.html#9\">App\\Console\\Commands\\DebugSeeder<\/a>"],[0,6,"<a href=\"ScheduleBankSyncs.php.html#9\">App\\Console\\Commands\\ScheduleBankSyncs<\/a>"],[0,3,"<a href=\"SyncBankIntegrations.php.html#8\">App\\Console\\Commands\\SyncBankIntegrations<\/a>"],[0,11,"<a href=\"SyncBankIntegrationsCommand.php.html#9\">App\\Console\\Commands\\SyncBankIntegrationsCommand<\/a>"],[100,6,"<a href=\"SyncFinancialNews.php.html#9\">App\\Console\\Commands\\SyncFinancialNews<\/a>"],[7.142857142857142,10,"<a href=\"TelegramPollCommand.php.html#9\">App\\Console\\Commands\\TelegramPollCommand<\/a>"],[0,3,"<a href=\"TestScanReceipt.php.html#8\">App\\Console\\Commands\\TestScanReceipt<\/a>"],[0,4,"<a href=\"TestScanReceiptEndpoint.php.html#9\">App\\Console\\Commands\\TestScanReceiptEndpoint<\/a>"],[0,5,"<a href=\"TestScanReceiptWithApi.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithApi<\/a>"],[0,3,"<a href=\"TestScanReceiptWithAuth.php.html#10\">App\\Console\\Commands\\TestScanReceiptWithAuth<\/a>"],[0,8,"<a href=\"TestScanReceiptWithBrowser.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithBrowser<\/a>"],[0,5,"<a href=\"TestScanReceiptWithCsrf.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithCsrf<\/a>"],[0,6,"<a href=\"TestScanReceiptWithSession.php.html#11\">App\\Console\\Commands\\TestScanReceiptWithSession<\/a>"]], 'Class Complexity'))
       .transition()
       .duration(500)
       .call(chart);
@@ -303,7 +302,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Method Complexity');
 
     d3.select('#methodComplexity svg')
-      .datum(getComplexityData([[0,10,"<a href=\"DebugSeeder.php.html#28\">App\\Console\\Commands\\DebugSeeder::handle<\/a>"],[0,6,"<a href=\"ScheduleBankSyncs.php.html#26\">App\\Console\\Commands\\ScheduleBankSyncs::handle<\/a>"],[0,3,"<a href=\"SyncBankIntegrations.php.html#27\">App\\Console\\Commands\\SyncBankIntegrations::handle<\/a>"],[0,2,"<a href=\"SyncBankIntegrationsCommand.php.html#24\">App\\Console\\Commands\\SyncBankIntegrationsCommand::handle<\/a>"],[0,5,"<a href=\"SyncBankIntegrationsCommand.php.html#40\">App\\Console\\Commands\\SyncBankIntegrationsCommand::syncFullData<\/a>"],[0,4,"<a href=\"SyncBankIntegrationsCommand.php.html#90\">App\\Console\\Commands\\SyncBankIntegrationsCommand::syncBalancesOnly<\/a>"],[0,1,"<a href=\"SyncFinancialNews.php.html#27\">App\\Console\\Commands\\SyncFinancialNews::__construct<\/a>"],[0,3,"<a href=\"SyncFinancialNews.php.html#36\">App\\Console\\Commands\\SyncFinancialNews::handle<\/a>"],[0,1,"<a href=\"SyncFinancialNews.php.html#55\">App\\Console\\Commands\\SyncFinancialNews::defaultTags<\/a>"],[0,1,"<a href=\"SyncFinancialNews.php.html#74\">App\\Console\\Commands\\SyncFinancialNews::defaultCategories<\/a>"],[0,3,"<a href=\"TestScanReceipt.php.html#27\">App\\Console\\Commands\\TestScanReceipt::handle<\/a>"],[0,4,"<a href=\"TestScanReceiptEndpoint.php.html#28\">App\\Console\\Commands\\TestScanReceiptEndpoint::handle<\/a>"],[0,5,"<a href=\"TestScanReceiptWithApi.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithApi::handle<\/a>"],[0,3,"<a href=\"TestScanReceiptWithAuth.php.html#29\">App\\Console\\Commands\\TestScanReceiptWithAuth::handle<\/a>"],[0,8,"<a href=\"TestScanReceiptWithBrowser.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithBrowser::handle<\/a>"],[0,5,"<a href=\"TestScanReceiptWithCsrf.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithCsrf::handle<\/a>"],[0,6,"<a href=\"TestScanReceiptWithSession.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithSession::handle<\/a>"]], 'Method Complexity'))
+      .datum(getComplexityData([[0,10,"<a href=\"DebugSeeder.php.html#28\">App\\Console\\Commands\\DebugSeeder::handle<\/a>"],[0,6,"<a href=\"ScheduleBankSyncs.php.html#26\">App\\Console\\Commands\\ScheduleBankSyncs::handle<\/a>"],[0,3,"<a href=\"SyncBankIntegrations.php.html#27\">App\\Console\\Commands\\SyncBankIntegrations::handle<\/a>"],[0,2,"<a href=\"SyncBankIntegrationsCommand.php.html#24\">App\\Console\\Commands\\SyncBankIntegrationsCommand::handle<\/a>"],[0,5,"<a href=\"SyncBankIntegrationsCommand.php.html#40\">App\\Console\\Commands\\SyncBankIntegrationsCommand::syncFullData<\/a>"],[0,4,"<a href=\"SyncBankIntegrationsCommand.php.html#90\">App\\Console\\Commands\\SyncBankIntegrationsCommand::syncBalancesOnly<\/a>"],[100,1,"<a href=\"SyncFinancialNews.php.html#27\">App\\Console\\Commands\\SyncFinancialNews::__construct<\/a>"],[100,3,"<a href=\"SyncFinancialNews.php.html#36\">App\\Console\\Commands\\SyncFinancialNews::handle<\/a>"],[100,1,"<a href=\"SyncFinancialNews.php.html#55\">App\\Console\\Commands\\SyncFinancialNews::defaultTags<\/a>"],[100,1,"<a href=\"SyncFinancialNews.php.html#74\">App\\Console\\Commands\\SyncFinancialNews::defaultCategories<\/a>"],[100,1,"<a href=\"TelegramPollCommand.php.html#17\">App\\Console\\Commands\\TelegramPollCommand::__construct<\/a>"],[0,5,"<a href=\"TelegramPollCommand.php.html#23\">App\\Console\\Commands\\TelegramPollCommand::handle<\/a>"],[0,4,"<a href=\"TelegramPollCommand.php.html#49\">App\\Console\\Commands\\TelegramPollCommand::pollBot<\/a>"],[0,3,"<a href=\"TestScanReceipt.php.html#27\">App\\Console\\Commands\\TestScanReceipt::handle<\/a>"],[0,4,"<a href=\"TestScanReceiptEndpoint.php.html#28\">App\\Console\\Commands\\TestScanReceiptEndpoint::handle<\/a>"],[0,5,"<a href=\"TestScanReceiptWithApi.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithApi::handle<\/a>"],[0,3,"<a href=\"TestScanReceiptWithAuth.php.html#29\">App\\Console\\Commands\\TestScanReceiptWithAuth::handle<\/a>"],[0,8,"<a href=\"TestScanReceiptWithBrowser.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithBrowser::handle<\/a>"],[0,5,"<a href=\"TestScanReceiptWithCsrf.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithCsrf::handle<\/a>"],[0,6,"<a href=\"TestScanReceiptWithSession.php.html#30\">App\\Console\\Commands\\TestScanReceiptWithSession::handle<\/a>"]], 'Method Complexity'))
       .transition()
       .duration(500)
       .call(chart);

@@ -8,7 +8,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Form Tambah Integrasi Bank</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Bank Integration Form</h6>
         </div>
         <div class="card-body">
             <form action="{{ route('bank-integrations.store') }}" method="POST" enctype="multipart/form-data">
@@ -110,7 +110,7 @@
 
                 <!-- API Settings (shown for API) -->
                 <div id="api-settings" class="form-group" style="display: none;">
-                    <label>Pengaturan API</label>
+                    <label>API Settings</label>
                     <div class="row">
                         <div class="col-md-6">
                             <input type="text" name="credentials[api_key]" class="form-control" placeholder="API Key">
@@ -138,8 +138,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Simpan Integrasi</button>
-                <a href="{{ route('bank-integrations.index') }}" class="btn btn-secondary ml-2">Batal</a>
+                <button type="submit" class="btn btn-primary">Save Integration</button>
+                <a href="{{ route('bank-integrations.index') }}" class="btn btn-secondary ml-2">Cancel</a>
             </form>
         </div>
     </div>

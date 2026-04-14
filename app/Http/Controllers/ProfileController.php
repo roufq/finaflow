@@ -43,11 +43,17 @@ class ProfileController extends Controller
 
         $profileCompletion = (int) round((collect($completionSegments)->filter()->count() / count($completionSegments)) * 100);
 
+        if (empty($user->remember_token)) {
+            $user->update(['remember_token' => \Illuminate\Support\Str::random(60)]);
+        }
+
         return view('profile.show', [
             'user' => $user,
             'settings' => $settings,
             'profileStats' => $profileStats,
             'profileCompletion' => $profileCompletion,
+            'telegramToken' => $user->remember_token,
+            'telegramBotName' => config('services.telegram.bot_name', 'FinaFlowBot'),
         ]);
     }
 
