@@ -3,12 +3,12 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Add New Account</h1>
+        <h1 class="h3 mb-0 text-gray-800">Tambah Akun Baru</h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Add Account Form</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Form Tambah Akun</h6>
         </div>
         <div class="card-body">
             <form action="{{ route('accounts.store') }}" method="POST">
@@ -35,6 +35,21 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="setting_id">Profil Mata Uang *</label>
+                    <select class="form-control @error('setting_id') is-invalid @enderror" id="setting_id" name="setting_id" required>
+                        <option value="">Pilih Profil Mata Uang</option>
+                        @foreach($settings as $setting)
+                        <option value="{{ $setting->id }}" data-symbol="{{ $setting->currency_symbol }}" {{ old('setting_id') == $setting->id ? 'selected' : '' }}>
+                            {{ $setting->label }} ({{ $setting->currency_symbol }})
+                        </option>
+                        @endforeach
+                    </select>
+                    @error('setting_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
                     <label for="account_number">Nomor Akun</label>
                     <input type="text" class="form-control @error('account_number') is-invalid @enderror" id="account_number" name="account_number" value="{{ old('account_number') }}">
                     @error('account_number')
@@ -54,7 +69,7 @@
                     <label for="balance">Saldo Awal *</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Rp</span>
+                            <span class="input-group-text currency-symbol">Rp</span>
                         </div>
                         <input type="number" step="0.01" class="form-control @error('balance') is-invalid @enderror" id="balance" name="balance" value="{{ old('balance', 0) }}" required>
                     </div>
@@ -67,7 +82,7 @@
                     <label for="credit_limit">Limit Kredit</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Rp</span>
+                            <span class="input-group-text currency-symbol">Rp</span>
                         </div>
                         <input type="number" step="0.01" class="form-control @error('credit_limit') is-invalid @enderror" id="credit_limit" name="credit_limit" value="{{ old('credit_limit') }}">
                     </div>
@@ -99,8 +114,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save Account</button>
-                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Simpan Akun</button>
+                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>
@@ -118,9 +133,17 @@ document.getElementById('type').addEventListener('change', function() {
     }
 });
 
+document.getElementById('setting_id').addEventListener('change', function() {
+    const symbol = this.options[this.selectedIndex].dataset.symbol || 'Rp';
+    document.querySelectorAll('.currency-symbol').forEach(el => {
+        el.innerText = symbol;
+    });
+});
+
 // Trigger change event on page load to handle pre-selected values
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('type').dispatchEvent(new Event('change'));
+    document.getElementById('setting_id').dispatchEvent(new Event('change'));
 });
 </script>
 @endsection

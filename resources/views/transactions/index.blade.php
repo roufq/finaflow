@@ -4,106 +4,118 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-start justify-content-between flex-wrap mb-4">
         <div class="mb-2">
-            <h1 class="h3 mb-0 text-gray-800">Transactions</h1>
+            <h1 class="h3 mb-2 text-gray-800 font-weight-bold">Transaksi</h1>
+            <p class="text-muted small mb-2">Pantau setiap alur uang keluar dan masuk Anda dengan mudah.</p>
             @if(request('search') || request('type') || request('account_id') || request('start_date') || request('end_date'))
-                <div class="small text-muted">
-                    Active Filters:
-                    @if(request('search')) <span class="badge badge-light">Search: "{{ request('search') }}"</span> @endif
-                    @if(request('type')) <span class="badge badge-light">Type: {{ request('type') }}</span> @endif
-                    @if(request('account_id')) <span class="badge badge-light">Account: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}</span> @endif
-                    @if(request('start_date')) <span class="badge badge-light">From: {{ request('start_date') }}</span> @endif
-                    @if(request('end_date')) <span class="badge badge-light">To: {{ request('end_date') }}</span> @endif
+                <div class="small">
+                    <span class="text-muted mr-1">Filter aktif:</span>
+                    @if(request('search')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Cari: "{{ request('search') }}"</span> @endif
+                    @if(request('type')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Tipe: {{ request('type') }}</span> @endif
+                    @if(request('account_id')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Akun: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}</span> @endif
+                    @if(request('start_date')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Dari: {{ request('start_date') }}</span> @endif
+                    @if(request('end_date')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Sampai: {{ request('end_date') }}</span> @endif
                 </div>
             @endif
         </div>
-        <div class="row align-items-start">
-            <div class="col-lg-7 mb-3 mb-lg-0">
+        <div class="row align-items-start w-100">
+            <div class="col-lg-8 mb-3 mb-lg-0">
                 <form class="form-row" method="GET" action="{{ route('transactions.index') }}">
-                    <div class="col-md-6 mb-2">
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="search" class="form-control" placeholder="Search transaction/category/amount..." value="{{ request('search') }}">
+                    <div class="col-md-5 mb-2">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Cari transaksi..." value="{{ request('search') }}">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3 mb-2">
-                        <select name="type" class="form-control form-control-sm">
-                            <option value="">All Types</option>
-                            <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Income</option>
-                            <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
+                        <select name="type" class="form-control">
+                            <option value="">Semua tipe</option>
+                            <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Pemasukan</option>
+                            <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Pengeluaran</option>
                         </select>
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <select name="account_id" class="form-control form-control-sm">
-                            <option value="">All Accounts</option>
+                    <div class="col-md-4 mb-2">
+                        <select name="account_id" class="form-control">
+                            <option value="">Semua akun</option>
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <input type="date" name="start_date" class="form-control form-control-sm" value="{{ request('start_date') }}" placeholder="From">
+                    <div class="col-md-4 mb-2">
+                        <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" title="Dari Tanggal">
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <input type="date" name="end_date" class="form-control form-control-sm" value="{{ request('end_date') }}" placeholder="To">
+                    <div class="col-md-4 mb-2">
+                        <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" title="Sampai Tanggal">
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <button class="btn btn-outline-secondary btn-sm btn-block" type="submit">Apply</button>
+                    <div class="col-md-2 mb-2">
+                        <button class="btn btn-primary border-0 btn-block shadow-sm font-weight-bold" type="submit" style="background-color: #3b82f6;">Filter</button>
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <a href="{{ route('transactions.index') }}" class="btn btn-link btn-sm btn-block">Reset</a>
+                    <div class="col-md-2 mb-2">
+                        <a href="{{ route('transactions.index') }}" class="btn btn-light btn-block text-muted">Clear</a>
                     </div>
                 </form>
             </div>
-            <div class="col-lg-5 d-flex flex-column flex-lg-row align-items-stretch">
-                <button type="button" class="btn btn-sm btn-success shadow-sm mb-2 mb-lg-0 mr-lg-2 w-100" data-toggle="modal" data-target="#receiptModal">
-                    <i class="fas fa-camera fa-sm text-white-50"></i> Scan Receipt
+            <div class="col-lg-4 d-flex justify-content-lg-end">
+                <button type="button" class="btn text-white shadow-sm mb-lg-0 mr-2" style="background-color: #10b981; border: none; border-radius: 8px;" data-toggle="modal" data-target="#receiptModal">
+                    <i class="fas fa-camera mr-1"></i> Scan
                 </button>
-                <a href="{{ route('transactions.create') }}" class="btn btn-sm btn-primary shadow-sm w-100">
-                    <i class="fas fa-plus fa-sm text-white-50"></i> Add Transaction
+                <a href="{{ route('transactions.create') }}" class="btn btn-primary shadow-sm" style="border-radius: 8px;">
+                    <i class="fas fa-plus mr-1"></i> Tambah Transaksi
                 </a>
             </div>
         </div>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Transactions List</h6>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-4 d-flex align-items-center">
+            <h6 class="m-0 font-weight-bold text-gray-800">Daftar Transaksi</h6>
         </div>
-                <div class="card-body">
+        <div class="card-body p-0">
             <div class="table-responsive d-none d-md-block">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
+                <table class="table table-borderless text-gray-700" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="bg-light text-muted">
                         <tr>
-                            <th>No</th>
-                            <th>Date</th>
-                            <th>Account</th>
-                            <th>Category</th>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Description</th>
-                            <th>Actions</th>
+                            <th class="px-4 py-3">Tanggal</th>
+                            <th class="py-3">Info Akun & Kategori</th>
+                            <th class="py-3">Tipe</th>
+                            <th class="py-3">Nominal</th>
+                            <th class="py-3">Deskripsi</th>
+                            <th class="px-4 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($transactions as $transaction)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $transaction->transaction_date->format('Y-m-d') }}</td>
-                            <td>{{ $transaction->account->name ?? '?' }}</td>
-                            <td>{{ $transaction->category->name }}</td>
-                            <td>{{ $transaction->type }}</td>
-                            <td>{{ $transaction->amount }}</td>
-                            <td>{{ $transaction->description }}</td>
-                            <td>
-                                <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-info btn-sm">View</a>
-                                <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                                </form>
+                        <tr class="border-bottom border-light hover-bg-light">
+                            <td class="px-4 py-3 align-middle">
+                                <div class="font-weight-bold text-gray-800">{{ $transaction->transaction_date->format('d M Y') }}</div>
+                            </td>
+                            <td class="py-3 align-middle">
+                                <span class="font-weight-bold text-gray-800">{{ $transaction->account->name ?? '?' }}</span><br>
+                                <span class="small text-muted">{{ $transaction->category->name }}</span>
+                            </td>
+                            <td class="py-3 align-middle">
+                                @if($transaction->type === 'income')
+                                    <span class="badge badge-pill font-weight-normal px-2 py-1" style="background-color: rgba(34, 197, 94, 0.1); color: #16a34a;"><i class="fas fa-arrow-up text-xs mr-1"></i> Masuk</span>
+                                @else
+                                    <span class="badge badge-pill font-weight-normal px-2 py-1" style="background-color: rgba(239, 68, 68, 0.1); color: #dc2626;"><i class="fas fa-arrow-down text-xs mr-1"></i> Keluar</span>
+                                @endif
+                            </td>
+                            <td class="py-3 align-middle {{ $transaction->type === 'income' ? 'text-success' : 'text-gray-800' }} font-weight-bold">
+                                {{ $transaction->type === 'income' ? '+' : '-' }} {{ $transaction->account->setting->currency_symbol ?? 'Rp' }} {{ number_format($transaction->amount, 0, ',', '.') }}
+                            </td>
+                            <td class="py-3 align-middle text-muted">{{ Str::limit($transaction->description, 30) ?: '-' }}</td>
+                            <td class="px-4 py-3 align-middle text-right">
+                                <div class="btn-group shadow-sm rounded-lg" role="group">
+                                    <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-light btn-sm text-primary" title="Lihat"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-light btn-sm text-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                                    <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-light btn-sm text-danger" title="Hapus" onclick="return confirm('Apakah Anda yakin?')"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -125,7 +137,7 @@
                                 </div>
                             </div>
                             <div class="mb-2">
-                                <div class="small text-muted">Category</div>
+                                <div class="small text-muted">Kategori</div>
                                 <div class="font-weight-semibold">{{ $transaction->category->name }}</div>
                             </div>
                             @if($transaction->description)
@@ -143,10 +155,26 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-muted mb-0">No transactions yet.</p>
+                    <div class="px-4 py-4 text-center">
+                        <i class="fas fa-receipt fa-3x text-light mb-3"></i>
+                        <p class="text-muted mb-0">Belum ada transaksi.</p>
+                    </div>
                 @endforelse
             </div>
         </div>
+        @if($transactions->hasPages())
+        <div class="card-footer bg-white border-top-0 px-4 py-3">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <div class="text-muted small mb-3 mb-md-0">
+                    Menampilkan <strong>{{ $transactions->firstItem() }}</strong> - <strong>{{ $transactions->lastItem() }}</strong> dari <strong>{{ $transactions->total() }}</strong> transaksi
+                </div>
+                <div class="pagination-scandinavian">
+                    {{ $transactions->links() }}
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
 </div>
 
 <!-- Receipt Scan Modal -->

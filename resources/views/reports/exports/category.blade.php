@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Category Report</title>
+    <title>Laporan Kategori</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #111827; }
         h2 { margin-bottom: 6px; }
@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <h2>Category Report</h2>
+    <h2>Laporan Kategori</h2>
     <div class="meta">
         <div>Periode: {{ $periodLabel }}</div>
         <div>Rentang: {{ $start->toDateString() }} - {{ $end->toDateString() }}</div>

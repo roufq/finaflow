@@ -18,7 +18,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit Tag
             </a>
             <a href="{{ route('tags.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm ml-2">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
             </a>
         </div>
     </div>
@@ -31,7 +31,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Transactions
+                                Total Transaksi
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $transactions->total() }}</div>
                         </div>
@@ -89,7 +89,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Recent Transactions
+                                Transaksi Terbaru
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 @if($transactions->count() > 0)
@@ -111,7 +111,7 @@
     <!-- Transactions Table -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Transactions with this Tag</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Transaksi dengan Tag Ini</h6>
         </div>
         <div class="card-body">
             @if($transactions->count() > 0)
@@ -120,11 +120,11 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Category</th>
-                                <th>Account</th>
-                                <th>Description</th>
+                                <th>Tanggal</th>
+                                <th>Tipe</th>
+                                <th>Kategori</th>
+                                <th>Akun</th>
+                                <th>Deskripsi</th>
                                 <th>Jumlah</th>
                                 <th>Aksi</th>
                             </tr>

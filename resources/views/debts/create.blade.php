@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Add New Debt</h1>
+        <h1 class="h3 mb-0 text-gray-800">Tambah Hutang Baru</h1>
         <a href="{{ route('debts.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
         </a>
     </div>
 
@@ -121,8 +121,8 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Save Debt</button>
-                            <a href="{{ route('debts.index') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Simpan Hutang</button>
+                            <a href="{{ route('debts.index') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>
                 </div>

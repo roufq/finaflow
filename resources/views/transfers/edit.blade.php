@@ -15,12 +15,12 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="from_account_id">From Account *</label>
+                    <label for="from_account_id">Dari Akun *</label>
                     <select class="form-control @error('from_account_id') is-invalid @enderror" id="from_account_id" name="from_account_id" required>
-                        <option value="">Select Sender Account</option>
+                        <option value="">Pilih Akun Pengirim</option>
                         @foreach($accounts as $account)
                         <option value="{{ $account->id }}" {{ old('from_account_id', $transfer->from_account_id) == $account->id ? 'selected' : '' }}>
-                            {{ $account->name }} (Balance: Rp {{ number_format($account->available_balance, 0, ',', '.') }})
+                            {{ $account->name }} (Saldo: Rp {{ number_format($account->available_balance, 0, ',', '.') }})
                         </option>
                         @endforeach
                     </select>
@@ -30,9 +30,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="to_account_id">To Account *</label>
+                    <label for="to_account_id">Ke Akun *</label>
                     <select class="form-control @error('to_account_id') is-invalid @enderror" id="to_account_id" name="to_account_id" required>
-                        <option value="">Select Receiver Account</option>
+                        <option value="">Pilih Akun Penerima</option>
                         @foreach($accounts as $account)
                         <option value="{{ $account->id }}" {{ old('to_account_id', $transfer->to_account_id) == $account->id ? 'selected' : '' }}>
                             {{ $account->name }}
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="transfer_date">Transfer Date *</label>
+                    <label for="transfer_date">Tanggal Transfer *</label>
                     <input type="date" class="form-control @error('transfer_date') is-invalid @enderror" id="transfer_date" name="transfer_date" value="{{ old('transfer_date', $transfer->transfer_date->format('Y-m-d')) }}" required>
                     @error('transfer_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -79,7 +79,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description">Deskripsi</label>
                     <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $transfer->description) }}</textarea>
                     @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -127,7 +127,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update Transfer</button>
-                <a href="{{ route('transfers.index') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('transfers.index') }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const fromOption = fromAccountSelect.options[fromAccountSelect.selectedIndex];
             const toOption = toAccountSelect.options[toAccountSelect.selectedIndex];
 
-            document.getElementById('summary_from').textContent = fromOption.text.split(' (Balance:')[0];
+            document.getElementById('summary_from').textContent = fromOption.text.split(' (Saldo:')[0];
             document.getElementById('summary_to').textContent = toOption.text.split(' (Saldo:')[0];
             document.getElementById('summary_amount').textContent = 'Rp ' + amount.toLocaleString('id-ID');
             document.getElementById('summary_fee').textContent = 'Rp ' + fee.toLocaleString('id-ID');

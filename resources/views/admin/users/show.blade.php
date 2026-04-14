@@ -7,7 +7,7 @@
             <h1 class="h3 text-gray-800 mb-0">Detail Akses Pengguna</h1>
             <p class="text-muted mb-0">Atur hak akses sidebar untuk <strong>{{ $user->name }}</strong> ({{ $user->email }}).</p>
         </div>
-        <a href="{{ route('admin.users.index') }}" class="btn btn-link">Back</a>
+        <a href="{{ route('admin.users.index') }}" class="btn btn-link">Kembali</a>
     </div>
 
     @if(session('status'))
@@ -79,7 +79,7 @@
                         </div>
                         <p class="text-muted small mb-0">Perubahan paket akan memperbarui izin sidebar sesuai daftar fitur pada tier yang dipilih.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save Access Package</button>
+                    <button type="submit" class="btn btn-primary">Simpan Paket Akses</button>
                 </form>
             @endif
 
@@ -99,7 +99,7 @@
                     <label for="deactivation_message">Pesan untuk pengguna (jika dinonaktifkan)</label>
                     <textarea class="form-control" id="deactivation_message" name="deactivation_message" rows="3" placeholder="Contoh: Akun Anda dinonaktifkan sementara. Hubungi admin untuk informasi lebih lanjut.">{{ old('deactivation_message', $user->deactivation_message) }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-outline-primary">Save Status</button>
+                <button type="submit" class="btn btn-outline-primary">Simpan Status</button>
             </form>
         </div>
     </div>

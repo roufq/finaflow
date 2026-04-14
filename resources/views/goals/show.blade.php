@@ -10,7 +10,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit
             </a>
             <a href="{{ route('goals.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
             </a>
         </div>
     </div>
@@ -134,7 +134,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <button class="btn btn-success btn-block" data-toggle="modal" data-target="#addProgressModal">
-                                <i class="fas fa-plus"></i> Add Progress
+                                <i class="fas fa-plus"></i> Tambah Progress
                             </button>
                         </div>
                         <div class="col-md-6">
@@ -142,7 +142,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> Delete Goal
+                                    <i class="fas fa-trash"></i> Hapus Goal
                                 </button>
                             </form>
                         </div>
@@ -158,7 +158,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProgressModalLabel">Add Progress</h5>
+                <h5 class="modal-title" id="addProgressModalLabel">Tambah Progress</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -175,8 +175,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>

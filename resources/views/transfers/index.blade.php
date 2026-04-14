@@ -38,9 +38,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Date</th>
-                            <th>From Account</th>
-                            <th>To Account</th>
+                            <th>Tanggal</th>
+                            <th>Dari Akun</th>
+                            <th>Ke Akun</th>
                             <th>Jumlah</th>
                             <th>Biaya</th>
                             <th>Total</th>
@@ -80,7 +80,7 @@
                                 <form action="{{ route('transfers.destroy', $transfer) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this transfer?')">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus transfer ini?')">Hapus</button>
                                 </form>
                                 @endif
                             </td>
@@ -96,7 +96,7 @@
             <div class="text-center py-5">
                 <i class="fas fa-exchange-alt fa-4x text-gray-300 mb-3"></i>
                 <h5 class="text-gray-500">Belum ada transfer</h5>
-                <p class="text-gray-400">Create your first transfer to move funds between accounts.</p>
+                <p class="text-gray-400">Buat transfer pertama Anda untuk memindahkan dana antar akun.</p>
                 <a href="{{ route('transfers.create') }}" class="btn btn-primary">Buat Transfer Pertama</a>
             </div>
             @endif

@@ -11,7 +11,7 @@
             </a>
             @endif
             <a href="{{ route('transfers.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
             </a>
         </div>
     </div>
@@ -59,7 +59,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <strong>Transfer Date:</strong><br>
+                            <strong>Tanggal Transfer:</strong><br>
                             {{ $transfer->transfer_date->format('d F Y') }}
                         </div>
                         <div class="col-md-6">
@@ -70,7 +70,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
-                            <strong>From Account:</strong><br>
+                            <strong>Dari Akun:</strong><br>
                             <a href="{{ route('accounts.show', $transfer->fromAccount) }}" class="text-decoration-none">
                                 {{ $transfer->fromAccount->name }}
                             </a>
@@ -79,7 +79,7 @@
                             @endif
                         </div>
                         <div class="col-md-6">
-                            <strong>To Account:</strong><br>
+                            <strong>Ke Akun:</strong><br>
                             <a href="{{ route('accounts.show', $transfer->toAccount) }}" class="text-decoration-none">
                                 {{ $transfer->toAccount->name }}
                             </a>
@@ -106,7 +106,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <strong>Description:</strong><br>
+                            <strong>Deskripsi:</strong><br>
                             {{ $transfer->description ?: '-' }}
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                                 <i class="fas fa-wallet"></i>
                             </div>
                             <div class="account-name">{{ $transfer->fromAccount->name }}</div>
-                            <div class="account-balance">Balance: Rp {{ number_format($transfer->fromAccount->balance, 0, ',', '.') }}</div>
+                            <div class="account-balance">Saldo: Rp {{ number_format($transfer->fromAccount->balance, 0, ',', '.') }}</div>
                         </div>
 
                         <div class="transfer-arrow">
@@ -158,7 +158,7 @@
                                 <i class="fas fa-wallet"></i>
                             </div>
                             <div class="account-name">{{ $transfer->toAccount->name }}</div>
-                            <div class="account-balance">Balance: Rp {{ number_format($transfer->toAccount->balance, 0, ',', '.') }}</div>
+                            <div class="account-balance">Saldo: Rp {{ number_format($transfer->toAccount->balance, 0, ',', '.') }}</div>
                         </div>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> Delete Transfer
+                                <i class="fas fa-trash"></i> Hapus Transfer
                             </button>
                         </form>
                     </div>

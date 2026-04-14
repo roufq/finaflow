@@ -18,7 +18,7 @@
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                 Expense (This Month)</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($currentMonthExpense, 0, ',', '.') }}
+                                {{ $currencySymbol }} {{ number_format($currentMonthExpense, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -36,7 +36,7 @@
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Income (This Month)</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($currentMonthIncome, 0, ',', '.') }}
+                                {{ $currencySymbol }} {{ number_format($currentMonthIncome, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -104,9 +104,9 @@
                 </div>
                 <div class="card-body">
                     @if($seasonalInsights['highest'])
-                        <p><strong>Highest month:</strong> {{ $seasonalInsights['highest']['label'] }} (Rp {{ number_format($seasonalInsights['highest']['total'], 0, ',', '.') }})</p>
-                        <p><strong>Lowest month:</strong> {{ $seasonalInsights['lowest']['label'] }} (Rp {{ number_format($seasonalInsights['lowest']['total'], 0, ',', '.') }})</p>
-                        <p><strong>Average monthly spending:</strong> Rp {{ number_format($seasonalInsights['average'], 0, ',', '.') }}</p>
+                        <p><strong>Highest month:</strong> {{ $seasonalInsights['highest']['label'] }} ({{ $currencySymbol }} {{ number_format($seasonalInsights['highest']['total'], 0, ',', '.') }})</p>
+                        <p><strong>Lowest month:</strong> {{ $seasonalInsights['lowest']['label'] }} ({{ $currencySymbol }} {{ number_format($seasonalInsights['lowest']['total'], 0, ',', '.') }})</p>
+                        <p><strong>Average monthly spending:</strong> {{ $currencySymbol }} {{ number_format($seasonalInsights['average'], 0, ',', '.') }}</p>
                         <p><strong>Trend:</strong>
                             @if($seasonalInsights['trend'] === 'increasing')
                                 Spending is increasing compared to earlier months.
@@ -159,9 +159,9 @@
                 </div>
                 <div class="card-body">
                     <p><strong>Your average monthly spending (6 months):</strong>
-                        Rp {{ number_format($peerComparison['user_average'], 0, ',', '.') }}</p>
+                        {{ $currencySymbol }} {{ number_format($peerComparison['user_average'], 0, ',', '.') }}</p>
                     <p><strong>Peer average monthly spending:</strong>
-                        Rp {{ number_format($peerComparison['peer_average'], 0, ',', '.') }}</p>
+                        {{ $currencySymbol }} {{ number_format($peerComparison['peer_average'], 0, ',', '.') }}</p>
                     <p><strong>Difference:</strong>
                         {{ $peerComparison['difference_percentage'] >= 0 ? '+' : '' }}{{ $peerComparison['difference_percentage'] }}%</p>
                     <p>
@@ -186,7 +186,7 @@
                         <p>Based on your last 12 months of spending, the following are simple trend-based projections for the next 3 months:</p>
                         <ul>
                             @foreach($spendingPredictions as $prediction)
-                                <li>{{ $prediction['label'] }}: Rp {{ number_format($prediction['total'], 0, ',', '.') }}</li>
+                                <li>{{ $prediction['label'] }}: {{ $currencySymbol }} {{ number_format($prediction['total'], 0, ',', '.') }}</li>
                             @endforeach
                         </ul>
                         <p class="text-muted mb-0">
@@ -251,33 +251,33 @@
                     <div class="row">
                         <div class="col-md-4">
                             <p><strong>Total income (year-to-date):</strong>
-                                Rp {{ number_format($taxInsights['total_income'], 0, ',', '.') }}</p>
+                                {{ $currencySymbol }} {{ number_format($taxInsights['total_income'], 0, ',', '.') }}</p>
                             <p><strong>Total expenses (year-to-date):</strong>
-                                Rp {{ number_format($taxInsights['total_expense'], 0, ',', '.') }}</p>
+                                {{ $currencySymbol }} {{ number_format($taxInsights['total_expense'], 0, ',', '.') }}</p>
                         </div>
                         <div class="col-md-4">
                             <p><strong>Estimated deductible expenses:</strong>
-                                Rp {{ number_format($taxInsights['deductible_expenses'], 0, ',', '.') }}</p>
+                                {{ $currencySymbol }} {{ number_format($taxInsights['deductible_expenses'], 0, ',', '.') }}</p>
                             <p><strong>Estimated taxable income:</strong>
-                                Rp {{ number_format($taxInsights['taxable_income'], 0, ',', '.') }}</p>
+                                {{ $currencySymbol }} {{ number_format($taxInsights['taxable_income'], 0, ',', '.') }}</p>
                         </div>
                         <div class="col-md-4">
                             @if($taxInsights['current_bracket'])
                                 <p><strong>Current bracket (rough):</strong>
                                     {{ $taxInsights['current_bracket']['rate'] }}%
                                     @if($taxInsights['current_bracket']['limit'])
-                                        up to Rp {{ number_format($taxInsights['current_bracket']['limit'], 0, ',', '.') }}
+                                        up to {{ $currencySymbol }} {{ number_format($taxInsights['current_bracket']['limit'], 0, ',', '.') }}
                                     @else
                                         (no upper limit)
                                     @endif
                                 </p>
                                 <p><strong>Simple estimated tax (flat on taxable income):</strong>
-                                    Rp {{ number_format($taxInsights['estimated_tax'], 0, ',', '.') }}</p>
+                                    {{ $currencySymbol }} {{ number_format($taxInsights['estimated_tax'], 0, ',', '.') }}</p>
                                 @if($taxInsights['next_bracket'] && $taxInsights['current_bracket']['limit'])
                                     <p>
                                         To reach the next bracket ({{ $taxInsights['next_bracket']['rate'] }}%),
                                         taxable income would need to exceed
-                                        Rp {{ number_format($taxInsights['current_bracket']['limit'], 0, ',', '.') }}.
+                                        {{ $currencySymbol }} {{ number_format($taxInsights['current_bracket']['limit'], 0, ',', '.') }}.
                                     </p>
                                 @endif
                             @else
@@ -335,7 +335,7 @@
                         maxTicksLimit: 5,
                         padding: 10,
                         callback: function(value) {
-                            return 'Rp ' + Number(value).toLocaleString('id-ID');
+                            return '{{ $currencySymbol }} ' + Number(value).toLocaleString('id-ID');
                         }
                     },
                     gridLines: {
@@ -367,7 +367,7 @@
                 callbacks: {
                     label: function(tooltipItem, chart) {
                         var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                        return datasetLabel + ': Rp ' + tooltipItem.yLabel.toLocaleString('id-ID');
+                        return datasetLabel + ': {{ $currencySymbol }} ' + tooltipItem.yLabel.toLocaleString('id-ID');
                     }
                 }
             }
@@ -404,7 +404,7 @@
                         maxTicksLimit: 5,
                         padding: 10,
                         callback: function(value) {
-                            return 'Rp ' + Number(value).toLocaleString('id-ID');
+                            return '{{ $currencySymbol }} ' + Number(value).toLocaleString('id-ID');
                         }
                     },
                     gridLines: {
@@ -436,7 +436,7 @@
                 callbacks: {
                     label: function(tooltipItem, chart) {
                         var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                        return datasetLabel + ': Rp ' + tooltipItem.yLabel.toLocaleString('id-ID');
+                        return datasetLabel + ': {{ $currencySymbol }} ' + tooltipItem.yLabel.toLocaleString('id-ID');
                     }
                 }
             }
@@ -482,7 +482,7 @@
                         maxTicksLimit: 5,
                         padding: 10,
                         callback: function(value) {
-                            return 'Rp ' + Number(value).toLocaleString('id-ID');
+                            return '{{ $currencySymbol }} ' + Number(value).toLocaleString('id-ID');
                         }
                     },
                     gridLines: {
@@ -514,7 +514,7 @@
                 callbacks: {
                     label: function(tooltipItem, chart) {
                         var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                        return datasetLabel + ': Rp ' + tooltipItem.yLabel.toLocaleString('id-ID');
+                        return datasetLabel + ': {{ $currencySymbol }} ' + tooltipItem.yLabel.toLocaleString('id-ID');
                     }
                 }
             }

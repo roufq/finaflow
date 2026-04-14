@@ -56,7 +56,7 @@
                                                 >{{ ucfirst($role) }}</option>
                                             @endforeach
                                         </select>
-                                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                        <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
                                         <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-secondary ml-2">Detail</a>
                                     </form>
                                 </td>
