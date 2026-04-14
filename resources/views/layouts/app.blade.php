@@ -56,7 +56,7 @@
                     <img src="{{ asset('img/logo.svg') }}" alt="Logo" width="32" onerror="this.outerHTML='<i class=\'fas fa-chart-line\'></i>'">
                 </div>
                 <div class="sidebar-brand-text mx-3 flex-grow-1">FinaFlow</div>
-                <button type="button" class="btn btn-link d-lg-none text-gray-500 p-2 ml-auto" id="sidebarCloseMobile" style="font-size: 1.75rem; text-decoration: none; line-height: 1; z-index: 1050; position: relative;" aria-label="Close">&times;</button>
+                <button type="button" class="btn btn-link d-lg-none text-gray-500 p-2 ml-auto" id="sidebarCloseMobile" style="font-size: 1.75rem; text-decoration: none; line-height: 1; z-index: 1050; position: relative;" aria-tags="Close">&times;</button>
             </a>
 
             <div class="sidebar-scroll">
@@ -332,7 +332,7 @@
                     <li class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('admin.users.index') }}">
                             <i class="fas fa-fw fa-user-shield"></i>
-                            <span>Kelola Pengguna</span>
+                            <span>Manage Users</span>
                         </a>
                     </li>
                 @endcan
@@ -401,7 +401,7 @@
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search position-relative">
                         <i class="fas fa-search topbar-search-icon"></i>
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-tags="Search">
                     </form>
 
                     <!-- Topbar Navbar -->
@@ -472,7 +472,7 @@
                     @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             {{ session('success') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -480,7 +480,7 @@
                     @if(session('error'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {{ session('error') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>

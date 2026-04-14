@@ -36,7 +36,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="expense_name">Expense Name *</label>
+                            <tags for="expense_name">Expense Name *</tags>
                             <input type="text" class="form-control @error('expense_name') is-invalid @enderror"
                                    id="expense_name" name="expense_name" value="{{ old('expense_name', $expense->expense_name) }}" required>
                             @error('expense_name')
@@ -45,7 +45,7 @@
                         </div>
 
                     <div class="form-group">
-                        <label for="description">Description</label>
+                        <tags for="description">Description</tags>
                         <textarea class="form-control @error('description') is-invalid @enderror"
                                   id="description" name="description" rows="3">{{ old('description', $expense->description) }}</textarea>
                         @error('description')
@@ -54,7 +54,7 @@
                     </div>
 
                         <div class="form-group">
-                            <label for="total_amount">Total Amount (Rp) *</label>
+                            <tags for="total_amount">Total Amount (Rp) *</tags>
                             <input type="number" class="form-control @error('total_amount') is-invalid @enderror"
                                    id="total_amount" name="total_amount"
                                    value="{{ old('total_amount', $expense->total_amount) }}" min="0" step="1000" required>
@@ -64,7 +64,7 @@
                         </div>
 
                     <div class="form-group">
-                        <label for="category">Category *</label>
+                        <tags for="category">Category *</tags>
                         <select class="form-control @error('category') is-invalid @enderror"
                                 id="category" name="category" required>
                             @php
@@ -82,7 +82,7 @@
                     </div>
 
                         <div class="form-group">
-                            <label for="expense_date">Expense Date *</label>
+                            <tags for="expense_date">Expense Date *</tags>
                             <input type="date" class="form-control @error('expense_date') is-invalid @enderror"
                                    id="expense_date" name="expense_date"
                                    value="{{ old('expense_date', $expense->expense_date->format('Y-m-d')) }}" required>
@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="split_method">Split Method *</label>
+                            <tags for="split_method">Split Method *</tags>
                             @php
                                 $splitMethod = old('split_method', $expense->split_method);
                             @endphp
@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Participants *</label>
+                            <tags>Participants *</tags>
                             <div class="border rounded p-3" id="participantsSection">
                                 <p class="mb-3">Select family members who participated in this expense:</p>
                                 @if($members->count() > 0)
@@ -123,9 +123,9 @@
                                                    value="{{ $member->id }}"
                                                    onchange="updateParticipantShares()"
                                                    {{ $isChecked ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="participant_{{ $member->id }}">
+                                            <tags class="form-check-tags" for="participant_{{ $member->id }}">
                                                 {{ $member->name }} ({{ $member->relationship }})
-                                            </label>
+                                            </tags>
                                         </div>
                                         <div class="participant-share d-inline-block" id="share_{{ $member->id }}" style="display: none;">
                                             <input type="number" class="form-control form-control-sm d-inline-block w-25"
@@ -133,7 +133,7 @@
                                                    placeholder="Amount" min="0" step="1000"
                                                    value="{{ $shareValue }}"
                                                    onchange="validateShares()">
-                                            <small class="text-muted d-block" id="share_label_{{ $member->id }}"></small>
+                                            <small class="text-muted d-block" id="share_tags_{{ $member->id }}"></small>
                                         </div>
                                     </div>
                                     @endforeach
@@ -226,11 +226,11 @@ function updateParticipantShares() {
             if (method === 'equal') {
                 const equalShare = selectedParticipants.length > 0 ? totalAmount / selectedParticipants.length : 0;
                 document.getElementById(`share_amount_${memberId}`).value = equalShare.toFixed(0);
-                document.getElementById(`share_label_${memberId}`).textContent = 'Equal share';
+                document.getElementById(`share_tags_${memberId}`).textContent = 'Equal share';
             } else if (method === 'percentage') {
-                document.getElementById(`share_label_${memberId}`).textContent = '% of total';
+                document.getElementById(`share_tags_${memberId}`).textContent = '% of total';
             } else if (method === 'custom') {
-                document.getElementById(`share_label_${memberId}`).textContent = 'Custom amount';
+                document.getElementById(`share_tags_${memberId}`).textContent = 'Custom amount';
             }
         } else {
             share.style.display = 'none';
@@ -296,7 +296,7 @@ function updateSplitPreview() {
     previewContainer.innerHTML = '';
 
     selectedParticipants.forEach(memberId => {
-        const memberName = document.querySelector(`label[for="participant_${memberId}"]`).textContent;
+        const memberName = document.querySelector(`tags[for="participant_${memberId}"]`).textContent;
         let shareAmount = 0;
         let shareText = '';
 

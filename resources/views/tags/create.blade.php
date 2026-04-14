@@ -7,7 +7,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Buat Tag Baru</h1>
         <a href="{{ route('tags.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
         </a>
     </div>
 
@@ -22,7 +22,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <label for="name">Nama Tag <span class="text-danger">*</span></label>
+                            <tags for="name">Name Tag <span class="text-danger">*</span></tags>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name') }}" required>
                             @error('name')
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="color">Warna Tag</label>
+                            <tags for="color">Color Tag</tags>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
@@ -45,11 +45,11 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <small class="form-text text-muted">Pilih warna untuk membedakan tag ini.</small>
+                            <small class="form-text text-muted">Select color untuk membedakan tag ini.</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Deskripsi</label>
+                            <tags for="description">Description</tags>
                             <textarea class="form-control @error('description') is-invalid @enderror"
                                       id="description" name="description" rows="3"
                                       placeholder="Deskripsikan penggunaan tag ini...">{{ old('description') }}</textarea>
@@ -61,10 +61,10 @@
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save fa-sm text-white-50"></i> Simpan Tag
+                                <i class="fas fa-save fa-sm text-white-50"></i> Save Tag
                             </button>
                             <a href="{{ route('tags.index') }}" class="btn btn-secondary ml-2">
-                                <i class="fas fa-times fa-sm text-white-50"></i> Batal
+                                <i class="fas fa-times fa-sm text-white-50"></i> Cancel
                             </a>
                         </div>
                     </form>
@@ -86,8 +86,8 @@
                     </div>
                     <hr>
                     <p class="text-muted small">
-                        Tag akan muncul seperti di atas pada transaksi yang diberi tag ini.
-                        Warna dan nama akan membantu Anda mengidentifikasi kategori transaksi dengan cepat.
+                        Tag akan muncul seperti di atas pada transactions yang diberi tag ini.
+                        Color dan name akan membantu Anda mengidentifikasi category transactions dengan cepat.
                     </p>
                 </div>
             </div>
@@ -100,15 +100,15 @@
                     <ul class="list-unstyled small">
                         <li class="mb-2">
                             <i class="fas fa-lightbulb text-warning mr-2"></i>
-                            Gunakan tag untuk mengelompokkan transaksi berdasarkan konteks (business, personal, dll.)
+                            Gunakan tag untuk mengelompokkan transactions berdasarkan konteks (business, personal, dll.)
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-lightbulb text-warning mr-2"></i>
-                            Tag berbeda dari kategori - satu transaksi bisa punya banyak tag
+                            Tag berbeda dari category - satu transactions bisa punya banyak tag
                         </li>
                         <li class="mb-2">
                             <i class="fas fa-lightbulb text-warning mr-2"></i>
-                            Pilih warna yang berbeda untuk setiap tag agar mudah dibedakan
+                            Select color yang berbeda untuk setiap tag agar mudah dibedakan
                         </li>
                     </ul>
                 </div>
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tagPreview = document.getElementById('tag-preview');
 
     function updatePreview() {
-        const name = nameInput.value || 'Nama Tag';
+        const name = nameInput.value || 'Name Tag';
         const color = colorInput.value;
 
         tagPreview.textContent = name;

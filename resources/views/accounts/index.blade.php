@@ -4,18 +4,18 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Akun</h1>
+            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Account</h1>
             <p class="text-muted small">Kelola rekening bank, e-wallet, dan kartu kredit Anda.</p>
         </div>
         <a href="{{ route('accounts.create') }}" class="d-none d-sm-inline-block btn btn-primary shadow-sm px-4">
-            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Akun
+            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add Account
         </a>
     </div>
 
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -24,7 +24,7 @@
     @if(session('error'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ session('error') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="col">
                             <div class="text-xs font-weight-bold text-muted text-uppercase mb-1 tracking-wide">
-                                Total Saldo Semua Akun
+                                Total Balance All Account
                             </div>
                             <div class="h3 mb-0 font-weight-bold text-gray-800">{{ $currencySymbol }} {{ number_format($totalBalance, 0, ',', '.') }}</div>
                         </div>
@@ -55,7 +55,7 @@
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-white py-4 d-flex align-items-center">
-            <h6 class="m-0 font-weight-bold text-gray-800">Daftar Akun</h6>
+            <h6 class="m-0 font-weight-bold text-gray-800">Account List</h6>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -63,13 +63,13 @@
                     <thead class="bg-light text-muted">
                         <tr>
                             <th class="px-4 py-3">No</th>
-                            <th class="py-3">Nama Akun</th>
-                            <th class="py-3">Tipe</th>
-                            <th class="py-3">Saldo</th>
+                            <th class="py-3">Name Account</th>
+                            <th class="py-3">Type</th>
+                            <th class="py-3">Balance</th>
                             <th class="py-3">Limit Kredit</th>
                             <th class="py-3">Bank</th>
                             <th class="py-3">Status</th>
-                            <th class="px-4 py-3 text-right">Aksi</th>
+                            <th class="px-4 py-3 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +85,7 @@
                                 @endif
                             </td>
                             <td class="py-3 align-middle">
-                                <span class="badge badge-pill badge-primary font-weight-normal px-3 py-1" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">{{ $account->type_label }}</span>
+                                <span class="badge badge-pill badge-primary font-weight-normal px-3 py-1" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">{{ $account->type_tags }}</span>
                             </td>
                             <td class="py-3 align-middle">
                                 <span class="font-weight-bold {{ $account->balance < 0 ? 'text-danger' : 'text-gray-800' }}">
@@ -119,7 +119,7 @@
                                     <form action="{{ route('accounts.destroy', $account) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-light btn-sm text-danger" title="Hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus akun ini?')"><i class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn btn-light btn-sm text-danger" title="Delete" onclick="return confirm('Apakah Anda are you sure you want to delete account ini?')"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </div>
                             </td>

@@ -10,7 +10,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit
             </a>
             <a href="{{ route('goals.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
         </div>
     </div>
@@ -29,7 +29,7 @@
                         </div>
                         <h4 class="mt-3">Rp {{ number_format($goal->current_amount, 0, ',', '.') }}</h4>
                         <p class="text-muted">dari Rp {{ number_format($goal->target_amount, 0, ',', '.') }}</p>
-                        <p class="text-muted">Sisa: Rp {{ number_format($goal->target_amount - $goal->current_amount, 0, ',', '.') }}</p>
+                        <p class="text-muted">Remaining: Rp {{ number_format($goal->target_amount - $goal->current_amount, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Kategori:</strong>
+                            <strong>Category:</strong>
                         </div>
                         <div class="col-sm-6">
                             {{ $goal->getCategoryLabel() }}
@@ -51,16 +51,16 @@
                     <hr>
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Tipe:</strong>
+                            <strong>Type:</strong>
                         </div>
                         <div class="col-sm-6">
-                            {{ $goal->type_label }}
+                            {{ $goal->type_tags }}
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Target Tanggal:</strong>
+                            <strong>Target Date:</strong>
                         </div>
                         <div class="col-sm-6">
                             {{ $goal->target_date->format('d M Y') }}
@@ -72,14 +72,14 @@
                             <strong>Status:</strong>
                         </div>
                         <div class="col-sm-6">
-                            <span class="badge badge-{{ $goal->status_color }}">{{ $goal->status_label }}</span>
+                            <span class="badge badge-{{ $goal->status_color }}">{{ $goal->status_tags }}</span>
                         </div>
                     </div>
                     @if($goal->description)
                     <hr>
                     <div class="row">
                         <div class="col-sm-12">
-                            <strong>Deskripsi:</strong>
+                            <strong>Description:</strong>
                             <p class="mt-2">{{ $goal->description }}</p>
                         </div>
                     </div>
@@ -92,21 +92,21 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Riwayat Progress</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">History Progress</h6>
                 </div>
                 <div class="card-body">
                     @if($progressEntries->isEmpty())
                         <div class="text-center text-muted">
                             <i class="fas fa-chart-line fa-3x mb-3"></i>
-                            <p>Belum ada riwayat progress</p>
+                            <p>Belum ada history progress</p>
                         </div>
                     @else
                         <div class="table-responsive">
                             <table class="table table-striped mb-0">
                                 <thead>
                                     <tr>
-                                        <th>Tanggal</th>
-                                        <th>Jumlah</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
                                         <th>Keterangan</th>
                                     </tr>
                                 </thead>
@@ -128,21 +128,21 @@
             <!-- Quick Actions -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Aksi Cepat</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Action Cepat</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <button class="btn btn-success btn-block" data-toggle="modal" data-target="#addProgressModal">
-                                <i class="fas fa-plus"></i> Tambah Progress
+                                <i class="fas fa-plus"></i> Add Progress
                             </button>
                         </div>
                         <div class="col-md-6">
-                            <form action="{{ route('goals.destroy', $goal) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus goal ini?')">
+                            <form action="{{ route('goals.destroy', $goal) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda are you sure you want to delete goal ini?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> Hapus Goal
+                                    <i class="fas fa-trash"></i> Delete Goal
                                 </button>
                             </form>
                         </div>
@@ -158,25 +158,25 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProgressModalLabel">Tambah Progress</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="addProgressModalLabel">Add Progress</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form id="addProgressForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="progress_amount">Jumlah Progress (Rp)</label>
+                        <tags for="progress_amount">Amount Progress (Rp)</tags>
                         <input type="number" class="form-control" id="progress_amount" name="amount" min="1" step="1" required>
                     </div>
                     <div class="form-group">
-                        <label for="progress_note">Catatan (opsional)</label>
-                        <input type="text" class="form-control" id="progress_note" name="note" maxlength="255" placeholder="Contoh: setoran gaji bulan ini">
+                        <tags for="progress_note">Notes (opsional)</tags>
+                        <input type="text" class="form-control" id="progress_note" name="note" maxlength="255" placeholder="Contoh: setoran gaji this month">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>

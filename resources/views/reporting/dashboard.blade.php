@@ -172,11 +172,11 @@
                     <form method="POST" action="{{ route('reporting.reports.store') }}">
                         @csrf
                         <div class="form-group">
-                            <label for="report-name">{{ __('reporting.forms.name') }}</label>
+                            <tags for="report-name">{{ __('reporting.forms.name') }}</tags>
                             <input type="text" class="form-control" id="report-name" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="report-schedule">{{ __('reporting.forms.schedule') }}</label>
+                            <tags for="report-schedule">{{ __('reporting.forms.schedule') }}</tags>
                             <select class="form-control" id="report-schedule" name="schedule">
                                 <option value="">{{ __('reporting.forms.choose_report') }}</option>
                                 @foreach(trans('reporting.schedules') as $key => $label)
@@ -185,7 +185,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="report-format">{{ __('reporting.forms.format') }}</label>
+                            <tags for="report-format">{{ __('reporting.forms.format') }}</tags>
                             <select class="form-control" id="report-format" name="format">
                                 @foreach(trans('reporting.formats') as $key => $label)
                                     <option value="{{ $key }}" @selected(old('format', 'pdf') === $key)>{{ $label }}</option>
@@ -193,7 +193,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="report-description">{{ __('reporting.forms.description') }}</label>
+                            <tags for="report-description">{{ __('reporting.forms.description') }}</tags>
                             <textarea class="form-control" id="report-description" rows="2" name="description"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">{{ __('reporting.forms.submit') }}</button>

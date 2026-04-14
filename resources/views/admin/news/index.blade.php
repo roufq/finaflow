@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h4 mb-0 text-gray-800">Manage Financial News</h1>
-            <p class="text-muted small mb-0">Curate or add news so halaman publik tidak kosong.</p>
+            <p class="text-muted small mb-0">Curate or add news so halaman publik no kosong.</p>
         </div>
         <a href="{{ route('admin.news.create') }}" class="btn btn-sm btn-primary">Create News</a>
     </div>

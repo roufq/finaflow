@@ -14,7 +14,7 @@
  @if(session('success'))
   <div class="alert alert-success alert-dismissible fade show" role="alert">
    <i class="fas fa-check-circle"></i> {{ session('success') }}
-   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+   <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
     <span aria-hidden="true">&times;</span>
    </button>
   </div>
@@ -36,9 +36,9 @@
         <input type="hidden" name="data_analytics" value="0">
         <input type="checkbox" class="custom-control-input" id="data_analytics"
          name="data_analytics" value="1" {{ $privacySettings->data_analytics ? 'checked' : '' }}>
-        <label class="custom-control-label" for="data_analytics">
+        <tags class="custom-control-tags" for="data_analytics">
          <strong>{{ __('privacy.data_analytics') }}</strong>
-        </label>
+        </tags>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.data_analytics_description') }}
@@ -50,9 +50,9 @@
         <input type="hidden" name="behavioral_insights" value="0">
         <input type="checkbox" class="custom-control-input" id="behavioral_insights"
          name="behavioral_insights" value="1" {{ $privacySettings->behavioral_insights ? 'checked' : '' }}>
-        <label class="custom-control-label" for="behavioral_insights">
+        <tags class="custom-control-tags" for="behavioral_insights">
          <strong>{{ __('privacy.behavioral_insights') }}</strong>
-        </label>
+        </tags>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.behavioral_insights_description') }}
@@ -64,9 +64,9 @@
         <input type="hidden" name="third_party_sharing" value="0">
         <input type="checkbox" class="custom-control-input" id="third_party_sharing"
          name="third_party_sharing" value="1" {{ $privacySettings->third_party_sharing ? 'checked' : '' }}>
-        <label class="custom-control-label" for="third_party_sharing">
+        <tags class="custom-control-tags" for="third_party_sharing">
          <strong>{{ __('privacy.third_party_sharing') }}</strong>
-        </label>
+        </tags>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.third_party_sharing_description') }}
@@ -78,9 +78,9 @@
         <input type="hidden" name="data_anonymization" value="0">
         <input type="checkbox" class="custom-control-input" id="data_anonymization"
          name="data_anonymization" value="1" {{ $privacySettings->data_anonymization ? 'checked' : '' }}>
-        <label class="custom-control-label" for="data_anonymization">
+        <tags class="custom-control-tags" for="data_anonymization">
          <strong>{{ __('privacy.data_anonymization') }}</strong>
-        </label>
+        </tags>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.data_anonymization_description') }}
@@ -188,7 +188,7 @@
   <div class="modal-content">
    <div class="modal-header">
     <h5 class="modal-title" id="deleteModalLabel">{{ __('privacy.confirm_account_deletion') }}</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
      <span aria-hidden="true">&times;</span>
     </button>
    </div>

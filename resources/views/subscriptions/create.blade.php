@@ -19,7 +19,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <label for="name">Subscription Name</label>
+                            <tags for="name">Subscription Name</tags>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="e.g., Netflix, Spotify, Gym Membership" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="provider">Provider</label>
+                            <tags for="provider">Provider</tags>
                             <input type="text" class="form-control @error('provider') is-invalid @enderror" id="provider" name="provider" value="{{ old('provider') }}" placeholder="e.g., Netflix Inc., Spotify AB" required>
                             @error('provider')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Amount (Rp)</label>
+                            <tags for="amount">Amount (Rp)</tags>
                             <input type="number" class="form-control @error('amount') is-invalid @enderror" id="amount" name="amount" value="{{ old('amount') }}" placeholder="Monthly/Yearly cost" required>
                             @error('amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="frequency">Billing Frequency</label>
+                            <tags for="frequency">Billing Frequency</tags>
                             <select class="form-control @error('frequency') is-invalid @enderror" id="frequency" name="frequency" required>
                                 <option value="">Select Frequency</option>
                                 <option value="monthly" {{ old('frequency') == 'monthly' ? 'selected' : '' }}>Monthly</option>
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="next_billing_date">Next Billing Date</label>
+                            <tags for="next_billing_date">Next Billing Date</tags>
                             <input type="date" class="form-control @error('next_billing_date') is-invalid @enderror" id="next_billing_date" name="next_billing_date" value="{{ old('next_billing_date') }}" required>
                             @error('next_billing_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="category">Category</label>
+                            <tags for="category">Category</tags>
                             <select class="form-control @error('category') is-invalid @enderror" id="category" name="category" required>
                                 <option value="">Select Category</option>
                                 <option value="entertainment" {{ old('category') == 'entertainment' ? 'selected' : '' }}>Entertainment</option>
@@ -83,13 +83,13 @@
 
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="auto_renewal" name="auto_renewal" value="1" {{ old('auto_renewal') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="auto_renewal">
+                            <tags class="form-check-tags" for="auto_renewal">
                                 Auto-renewal enabled
-                            </label>
+                            </tags>
                         </div>
 
                         <div class="form-group mt-3">
-                            <label for="notes">Notes (Optional)</label>
+                            <tags for="notes">Notes (Optional)</tags>
                             <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Any additional notes about this subscription">{{ old('notes') }}</textarea>
                         </div>
 

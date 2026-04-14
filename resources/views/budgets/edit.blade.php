@@ -6,7 +6,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Edit Budget: {{ $budget->name }}</h1>
         <a href="{{ route('budgets.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
         </a>
     </div>
 
@@ -22,7 +22,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="name">Nama Budget *</label>
+                            <tags for="name">Name Budget *</tags>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $budget->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Deskripsi</label>
+                            <tags for="description">Description</tags>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $budget->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -39,9 +39,9 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="type">Tipe Budget *</label>
+                                <tags for="type">Type Budget *</tags>
                                 <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
-                                    <option value="">Pilih Tipe</option>
+                                    <option value="">Select Type</option>
                                     <option value="zero_based" {{ old('type', $budget->type) == 'zero_based' ? 'selected' : '' }}>Zero-Based Budgeting</option>
                                     <option value="envelope" {{ old('type', $budget->type) == 'envelope' ? 'selected' : '' }}>Envelope System</option>
                                     <option value="percentage_based" {{ old('type', $budget->type) == 'percentage_based' ? 'selected' : '' }}>Percentage-Based</option>
@@ -53,9 +53,9 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="period">Periode *</label>
+                                <tags for="period">Periode *</tags>
                                 <select class="form-control @error('period') is-invalid @enderror" id="period" name="period" required>
-                                    <option value="">Pilih Periode</option>
+                                    <option value="">Select Period</option>
                                     <option value="weekly" {{ old('period', $budget->period) == 'weekly' ? 'selected' : '' }}>Mingguan</option>
                                     <option value="monthly" {{ old('period', $budget->period) == 'monthly' ? 'selected' : '' }}>Bulanan</option>
                                     <option value="quarterly" {{ old('period', $budget->period) == 'quarterly' ? 'selected' : '' }}>Triwulanan</option>
@@ -69,7 +69,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="start_date">Tanggal Mulai *</label>
+                                <tags for="start_date">Date Mulai *</tags>
                                 <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ old('start_date', $budget->start_date->format('Y-m-d')) }}" required>
                                 @error('start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="end_date">Tanggal Berakhir</label>
+                                <tags for="end_date">Date Berakhir</tags>
                                 <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date" value="{{ old('end_date', $budget->end_date ? $budget->end_date->format('Y-m-d') : '') }}">
                                 @error('end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -87,7 +87,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="total_budget">Total Budget (Rp) *</label>
+                                <tags for="total_budget">Total Budget (Rp) *</tags>
                                 <input type="number" class="form-control @error('total_budget') is-invalid @enderror" id="total_budget" name="total_budget" value="{{ old('total_budget', $budget->total_budget) }}" min="0" required>
                                 @error('total_budget')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -95,7 +95,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="spent_amount">Jumlah Terpakai (Rp) *</label>
+                                <tags for="spent_amount">Amount Terpakai (Rp) *</tags>
                                 <input type="number" class="form-control @error('spent_amount') is-invalid @enderror" id="spent_amount" name="spent_amount" value="{{ old('spent_amount', $budget->spent_amount) }}" min="0" required>
                                 @error('spent_amount')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -104,10 +104,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="status">Status *</label>
+                            <tags for="status">Status *</tags>
                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                 <option value="active" {{ old('status', $budget->status) == 'active' ? 'selected' : '' }}>Aktif</option>
-                                <option value="completed" {{ old('status', $budget->status) == 'completed' ? 'selected' : '' }}>Selesai</option>
+                                <option value="completed" {{ old('status', $budget->status) == 'completed' ? 'selected' : '' }}>Completed</option>
                                 <option value="paused" {{ old('status', $budget->status) == 'paused' ? 'selected' : '' }}>Ditunda</option>
                                 <option value="cancelled" {{ old('status', $budget->status) == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
                             </select>
@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Alokasi Kategori</label>
+                            <tags>Alokasi Category</tags>
                             <div id="category-allocations">
                                 @if($budget->category_allocations)
                                     @foreach($budget->category_allocations as $categoryId => $allocation)
@@ -127,20 +127,20 @@
                                                     <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
-                                            <input type="number" class="form-control" name="category_allocations[{{ $categoryId }}][amount]" value="{{ $allocation }}" placeholder="Jumlah (Rp)" min="0">
+                                            <input type="number" class="form-control" name="category_allocations[{{ $categoryId }}][amount]" value="{{ $allocation }}" placeholder="Amount (Rp)" min="0">
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-danger remove-allocation" type="button">Hapus</button>
+                                                <button class="btn btn-outline-danger remove-allocation" type="button">Delete</button>
                                             </div>
                                         </div>
                                     @endforeach
                                 @endif
                             </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-allocation">Tambah Alokasi Kategori</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-allocation">Add Alokasi Category</button>
                         </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update Budget</button>
-                            <a href="{{ route('budgets.index') }}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ route('budgets.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>
@@ -163,9 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
-            <input type="number" class="form-control" name="category_allocations[${allocationIndex}][amount]" placeholder="Jumlah (Rp)" min="0" required>
+            <input type="number" class="form-control" name="category_allocations[${allocationIndex}][amount]" placeholder="Amount (Rp)" min="0" required>
             <div class="input-group-append">
-                <button class="btn btn-outline-danger remove-allocation" type="button">Hapus</button>
+                <button class="btn btn-outline-danger remove-allocation" type="button">Delete</button>
             </div>
         `;
         container.appendChild(div);

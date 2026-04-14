@@ -22,7 +22,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="event_name">Event Name *</label>
+                            <tags for="event_name">Event Name *</tags>
                             <input type="text" class="form-control @error('event_name') is-invalid @enderror"
                                    id="event_name" name="event_name" value="{{ old('event_name', $event->event_name) }}" required>
                             @error('event_name')
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="event_type">Event Type *</label>
+                            <tags for="event_type">Event Type *</tags>
                             <input type="text" class="form-control @error('event_type') is-invalid @enderror"
                                    id="event_type" name="event_type" value="{{ old('event_type', $event->event_type) }}" required>
                             @error('event_type')
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="event_date">Event Date *</label>
+                            <tags for="event_date">Event Date *</tags>
                             <input type="date" class="form-control @error('event_date') is-invalid @enderror"
                                    id="event_date" name="event_date" value="{{ old('event_date', $event->event_date->format('Y-m-d')) }}" required>
                             @error('event_date')
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="budget_amount">Budget Amount (Rp)</label>
+                            <tags for="budget_amount">Budget Amount (Rp)</tags>
                             <input type="number" class="form-control @error('budget_amount') is-invalid @enderror"
                                    id="budget_amount" name="budget_amount"
                                    value="{{ old('budget_amount', $event->budget_amount) }}" min="0" step="1000">
@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Recipients</label>
+                            <tags>Recipients</tags>
                             <div class="border rounded p-3">
                                 <p class="mb-2">Select people who will receive gifts for this event:</p>
                                 @if($members->count() > 0)
@@ -70,9 +70,9 @@
                                                id="recipient_{{ $member->id }}" name="recipients[]"
                                                value="{{ $member->id }}"
                                                {{ in_array($member->id, old('recipients', $event->recipients ?? [])) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="recipient_{{ $member->id }}">
+                                        <tags class="form-check-tags" for="recipient_{{ $member->id }}">
                                             {{ $member->name }} ({{ $member->relationship }})
-                                        </label>
+                                        </tags>
                                     </div>
                                     @endforeach
                                 @else
@@ -82,7 +82,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="notes">Notes</label>
+                            <tags for="notes">Notes</tags>
                             <textarea class="form-control @error('notes') is-invalid @enderror"
                                       id="notes" name="notes" rows="3">{{ old('notes', $event->notes) }}</textarea>
                             @error('notes')

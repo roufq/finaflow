@@ -4,8 +4,8 @@
 <div class="container-fluid">
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 text-gray-800 mb-0">Kelola Pengguna</h1>
-            <p class="text-muted mb-0">Atur peran dan aktif/nonaktif pengguna.</p>
+            <h1 class="h3 text-gray-800 mb-0">Manage Users</h1>
+            <p class="text-muted mb-0">Set roles and active/inactive status.</p>
         </div>
     </div>
 
@@ -22,11 +22,11 @@
                 <table class="table mb-0">
                     <thead class="thead-light">
                         <tr>
-                            <th>Nama</th>
+                            <th>Name</th>
                             <th>Email</th>
-                            <th>Peran</th>
+                            <th>Role</th>
                             <th>Status</th>
-                            <th class="text-right">Aksi</th>
+                            <th class="text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,7 @@
                                 <td>{{ $user->roles->pluck('name')->implode(', ') ?: '-' }}</td>
                                 <td>
                                     <span class="badge badge-{{ $user->is_active ? 'success' : 'secondary' }}">
-                                        {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
+                                        {{ $user->is_active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
                                 <td class="text-right">
@@ -56,7 +56,7 @@
                                                 >{{ ucfirst($role) }}</option>
                                             @endforeach
                                         </select>
-                                        <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+                                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
                                         <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-outline-secondary ml-2">Detail</a>
                                     </form>
                                 </td>
@@ -65,8 +65,8 @@
                     </tbody>
                 </table>
                 <div class="p-3 text-muted small">
-                    <div>Maksimal 2 admin. Pengguna non-admin tidak bisa dipromosikan jika batas tercapai.</div>
-                    <div>Nonaktifkan pengguna untuk memblokir akses (akan diarahkan ke login dengan notifikasi).</div>
+                    <div>Maximum 2 admins. Non-admin users cannot be promoted if the limit is reached.</div>
+                    <div>Deactivate users to block access (will be redirected to login with notification).</div>
                 </div>
             </div>
         </div>

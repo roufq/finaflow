@@ -22,7 +22,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <label for="goal_name">Goal Name *</label>
+                            <tags for="goal_name">Goal Name *</tags>
                             <input type="text" class="form-control @error('goal_name') is-invalid @enderror"
                                    id="goal_name" name="goal_name" value="{{ old('goal_name') }}" required>
                             @error('goal_name')
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="goal_type">Goal Type *</label>
+                            <tags for="goal_type">Goal Type *</tags>
                             <select class="form-control @error('goal_type') is-invalid @enderror"
                                     id="goal_type" name="goal_type" required>
                                 <option value="">Select Goal Type</option>
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="target_amount">Target Amount (Rp) *</label>
+                            <tags for="target_amount">Target Amount (Rp) *</tags>
                             <input type="number" class="form-control @error('target_amount') is-invalid @enderror"
                                    id="target_amount" name="target_amount"
                                    value="{{ old('target_amount') }}" min="0" step="1000" required>
@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="target_date">Target Date *</label>
+                            <tags for="target_date">Target Date *</tags>
                             <input type="date" class="form-control @error('target_date') is-invalid @enderror"
                                    id="target_date" name="target_date" value="{{ old('target_date') }}" required>
                             @error('target_date')
@@ -71,7 +71,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Description</label>
+                            <tags for="description">Description</tags>
                             <textarea class="form-control @error('description') is-invalid @enderror"
                                       id="description" name="description" rows="3">{{ old('description') }}</textarea>
                             @error('description')
@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Contributors (Optional)</label>
+                            <tags>Contributors (Optional)</tags>
                             <div class="border rounded p-3">
                                 <p class="mb-2">Select family members who will contribute to this goal:</p>
                                 @php
@@ -93,9 +93,9 @@
                                                id="contributor_{{ $member->id }}" name="contributors[]"
                                                value="{{ $member->id }}"
                                                {{ in_array($member->id, old('contributors', [])) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="contributor_{{ $member->id }}">
+                                        <tags class="form-check-tags" for="contributor_{{ $member->id }}">
                                             {{ $member->name }} ({{ $member->relationship }})
-                                        </label>
+                                        </tags>
                                     </div>
                                     @endforeach
                                 @else
@@ -149,11 +149,11 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="calc_amount">Target Amount (Rp)</label>
+                        <tags for="calc_amount">Target Amount (Rp)</tags>
                         <input type="number" class="form-control" id="calc_amount" placeholder="10000000">
                     </div>
                     <div class="form-group">
-                        <label for="calc_months">Time Period (Months)</label>
+                        <tags for="calc_months">Time Period (Months)</tags>
                         <input type="number" class="form-control" id="calc_months" placeholder="12">
                     </div>
                     <button type="button" class="btn btn-success btn-block" onclick="calculateMonthly()">

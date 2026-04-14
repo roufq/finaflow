@@ -165,7 +165,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="giftModalLabel{{ $event->id }}">Manage Gifts - {{ $event->event_name }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -230,7 +230,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="addGiftModalLabel{{ $event->id }}">Add Gift for {{ $event->event_name }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -238,7 +238,7 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label for="recipient{{ $event->id }}">Recipient</label>
+                                                    <tags for="recipient{{ $event->id }}">Recipient</tags>
                                                     <select class="form-control" id="recipient{{ $event->id }}" name="recipient_id" required>
                                                         <option value="" disabled {{ optional($event->recipient_details)->count() ? '' : 'selected' }}>Select Recipient</option>
                                                         @if(optional($event->recipient_details)->count() > 0)
@@ -251,20 +251,20 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="gift_name{{ $event->id }}">Gift Name</label>
+                                                    <tags for="gift_name{{ $event->id }}">Gift Name</tags>
                                                     <input type="text" class="form-control" id="gift_name{{ $event->id }}" name="gift_name" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="gift_amount{{ $event->id }}">Gift Amount (Rp)</label>
+                                                    <tags for="gift_amount{{ $event->id }}">Gift Amount (Rp)</tags>
                                                     <input type="number" class="form-control" id="gift_amount{{ $event->id }}" name="amount" min="0" step="1000" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="gift_description{{ $event->id }}">Description (Optional)</label>
+                                                    <tags for="gift_description{{ $event->id }}">Description (Optional)</tags>
                                                     <textarea class="form-control" id="gift_description{{ $event->id }}" name="description" rows="2"></textarea>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="purchased{{ $event->id }}" name="purchased">
-                                                    <label class="form-check-label" for="purchased{{ $event->id }}">Already purchased</label>
+                                                    <tags class="form-check-tags" for="purchased{{ $event->id }}">Already purchased</tags>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -282,7 +282,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="detailsModalLabel{{ $event->id }}">{{ $event->event_name }} - Details</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>

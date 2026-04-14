@@ -55,7 +55,7 @@
             font-size: 0.95rem;
             margin-top: 0.5rem;
         }
-        .form-group label {
+        .form-group tags {
             font-weight: 500;
             font-size: 0.875rem;
             color: #475569;
@@ -91,12 +91,12 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
         }
-        .custom-control-label {
+        .custom-control-tags {
             font-size: 0.875rem;
             color: #64748b;
             cursor: pointer;
         }
-        .custom-control-input:checked ~ .custom-control-label::before {
+        .custom-control-input:checked ~ .custom-control-tags::before {
             background-color: #3b82f6;
             border-color: #3b82f6;
         }
@@ -156,14 +156,14 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="form-group mb-3">
-                <label for="email">Email Address</label>
+                <tags for="email">Email Address</tags>
                 <input type="email" class="form-control"
                     id="email" placeholder="name@company.com" 
                     name="email" value="{{ old('email') }}" required autofocus>
             </div>
             
             <div class="form-group mb-3">
-                <label for="password">Password</label>
+                <tags for="password">Password</tags>
                 <input type="password" class="form-control"
                     id="password" placeholder="••••••••" 
                     name="password" required>
@@ -172,7 +172,7 @@
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="remember" name="remember">
-                    <label class="custom-control-label" for="remember">Remember me</label>
+                    <tags class="custom-control-tags" for="remember">Remember me</tags>
                 </div>
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="small font-weight-bold text-primary text-decoration-none">Forgot password?</a>

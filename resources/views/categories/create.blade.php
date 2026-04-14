@@ -14,18 +14,18 @@
             <form action="{{ route('categories.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <tags for="name">Name</tags>
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="type">Type</label>
+                    <tags for="type">Type</tags>
                     <select class="form-control" id="type" name="type" required>
                         <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Income</option>
                         <option value="expense" {{ old('type') == 'expense' ? 'selected' : '' }}>Expense</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="description">Description</label>
+                    <tags for="description">Description</tags>
                     <textarea class="form-control" id="description" name="description" rows="3">{{ old('description') }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>

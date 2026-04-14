@@ -4,18 +4,18 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Tujuan Finansial</h1>
+            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Goals Finansial</h1>
             <p class="text-muted small">Kelola target keuangan Anda untuk masa depan yang lebih baik.</p>
         </div>
         <a href="{{ route('goals.create') }}" class="d-none d-sm-inline-block btn btn-primary shadow-sm px-4">
-            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Tujuan Baru
+            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add New Goal
         </a>
     </div>
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -35,13 +35,13 @@
                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink{{ $goal->id }}">
-                                <div class="dropdown-header">Aksi:</div>
+                                <div class="dropdown-header">Action:</div>
                                 <a class="dropdown-item" href="{{ route('goals.edit', $goal) }}">Edit</a>
                                 <div class="dropdown-divider"></div>
                                 <form action="{{ route('goals.destroy', $goal) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Hapus tujuan?')">Hapus</button>
+                                    <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Delete goals?')">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                         </a>
                         
                         <div class="mt-3">
-                            <div class="text-xs font-weight-bold text-muted text-uppercase mb-1">Terkumpul</div>
+                            <div class="text-xs font-weight-bold text-muted text-uppercase mb-1">Collected</div>
                             <div class="h5 mb-0 font-weight-bold text-primary">Rp {{ number_format($goal->current_amount, 0, ',', '.') }}</div>
                             <div class="text-xs text-muted mt-1 text-truncate">Target: Rp {{ number_format($goal->target_amount, 0, ',', '.') }}</div>
                         </div>
@@ -61,7 +61,7 @@
                             <div class="progress-bar" role="progressbar" style="width: {{ $goal->progress_percentage }}%; background-color: #3b82f6;" aria-valuenow="{{ $goal->progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="d-flex justify-content-between mt-2">
-                            <small class="font-weight-bold" style="color: #64748b;">{{ $goal->progress_percentage }}% selesai</small>
+                            <small class="font-weight-bold" style="color: #64748b;">{{ $goal->progress_percentage }}% completed</small>
                             @if($goal->progress_percentage >= 100)
                                 <small class="text-success font-weight-bold"><i class="fas fa-check-circle"></i></small>
                             @endif

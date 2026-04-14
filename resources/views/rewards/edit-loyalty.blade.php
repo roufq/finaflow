@@ -20,7 +20,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="program_name">Program Name</label>
+                            <tags for="program_name">Program Name</tags>
                             <input type="text" class="form-control @error('program_name') is-invalid @enderror" id="program_name" name="program_name" value="{{ old('program_name', $loyaltyProgram->program_name) }}" required>
                             @error('program_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="program_type">Program Type</label>
+                            <tags for="program_type">Program Type</tags>
                             <select class="form-control @error('program_type') is-invalid @enderror" id="program_type" name="program_type" required>
                                 <option value="airline" {{ old('program_type', $loyaltyProgram->program_type) == 'airline' ? 'selected' : '' }}>Airline (Miles)</option>
                                 <option value="hotel" {{ old('program_type', $loyaltyProgram->program_type) == 'hotel' ? 'selected' : '' }}>Hotel (Points)</option>
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="tier_level">Current Tier Level</label>
+                            <tags for="tier_level">Current Tier Level</tags>
                             <select class="form-control @error('tier_level') is-invalid @enderror" id="tier_level" name="tier_level">
                                 <option value="bronze" {{ old('tier_level', $loyaltyProgram->tier_level) == 'bronze' ? 'selected' : '' }}>Bronze</option>
                                 <option value="silver" {{ old('tier_level', $loyaltyProgram->tier_level) == 'silver' ? 'selected' : '' }}>Silver</option>
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="membership_number">Membership Number (Optional)</label>
+                            <tags for="membership_number">Membership Number (Optional)</tags>
                             <input type="text" class="form-control @error('membership_number') is-invalid @enderror" id="membership_number" name="membership_number" value="{{ old('membership_number', $loyaltyProgram->membership_number) }}">
                             @error('membership_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -63,7 +63,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="expiry_date">Membership Expiry Date (Optional)</label>
+                            <tags for="expiry_date">Membership Expiry Date (Optional)</tags>
                             <input type="date" class="form-control @error('expiry_date') is-invalid @enderror" id="expiry_date" name="expiry_date" value="{{ old('expiry_date', $loyaltyProgram->expiry_date ? $loyaltyProgram->expiry_date->format('Y-m-d') : '') }}">
                             @error('expiry_date')
                                 <div class="invalid-feedback">{{ $message }}</div>

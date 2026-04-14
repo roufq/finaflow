@@ -21,8 +21,8 @@
         .step-circle { width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; color: #64748b; line-height: 32px; margin: 0 auto 8px; font-weight: 600; }
         .step.active .step-circle { background: #3b82f6; color: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
         .step.completed .step-circle { background: #10b981; color: #fff; }
-        .step-label { font-size: 0.8rem; color: #64748b; font-weight: 500; }
-        .step.active .step-label { color: #3b82f6; font-weight: 600; }
+        .step-tags { font-size: 0.8rem; color: #64748b; font-weight: 500; }
+        .step.active .step-tags { color: #3b82f6; font-weight: 600; }
         .btn-primary { background-color: #3b82f6; border-color: #3b82f6; padding: 0.6rem 1.5rem; font-weight: 500; border-radius: 8px; }
         .btn-primary:hover { background-color: #2563eb; }
         .form-control { border-radius: 8px; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; }
@@ -48,23 +48,23 @@
                 <div class="step-progress">
                     <div class="step {{ request()->routeIs('installer.index') ? 'active' : 'completed' }}">
                         <div class="step-circle">1</div>
-                        <div class="step-label">Requirements</div>
+                        <div class="step-tags">Requirements</div>
                     </div>
                     <div class="step {{ request()->routeIs('installer.permissions') ? 'active' : (request()->routeIs('installer.index') ? '' : 'completed') }}">
                         <div class="step-circle">2</div>
-                        <div class="step-label">Permissions</div>
+                        <div class="step-tags">Permissions</div>
                     </div>
                     <div class="step {{ request()->routeIs('installer.environment') ? 'active' : (request()->routeIs('installer.index', 'installer.permissions') ? '' : 'completed') }}">
                         <div class="step-circle">3</div>
-                        <div class="step-label">Database</div>
+                        <div class="step-tags">Database</div>
                     </div>
                     <div class="step {{ request()->routeIs('installer.database') ? 'active' : (request()->routeIs('installer.finish') ? 'completed' : '') }}">
                         <div class="step-circle">4</div>
-                        <div class="step-label">Install</div>
+                        <div class="step-tags">Install</div>
                     </div>
                     <div class="step {{ request()->routeIs('installer.finish') ? 'active' : '' }}">
                         <div class="step-circle"><i class="fas fa-check"></i></div>
-                        <div class="step-label">Finish</div>
+                        <div class="step-tags">Finish</div>
                     </div>
                 </div>
             </div>

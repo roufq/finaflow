@@ -7,14 +7,14 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Tags</h1>
         <a href="{{ route('tags.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Tag
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add Tag
         </a>
     </div>
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -23,7 +23,7 @@
     @if(session('error'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -42,7 +42,7 @@
                                     </span>
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $tag->getTransactionsCount() }} transaksi
+                                    {{ $tag->getTransactionsCount() }} transactions
                                 </div>
                                 @if($tag->description)
                                     <div class="text-xs text-muted mt-1">
@@ -71,9 +71,9 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus tag ini?')">
+                                                    onclick="return confirm('Apakah Anda are you sure you want to delete tag ini?')">
                                                 <i class="fas fa-trash fa-sm fa-fw mr-2"></i>
-                                                Hapus
+                                                Delete
                                             </button>
                                         </form>
                                     </div>
@@ -89,7 +89,7 @@
                     <div class="card-body text-center py-5">
                         <i class="fas fa-tags fa-3x text-gray-300 mb-3"></i>
                         <h5 class="text-gray-500">Belum ada tag</h5>
-                        <p class="text-gray-400 mb-4">Buat tag pertama Anda untuk mengorganisir transaksi dengan lebih baik.</p>
+                        <p class="text-gray-400 mb-4">Buat tag pertama Anda untuk mengorganisir transactions dengan lebih baik.</p>
                         <a href="{{ route('tags.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus fa-sm text-white-50"></i> Buat Tag Pertama
                         </a>

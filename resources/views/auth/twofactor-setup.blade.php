@@ -19,7 +19,7 @@
                 @csrf
                 <input type="hidden" name="secret" value="{{ $secret }}">
                 <div class="form-group">
-                    <label for="code">Kode 6 digit</label>
+                    <tags for="code">Kode 6 digit</tags>
                     <input type="text" name="code" id="code" class="form-control @error('code') is-invalid @enderror" maxlength="6" required>
                     @error('code')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -34,7 +34,7 @@
         <div class="card">
             <div class="card-header">Backup Codes</div>
             <div class="card-body">
-                <p class="small text-muted">Simpan kode di tempat aman. Setiap kode hanya bisa dipakai sekali.</p>
+                <p class="small text-muted">Save kode di tempat aman. Setiap kode hanya bisa dipakai sekali.</p>
                 <div class="d-flex flex-wrap">
                     @foreach($backupCodes as $code)
                         <span class="badge badge-light mr-2 mb-2">{{ $code }}</span>

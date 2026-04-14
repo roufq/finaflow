@@ -96,7 +96,7 @@
                     <div class="mt-4 text-center small">
                         @foreach($assetAllocation as $type => $data)
                         <span class="mr-2">
-                            <i class="fas fa-circle" style="color: {{ getChartColor($loop->index) }}"></i> {{ $data['label'] }}: {{ $data['percentage'] }}%
+                            <i class="fas fa-circle" style="color: {{ getChartColor($loop->index) }}"></i> {{ $data['tags'] }}: {{ $data['percentage'] }}%
                         </span>
                         @endforeach
                     </div>
@@ -243,7 +243,7 @@ var assetBreakdownChart = new Chart(ctxAsset, {
     data: {
         labels: [
             @foreach($assetAllocation as $type => $data)
-            "{{ $data['label'] }}",
+            "{{ $data['tags'] }}",
             @endforeach
         ],
         datasets: [{
@@ -277,10 +277,10 @@ var assetBreakdownChart = new Chart(ctxAsset, {
             displayColors: false,
             caretPadding: 10,
             callbacks: {
-                label: function(tooltipItem, data) {
-                    var label = data.labels[tooltipItem.index] || '';
+                tags: function(tooltipItem, data) {
+                    var tags = data.labels[tooltipItem.index] || '';
                     var value = data.datasets[0].data[tooltipItem.index];
-                    return label + ': Rp ' + value.toLocaleString('id-ID');
+                    return tags + ': Rp ' + value.toLocaleString('id-ID');
                 }
             }
         },
@@ -302,7 +302,7 @@ var netWorthHistoryChart = new Chart(ctxNetWorth, {
             @endforeach
         ],
         datasets: [{
-            label: "Net Worth",
+            tags: "Net Worth",
             lineTension: 0.3,
             backgroundColor: "rgba(78, 115, 223, 0.05)",
             borderColor: "rgba(78, 115, 223, 1)",
@@ -379,8 +379,8 @@ var netWorthHistoryChart = new Chart(ctxNetWorth, {
             mode: 'index',
             caretPadding: 10,
             callbacks: {
-                label: function(tooltipItem, chart) {
-                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                tags: function(tooltipItem, chart) {
+                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].tags || '';
                     return datasetLabel + ': Rp ' + tooltipItem.yLabel.toLocaleString('id-ID');
                 }
             }

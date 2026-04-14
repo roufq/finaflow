@@ -4,18 +4,18 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Pengaturan Keuangan</h1>
-            <p class="text-muted small">Kelola mata uang, profil risiko, dan konfigurasi lainnya.</p>
+            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Settings Keuangan</h1>
+            <p class="text-muted small">Kelola mata uang, profile risiko, dan konfigurasi lainnya.</p>
         </div>
         <a href="{{ route('settings.create') }}" class="btn btn-primary shadow-sm px-4">
-            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Pengaturan
+            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add Settings
         </a>
     </div>
 
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -31,13 +31,13 @@
                     <thead class="bg-light text-muted">
                         <tr>
                             <th class="px-4 py-3">No</th>
-                            <th class="py-3">Profil / Label</th>
+                            <th class="py-3">Profile / Tags</th>
                             <th class="py-3 text-center">Simbol</th>
                             <th class="py-3 text-right">Kurs (ke Base)</th>
-                            <th class="py-3 text-center">Bulan Mulai</th>
+                            <th class="py-3 text-center">Month Mulai</th>
                             <th class="py-3 text-center">Credit Score</th>
-                            <th class="py-3">Profil Risiko</th>
-                            <th class="px-4 py-3 text-right">Aksi</th>
+                            <th class="py-3">Profile Risiko</th>
+                            <th class="px-4 py-3 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,7 @@
                         <tr class="border-bottom border-light hover-bg-light {{ $setting->is_default ? 'bg-soft-primary' : '' }}">
                             <td class="px-4 py-3 align-middle">{{ $loop->iteration }}</td>
                             <td class="py-3 align-middle">
-                                <span class="font-weight-bold">{{ $setting->label ?? 'Default' }}</span>
+                                <span class="font-weight-bold">{{ $setting->tags ?? 'Default' }}</span>
                                 @if($setting->is_default)
                                     <span class="badge badge-pill badge-primary ml-1" style="background-color: rgba(59, 130, 246, 0.1); color: #3b82f6;">Utama</span>
                                 @endif
@@ -76,10 +76,10 @@
                                         <a class="dropdown-item" href="{{ route('settings.show', $setting) }}">Lihat Detail</a>
                                         <a class="dropdown-item" href="{{ route('settings.edit', $setting) }}">Edit</a>
                                         <div class="dropdown-divider"></div>
-                                        <form action="{{ route('settings.destroy', $setting) }}" method="POST" onsubmit="return confirm('Hapus pengaturan ini?')">
+                                        <form action="{{ route('settings.destroy', $setting) }}" method="POST" onsubmit="return confirm('Delete settings ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
                                         </form>
                                     </div>
                                 </div>

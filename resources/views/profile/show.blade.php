@@ -18,7 +18,7 @@
     @if (session('profileUpdated'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle"></i> {{ session('profileUpdated') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -27,7 +27,7 @@
     @if (session('passwordUpdated'))
         <div class="alert alert-info alert-dismissible fade show" role="alert">
             <i class="fas fa-shield-alt"></i> {{ session('passwordUpdated') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -51,7 +51,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="name">{{ __('forms.labels.name') }}</label>
+                            <tags for="name">{{ __('forms.labels.name') }}</tags>
                             <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror"
                                 value="{{ old('name', $user->name) }}" required>
                             @error('name')
@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="email">{{ __('forms.labels.email') }}</label>
+                            <tags for="email">{{ __('forms.labels.email') }}</tags>
                             <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                 value="{{ old('email', $user->email) }}" required>
                             @error('email')
@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="avatar">Profile Photo</label>
+                            <tags for="avatar">Profile Photo</tags>
                             <div class="d-flex align-items-center">
                                 <img src="{{ $avatarUrl }}" alt="Profile avatar" class="rounded-circle mr-3" style="width: 60px; height: 60px; object-fit: cover;">
                                 <div class="flex-fill">
@@ -107,7 +107,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="current_password">{{ __('forms.labels.current_password') }}</label>
+                            <tags for="current_password">{{ __('forms.labels.current_password') }}</tags>
                             <input type="password" id="current_password" name="current_password"
                                 class="form-control @error('current_password') is-invalid @enderror" required>
                             @error('current_password')
@@ -118,7 +118,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="new_password">{{ __('forms.labels.new_password') }}</label>
+                            <tags for="new_password">{{ __('forms.labels.new_password') }}</tags>
                             <input type="password" id="new_password" name="new_password"
                                 class="form-control @error('new_password') is-invalid @enderror" required>
                             @error('new_password')
@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="new_password_confirmation">{{ __('forms.labels.confirm_new_password') }}</label>
+                            <tags for="new_password_confirmation">{{ __('forms.labels.confirm_new_password') }}</tags>
                             <input type="password" id="new_password_confirmation" name="new_password_confirmation"
                                 class="form-control" required>
                         </div>

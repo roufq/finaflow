@@ -15,17 +15,17 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <tags for="title">Title</tags>
                     <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $document->title) }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="year">Year</label>
+                    <tags for="year">Year</tags>
                     <input type="number" class="form-control" id="year" name="year" min="2000" max="{{ now()->year + 1 }}" value="{{ old('year', $document->year) }}" required>
                 </div>
                 <div class="form-group">
-                    <label for="category">Category (optional)</label>
+                    <tags for="category">Category (optional)</tags>
                     <select class="form-control" id="category" name="category">
-                        <option value="">Pilih kategori</option>
+                        <option value="">Select category</option>
                         <option value="income_proof" {{ old('category', $document->category) === 'income_proof' ? 'selected' : '' }}>Income Proof</option>
                         <option value="expense_receipt" {{ old('category', $document->category) === 'expense_receipt' ? 'selected' : '' }}>Expense Receipt</option>
                         <option value="tax_form" {{ old('category', $document->category) === 'tax_form' ? 'selected' : '' }}>Tax Form</option>
@@ -33,15 +33,15 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="notes">Notes (optional)</label>
+                    <tags for="notes">Notes (optional)</tags>
                     <textarea class="form-control" id="notes" name="notes" rows="3">{{ old('notes', $document->notes) }}</textarea>
                 </div>
                 <div class="form-group">
-                    <label>Current File</label><br>
+                    <tags>Current File</tags><br>
                     <a href="{{ Storage::disk('public')->url($document->file_path) }}" target="_blank" class="btn btn-sm btn-success">View / Download</a>
                 </div>
                 <div class="form-group">
-                    <label for="document">Replace File (optional)</label>
+                    <tags for="document">Replace File (optional)</tags>
                     <input type="file" class="form-control-file" id="document" name="document">
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

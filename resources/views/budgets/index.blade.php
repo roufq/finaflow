@@ -5,17 +5,17 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Anggaran Keuangan</h1>
-            <p class="text-muted small">Kelola batas pengeluaran Anda agar tetap dalam kendali.</p>
+            <p class="text-muted small">Kelola batas expense Anda agar tetap dalam kendali.</p>
         </div>
         <a href="{{ route('budgets.create') }}" class="d-none d-sm-inline-block btn btn-primary shadow-sm px-4">
-            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Anggaran Baru
+            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add Anggaran Baru
         </a>
     </div>
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -39,13 +39,13 @@
                                 <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink{{ $budget->id }}">
-                                <div class="dropdown-header">Aksi:</div>
+                                <div class="dropdown-header">Action:</div>
                                 <a class="dropdown-item" href="{{ route('budgets.edit', $budget) }}">Edit</a>
                                 <div class="dropdown-divider"></div>
                                 <form action="{{ route('budgets.destroy', $budget) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Hapus anggaran ini?')">Hapus</button>
+                                    <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Delete anggaran ini?')">Delete</button>
                                 </form>
                             </div>
                         </div>
@@ -69,13 +69,13 @@
                             @if($budget->spent_percentage > 100)
                                 <small class="text-danger font-weight-bold"><i class="fas fa-exclamation-triangle"></i> Over: {{ $currencySymbol }} {{ number_format($budget->spent_amount - $budget->total_budget, 0, ',', '.') }}</small>
                             @else
-                                <small class="text-muted font-weight-bold">Sisa: {{ $currencySymbol }} {{ number_format($budget->remaining_amount, 0, ',', '.') }}</small>
+                                <small class="text-muted font-weight-bold">Remaining: {{ $currencySymbol }} {{ number_format($budget->remaining_amount, 0, ',', '.') }}</small>
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4 text-center">
-                    <a href="{{ route('budgets.show', $budget) }}" class="btn btn-light btn-sm btn-block text-gray-600 font-weight-bold rounded-lg" style="background-color: #f8fafc;">Detail Transaksi</a>
+                    <a href="{{ route('budgets.show', $budget) }}" class="btn btn-light btn-sm btn-block text-gray-600 font-weight-bold rounded-lg" style="background-color: #f8fafc;">Transaction Details</a>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
                 <div class="card-body text-center">
                     <i class="fas fa-calculator fa-3x text-gray-300 mb-3"></i>
                     <h5 class="text-gray-500">Belum ada budgets</h5>
-                    <p class="text-gray-500">Mulai buat budget pertama Anda untuk mengelola pengeluaran</p>
+                    <p class="text-gray-500">Mulai buat budget pertama Anda untuk mengelola expense</p>
                     <a href="{{ route('budgets.create') }}" class="btn btn-primary">Buat Budget Pertama</a>
                 </div>
             </div>

@@ -4,17 +4,17 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
-            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Kategori</h1>
-            <p class="text-muted small">Kelola klasifikasi pemasukan dan pengeluaran Anda.</p>
+            <h1 class="h3 mb-1 text-gray-800 font-weight-bold">Category</h1>
+            <p class="text-muted small">Kelola klasifikasi pemasukan dan expense Anda.</p>
         </div>
         <a href="{{ route('categories.create') }}" class="d-none d-sm-inline-block btn btn-primary shadow-sm px-4">
-            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Tambah Kategori
+            <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Add Category
         </a>
     </div>
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-white py-4 d-flex align-items-center">
-            <h6 class="m-0 font-weight-bold text-gray-800">Daftar Kategori</h6>
+            <h6 class="m-0 font-weight-bold text-gray-800">Category List</h6>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -22,10 +22,10 @@
                     <thead class="bg-light text-muted">
                         <tr>
                             <th class="px-4 py-3">No</th>
-                            <th class="py-3">Nama Kategori</th>
-                            <th class="py-3">Tipe</th>
-                            <th class="py-3">Deskripsi</th>
-                            <th class="px-4 py-3 text-right">Aksi</th>
+                            <th class="py-3">Name Category</th>
+                            <th class="py-3">Type</th>
+                            <th class="py-3">Description</th>
+                            <th class="px-4 py-3 text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,7 +37,7 @@
                                 @if($category->type === 'income')
                                     <span class="badge badge-pill font-weight-normal px-3 py-1" style="background-color: rgba(34, 197, 94, 0.1); color: #16a34a;">Pemasukan</span>
                                 @else
-                                    <span class="badge badge-pill font-weight-normal px-3 py-1" style="background-color: rgba(239, 68, 68, 0.1); color: #dc2626;">Pengeluaran</span>
+                                    <span class="badge badge-pill font-weight-normal px-3 py-1" style="background-color: rgba(239, 68, 68, 0.1); color: #dc2626;">Expense</span>
                                 @endif
                             </td>
                             <td class="py-3 align-middle text-muted">{{ $category->description ?: '-' }}</td>
@@ -48,7 +48,7 @@
                                     <form action="{{ route('categories.destroy', $category) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-light btn-sm text-danger" title="Hapus" onclick="return confirm('Apakah Anda yakin?')"><i class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn btn-light btn-sm text-danger" title="Delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </div>
                             </td>

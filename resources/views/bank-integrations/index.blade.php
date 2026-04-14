@@ -4,16 +4,16 @@
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Integrasi Bank</h1>
+        <h1 class="h3 mb-0 text-gray-800">Integrations Bank</h1>
         <a href="{{ route('bank-integrations.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Integrasi
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add Integrations
         </a>
     </div>
 
     @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -22,7 +22,7 @@
     @if(session('error'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ session('error') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -36,7 +36,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Integrasi</div>
+                                Total Integrations</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $integrations->count() }}</div>
                         </div>
                         <div class="col-auto">
@@ -52,7 +52,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Integrasi Aktif</div>
+                                Integrations Aktif</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $integrations->where('is_active', true)->count() }}</div>
                         </div>
                         <div class="col-auto">
@@ -68,7 +68,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total Saldo</div>
+                                Total Balance</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 Rp {{ number_format($integrations->where('is_active', true)->sum('current_balance'), 0, ',', '.') }}
                             </div>
@@ -84,7 +84,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Integrasi Bank</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Integrations Bank</h6>
         </div>
         <div class="card-body">
             @if($integrations->count() > 0)
@@ -93,14 +93,14 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Bank</th>
-                            <th>Akun</th>
-                            <th>Tipe Akun</th>
-                            <th>Metode Integrasi</th>
+                            <th>Name Bank</th>
+                            <th>Account</th>
+                            <th>Type Account</th>
+                            <th>Metode Integrations</th>
                             <th>Status</th>
-                            <th>Saldo</th>
+                            <th>Balance</th>
                             <th>Terakhir Sync</th>
-                            <th>Aksi</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -124,7 +124,7 @@
                                 @if($integration->is_active)
                                 <span class="badge badge-success">Aktif</span>
                                 @else
-                                <span class="badge badge-secondary">Tidak Aktif</span>
+                                <span class="badge badge-secondary">No Aktif</span>
                                 @endif
                             </td>
                             <td>
@@ -160,7 +160,7 @@
                                 <form action="{{ route('bank-integrations.destroy', $integration) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus integrasi ini?')">Hapus</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda are you sure you want to delete integrations ini?')">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -171,10 +171,10 @@
             @else
             <div class="text-center">
                 <i class="fas fa-university fa-3x text-gray-300 mb-3"></i>
-                <h5 class="text-gray-500">Belum ada integrasi bank</h5>
-                <p class="text-gray-500">Tambahkan integrasi bank untuk mengimpor transaksi secara otomatis.</p>
+                <h5 class="text-gray-500">Belum ada integrations bank</h5>
+                <p class="text-gray-500">Tambahkan integrations bank untuk mengimpor transactions secara otomatis.</p>
                 <a href="{{ route('bank-integrations.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Buat Integrasi Pertama
+                    <i class="fas fa-plus"></i> Buat Integrations Pertama
                 </a>
             </div>
             @endif
@@ -200,7 +200,7 @@
                 <div id="sync-result"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="alert alert-success">
                         <h6>Sinkronisasi Berhasil!</h6>
                         <p>${data.message}</p>
-                        ${data.data && data.data.transactions_imported ? `<p>Transaksi diimpor: ${data.data.transactions_imported}</p>` : ''}
+                        ${data.data && data.data.transactions_imported ? `<p>Transactions diimpor: ${data.data.transactions_imported}</p>` : ''}
                     </div>
                 `;
                 // Reload page after 2 seconds to show updated data

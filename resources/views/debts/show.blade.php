@@ -10,7 +10,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit
             </a>
             <a href="{{ route('debts.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
         </div>
     </div>
@@ -29,7 +29,7 @@
                         </div>
                         <h4 class="mt-3">Rp {{ number_format($debt->current_balance, 0, ',', '.') }}</h4>
                         <p class="text-muted">dari Rp {{ number_format($debt->original_amount, 0, ',', '.') }}</p>
-                        <p class="text-success">Sudah dibayar: Rp {{ number_format($debt->original_amount - $debt->current_balance, 0, ',', '.') }}</p>
+                        <p class="text-success">Sudah paid: Rp {{ number_format($debt->original_amount - $debt->current_balance, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
@@ -37,15 +37,15 @@
             <!-- Debt Details -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Detail Hutang</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Debt Details</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Tipe:</strong>
+                            <strong>Type:</strong>
                         </div>
                         <div class="col-sm-6">
-                            {{ $debt->type_label }}
+                            {{ $debt->type_tags }}
                         </div>
                     </div>
                     <hr>
@@ -90,7 +90,7 @@
                             <strong>Strategi Pelunasan:</strong>
                         </div>
                         <div class="col-sm-6">
-                            {{ $debt->payoff_strategy_label }}
+                            {{ $debt->payoff_strategy_tags }}
                         </div>
                     </div>
                     <hr>
@@ -99,14 +99,14 @@
                             <strong>Status:</strong>
                         </div>
                         <div class="col-sm-6">
-                            <span class="badge badge-{{ $debt->status_color }}">{{ $debt->status_label }}</span>
+                            <span class="badge badge-{{ $debt->status_color }}">{{ $debt->status_tags }}</span>
                         </div>
                     </div>
                     @if($debt->description)
                     <hr>
                     <div class="row">
                         <div class="col-sm-12">
-                            <strong>Deskripsi:</strong>
+                            <strong>Description:</strong>
                             <p class="mt-2">{{ $debt->description }}</p>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
             <!-- Payment History -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Riwayat Pembayaran</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">History Pembayaran</h6>
                 </div>
                 <div class="card-body">
                     @if($debt->payment_history && count($debt->payment_history) > 0)
@@ -128,10 +128,10 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Tanggal</th>
-                                        <th>Jumlah</th>
-                                        <th>Saldo Setelah</th>
-                                        <th>Catatan</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Balance Setelah</th>
+                                        <th>Notes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -149,7 +149,7 @@
                     @else
                         <div class="text-center text-muted">
                             <i class="fas fa-history fa-3x mb-3"></i>
-                            <p>Belum ada riwayat pembayaran</p>
+                            <p>Belum ada history pembayaran</p>
                         </div>
                     @endif
                 </div>
@@ -158,13 +158,13 @@
             <!-- Quick Actions -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Aksi Cepat</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Action Cepat</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
                             <button class="btn btn-success btn-block" data-toggle="modal" data-target="#addPaymentModal">
-                                <i class="fas fa-plus"></i> Bayar Hutang
+                                <i class="fas fa-plus"></i> Bayar Debts
                             </button>
                         </div>
                         <div class="col-md-4">
@@ -173,11 +173,11 @@
                             </button>
                         </div>
                         <div class="col-md-4">
-                            <form action="{{ route('debts.destroy', $debt) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus hutang ini?')">
+                            <form action="{{ route('debts.destroy', $debt) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda are you sure you want to delete debts ini?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> Hapus Hutang
+                                    <i class="fas fa-trash"></i> Delete Debts
                                 </button>
                             </form>
                         </div>
@@ -188,14 +188,14 @@
             <!-- Debt Calculator -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Kalkulator Hutang</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Kalkulator Debts</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <h6>Estimasi Waktu Pelunasan</h6>
                             <p class="text-muted">Dengan pembayaran minimum:</p>
-                            <h5 class="text-primary">{{ $debt->estimated_payoff_months }} bulan</h5>
+                            <h5 class="text-primary">{{ $debt->estimated_payoff_months }} month</h5>
                             <small class="text-muted">Total pembayaran: Rp {{ number_format($debt->estimated_total_payment, 0, ',', '.') }}</small>
                         </div>
                         <div class="col-md-6">
@@ -216,30 +216,30 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addPaymentModalLabel">Tambah Pembayaran</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="addPaymentModalLabel">Add Pembayaran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form id="addPaymentForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="payment_amount">Jumlah Pembayaran (Rp)</label>
+                        <tags for="payment_amount">Amount Pembayaran (Rp)</tags>
                         <input type="number" class="form-control" id="payment_amount" name="payment_amount" min="0" max="{{ $debt->current_balance }}" required>
                         <small class="form-text text-muted">Maksimal: Rp {{ number_format($debt->current_balance, 0, ',', '.') }}</small>
                     </div>
                     <div class="form-group">
-                        <label for="payment_date">Tanggal Pembayaran</label>
+                        <tags for="payment_date">Date Pembayaran</tags>
                         <input type="date" class="form-control" id="payment_date" name="payment_date" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="notes">Catatan</label>
+                        <tags for="notes">Notes</tags>
                         <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Pembayaran</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Pembayaran</button>
                 </div>
             </form>
         </div>
@@ -251,8 +251,8 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="calculateModalLabel">Kalkulator Pelunasan Hutang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="calculateModalLabel">Kalkulator Pelunasan Debts</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -261,7 +261,7 @@
                     <div class="col-md-6">
                         <h6>Simulasi Pembayaran Lebih</h6>
                         <div class="form-group">
-                            <label for="extra_payment">Pembayaran Tambahan per Bulan (Rp)</label>
+                            <tags for="extra_payment">Pembayaran Tambahan per Month (Rp)</tags>
                             <input type="number" class="form-control" id="extra_payment" min="0">
                         </div>
                         <button class="btn btn-primary btn-block" id="calculateBtn">Hitung</button>
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalTotal = {{ $debt->estimated_total_payment }};
         const savedInterest = originalTotal - totalPayment;
 
-        document.getElementById('newPayoffTime').textContent = months + ' bulan';
+        document.getElementById('newPayoffTime').textContent = months + ' month';
         document.getElementById('newTotalPayment').textContent = 'Rp ' + totalPayment.toLocaleString('id-ID');
         document.getElementById('savedInterest').textContent = 'Rp ' + savedInterest.toLocaleString('id-ID');
 

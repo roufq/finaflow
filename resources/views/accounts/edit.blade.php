@@ -3,19 +3,19 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Edit Akun: {{ $account->name }}</h1>
+        <h1 class="h3 mb-0 text-gray-800">Edit Account: {{ $account->name }}</h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Form Edit Akun</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Form Edit Account</h6>
         </div>
         <div class="card-body">
             <form action="{{ route('accounts.update', $account) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <label for="name">Nama Akun *</label>
+                    <tags for="name">Name Account *</tags>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $account->name) }}" required>
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -23,9 +23,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="type">Tipe Akun *</label>
+                    <tags for="type">Type Account *</tags>
                     <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
-                        <option value="">Pilih Tipe Akun</option>
+                        <option value="">Select Type Account</option>
                         @foreach($accountTypes as $key => $label)
                         <option value="{{ $key }}" {{ old('type', $account->type) == $key ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
@@ -36,12 +36,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="setting_id">Profil Mata Uang *</label>
+                    <tags for="setting_id">Profile Mata Uang *</tags>
                     <select class="form-control @error('setting_id') is-invalid @enderror" id="setting_id" name="setting_id" required>
-                        <option value="">Pilih Profil Mata Uang</option>
+                        <option value="">Select Profile Mata Uang</option>
                         @foreach($settings as $setting)
                         <option value="{{ $setting->id }}" data-symbol="{{ $setting->currency_symbol }}" {{ old('setting_id', $account->setting_id) == $setting->id ? 'selected' : '' }}>
-                            {{ $setting->label }} ({{ $setting->currency_symbol }})
+                            {{ $setting->tags }} ({{ $setting->currency_symbol }})
                         </option>
                         @endforeach
                     </select>
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="account_number">Nomor Akun</label>
+                    <tags for="account_number">Nomor Account</tags>
                     <input type="text" class="form-control @error('account_number') is-invalid @enderror" id="account_number" name="account_number" value="{{ old('account_number', $account->account_number) }}">
                     @error('account_number')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="bank_name">Nama Bank</label>
+                    <tags for="bank_name">Name Bank</tags>
                     <input type="text" class="form-control @error('bank_name') is-invalid @enderror" id="bank_name" name="bank_name" value="{{ old('bank_name', $account->bank_name) }}">
                     @error('bank_name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="balance">Saldo *</label>
+                    <tags for="balance">Balance *</tags>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text currency-symbol">{{ $account->setting->currency_symbol ?? 'Rp' }}</span>
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="form-group" id="credit_limit_group" style="{{ $account->type === 'credit_card' ? '' : 'display: none;' }}">
-                    <label for="credit_limit">Limit Kredit</label>
+                    <tags for="credit_limit">Limit Kredit</tags>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text currency-symbol">{{ $account->setting->currency_symbol ?? 'Rp' }}</span>
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="opening_date">Tanggal Pembukaan</label>
+                    <tags for="opening_date">Date Pembukaan</tags>
                     <input type="date" class="form-control @error('opening_date') is-invalid @enderror" id="opening_date" name="opening_date" value="{{ old('opening_date', $account->opening_date?->format('Y-m-d')) }}">
                     @error('opening_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="notes">Catatan</label>
+                    <tags for="notes">Notes</tags>
                     <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3">{{ old('notes', $account->notes) }}</textarea>
                     @error('notes')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -111,12 +111,12 @@
                 <div class="form-group">
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" {{ old('is_active', $account->is_active) ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="is_active">Akun Aktif</label>
+                        <tags class="custom-control-tags" for="is_active">Account Aktif</tags>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Update Akun</button>
-                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary">Update Account</button>
+                <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

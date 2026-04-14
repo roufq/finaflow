@@ -7,7 +7,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Edit Tag</h1>
         <a href="{{ route('tags.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
         </a>
     </div>
 
@@ -23,7 +23,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="name">Nama Tag <span class="text-danger">*</span></label>
+                            <tags for="name">Name Tag <span class="text-danger">*</span></tags>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name', $tag->name) }}" required>
                             @error('name')
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="color">Warna Tag</label>
+                            <tags for="color">Color Tag</tags>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Deskripsi</label>
+                            <tags for="description">Description</tags>
                             <textarea class="form-control @error('description') is-invalid @enderror"
                                       id="description" name="description" rows="3">{{ old('description', $tag->description) }}</textarea>
                             @error('description')
@@ -61,7 +61,7 @@
                                 <i class="fas fa-save fa-sm text-white-50"></i> Update Tag
                             </button>
                             <a href="{{ route('tags.index') }}" class="btn btn-secondary ml-2">
-                                <i class="fas fa-times fa-sm text-white-50"></i> Batal
+                                <i class="fas fa-times fa-sm text-white-50"></i> Cancel
                             </a>
                         </div>
                     </form>
@@ -83,7 +83,7 @@
                     </div>
                     <hr>
                     <p class="text-muted small">
-                        Tag akan muncul seperti di atas pada transaksi yang diberi tag ini.
+                        Tag akan muncul seperti di atas pada transactions yang diberi tag ini.
                     </p>
                 </div>
             </div>
@@ -97,14 +97,14 @@
                         <div class="col-12">
                             <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $tag->getTransactionsCount() }}</div>
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total Transaksi
+                                Total Transactions
                             </div>
                         </div>
                     </div>
                     <hr>
                     <p class="text-muted small">
-                        Tag ini telah digunakan pada {{ $tag->getTransactionsCount() }} transaksi.
-                        Mengubah nama tag tidak akan mempengaruhi transaksi yang sudah ada.
+                        Tag ini telah digunakan pada {{ $tag->getTransactionsCount() }} transactions.
+                        Mengubah name tag no akan mempengaruhi transactions yang sudah ada.
                     </p>
                 </div>
             </div>
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tagPreview = document.getElementById('tag-preview');
 
     function updatePreview() {
-        const name = nameInput.value || 'Nama Tag';
+        const name = nameInput.value || 'Name Tag';
         const color = colorInput.value;
 
         tagPreview.textContent = name;

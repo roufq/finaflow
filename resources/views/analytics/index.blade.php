@@ -104,8 +104,8 @@
                 </div>
                 <div class="card-body">
                     @if($seasonalInsights['highest'])
-                        <p><strong>Highest month:</strong> {{ $seasonalInsights['highest']['label'] }} ({{ $currencySymbol }} {{ number_format($seasonalInsights['highest']['total'], 0, ',', '.') }})</p>
-                        <p><strong>Lowest month:</strong> {{ $seasonalInsights['lowest']['label'] }} ({{ $currencySymbol }} {{ number_format($seasonalInsights['lowest']['total'], 0, ',', '.') }})</p>
+                        <p><strong>Highest month:</strong> {{ $seasonalInsights['highest']['tags'] }} ({{ $currencySymbol }} {{ number_format($seasonalInsights['highest']['total'], 0, ',', '.') }})</p>
+                        <p><strong>Lowest month:</strong> {{ $seasonalInsights['lowest']['tags'] }} ({{ $currencySymbol }} {{ number_format($seasonalInsights['lowest']['total'], 0, ',', '.') }})</p>
                         <p><strong>Average monthly spending:</strong> {{ $currencySymbol }} {{ number_format($seasonalInsights['average'], 0, ',', '.') }}</p>
                         <p><strong>Trend:</strong>
                             @if($seasonalInsights['trend'] === 'increasing')
@@ -186,7 +186,7 @@
                         <p>Based on your last 12 months of spending, the following are simple trend-based projections for the next 3 months:</p>
                         <ul>
                             @foreach($spendingPredictions as $prediction)
-                                <li>{{ $prediction['label'] }}: {{ $currencySymbol }} {{ number_format($prediction['total'], 0, ',', '.') }}</li>
+                                <li>{{ $prediction['tags'] }}: {{ $currencySymbol }} {{ number_format($prediction['total'], 0, ',', '.') }}</li>
                             @endforeach
                         </ul>
                         <p class="text-muted mb-0">
@@ -303,7 +303,7 @@
         data: {
             labels: {!! json_encode($dailySpending['labels']) !!},
             datasets: [{
-                label: "Daily Expense",
+                tags: "Daily Expense",
                 lineTension: 0.3,
                 backgroundColor: "rgba(231, 74, 59, 0.05)",
                 borderColor: "rgba(231, 74, 59, 1)",
@@ -365,8 +365,8 @@
                 mode: 'index',
                 caretPadding: 10,
                 callbacks: {
-                    label: function(tooltipItem, chart) {
-                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                    tags: function(tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].tags || '';
                         return datasetLabel + ': {{ $currencySymbol }} ' + tooltipItem.yLabel.toLocaleString('id-ID');
                     }
                 }
@@ -381,7 +381,7 @@
         data: {
             labels: {!! json_encode($weeklySpending['labels']) !!},
             datasets: [{
-                label: "Weekly Expense",
+                tags: "Weekly Expense",
                 backgroundColor: "rgba(78, 115, 223, 0.8)",
                 borderColor: "rgba(78, 115, 223, 1)",
                 data: {!! json_encode($weeklySpending['values']) !!},
@@ -434,8 +434,8 @@
                 mode: 'index',
                 caretPadding: 10,
                 callbacks: {
-                    label: function(tooltipItem, chart) {
-                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                    tags: function(tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].tags || '';
                         return datasetLabel + ': {{ $currencySymbol }} ' + tooltipItem.yLabel.toLocaleString('id-ID');
                     }
                 }
@@ -448,9 +448,9 @@
     var monthlySpendingChart = new Chart(ctxMonthly, {
         type: 'line',
         data: {
-            labels: {!! json_encode(array_column($monthlySpending, 'label')) !!},
+            labels: {!! json_encode(array_column($monthlySpending, 'tags')) !!},
             datasets: [{
-                label: "Monthly Expense",
+                tags: "Monthly Expense",
                 lineTension: 0.3,
                 backgroundColor: "rgba(54, 185, 204, 0.05)",
                 borderColor: "rgba(54, 185, 204, 1)",
@@ -512,8 +512,8 @@
                 mode: 'index',
                 caretPadding: 10,
                 callbacks: {
-                    label: function(tooltipItem, chart) {
-                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                    tags: function(tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].tags || '';
                         return datasetLabel + ': {{ $currencySymbol }} ' + tooltipItem.yLabel.toLocaleString('id-ID');
                     }
                 }

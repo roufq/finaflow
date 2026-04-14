@@ -12,7 +12,7 @@
                     <form method="POST" action="{{ route('integrations.email-parser.store') }}">
                         @csrf
                         <div class="form-group">
-                            <label>Email Content</label>
+                            <tags>Email Content</tags>
                             <textarea name="email_content" rows="10" class="form-control @error('email_content') is-invalid @enderror">{{ old('email_content') }}</textarea>
                             @error('email_content')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>

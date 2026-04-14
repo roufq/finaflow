@@ -69,7 +69,7 @@
                                 <div class="card-body">
                                     @forelse($anomalies as $anomaly)
                                         <div class="alert alert-{{ $anomaly->severity >= 3 ? 'danger' : ($anomaly->severity >= 2 ? 'warning' : 'info') }} mb-2">
-                                            <strong>{{ $anomaly->severity_label }}</strong>
+                                            <strong>{{ $anomaly->severity_tags }}</strong>
                                             <p class="mb-1">{{ $anomaly->description }}</p>
                                             <small class="text-muted">{{ $anomaly->detected_at->diffForHumans() }}</small>
                                         </div>
@@ -100,7 +100,7 @@
                                             <p class="mb-1">
                                                 {{ __('insights.predictions.expected_amount', [
                                                     'amount' => number_format($prediction->predicted_amount, 0),
-                                                    'period' => $prediction->period_label
+                                                    'period' => $prediction->period_tags
                                                 ]) }}
                                             </p>
                                             <small class="text-muted">

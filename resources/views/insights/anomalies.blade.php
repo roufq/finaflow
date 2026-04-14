@@ -38,7 +38,7 @@
                                             <td>{{ $anomaly->description }}</td>
                                             <td>
                                                 <span class="badge badge-{{ $anomaly->severity >= 3 ? 'danger' : ($anomaly->severity >= 2 ? 'warning' : 'info') }}">
-                                                    {{ $anomaly->severity_label }}
+                                                    {{ $anomaly->severity_tags }}
                                                 </span>
                                             </td>
                                             <td>

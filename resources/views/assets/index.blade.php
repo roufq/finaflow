@@ -14,7 +14,7 @@
     @if($expiredInsurance->count() > 0)
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Warning!</strong> You have {{ $expiredInsurance->count() }} asset(s) with expired insurance.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -23,7 +23,7 @@
     @if($expiringInsurance->count() > 0)
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong>Notice!</strong> You have {{ $expiringInsurance->count() }} asset(s) with insurance expiring within 30 days.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>

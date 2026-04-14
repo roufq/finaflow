@@ -19,7 +19,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <label for="program_name">Program Name</label>
+                            <tags for="program_name">Program Name</tags>
                             <input type="text" class="form-control @error('program_name') is-invalid @enderror" id="program_name" name="program_name" value="{{ old('program_name') }}" placeholder="e.g., GarudaMiles, Marriott Bonvoy, Starbucks Rewards" required>
                             @error('program_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="program_type">Program Type</label>
+                            <tags for="program_type">Program Type</tags>
                             <select class="form-control @error('program_type') is-invalid @enderror" id="program_type" name="program_type" required>
                                 <option value="">Select Program Type</option>
                                 <option value="airline" {{ old('program_type') == 'airline' ? 'selected' : '' }}>Airline (Miles)</option>
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="membership_number">Membership Number (Optional)</label>
+                            <tags for="membership_number">Membership Number (Optional)</tags>
                             <input type="text" class="form-control @error('membership_number') is-invalid @enderror" id="membership_number" name="membership_number" value="{{ old('membership_number') }}" placeholder="Your membership/account number">
                             @error('membership_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="expiry_date">Membership Expiry Date (Optional)</label>
+                            <tags for="expiry_date">Membership Expiry Date (Optional)</tags>
                             <input type="date" class="form-control @error('expiry_date') is-invalid @enderror" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}">
                             @error('expiry_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -117,7 +117,7 @@
                         <li>Use points before they expire</li>
                         <li>Combine programs for maximum benefits</li>
                         <li>Track your points balance regularly</li>
-                        <li>Look for transfer partnerships between programs</li>
+                        <li>Look for transfers partnerships between programs</li>
                     </ul>
                 </div>
             </div>

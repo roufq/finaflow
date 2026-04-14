@@ -214,10 +214,10 @@
             legend: { display: false },
             tooltips: {
                 callbacks: {
-                    label: function(tooltipItem, data) {
-                        const label = data.labels[tooltipItem.index];
+                    tags: function(tooltipItem, data) {
+                        const tags = data.labels[tooltipItem.index];
                         const value = data.datasets[0].data[tooltipItem.index];
-                        return label + ': {{ $currencySymbol }} ' + new Intl.NumberFormat('id-ID').format(value);
+                        return tags + ': {{ $currencySymbol }} ' + new Intl.NumberFormat('id-ID').format(value);
                     }
                 }
             }

@@ -56,11 +56,11 @@
                         <form method="POST" action="{{ route('reporting.reports.store') }}">
                             @csrf
                             <div class="form-group">
-                                <label for="builder-name">{{ __('reporting.forms.name') }}</label>
+                                <tags for="builder-name">{{ __('reporting.forms.name') }}</tags>
                                 <input type="text" class="form-control" id="builder-name" name="name" required>
                             </div>
                             <div class="form-group">
-                                <label for="builder-schedule">{{ __('reporting.forms.schedule') }}</label>
+                                <tags for="builder-schedule">{{ __('reporting.forms.schedule') }}</tags>
                                 <select class="form-control" id="builder-schedule" name="schedule">
                                     <option value="">{{ __('reporting.forms.choose_report') }}</option>
                                     @foreach(trans('reporting.schedules') as $key => $label)
@@ -69,7 +69,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="builder-format">{{ __('reporting.forms.format') }}</label>
+                                <tags for="builder-format">{{ __('reporting.forms.format') }}</tags>
                                 <select class="form-control" id="builder-format" name="format">
                                     @foreach(trans('reporting.formats') as $key => $label)
                                         <option value="{{ $key }}" @selected(old('format', 'pdf') === $key)>{{ $label }}</option>
@@ -77,7 +77,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="builder-description">{{ __('reporting.forms.description') }}</label>
+                                <tags for="builder-description">{{ __('reporting.forms.description') }}</tags>
                                 <textarea class="form-control" id="builder-description" rows="2" name="description"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">{{ __('reporting.forms.submit') }}</button>
@@ -135,7 +135,7 @@
                                                     <option value="{{ $size }}" @selected($widget->size === $size)>{{ ucfirst($size) }}</option>
                                                 @endforeach
                                             </select>
-                                            <div class="btn-group btn-group-sm" role="group" aria-label="Widget actions">
+                                            <div class="btn-group btn-group-sm" role="group" aria-tags="Widget actions">
                                                 <button type="button"
                                                     class="btn btn-outline-secondary edit-widget"
                                                     data-widget-id="{{ $widget->id }}"
@@ -186,7 +186,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="widgetEditModalLabel">{{ __('reporting.forms.widget_title') }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -195,15 +195,15 @@
                 @method('PUT')
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="widget-edit-title">{{ __('reporting.forms.widget_title') }}</label>
+                        <tags for="widget-edit-title">{{ __('reporting.forms.widget_title') }}</tags>
                         <input type="text" name="title" id="widget-edit-title" class="form-control" maxlength="255">
                     </div>
                     <div class="form-group">
-                        <label for="widget-edit-notes">{{ __('reporting.forms.notes') }}</label>
+                        <tags for="widget-edit-notes">{{ __('reporting.forms.notes') }}</tags>
                         <textarea name="notes" id="widget-edit-notes" rows="3" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="widget-edit-size">{{ __('reporting.forms.widget_size') }}</label>
+                        <tags for="widget-edit-size">{{ __('reporting.forms.widget_size') }}</tags>
                         <select name="size" id="widget-edit-size" class="form-control">
                             @foreach(['small', 'medium', 'large'] as $size)
                                 <option value="{{ $size }}">{{ ucfirst($size) }}</option>

@@ -20,7 +20,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label for="name">Subscription Name</label>
+                            <tags for="name">Subscription Name</tags>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $subscription->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="provider">Provider</label>
+                            <tags for="provider">Provider</tags>
                             <input type="text" class="form-control @error('provider') is-invalid @enderror" id="provider" name="provider" value="{{ old('provider', $subscription->provider) }}" required>
                             @error('provider')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Amount (Rp)</label>
+                            <tags for="amount">Amount (Rp)</tags>
                             <input type="number" class="form-control @error('amount') is-invalid @enderror" id="amount" name="amount" value="{{ old('amount', $subscription->amount) }}" step="0.01" required>
                             @error('amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="frequency">Billing Frequency</label>
+                            <tags for="frequency">Billing Frequency</tags>
                             <select class="form-control @error('frequency') is-invalid @enderror" id="frequency" name="frequency" required>
                                 <option value="weekly" {{ old('frequency', $subscription->frequency) == 'weekly' ? 'selected' : '' }}>Weekly</option>
                                 <option value="monthly" {{ old('frequency', $subscription->frequency) == 'monthly' ? 'selected' : '' }}>Monthly</option>
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="next_billing_date">Next Billing Date</label>
+                            <tags for="next_billing_date">Next Billing Date</tags>
                             <input type="date" class="form-control @error('next_billing_date') is-invalid @enderror" id="next_billing_date" name="next_billing_date" value="{{ old('next_billing_date', $subscription->next_billing_date ? $subscription->next_billing_date->format('Y-m-d') : '') }}" required>
                             @error('next_billing_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="category">Category</label>
+                            <tags for="category">Category</tags>
                             <select class="form-control @error('category') is-invalid @enderror" id="category" name="category">
                                 <option value="">Select Category</option>
                                 <option value="Entertainment" {{ old('category', $subscription->category) == 'Entertainment' ? 'selected' : '' }}>Entertainment</option>
@@ -81,7 +81,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="status">Status</label>
+                            <tags for="status">Status</tags>
                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                 <option value="active" {{ old('status', $subscription->status) == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="paused" {{ old('status', $subscription->status) == 'paused' ? 'selected' : '' }}>Paused</option>
@@ -94,11 +94,11 @@
 
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" id="auto_renewal" name="auto_renewal" value="1" {{ old('auto_renewal', $subscription->auto_renewal) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="auto_renewal">Auto Renewal</label>
+                            <tags class="form-check-tags" for="auto_renewal">Auto Renewal</tags>
                         </div>
 
                         <div class="form-group">
-                            <label for="notes">Notes (Optional)</label>
+                            <tags for="notes">Notes (Optional)</tags>
                             <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Additional notes about this subscription">{{ old('notes', $subscription->notes) }}</textarea>
                         </div>
 

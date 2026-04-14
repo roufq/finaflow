@@ -10,7 +10,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit
             </a>
             <a href="{{ route('budgets.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
         </div>
     </div>
@@ -32,7 +32,7 @@
                         @if($budget->spent_percentage > 100)
                             <p class="text-danger">Over budget: Rp {{ number_format($budget->spent_amount - $budget->total_budget, 0, ',', '.') }}</p>
                         @else
-                            <p class="text-success">Sisa: Rp {{ number_format($budget->remaining_amount, 0, ',', '.') }}</p>
+                            <p class="text-success">Remaining: Rp {{ number_format($budget->remaining_amount, 0, ',', '.') }}</p>
                         @endif
                     </div>
                 </div>
@@ -46,10 +46,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Tipe:</strong>
+                            <strong>Type:</strong>
                         </div>
                         <div class="col-sm-6">
-                            {{ $budget->type_label }}
+                            {{ $budget->type_tags }}
                         </div>
                     </div>
                     <hr>
@@ -58,13 +58,13 @@
                             <strong>Periode:</strong>
                         </div>
                         <div class="col-sm-6">
-                            {{ $budget->period_label }}
+                            {{ $budget->period_tags }}
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Tanggal Mulai:</strong>
+                            <strong>Date Mulai:</strong>
                         </div>
                         <div class="col-sm-6">
                             {{ $budget->start_date->format('d M Y') }}
@@ -74,7 +74,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-sm-6">
-                            <strong>Tanggal Berakhir:</strong>
+                            <strong>Date Berakhir:</strong>
                         </div>
                         <div class="col-sm-6">
                             {{ $budget->end_date->format('d M Y') }}
@@ -87,14 +87,14 @@
                             <strong>Status:</strong>
                         </div>
                         <div class="col-sm-6">
-                            <span class="badge badge-{{ $budget->status_color }}">{{ $budget->status_label }}</span>
+                            <span class="badge badge-{{ $budget->status_color }}">{{ $budget->status_tags }}</span>
                         </div>
                     </div>
                     @if($budget->description)
                     <hr>
                     <div class="row">
                         <div class="col-sm-12">
-                            <strong>Deskripsi:</strong>
+                            <strong>Description:</strong>
                             <p class="mt-2">{{ $budget->description }}</p>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
             @if($budget->category_allocations && count($budget->category_allocations) > 0)
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Alokasi Kategori</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Alokasi Category</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -144,21 +144,21 @@
             <!-- Quick Actions -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Aksi Cepat</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Action Cepat</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <button class="btn btn-success btn-block" data-toggle="modal" data-target="#updateSpentModal">
-                                <i class="fas fa-plus"></i> Update Pengeluaran
+                                <i class="fas fa-plus"></i> Update Expense
                             </button>
                         </div>
                         <div class="col-md-6">
-                            <form action="{{ route('budgets.destroy', $budget) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus budget ini?')">
+                            <form action="{{ route('budgets.destroy', $budget) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda are you sure you want to delete budget ini?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> Hapus Budget
+                                    <i class="fas fa-trash"></i> Delete Budget
                                 </button>
                             </form>
                         </div>
@@ -174,21 +174,21 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateSpentModalLabel">Update Jumlah Terpakai</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="updateSpentModalLabel">Update Amount Terpakai</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form id="updateSpentForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="spent_amount">Jumlah Terpakai Baru (Rp)</label>
+                        <tags for="spent_amount">Amount Terpakai Baru (Rp)</tags>
                         <input type="number" class="form-control" id="spent_amount" name="spent_amount" value="{{ $budget->spent_amount }}" min="0" required>
-                        <small class="form-text text-muted">Masukkan jumlah total yang sudah terpakai</small>
+                        <small class="form-text text-muted">Masukkan amount total yang sudah terpakai</small>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>

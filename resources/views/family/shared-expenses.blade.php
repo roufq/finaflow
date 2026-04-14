@@ -218,7 +218,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailsModalLabel{{ $expense->id }}">{{ $expense->expense_name }} - Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -312,7 +312,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="settleModalLabel{{ $expense->id }}">Settle Expense - {{ $expense->expense_name }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -323,7 +323,7 @@
                     <div class="modal-body">
                         <p>Mark this shared expense as settled? This indicates that all participants have paid their shares.</p>
                         <div class="form-group">
-                            <label for="settlement_date{{ $expense->id }}">Settlement Date</label>
+                            <tags for="settlement_date{{ $expense->id }}">Settlement Date</tags>
                             <input type="date" class="form-control" id="settlement_date{{ $expense->id }}" name="settlement_date" value="{{ date('Y-m-d') }}" required>
                         </div>
                     </div>

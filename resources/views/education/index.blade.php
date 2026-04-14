@@ -15,7 +15,7 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -106,7 +106,7 @@
             <form method="GET" action="{{ route('education.index') }}">
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="text-xs text-muted text-uppercase">{{ __('education.filters.category') }}</label>
+                        <tags class="text-xs text-muted text-uppercase">{{ __('education.filters.category') }}</tags>
                         <select name="category" class="form-control">
                             <option value="">{{ __('education.filters.all') }}</option>
                             @foreach($filterOptions['categories'] ?? [] as $category)
@@ -117,7 +117,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="text-xs text-muted text-uppercase">{{ __('education.filters.difficulty') }}</label>
+                        <tags class="text-xs text-muted text-uppercase">{{ __('education.filters.difficulty') }}</tags>
                         <select name="difficulty" class="form-control">
                             <option value="">{{ __('education.filters.all') }}</option>
                             @foreach($filterOptions['difficulties'] ?? [] as $difficulty)
@@ -128,7 +128,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="text-xs text-muted text-uppercase">{{ __('education.filters.language') }}</label>
+                        <tags class="text-xs text-muted text-uppercase">{{ __('education.filters.language') }}</tags>
                         <select name="language" class="form-control">
                             <option value="">{{ __('education.filters.all') }}</option>
                             @foreach($filterOptions['languages'] ?? [] as $language)
@@ -139,7 +139,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="text-xs text-muted text-uppercase">{{ __('education.filters.tag') }}</label>
+                        <tags class="text-xs text-muted text-uppercase">{{ __('education.filters.tag') }}</tags>
                         <select name="tag" class="form-control">
                             <option value="">{{ __('education.filters.all') }}</option>
                             @foreach($filterOptions['tags'] ?? [] as $tag)
@@ -150,7 +150,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="text-xs text-muted text-uppercase">{{ __('education.filters.search') }}</label>
+                        <tags class="text-xs text-muted text-uppercase">{{ __('education.filters.search') }}</tags>
                         <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" class="form-control" placeholder="{{ __('education.filters.search_placeholder') }}">
                     </div>
                 </div>
@@ -203,7 +203,7 @@
                 <div class="card-body">
                     @if(!empty($newsTags))
                         <form method="GET" action="{{ route('education.index') }}" class="form-inline mb-3">
-                            <label class="text-xs text-muted mr-2 mb-0">{{ __('education.news.filter_tag') }}</label>
+                            <tags class="text-xs text-muted mr-2 mb-0">{{ __('education.news.filter_tag') }}</tags>
                             <select name="news_tag" class="form-control form-control-sm mr-2">
                                 <option value="">{{ __('education.filters.all') }}</option>
                                 @foreach($newsTags as $tag)
@@ -265,19 +265,19 @@
                     <form method="POST" action="{{ route('education.community-stories.store') }}">
                         @csrf
                         <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('education.community.fields.display_name') }}</label>
+                            <tags class="text-xs text-muted text-uppercase">{{ __('education.community.fields.display_name') }}</tags>
                             <input type="text" name="display_name" class="form-control" value="{{ old('display_name') }}" placeholder="{{ __('education.community.fields.display_name_placeholder') }}">
                         </div>
                         <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('education.community.fields.title') }}</label>
+                            <tags class="text-xs text-muted text-uppercase">{{ __('education.community.fields.title') }}</tags>
                             <input type="text" name="title" class="form-control" value="{{ old('title') }}" required>
                         </div>
                         <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('education.community.fields.achievement') }}</label>
+                            <tags class="text-xs text-muted text-uppercase">{{ __('education.community.fields.achievement') }}</tags>
                             <textarea name="achievement" rows="3" class="form-control" required>{{ old('achievement') }}</textarea>
                         </div>
                         <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('education.community.fields.tip') }}</label>
+                            <tags class="text-xs text-muted text-uppercase">{{ __('education.community.fields.tip') }}</tags>
                             <textarea name="tip" rows="2" class="form-control">{{ old('tip') }}</textarea>
                         </div>
                         <button type="submit" class="btn btn-sm btn-primary btn-block">{{ __('education.community.submit') }}</button>
@@ -303,7 +303,7 @@
                                         <h5 class="font-weight-bold">{{ $module->title }}</h5>
                                         <small class="text-muted">{{ __('education.modules.category') }}: {{ ucfirst($module->category) }}</small>
                                         <div class="mt-1">
-                                            <span class="badge badge-light border text-uppercase text-muted">{{ __('education.modules.language') }}: {{ $module->language_label }}</span>
+                                            <span class="badge badge-light border text-uppercase text-muted">{{ __('education.modules.language') }}: {{ $module->language_tags }}</span>
                                         </div>
                                     </div>
                                     <div class="text-xs text-muted mb-2">

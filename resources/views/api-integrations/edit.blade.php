@@ -14,7 +14,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <label>Provider</label>
+                            <tags>Provider</tags>
                             <select name="provider" class="form-control">
                                 @foreach(['credit_score','investment_data','news','weather'] as $provider)
                                     <option value="{{ $provider }}" @selected($apiIntegration->provider === $provider)>{{ ucfirst(str_replace('_',' ', $provider)) }}</option>
@@ -23,18 +23,18 @@
                         </div>
 
                         <div class="form-group">
-                            <label>API Key</label>
+                            <tags>API Key</tags>
                             <input type="text" name="api_key" value="{{ old('api_key', $apiIntegration->api_key) }}" class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label>Notes / Settings</label>
+                            <tags>Notes / Settings</tags>
                             <textarea name="settings[notes]" class="form-control" rows="3">{{ data_get($apiIntegration->settings, 'notes') }}</textarea>
                         </div>
 
                         <div class="form-check mb-3">
                             <input type="checkbox" name="is_active" class="form-check-input" id="is_active" {{ $apiIntegration->is_active ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_active">Active</label>
+                            <tags class="form-check-tags" for="is_active">Active</tags>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Update</button>

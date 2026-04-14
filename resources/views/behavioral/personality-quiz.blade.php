@@ -23,21 +23,21 @@
                             <h5>1. When you receive unexpected money (bonus, gift), what do you usually do?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" value="save" id="q1a" required>
-                                <label class="form-check-label" for="q1a">
+                                <tags class="form-check-tags" for="q1a">
                                     Save it for future needs or investments
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" value="spend" id="q1b">
-                                <label class="form-check-label" for="q1b">
+                                <tags class="form-check-tags" for="q1b">
                                     Spend it on something fun or needed
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" value="invest" id="q1c">
-                                <label class="form-check-label" for="q1c">
+                                <tags class="form-check-tags" for="q1c">
                                     Invest it in stocks, crypto, or other assets
-                                </label>
+                                </tags>
                             </div>
                         </div>
 
@@ -46,21 +46,21 @@
                             <h5>2. How do you feel about debt?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q2" value="avoid" id="q2a" required>
-                                <label class="form-check-label" for="q2a">
+                                <tags class="form-check-tags" for="q2a">
                                     I avoid debt at all costs
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q2" value="strategic" id="q2b">
-                                <label class="form-check-label" for="q2b">
+                                <tags class="form-check-tags" for="q2b">
                                     I use debt strategically (mortgage, education)
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q2" value="comfortable" id="q2c">
-                                <label class="form-check-label" for="q2c">
+                                <tags class="form-check-tags" for="q2c">
                                     I'm comfortable with some debt for lifestyle
-                                </label>
+                                </tags>
                             </div>
                         </div>
 
@@ -69,21 +69,21 @@
                             <h5>3. What's your approach to budgeting?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q3" value="strict" id="q3a" required>
-                                <label class="form-check-label" for="q3a">
+                                <tags class="form-check-tags" for="q3a">
                                     I track every expense meticulously
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q3" value="flexible" id="q3b">
-                                <label class="form-check-label" for="q3b">
+                                <tags class="form-check-tags" for="q3b">
                                     I have rough guidelines but stay flexible
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q3" value="minimal" id="q3c">
-                                <label class="form-check-label" for="q3c">
+                                <tags class="form-check-tags" for="q3c">
                                     I don't budget much, I just spend what I need
-                                </label>
+                                </tags>
                             </div>
                         </div>
 
@@ -92,21 +92,21 @@
                             <h5>4. How do you react to sales or discounts?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q4" value="ignore" id="q4a" required>
-                                <label class="form-check-label" for="q4a">
+                                <tags class="form-check-tags" for="q4a">
                                     I buy only what I need, regardless of price
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q4" value="smart" id="q4b">
-                                <label class="form-check-label" for="q4b">
+                                <tags class="form-check-tags" for="q4b">
                                     I look for good deals but don't overspend
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q4" value="enthusiastic" id="q4c">
-                                <label class="form-check-label" for="q4c">
+                                <tags class="form-check-tags" for="q4c">
                                     I love sales and often buy things I don't need
-                                </label>
+                                </tags>
                             </div>
                         </div>
 
@@ -115,21 +115,21 @@
                             <h5>5. What's your investment risk tolerance?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q5" value="low" id="q5a" required>
-                                <label class="form-check-label" for="q5a">
+                                <tags class="form-check-tags" for="q5a">
                                     I prefer safe, guaranteed returns
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q5" value="moderate" id="q5b">
-                                <label class="form-check-label" for="q5b">
+                                <tags class="form-check-tags" for="q5b">
                                     I'm willing to take some risk for better returns
-                                </label>
+                                </tags>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q5" value="high" id="q5c">
-                                <label class="form-check-label" for="q5c">
+                                <tags class="form-check-tags" for="q5c">
                                     I'm comfortable with high risk for high rewards
-                                </label>
+                                </tags>
                             </div>
                         </div>
 

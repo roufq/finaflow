@@ -18,7 +18,7 @@
                 <i class="fas fa-edit fa-sm text-white-50"></i> Edit Tag
             </a>
             <a href="{{ route('tags.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm ml-2">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Kembali
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
             </a>
         </div>
     </div>
@@ -31,7 +31,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Transaksi
+                                Total Transactions
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $transactions->total() }}</div>
                         </div>
@@ -69,7 +69,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Total Pengeluaran
+                                Total Expense
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 Rp {{ number_format($transactions->where('type', 'expense')->sum('amount'), 0, ',', '.') }}
@@ -89,7 +89,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Transaksi Terbaru
+                                Transactions Recent
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 @if($transactions->count() > 0)
@@ -111,7 +111,7 @@
     <!-- Transactions Table -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Transaksi dengan Tag Ini</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Transactions dengan Tag Ini</h6>
         </div>
         <div class="card-body">
             @if($transactions->count() > 0)
@@ -120,13 +120,13 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Tanggal</th>
-                                <th>Tipe</th>
-                                <th>Kategori</th>
-                                <th>Akun</th>
-                                <th>Deskripsi</th>
-                                <th>Jumlah</th>
-                                <th>Aksi</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Account</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,7 +136,7 @@
                                     <td>{{ $transaction->transaction_date->format('d M Y') }}</td>
                                     <td>
                                         <span class="badge badge-{{ $transaction->type === 'income' ? 'success' : 'danger' }}">
-                                            {{ $transaction->type === 'income' ? 'Pemasukan' : 'Pengeluaran' }}
+                                            {{ $transaction->type === 'income' ? 'Pemasukan' : 'Expense' }}
                                         </span>
                                     </td>
                                     <td>{{ $transaction->category->name ?? 'N/A' }}</td>
@@ -171,10 +171,10 @@
             @else
                 <div class="text-center py-5">
                     <i class="fas fa-inbox fa-3x text-gray-300 mb-3"></i>
-                    <h5 class="text-gray-500">Belum ada transaksi</h5>
-                    <p class="text-gray-400">Tag ini belum digunakan pada transaksi manapun.</p>
+                    <h5 class="text-gray-500">Belum ada transactions</h5>
+                    <p class="text-gray-400">Tag ini belum digunakan pada transactions manapun.</p>
                     <a href="{{ route('transactions.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus fa-sm text-white-50"></i> Buat Transaksi Baru
+                        <i class="fas fa-plus fa-sm text-white-50"></i> Buat Transactions Baru
                     </a>
                 </div>
             @endif

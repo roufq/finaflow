@@ -12,25 +12,25 @@
                     <form method="POST" action="{{ route('integrations.reminders.store') }}">
                         @csrf
                         <div class="form-group">
-                            <label>Name</label>
+                            <tags>Name</tags>
                             <input type="text" name="name" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label>Vendor</label>
+                            <tags>Vendor</tags>
                             <input type="text" name="vendor" class="form-control" required>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label>Amount (Rp)</label>
+                                <tags>Amount (Rp)</tags>
                                 <input type="number" name="amount" class="form-control" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Due Date</label>
+                                <tags>Due Date</tags>
                                 <input type="date" name="due_date" class="form-control" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Remind me (days before)</label>
+                            <tags>Remind me (days before)</tags>
                             <input type="number" name="reminder_days" class="form-control" min="1" max="30" value="3" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Create Reminder</button>

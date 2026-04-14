@@ -170,7 +170,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="contributeModalLabel{{ $goal->id }}">Contribute to {{ $goal->goal_name }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -178,15 +178,15 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label for="contribution_amount{{ $goal->id }}">Contribution Amount (Rp)</label>
+                                                    <tags for="contribution_amount{{ $goal->id }}">Contribution Amount (Rp)</tags>
                                                     <input type="number" class="form-control" id="contribution_amount{{ $goal->id }}" name="amount" min="0" step="1000" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="contribution_date{{ $goal->id }}">Contribution Date</label>
+                                                    <tags for="contribution_date{{ $goal->id }}">Contribution Date</tags>
                                                     <input type="date" class="form-control" id="contribution_date{{ $goal->id }}" name="date" value="{{ date('Y-m-d') }}" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="contribution_note{{ $goal->id }}">Note (Optional)</label>
+                                                    <tags for="contribution_note{{ $goal->id }}">Note (Optional)</tags>
                                                     <textarea class="form-control" id="contribution_note{{ $goal->id }}" name="note" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -205,7 +205,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="detailsModalLabel{{ $goal->id }}">{{ $goal->goal_name }} - Details</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>

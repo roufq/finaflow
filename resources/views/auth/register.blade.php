@@ -55,7 +55,7 @@
             font-size: 0.95rem;
             margin-top: 0.5rem;
         }
-        .form-group label {
+        .form-group tags {
             font-weight: 500;
             font-size: 0.875rem;
             color: #475569;
@@ -151,26 +151,26 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <div class="form-group mb-3">
-                <label for="name">Full Name</label>
+                <tags for="name">Full Name</tags>
                 <input type="text" class="form-control" id="name"
                     placeholder="Your Name" name="name" value="{{ old('name') }}" required autofocus>
             </div>
 
             <div class="form-group mb-3">
-                <label for="email">Email Address</label>
+                <tags for="email">Email Address</tags>
                 <input type="email" class="form-control" id="email"
                     placeholder="name@email.com" name="email" value="{{ old('email') }}" required>
             </div>
 
             <div class="form-group mb-3">
-                <label for="password">Password</label>
+                <tags for="password">Password</tags>
                 <input type="password" class="form-control"
                     id="password" placeholder="Min 8 characters" name="password" required>
                 <small class="text-muted d-block mt-2" style="font-size: 0.75rem;">A combination of uppercase, lowercase, numbers, and symbols is recommended.</small>
             </div>
 
             <div class="form-group mb-4">
-                <label for="password_confirmation">Confirm Password</label>
+                <tags for="password_confirmation">Confirm Password</tags>
                 <input type="password" class="form-control"
                     id="password_confirmation" placeholder="Repeat password" name="password_confirmation" required>
             </div>

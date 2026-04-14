@@ -54,7 +54,7 @@
                         <ul class="mb-0">
                             @foreach($module->resource_list as $resource)
                                 @php
-                                    $label = is_array($resource) ? ($resource['label'] ?? ($resource['url'] ?? __('education.module.resources'))) : $resource;
+                                    $label = is_array($resource) ? ($resource['tags'] ?? ($resource['url'] ?? __('education.module.resources'))) : $resource;
                                     $url = is_array($resource) ? ($resource['url'] ?? null) : null;
                                 @endphp
                                 <li>
@@ -89,7 +89,7 @@
                     <form method="POST" action="{{ route('education.module.progress', $module) }}">
                         @csrf
                         <div class="form-group">
-                            <label for="progress-range" class="text-xs text-muted">{{ __('education.module.cta') }}</label>
+                            <tags for="progress-range" class="text-xs text-muted">{{ __('education.module.cta') }}</tags>
                             <input type="range" class="custom-range" id="progress-range" name="progress" min="0" max="100" value="{{ $path->progress }}">
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">{{ __('education.module.cta') }}</button>

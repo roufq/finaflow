@@ -50,7 +50,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="badge badge-info">{{ $prediction->period_label }}</span>
+                                                <span class="badge badge-info">{{ $prediction->period_tags }}</span>
                                             </td>
                                             <td>{{ $prediction->prediction_date->format('M d, Y') }}</td>
                                         </tr>
