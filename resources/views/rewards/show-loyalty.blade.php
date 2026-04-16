@@ -99,11 +99,11 @@
                     <form method="POST" action="{{ route('rewards.redeem-loyalty', $loyaltyProgram) }}" class="mb-3">
                         @csrf
                         <div class="form-group">
-                            <tags for="points">Redeem Points</tags>
+                            <label for="points">Redeem Points</label>
                             <input type="number" class="form-control" id="points" name="points" placeholder="Points to redeem" min="1" max="{{ $loyaltyProgram->points_balance }}" required>
                         </div>
                         <div class="form-group">
-                            <tags for="description">Description (Optional)</tags>
+                            <label for="description">Description (Optional)</label>
                             <input type="text" class="form-control" id="description" name="description" placeholder="What are you redeeming for?">
                         </div>
                         <button type="submit" class="btn btn-warning btn-block">Redeem Points</button>

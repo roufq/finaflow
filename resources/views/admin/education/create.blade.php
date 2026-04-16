@@ -16,11 +16,11 @@
                 @csrf
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <tags>Title</tags>
+                        <label>Title</label>
                         <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
-                        <tags>Category</tags>
+                        <label>Category</label>
                         <select name="category" class="form-control">
                             <option value="">{{ __('Choose category') }}</option>
                             @foreach($categories as $category)
@@ -29,7 +29,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <tags>Difficulty</tags>
+                        <label>Difficulty</label>
                         <select name="difficulty" class="form-control">
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -39,26 +39,26 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <tags>Estimated Time (minutes)</tags>
+                        <label>Estimated Time (minutes)</label>
                         <input type="number" name="estimated_time" class="form-control" min="0" value="15">
                     </div>
                     <div class="form-group col-md-4">
-                        <tags>Order</tags>
+                        <label>Order</label>
                         <input type="number" name="order" class="form-control" min="0" value="0">
                     </div>
                     <div class="form-group col-md-4">
-                        <tags>Language</tags>
+                        <label>Language</label>
                         <input type="text" name="language" class="form-control" value="id">
                     </div>
                 </div>
                 <p class="text-muted small">Butuh category baru? <a href="{{ route('admin.education-categories.index') }}">Kelola category</a>.</p>
                 <div class="form-group">
-                    <tags>Content</tags>
+                    <label>Content</label>
                     <textarea name="content" class="form-control" rows="6"></textarea>
                 </div>
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" checked>
-                    <tags class="form-check-tags" for="is_active">Publish</tags>
+                    <label class="form-check-label" for="is_active">Publish</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>
             </form>

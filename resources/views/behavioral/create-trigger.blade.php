@@ -30,7 +30,7 @@
                                     'other' => __('behavioral.triggers.other'),
                                 ];
                             @endphp
-                            <tags for="trigger_type">{{ __('behavioral.triggers.trigger_type') }}</tags>
+                            <label for="trigger_type">{{ __('behavioral.triggers.trigger_type') }}</label>
                             <select class="form-control @error('trigger_type') is-invalid @enderror" id="trigger_type" name="trigger_type" required>
                                 <option value="">{{ __('behavioral.triggers.select_trigger_type') }}</option>
                                 @foreach ($triggerOptions as $value => $label)
@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">{{ __('behavioral.triggers.description') }}</tags>
+                            <label for="description">{{ __('behavioral.triggers.description') }}</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" placeholder="{{ __('behavioral.triggers.describe_trigger') }}" required>{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="amount_threshold">{{ __('behavioral.triggers.amount_threshold') }}</tags>
+                            <label for="amount_threshold">{{ __('behavioral.triggers.amount_threshold') }}</label>
                             <input type="number" class="form-control @error('amount_threshold') is-invalid @enderror" id="amount_threshold" name="amount_threshold" value="{{ old('amount_threshold') }}" placeholder="{{ __('behavioral.triggers.minimum_amount') }}" required>
                             @error('amount_threshold')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="frequency">{{ __('behavioral.triggers.initial_frequency') }}</tags>
+                            <label for="frequency">{{ __('behavioral.triggers.initial_frequency') }}</label>
                             <input type="number" class="form-control @error('frequency') is-invalid @enderror" id="frequency" name="frequency" value="{{ old('frequency', 1) }}" min="1" required>
                             @error('frequency')
                                 <div class="invalid-feedback">{{ $message }}</div>

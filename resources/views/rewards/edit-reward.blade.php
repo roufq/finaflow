@@ -20,7 +20,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="card_type">Card Type</tags>
+                            <label for="card_type">Card Type</label>
                             <select class="form-control @error('card_type') is-invalid @enderror" id="card_type" name="card_type" required>
                                 <option value="Visa" {{ old('card_type', $reward->card_type) == 'Visa' ? 'selected' : '' }}>Visa</option>
                                 <option value="Mastercard" {{ old('card_type', $reward->card_type) == 'Mastercard' ? 'selected' : '' }}>Mastercard</option>
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="reward_type">Reward Type</tags>
+                            <label for="reward_type">Reward Type</label>
                             <select class="form-control @error('reward_type') is-invalid @enderror" id="reward_type" name="reward_type" required>
                                 <option value="Cashback" {{ old('reward_type', $reward->reward_type) == 'Cashback' ? 'selected' : '' }}>Cashback</option>
                                 <option value="Points" {{ old('reward_type', $reward->reward_type) == 'Points' ? 'selected' : '' }}>Points</option>
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="points_earned">Points Earned</tags>
+                            <label for="points_earned">Points Earned</label>
                             <input type="number" class="form-control @error('points_earned') is-invalid @enderror" id="points_earned" name="points_earned" value="{{ old('points_earned', $reward->points_earned) }}" required>
                             @error('points_earned')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="points_redeemed">Points Redeemed</tags>
+                            <label for="points_redeemed">Points Redeemed</label>
                             <input type="number" class="form-control @error('points_redeemed') is-invalid @enderror" id="points_redeemed" name="points_redeemed" value="{{ old('points_redeemed', $reward->points_redeemed) }}" required>
                             @error('points_redeemed')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -64,7 +64,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="cashback_amount">Cashback Amount (Rp)</tags>
+                            <label for="cashback_amount">Cashback Amount (Rp)</label>
                             <input type="number" class="form-control @error('cashback_amount') is-invalid @enderror" id="cashback_amount" name="cashback_amount" value="{{ old('cashback_amount', $reward->cashback_amount) }}" step="0.01" required>
                             @error('cashback_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -72,7 +72,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="expiry_date">Points Expiry Date (Optional)</tags>
+                            <label for="expiry_date">Points Expiry Date (Optional)</label>
                             <input type="date" class="form-control @error('expiry_date') is-invalid @enderror" id="expiry_date" name="expiry_date" value="{{ old('expiry_date', $reward->expiry_date ? $reward->expiry_date->format('Y-m-d') : '') }}">
                             @error('expiry_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -80,7 +80,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="status">Status</tags>
+                            <label for="status">Status</label>
                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                 <option value="active" {{ old('status', $reward->status) == 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="expired" {{ old('status', $reward->status) == 'expired' ? 'selected' : '' }}>Expired</option>

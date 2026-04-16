@@ -22,7 +22,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="name">Name Debts *</tags>
+                            <label for="name">Name Debts *</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $debt->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">Description</tags>
+                            <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $debt->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -39,7 +39,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="type">Type Debts *</tags>
+                                <label for="type">Type Debts *</label>
                                 <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                                     <option value="">Select Type</option>
                                     <option value="credit_card" {{ old('type', $debt->type) == 'credit_card' ? 'selected' : '' }}>Kartu Kredit</option>
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="lender">Pemberi Pinjaman *</tags>
+                                <label for="lender">Pemberi Pinjaman *</label>
                                 <input type="text" class="form-control @error('lender') is-invalid @enderror" id="lender" name="lender" value="{{ old('lender', $debt->lender) }}" required>
                                 @error('lender')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -66,7 +66,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="original_amount">Amount Asli (Rp) *</tags>
+                                <label for="original_amount">Amount Asli (Rp) *</label>
                                 <input type="number" class="form-control @error('original_amount') is-invalid @enderror" id="original_amount" name="original_amount" value="{{ old('original_amount', $debt->original_amount) }}" min="0" required>
                                 @error('original_amount')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -74,7 +74,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="current_balance">Balance Saat Ini (Rp) *</tags>
+                                <label for="current_balance">Balance Saat Ini (Rp) *</label>
                                 <input type="number" class="form-control @error('current_balance') is-invalid @enderror" id="current_balance" name="current_balance" value="{{ old('current_balance', $debt->current_balance) }}" min="0" required>
                                 @error('current_balance')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -84,7 +84,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <tags for="interest_rate">Suku Bunga (%) *</tags>
+                                <label for="interest_rate">Suku Bunga (%) *</label>
                                 <input type="number" class="form-control @error('interest_rate') is-invalid @enderror" id="interest_rate" name="interest_rate" value="{{ old('interest_rate', $debt->interest_rate) }}" min="0" max="100" step="0.01" required>
                                 @error('interest_rate')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -92,7 +92,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <tags for="minimum_payment">Pembayaran Minimum (Rp) *</tags>
+                                <label for="minimum_payment">Pembayaran Minimum (Rp) *</label>
                                 <input type="number" class="form-control @error('minimum_payment') is-invalid @enderror" id="minimum_payment" name="minimum_payment" value="{{ old('minimum_payment', $debt->minimum_payment) }}" min="0" required>
                                 @error('minimum_payment')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -100,7 +100,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <tags for="due_date">Date Jatuh Tempo *</tags>
+                                <label for="due_date">Date Jatuh Tempo *</label>
                                 <input type="date" class="form-control @error('due_date') is-invalid @enderror" id="due_date" name="due_date" value="{{ old('due_date', $debt->due_date->format('Y-m-d')) }}" required>
                                 @error('due_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -110,7 +110,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="payoff_strategy">Strategi Pelunasan *</tags>
+                                <label for="payoff_strategy">Strategi Pelunasan *</label>
                                 <select class="form-control @error('payoff_strategy') is-invalid @enderror" id="payoff_strategy" name="payoff_strategy" required>
                                     <option value="">Select Strategi</option>
                                     <option value="snowball" {{ old('payoff_strategy', $debt->payoff_strategy) == 'snowball' ? 'selected' : '' }}>Snowball (Debts Terkecil Dulu)</option>
@@ -123,7 +123,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="status">Status *</tags>
+                                <label for="status">Status *</label>
                                 <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                     <option value="active" {{ old('status', $debt->status) == 'active' ? 'selected' : '' }}>Aktif</option>
                                     <option value="paid_off" {{ old('status', $debt->status) == 'paid_off' ? 'selected' : '' }}>Paid</option>

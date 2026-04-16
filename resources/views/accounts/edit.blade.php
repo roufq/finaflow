@@ -15,7 +15,7 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <tags for="name">Name Account *</tags>
+                    <label for="name">Name Account *</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $account->name) }}" required>
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="type">Type Account *</tags>
+                    <label for="type">Type Account *</label>
                     <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                         <option value="">Select Type Account</option>
                         @foreach($accountTypes as $key => $label)
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="setting_id">Profile Mata Uang *</tags>
+                    <label for="setting_id">Profile Mata Uang *</label>
                     <select class="form-control @error('setting_id') is-invalid @enderror" id="setting_id" name="setting_id" required>
                         <option value="">Select Profile Mata Uang</option>
                         @foreach($settings as $setting)
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="account_number">Nomor Account</tags>
+                    <label for="account_number">Nomor Account</label>
                     <input type="text" class="form-control @error('account_number') is-invalid @enderror" id="account_number" name="account_number" value="{{ old('account_number', $account->account_number) }}">
                     @error('account_number')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="bank_name">Name Bank</tags>
+                    <label for="bank_name">Name Bank</label>
                     <input type="text" class="form-control @error('bank_name') is-invalid @enderror" id="bank_name" name="bank_name" value="{{ old('bank_name', $account->bank_name) }}">
                     @error('bank_name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="balance">Balance *</tags>
+                    <label for="balance">Balance *</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text currency-symbol">{{ $account->setting->currency_symbol ?? 'Rp' }}</span>
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="form-group" id="credit_limit_group" style="{{ $account->type === 'credit_card' ? '' : 'display: none;' }}">
-                    <tags for="credit_limit">Limit Kredit</tags>
+                    <label for="credit_limit">Limit Kredit</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text currency-symbol">{{ $account->setting->currency_symbol ?? 'Rp' }}</span>
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="opening_date">Date Pembukaan</tags>
+                    <label for="opening_date">Date Pembukaan</label>
                     <input type="date" class="form-control @error('opening_date') is-invalid @enderror" id="opening_date" name="opening_date" value="{{ old('opening_date', $account->opening_date?->format('Y-m-d')) }}">
                     @error('opening_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="notes">Notes</tags>
+                    <label for="notes">Notes</label>
                     <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3">{{ old('notes', $account->notes) }}</textarea>
                     @error('notes')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -111,7 +111,7 @@
                 <div class="form-group">
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" {{ old('is_active', $account->is_active) ? 'checked' : '' }}>
-                        <tags class="custom-control-tags" for="is_active">Account Aktif</tags>
+                        <label class="custom-control-label" for="is_active">Account Aktif</label>
                     </div>
                 </div>
 

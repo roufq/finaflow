@@ -36,9 +36,9 @@
         <input type="hidden" name="data_analytics" value="0">
         <input type="checkbox" class="custom-control-input" id="data_analytics"
          name="data_analytics" value="1" {{ $privacySettings->data_analytics ? 'checked' : '' }}>
-        <tags class="custom-control-tags" for="data_analytics">
+        <label class="custom-control-label" for="data_analytics">
          <strong>{{ __('privacy.data_analytics') }}</strong>
-        </tags>
+        </label>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.data_analytics_description') }}
@@ -50,9 +50,9 @@
         <input type="hidden" name="behavioral_insights" value="0">
         <input type="checkbox" class="custom-control-input" id="behavioral_insights"
          name="behavioral_insights" value="1" {{ $privacySettings->behavioral_insights ? 'checked' : '' }}>
-        <tags class="custom-control-tags" for="behavioral_insights">
+        <label class="custom-control-label" for="behavioral_insights">
          <strong>{{ __('privacy.behavioral_insights') }}</strong>
-        </tags>
+        </label>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.behavioral_insights_description') }}
@@ -64,9 +64,9 @@
         <input type="hidden" name="third_party_sharing" value="0">
         <input type="checkbox" class="custom-control-input" id="third_party_sharing"
          name="third_party_sharing" value="1" {{ $privacySettings->third_party_sharing ? 'checked' : '' }}>
-        <tags class="custom-control-tags" for="third_party_sharing">
+        <label class="custom-control-label" for="third_party_sharing">
          <strong>{{ __('privacy.third_party_sharing') }}</strong>
-        </tags>
+        </label>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.third_party_sharing_description') }}
@@ -78,9 +78,9 @@
         <input type="hidden" name="data_anonymization" value="0">
         <input type="checkbox" class="custom-control-input" id="data_anonymization"
          name="data_anonymization" value="1" {{ $privacySettings->data_anonymization ? 'checked' : '' }}>
-        <tags class="custom-control-tags" for="data_anonymization">
+        <label class="custom-control-label" for="data_anonymization">
          <strong>{{ __('privacy.data_anonymization') }}</strong>
-        </tags>
+        </label>
        </div>
        <small class="form-text text-muted">
         {{ __('privacy.data_anonymization_description') }}

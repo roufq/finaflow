@@ -6,26 +6,26 @@
 
     <div class="card mb-3">
         <div class="card-body">
-            <p class="mb-2">Scan QR atau masukkan secret ini di aplikasi authenticator:</p>
+            <p class="mb-2">Scan the QR code or enter this secret in your authenticator app:</p>
             <div class="mb-3">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode($otpAuth) }}" alt="QR code for TOTP" width="200" height="200" onerror="this.replaceWith(document.createTextNode('Gagal memuat QR, gunakan secret di atas.'));">
+                <img src="https://quickchart.io/qr?text={{ urlencode($otpAuth) }}&size=200" alt="QR code for TOTP" width="200" height="200" onerror="this.replaceWith(document.createTextNode('Failed to load QR, use the secret above.'));">
             </div>
             <div class="alert alert-secondary"><strong>Secret:</strong> {{ $secret }}</div>
-            <p class="mb-2">URI (salin jika butuh):</p>
+            <p class="mb-2">URI (copy if needed):</p>
             <code class="d-block mb-3" style="word-break: break-all;">{{ $otpAuth }}</code>
-            <p class="small text-muted mb-1">Gunakan Google Authenticator/1Password/Authy. Masukkan kode 6 digit untuk verifikasi.</p>
+            <p class="small text-muted mb-1">Use Google Authenticator, 1Password, or Authy. Enter the 6-digit code to verify.</p>
 
             <form method="POST" action="{{ route('twofactor.enable') }}">
                 @csrf
                 <input type="hidden" name="secret" value="{{ $secret }}">
                 <div class="form-group">
-                    <tags for="code">Kode 6 digit</tags>
+                    <label for="code">6-digit code</label>
                     <input type="text" name="code" id="code" class="form-control @error('code') is-invalid @enderror" maxlength="6" required>
                     @error('code')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary">Aktifkan 2FA</button>
+                <button type="submit" class="btn btn-primary">Enable 2FA</button>
             </form>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="card">
             <div class="card-header">Backup Codes</div>
             <div class="card-body">
-                <p class="small text-muted">Save kode di tempat aman. Setiap kode hanya bisa dipakai sekali.</p>
+                <p class="small text-muted">Save these codes in a safe place. Each code can only be used once.</p>
                 <div class="d-flex flex-wrap">
                     @foreach($backupCodes as $code)
                         <span class="badge badge-light mr-2 mb-2">{{ $code }}</span>

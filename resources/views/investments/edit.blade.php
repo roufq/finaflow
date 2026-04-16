@@ -22,7 +22,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="symbol">Symbol *</tags>
+                            <label for="symbol">Symbol *</label>
                             <input type="text" class="form-control @error('symbol') is-invalid @enderror"
                                    id="symbol" name="symbol" value="{{ old('symbol', $investment->symbol) }}" required maxlength="10">
                             @error('symbol')
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="name">Name *</tags>
+                            <label for="name">Name *</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name', $investment->name) }}" required maxlength="255">
                             @error('name')
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="type">Type *</tags>
+                            <label for="type">Type *</label>
                             <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                                 <option value="">Select Type</option>
                                 <option value="stock" {{ old('type', $investment->type) == 'stock' ? 'selected' : '' }}>Stock</option>
@@ -58,7 +58,7 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="quantity">Quantity *</tags>
+                                    <label for="quantity">Quantity *</label>
                                     <input type="number" step="0.0001" class="form-control @error('quantity') is-invalid @enderror"
                                            id="quantity" name="quantity" value="{{ old('quantity', $investment->quantity) }}" required min="0">
                                     @error('quantity')
@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="purchase_price">Purchase Price per Unit *</tags>
+                                    <label for="purchase_price">Purchase Price per Unit *</label>
                                     <input type="number" step="0.01" class="form-control @error('purchase_price') is-invalid @enderror"
                                            id="purchase_price" name="purchase_price" value="{{ old('purchase_price', $investment->purchase_price) }}" required min="0">
                                     @error('purchase_price')
@@ -81,7 +81,7 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="current_price">Current Price per Unit</tags>
+                                    <label for="current_price">Current Price per Unit</label>
                                     <input type="number" step="0.01" class="form-control @error('current_price') is-invalid @enderror"
                                            id="current_price" name="current_price" value="{{ old('current_price', $investment->current_price) }}" min="0">
                                     @error('current_price')
@@ -91,7 +91,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="purchase_date">Purchase Date *</tags>
+                                    <label for="purchase_date">Purchase Date *</label>
                                     <input type="date" class="form-control @error('purchase_date') is-invalid @enderror"
                                            id="purchase_date" name="purchase_date" value="{{ old('purchase_date', $investment->purchase_date->format('Y-m-d')) }}" required>
                                     @error('purchase_date')
@@ -104,7 +104,7 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="dividends_received">Dividends Received</tags>
+                                    <label for="dividends_received">Dividends Received</label>
                                     <input type="number" step="0.01" class="form-control @error('dividends_received') is-invalid @enderror"
                                            id="dividends_received" name="dividends_received" value="{{ old('dividends_received', $investment->dividends_received) }}" min="0">
                                     @error('dividends_received')
@@ -114,7 +114,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="fees">Transaction Fees</tags>
+                                    <label for="fees">Transaction Fees</label>
                                     <input type="number" step="0.01" class="form-control @error('fees') is-invalid @enderror"
                                            id="fees" name="fees" value="{{ old('fees', $investment->fees) }}" min="0">
                                     @error('fees')
@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="notes">Notes</tags>
+                            <label for="notes">Notes</label>
                             <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3">{{ old('notes', $investment->notes) }}</textarea>
                             @error('notes')
                                 <div class="invalid-feedback">{{ $message }}</div>

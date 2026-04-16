@@ -224,16 +224,16 @@
             <form id="addPaymentForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <tags for="payment_amount">Amount Pembayaran (Rp)</tags>
+                        <label for="payment_amount">Amount Pembayaran (Rp)</label>
                         <input type="number" class="form-control" id="payment_amount" name="payment_amount" min="0" max="{{ $debt->current_balance }}" required>
                         <small class="form-text text-muted">Maksimal: Rp {{ number_format($debt->current_balance, 0, ',', '.') }}</small>
                     </div>
                     <div class="form-group">
-                        <tags for="payment_date">Date Pembayaran</tags>
+                        <label for="payment_date">Date Pembayaran</label>
                         <input type="date" class="form-control" id="payment_date" name="payment_date" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="form-group">
-                        <tags for="notes">Notes</tags>
+                        <label for="notes">Notes</label>
                         <textarea class="form-control" id="notes" name="notes" rows="2"></textarea>
                     </div>
                 </div>
@@ -261,7 +261,7 @@
                     <div class="col-md-6">
                         <h6>Simulasi Pembayaran Lebih</h6>
                         <div class="form-group">
-                            <tags for="extra_payment">Pembayaran Tambahan per Month (Rp)</tags>
+                            <label for="extra_payment">Pembayaran Tambahan per Month (Rp)</label>
                             <input type="number" class="form-control" id="extra_payment" min="0">
                         </div>
                         <button class="btn btn-primary btn-block" id="calculateBtn">Hitung</button>

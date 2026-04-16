@@ -1,9 +1,9 @@
-# 🚀 PANDUAN DEPLOYMENT FINA FLOW
+# 🚀 FINAFLOW DEPLOYMENT GUIDE
 
 ## 📋 Overview
-Panduan lengkap untuk deploy aplikasi FinaFlow dari development hingga production. Panduan ini mencakup setup server, konfigurasi environment, database, dan automation deployment.
+Comprehensive guide to deploy the FinaFlow application from development to a production environment. This guide covers server setup, environment configuration, database management, and deployment automation.
 
-## 🏗️ ARSITEKTUR DEPLOYMENT
+## 🏗️ DEPLOYMENT ARCHITECTURE
 
 ### **Environment Setup**
 ```
@@ -19,9 +19,9 @@ Local Machine → VPS Server → Production Server
 - **Process Manager**: Supervisor
 - **Cache**: Redis 6.0+
 - **SSL**: Let's Encrypt
-- **Deployment**: Git-based dengan automation
+- **Deployment**: Git-based with automation
 
-## 📋 PRASYARAT SERVER
+## 📋 SERVER PREREQUISITES
 
 ### **Minimum Requirements**
 - **CPU**: 2 cores
@@ -30,13 +30,13 @@ Local Machine → VPS Server → Production Server
 - **OS**: Ubuntu 20.04 LTS / 22.04 LTS
 - **Network**: 100Mbps bandwidth
 
-### **Recommended Production**
+### **Recommended Production Specifications**
 - **CPU**: 4+ cores
 - **RAM**: 8GB+
 - **Storage**: 50GB+ SSD
-- **Load Balancer**: Nginx/HAProxy (untuk multiple servers)
+- **Load Balancer**: Nginx/HAProxy (for multiple servers)
 
-## 🔧 SETUP SERVER PRODUCTION
+## 🔧 PRODUCTION SERVER SETUP
 
 ### **1. Update System**
 ```bash
@@ -55,7 +55,7 @@ sudo apt install -y curl wget git unzip software-properties-common
 sudo add-apt-repository ppa:ondrej/php -y
 sudo apt update
 
-# Install PHP dan extensions
+# Install PHP and extensions
 sudo apt install -y php8.2 php8.2-cli php8.2-fpm php8.2-mysql php8.2-pgsql \
 php8.2-sqlite3 php8.2-redis php8.2-memcached php8.2-xml php8.2-curl \
 php8.2-gd php8.2-mbstring php8.2-zip php8.2-bcmath php8.2-intl \
@@ -69,7 +69,7 @@ sudo mv composer.phar /usr/local/bin/composer
 sudo chmod +x /usr/local/bin/composer
 ```
 
-### **5. Install Node.js & NPM (untuk asset compilation)**
+### **5. Install Node.js & NPM (for asset compilation)**
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -104,14 +104,14 @@ sudo systemctl enable nginx
 sudo apt install -y certbot python3-certbot-nginx
 ```
 
-### **10. Install Supervisor (untuk queue workers)**
+### **10. Install Supervisor (for queue workers)**
 ```bash
 sudo apt install -y supervisor
 sudo systemctl start supervisor
 sudo systemctl enable supervisor
 ```
 
-## 🔐 KONFIGURASI SECURITY
+## 🔐 SECURITY CONFIGURATION
 
 ### **1. Setup Firewall**
 ```bash
@@ -146,7 +146,7 @@ sudo systemctl start fail2ban
 sudo systemctl enable fail2ban
 ```
 
-## 📁 SETUP APPLICATION
+## 📁 APPLICATION SETUP
 
 ### **1. Clone Repository**
 ```bash
@@ -168,7 +168,7 @@ cp .env.example .env.production
 nano .env.production
 ```
 
-**Isi file .env.production:**
+**Content of .env.production:**
 ```env
 APP_NAME="FinaFlow"
 APP_ENV=production
@@ -197,7 +197,7 @@ MAIL_FROM_ADDRESS=your-email@domain.com
 MAIL_FROM_NAME="${APP_NAME}"
 
 # Queue Configuration
-QUEUE_CONNECTION=database
+QUEUE_CONNECTION=redis
 
 # Cache Configuration
 CACHE_DRIVER=redis
@@ -251,7 +251,7 @@ sudo chmod -R 775 bootstrap/cache
 sudo nano /etc/supervisor/conf.d/finaflow-worker.conf
 ```
 
-**Isi file /etc/supervisor/conf.d/finaflow-worker.conf:**
+**Content of /etc/supervisor/conf.d/finaflow-worker.conf:**
 ```ini
 [program:finaflow-worker]
 process_name=%(program_name)s_%(process_num)02d
@@ -274,14 +274,14 @@ sudo supervisorctl update
 sudo supervisorctl start finaflow-worker:*
 ```
 
-## 🌐 KONFIGURASI NGINX
+## 🌐 NGINX CONFIGURATION
 
 ### **1. Create Nginx Site Configuration**
 ```bash
 sudo nano /etc/nginx/sites-available/finaflow
 ```
 
-**Isi file /etc/nginx/sites-available/finaflow:**
+**Content of /etc/nginx/sites-available/finaflow:**
 ```nginx
 server {
     listen 80;
@@ -363,7 +363,7 @@ git remote add production https://github.com/yourusername/finaflow.git
 sudo nano /home/deploy/deploy.sh
 ```
 
-**Isi file /home/deploy/deploy.sh:**
+**Content of /home/deploy/deploy.sh:**
 ```bash
 #!/bin/bash
 
@@ -428,7 +428,7 @@ echo "✅ Deployment completed successfully!"
 sudo chmod +x /home/deploy/deploy.sh
 ```
 
-### **4. Setup Webhook (Optional - untuk auto deployment)**
+### **4. Setup Webhook (Optional - for auto deployment)**
 ```bash
 # Install webhook
 sudo apt install -y webhook
@@ -437,7 +437,7 @@ sudo apt install -y webhook
 sudo nano /etc/webhook.conf
 ```
 
-**Isi file /etc/webhook.conf:**
+**Content of /etc/webhook.conf:**
 ```json
 [
   {
@@ -466,7 +466,7 @@ sudo nano /etc/webhook.conf
 sudo nano /etc/logrotate.d/finaflow
 ```
 
-**Isi file /etc/logrotate.d/finaflow:**
+**Content of /etc/logrotate.d/finaflow:**
 ```
 /home/deploy/app/storage/logs/*.log {
     daily
@@ -502,7 +502,7 @@ php artisan migrate
 crontab -e
 ```
 
-**Tambahkan ke crontab:**
+**Add to crontab:**
 ```bash
 # Health check every 5 minutes
 */5 * * * * curl -f https://yourdomain.com/health > /dev/null 2>&1 || echo "Health check failed at $(date)" >> /home/deploy/health.log
@@ -518,7 +518,7 @@ crontab -e
 sudo nano /home/deploy/backup.sh
 ```
 
-**Isi file /home/deploy/backup.sh:**
+**Content of /home/deploy/backup.sh:**
 ```bash
 #!/bin/bash
 
@@ -607,10 +607,10 @@ curl -I https://yourdomain.com
 ## 📈 SCALING CONSIDERATIONS
 
 ### **Horizontal Scaling**
-- **Load Balancer**: Setup Nginx/HAProxy untuk multiple servers
-- **Database**: Consider read replicas untuk performance
+- **Load Balancer**: Setup Nginx/HAProxy for multiple servers
+- **Database**: Consider read replicas for performance
 - **File Storage**: Use cloud storage (AWS S3, DigitalOcean Spaces)
-- **Caching**: Redis cluster untuk high availability
+- **Caching**: Redis cluster for high availability
 
 ### **Performance Optimization**
 ```bash
@@ -673,14 +673,14 @@ sudo supervisorctl status
 ## 🎯 DEPLOYMENT CHECKLIST
 
 ### **Pre-Deployment**
-- [ ] Server provisioned dengan correct specs
+- [ ] Server provisioned with correct specs
 - [ ] Domain DNS configured
 - [ ] SSL certificate ready
-- [ ] Database created dan configured
+- [ ] Database created and configured
 - [ ] Environment variables prepared
 
 ### **Deployment Steps**
-- [ ] Code deployed ke server
+- [ ] Code deployed to server
 - [ ] Dependencies installed
 - [ ] Database migrated
 - [ ] Assets compiled
@@ -717,4 +717,4 @@ echo "✅ Deployment completed!"
 
 ---
 
-*Panduan deployment ini dirancang untuk production-ready Laravel application dengan fokus pada security, performance, dan maintainability. Pastikan untuk test setiap langkah di staging environment sebelum production deployment.*
+*This deployment guide is designed for a production-ready Laravel application with a focus on security, performance, and maintainability. Ensure testing every step in a staging environment before carrying out the main production deployment.*

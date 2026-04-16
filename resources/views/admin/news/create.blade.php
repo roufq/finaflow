@@ -16,30 +16,30 @@
                 @csrf
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <tags>Title</tags>
+                        <label>Title</label>
                         <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="form-group col-md-3">
-                        <tags>Source</tags>
+                        <label>Source</label>
                         <input type="text" name="source" class="form-control">
                     </div>
                     <div class="form-group col-md-3">
-                        <tags>Category</tags>
+                        <label>Category</label>
                         <input type="text" name="category" class="form-control">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <tags>Published At</tags>
+                        <label>Published At</label>
                         <input type="datetime-local" name="published_at" class="form-control">
                     </div>
                     <div class="form-group col-md-8">
-                        <tags>URL</tags>
+                        <label>URL</label>
                         <input type="url" name="url" class="form-control" placeholder="https://">
                     </div>
                 </div>
                 <div class="form-group">
-                    <tags>Content</tags>
+                    <label>Content</label>
                     <textarea name="content" rows="4" class="form-control"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>

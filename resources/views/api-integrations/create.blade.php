@@ -13,7 +13,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags>Provider</tags>
+                            <label>Provider</label>
                             <select name="provider" class="form-control" required>
                                 <option value="credit_score">Credit Score</option>
                                 <option value="investment_data">Investment Data</option>
@@ -23,18 +23,18 @@
                         </div>
 
                         <div class="form-group">
-                            <tags>API Key (optional)</tags>
+                            <label>API Key (optional)</label>
                             <input type="text" name="api_key" class="form-control" value="{{ old('api_key') }}">
                         </div>
 
                         <div class="form-group">
-                            <tags>Notes / Settings</tags>
+                            <label>Notes / Settings</label>
                             <textarea name="settings[notes]" class="form-control" rows="3">{{ old('settings.notes') }}</textarea>
                         </div>
 
                         <div class="form-check mb-3">
                             <input type="checkbox" name="is_active" class="form-check-input" id="is_active" checked>
-                            <tags class="form-check-tags" for="is_active">Activate integration</tags>
+                            <label class="form-check-label" for="is_active">Activate integration</label>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Save</button>

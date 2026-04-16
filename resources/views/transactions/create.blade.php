@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-4">
-                            <tags class="small font-weight-bold text-gray-700" for="account_id">Account Penyalur</tags>
+                            <label class="small font-weight-bold text-gray-700" for="account_id">Account Penyalur</label>
                             <select class="form-control form-control-modern" id="account_id" name="account_id" required>
                                 <option value="">Select Account</option>
                                 @foreach($accounts as $account)
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-4">
-                            <tags class="small font-weight-bold text-gray-700" for="category_id">Category</tags>
+                            <label class="small font-weight-bold text-gray-700" for="category_id">Category</label>
                             <select class="form-control form-control-modern" id="category_id" name="category_id" required>
                                 <option value="">Select Category</option>
                                 @foreach($categories as $category)
@@ -41,13 +41,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-4">
-                            <tags class="small font-weight-bold text-gray-700" for="transaction_date">Transaction Date</tags>
+                            <label class="small font-weight-bold text-gray-700" for="transaction_date">Transaction Date</label>
                             <input type="date" class="form-control form-control-modern" id="transaction_date" name="transaction_date" value="{{ old('transaction_date', date('Y-m-d')) }}" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-4">
-                            <tags class="small font-weight-bold text-gray-700" for="type">Type</tags>
+                            <label class="small font-weight-bold text-gray-700" for="type">Type</label>
                             <select class="form-control form-control-modern" id="type" name="type" required>
                                 <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Pemasukan</option>
                                 <option value="expense" {{ old('type') == 'expense' ? 'selected' : '' }}>Expense</option>
@@ -57,12 +57,12 @@
                 </div>
 
                 <div class="form-group mb-4">
-                    <tags class="small font-weight-bold text-gray-700" for="amount">Nominal (<span id="currency-symbol">Rp</span>)</tags>
+                    <label class="small font-weight-bold text-gray-700" for="amount">Nominal (<span id="currency-symbol">Rp</span>)</label>
                     <input type="number" step="0.01" class="form-control form-control-modern font-weight-bold" id="amount" name="amount" value="{{ old('amount') }}" placeholder="0.00" required>
                 </div>
 
                 <div class="form-group mb-4">
-                    <tags class="small font-weight-bold text-gray-700" for="description">Description (Opsional)</tags>
+                    <label class="small font-weight-bold text-gray-700" for="description">Description (Opsional)</label>
                     <textarea class="form-control form-control-modern" id="description" name="description" rows="3" placeholder="Apa goals transactions ini?">{{ old('description') }}</textarea>
                 </div>
 

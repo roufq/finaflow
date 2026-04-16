@@ -51,7 +51,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="name">{{ __('forms.labels.name') }}</tags>
+                            <label for="name">{{ __('forms.labels.name') }}</label>
                             <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror"
                                 value="{{ old('name', $user->name) }}" required>
                             @error('name')
@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="email">{{ __('forms.labels.email') }}</tags>
+                            <label for="email">{{ __('forms.labels.email') }}</label>
                             <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                 value="{{ old('email', $user->email) }}" required>
                             @error('email')
@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="avatar">Profile Photo</tags>
+                            <label for="avatar">Profile Photo</label>
                             <div class="d-flex align-items-center">
                                 <img src="{{ $avatarUrl }}" alt="Profile avatar" class="rounded-circle mr-3" style="width: 60px; height: 60px; object-fit: cover;">
                                 <div class="flex-fill">
@@ -107,7 +107,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="current_password">{{ __('forms.labels.current_password') }}</tags>
+                            <label for="current_password">{{ __('forms.labels.current_password') }}</label>
                             <input type="password" id="current_password" name="current_password"
                                 class="form-control @error('current_password') is-invalid @enderror" required>
                             @error('current_password')
@@ -118,7 +118,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="new_password">{{ __('forms.labels.new_password') }}</tags>
+                            <label for="new_password">{{ __('forms.labels.new_password') }}</label>
                             <input type="password" id="new_password" name="new_password"
                                 class="form-control @error('new_password') is-invalid @enderror" required>
                             @error('new_password')
@@ -129,7 +129,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="new_password_confirmation">{{ __('forms.labels.confirm_new_password') }}</tags>
+                            <label for="new_password_confirmation">{{ __('forms.labels.confirm_new_password') }}</label>
                             <input type="password" id="new_password_confirmation" name="new_password_confirmation"
                                 class="form-control" required>
                         </div>

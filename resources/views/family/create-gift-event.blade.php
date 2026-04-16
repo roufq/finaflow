@@ -22,7 +22,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags for="event_name">Event Name *</tags>
+                            <label for="event_name">Event Name *</label>
                             <input type="text" class="form-control @error('event_name') is-invalid @enderror"
                                    id="event_name" name="event_name" value="{{ old('event_name') }}" required>
                             @error('event_name')
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="event_type">Event Type *</tags>
+                            <label for="event_type">Event Type *</label>
                             <select class="form-control @error('event_type') is-invalid @enderror"
                                     id="event_type" name="event_type" required>
                                 <option value="">Select Event Type</option>
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="event_date">Event Date *</tags>
+                            <label for="event_date">Event Date *</label>
                             <input type="date" class="form-control @error('event_date') is-invalid @enderror"
                                    id="event_date" name="event_date" value="{{ old('event_date') }}" required>
                             @error('event_date')
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="budget_amount">Budget Amount (Rp)</tags>
+                            <label for="budget_amount">Budget Amount (Rp)</label>
                             <input type="number" class="form-control @error('budget_amount') is-invalid @enderror"
                                    id="budget_amount" name="budget_amount"
                                    value="{{ old('budget_amount', 0) }}" min="0" step="1000">
@@ -70,7 +70,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags>Recipients</tags>
+                            <label>Recipients</label>
                             <div class="border rounded p-3">
                                 <p class="mb-2">Select people who will receive gifts for this event:</p>
                                 @if($members->count() > 0)
@@ -80,9 +80,9 @@
                                                id="recipient_{{ $member->id }}" name="recipients[]"
                                                value="{{ $member->id }}"
                                                {{ in_array($member->id, old('recipients', [])) ? 'checked' : '' }}>
-                                        <tags class="form-check-tags" for="recipient_{{ $member->id }}">
+                                        <label class="form-check-label" for="recipient_{{ $member->id }}">
                                             {{ $member->name }} ({{ $member->relationship }})
-                                        </tags>
+                                        </label>
                                     </div>
                                     @endforeach
                                 @else
@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="notes">Notes</tags>
+                            <label for="notes">Notes</label>
                             <textarea class="form-control @error('notes') is-invalid @enderror"
                                       id="notes" name="notes" rows="3">{{ old('notes') }}</textarea>
                             @error('notes')
@@ -145,11 +145,11 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <tags for="calc_recipients">Number of Recipients</tags>
+                        <label for="calc_recipients">Number of Recipients</label>
                         <input type="number" class="form-control" id="calc_recipients" placeholder="1" min="1">
                     </div>
                     <div class="form-group">
-                        <tags for="calc_avg_gift">Average Gift Amount (Rp)</tags>
+                        <label for="calc_avg_gift">Average Gift Amount (Rp)</label>
                         <input type="number" class="form-control" id="calc_avg_gift" placeholder="100000" min="0" step="1000">
                     </div>
                     <button type="button" class="btn btn-success btn-block" onclick="calculateBudget()">

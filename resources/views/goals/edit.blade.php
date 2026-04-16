@@ -22,7 +22,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="name">Name Goal *</tags>
+                            <label for="name">Name Goal *</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $goal->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">Description</tags>
+                            <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $goal->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -39,7 +39,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="category">Category *</tags>
+                                <label for="category">Category *</label>
                                 <select class="form-control @error('category') is-invalid @enderror" id="category" name="category" required>
                                     <option value="">Select Category</option>
                                     <option value="emergency_fund" {{ old('category', $goal->category) == 'emergency_fund' ? 'selected' : '' }}>Dana Darurat</option>
@@ -59,7 +59,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="type">Type Goal *</tags>
+                                <label for="type">Type Goal *</label>
                                 <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                                     <option value="">Select Type</option>
                                     <option value="short_term" {{ old('type', $goal->type) == 'short_term' ? 'selected' : '' }}>Jangka Pendek (≤ 1 year)</option>
@@ -74,7 +74,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <tags for="target_amount">Target Amount (Rp) *</tags>
+                                <label for="target_amount">Target Amount (Rp) *</label>
                                 <input type="number" class="form-control @error('target_amount') is-invalid @enderror" id="target_amount" name="target_amount" value="{{ old('target_amount', $goal->target_amount) }}" min="0" required>
                                 @error('target_amount')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <tags for="current_amount">Amount Saat Ini (Rp) *</tags>
+                                <label for="current_amount">Amount Saat Ini (Rp) *</label>
                                 <input type="number" class="form-control @error('current_amount') is-invalid @enderror" id="current_amount" name="current_amount" value="{{ old('current_amount', $goal->current_amount) }}" min="0" required>
                                 @error('current_amount')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <tags for="target_date">Target Date *</tags>
+                                <label for="target_date">Target Date *</label>
                                 <input type="date" class="form-control @error('target_date') is-invalid @enderror" id="target_date" name="target_date" value="{{ old('target_date', $goal->target_date->format('Y-m-d')) }}" required>
                                 @error('target_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -99,7 +99,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="status">Status *</tags>
+                            <label for="status">Status *</label>
                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                 <option value="active" {{ old('status', $goal->status) == 'active' ? 'selected' : '' }}>Aktif</option>
                                 <option value="completed" {{ old('status', $goal->status) == 'completed' ? 'selected' : '' }}>Completed</option>

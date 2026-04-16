@@ -166,11 +166,11 @@
             <form id="addProgressForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <tags for="progress_amount">Amount Progress (Rp)</tags>
+                        <label for="progress_amount">Amount Progress (Rp)</label>
                         <input type="number" class="form-control" id="progress_amount" name="amount" min="1" step="1" required>
                     </div>
                     <div class="form-group">
-                        <tags for="progress_note">Notes (opsional)</tags>
+                        <label for="progress_note">Notes (opsional)</label>
                         <input type="text" class="form-control" id="progress_note" name="note" maxlength="255" placeholder="Contoh: setoran gaji this month">
                     </div>
                 </div>

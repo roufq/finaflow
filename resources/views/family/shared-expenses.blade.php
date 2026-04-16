@@ -323,7 +323,7 @@
                     <div class="modal-body">
                         <p>Mark this shared expense as settled? This indicates that all participants have paid their shares.</p>
                         <div class="form-group">
-                            <tags for="settlement_date{{ $expense->id }}">Settlement Date</tags>
+                            <label for="settlement_date{{ $expense->id }}">Settlement Date</label>
                             <input type="date" class="form-control" id="settlement_date{{ $expense->id }}" name="settlement_date" value="{{ date('Y-m-d') }}" required>
                         </div>
                     </div>

@@ -5,9 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Login - FinaFlow</title>
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -91,12 +92,12 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
         }
-        .custom-control-tags {
+        .custom-control-label {
             font-size: 0.875rem;
             color: #64748b;
             cursor: pointer;
         }
-        .custom-control-input:checked ~ .custom-control-tags::before {
+        .custom-control-input:checked ~ .custom-control-label::before {
             background-color: #3b82f6;
             border-color: #3b82f6;
         }
@@ -131,7 +132,7 @@
     <div class="login-card">
         <div class="brand-section">
             <div class="brand-logo">
-                <i class="fas fa-chart-line"></i>
+                <img src="{{ asset('img/logo.svg') }}" alt="Logo" width="32" onerror="this.outerHTML='<i class=\'fas fa-chart-line\'></i>'">
             </div>
             <div class="brand-name">FinaFlow</div>
             <div class="welcome-text">Please sign in to your account</div>
@@ -156,14 +157,14 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="form-group mb-3">
-                <tags for="email">Email Address</tags>
+                <label for="email">Email Address</label>
                 <input type="email" class="form-control"
                     id="email" placeholder="name@company.com" 
                     name="email" value="{{ old('email') }}" required autofocus>
             </div>
             
             <div class="form-group mb-3">
-                <tags for="password">Password</tags>
+                <label for="password">Password</label>
                 <input type="password" class="form-control"
                     id="password" placeholder="••••••••" 
                     name="password" required>
@@ -172,7 +173,7 @@
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="remember" name="remember">
-                    <tags class="custom-control-tags" for="remember">Remember me</tags>
+                    <label class="custom-control-label" for="remember">Remember me</label>
                 </div>
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="small font-weight-bold text-primary text-decoration-none">Forgot password?</a>

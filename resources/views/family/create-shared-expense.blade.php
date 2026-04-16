@@ -22,7 +22,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags for="expense_name">Expense Name *</tags>
+                            <label for="expense_name">Expense Name *</label>
                             <input type="text" class="form-control @error('expense_name') is-invalid @enderror"
                                    id="expense_name" name="expense_name" value="{{ old('expense_name') }}" required>
                             @error('expense_name')
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">Description</tags>
+                            <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror"
                                       id="description" name="description" rows="3">{{ old('description') }}</textarea>
                             @error('description')
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="total_amount">Total Amount (Rp) *</tags>
+                            <label for="total_amount">Total Amount (Rp) *</label>
                             <input type="number" class="form-control @error('total_amount') is-invalid @enderror"
                                    id="total_amount" name="total_amount"
                                    value="{{ old('total_amount') }}" min="0" step="1000" required>
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="category">Category *</tags>
+                            <label for="category">Category *</label>
                             <select class="form-control @error('category') is-invalid @enderror"
                                     id="category" name="category" required>
                                 <option value="">Select Category</option>
@@ -70,7 +70,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="expense_date">Expense Date *</tags>
+                            <label for="expense_date">Expense Date *</label>
                             <input type="date" class="form-control @error('expense_date') is-invalid @enderror"
                                    id="expense_date" name="expense_date" value="{{ old('expense_date', date('Y-m-d')) }}" required>
                             @error('expense_date')
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="split_method">Split Method *</tags>
+                            <label for="split_method">Split Method *</label>
                             <select class="form-control @error('split_method') is-invalid @enderror"
                                     id="split_method" name="split_method" required onchange="toggleSplitOptions()">
                                 <option value="">Select Split Method</option>
@@ -93,7 +93,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags>Participants *</tags>
+                            <label>Participants *</label>
                             <div class="border rounded p-3" id="participantsSection">
                                 <p class="mb-3">Select family members who participated in this expense:</p>
                                 @if($members->count() > 0)
@@ -105,9 +105,9 @@
                                                    value="{{ $member->id }}"
                                                    onchange="updateParticipantShares()"
                                                    {{ in_array($member->id, old('participants', [])) ? 'checked' : '' }}>
-                                            <tags class="form-check-tags" for="participant_{{ $member->id }}">
+                                            <label class="form-check-label" for="participant_{{ $member->id }}">
                                                 {{ $member->name }} ({{ $member->relationship }})
-                                            </tags>
+                                            </label>
                                         </div>
                                         <div class="participant-share d-inline-block" id="share_{{ $member->id }}" style="display: none;">
                                             <input type="number" class="form-control form-control-sm d-inline-block w-25"

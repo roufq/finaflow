@@ -108,7 +108,7 @@
                     <form method="POST" action="{{ route('rewards.redeem-reward', $reward) }}" class="mb-3">
                         @csrf
                         <div class="form-group">
-                            <tags for="points">Redeem Points</tags>
+                            <label for="points">Redeem Points</label>
                             <input type="number" class="form-control" id="points" name="points" placeholder="Points to redeem" min="1" max="{{ $reward->getAvailablePoints() }}" required>
                         </div>
                         <button type="submit" class="btn btn-warning btn-block">Redeem Points</button>
@@ -131,7 +131,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <tags for="calc_amount">Transaction Amount (Rp)</tags>
+                        <label for="calc_amount">Transaction Amount (Rp)</label>
                         <input type="number" class="form-control" id="calc_amount" placeholder="Enter amount">
                     </div>
                     <button type="button" class="btn btn-info btn-block" onclick="calculateRewards()">Calculate Rewards</button>

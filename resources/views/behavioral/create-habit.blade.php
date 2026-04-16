@@ -19,7 +19,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags for="habit_name">{{ __('behavioral.habits.habit_name') }}</tags>
+                            <label for="habit_name">{{ __('behavioral.habits.habit_name') }}</label>
                             <input type="text" class="form-control @error('habit_name') is-invalid @enderror" id="habit_name" name="habit_name" value="{{ old('habit_name') }}" placeholder="{{ __('forms.placeholders.enter_name') }}" required>
                             @error('habit_name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="category">{{ __('behavioral.habits.category') }}</tags>
+                            <label for="category">{{ __('behavioral.habits.category') }}</label>
                             <select class="form-control @error('category') is-invalid @enderror" id="category" name="category" required>
                                 <option value="">{{ __('forms.placeholders.select_category') }}</option>
                                 @foreach(trans('behavioral.habits.categories_options') as $value => $label)
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="target_amount">{{ __('behavioral.habits.target_amount') }}</tags>
+                            <label for="target_amount">{{ __('behavioral.habits.target_amount') }}</label>
                             <input type="number" class="form-control @error('target_amount') is-invalid @enderror" id="target_amount" name="target_amount" value="{{ old('target_amount') }}" placeholder="{{ __('behavioral.habits.target_amount') }}">
                             @error('target_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="start_date">{{ __('behavioral.habits.start_date') }}</tags>
+                            <label for="start_date">{{ __('behavioral.habits.start_date') }}</label>
                             <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ old('start_date', date('Y-m-d')) }}" required>
                             @error('start_date')
                                 <div class="invalid-feedback">{{ $message }}</div>

@@ -182,7 +182,7 @@
             <form id="updateSpentForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <tags for="spent_amount">Amount Terpakai Baru (Rp)</tags>
+                        <label for="spent_amount">Amount Terpakai Baru (Rp)</label>
                         <input type="number" class="form-control" id="spent_amount" name="spent_amount" value="{{ $budget->spent_amount }}" min="0" required>
                         <small class="form-text text-muted">Masukkan amount total yang sudah terpakai</small>
                     </div>

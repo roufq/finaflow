@@ -27,21 +27,21 @@
                 @method('PUT')
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <tags>Name</tags>
+                        <label>Name</label>
                         <input type="text" name="name" class="form-control" value="{{ old('name', $category->name) }}" required>
                     </div>
                     <div class="form-group col-md-6">
-                        <tags>Order</tags>
+                        <label>Order</label>
                         <input type="number" name="order" class="form-control" min="0" value="{{ old('order', $category->order) }}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <tags>Description</tags>
+                    <label>Description</label>
                     <textarea name="description" rows="3" class="form-control">{{ old('description', $category->description) }}</textarea>
                 </div>
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" @checked(old('is_active', $category->is_active))>
-                    <tags class="form-check-tags" for="is_active">Active</tags>
+                    <label class="form-check-label" for="is_active">Active</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>

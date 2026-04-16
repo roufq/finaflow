@@ -22,7 +22,7 @@
                         @method('PUT')
 
                         <div class="form-group">
-                            <tags for="name">Name Budget *</tags>
+                            <label for="name">Name Budget *</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $budget->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">Description</tags>
+                            <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $budget->description) }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -39,7 +39,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="type">Type Budget *</tags>
+                                <label for="type">Type Budget *</label>
                                 <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                                     <option value="">Select Type</option>
                                     <option value="zero_based" {{ old('type', $budget->type) == 'zero_based' ? 'selected' : '' }}>Zero-Based Budgeting</option>
@@ -53,7 +53,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="period">Periode *</tags>
+                                <label for="period">Periode *</label>
                                 <select class="form-control @error('period') is-invalid @enderror" id="period" name="period" required>
                                     <option value="">Select Period</option>
                                     <option value="weekly" {{ old('period', $budget->period) == 'weekly' ? 'selected' : '' }}>Mingguan</option>
@@ -69,7 +69,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="start_date">Date Mulai *</tags>
+                                <label for="start_date">Date Mulai *</label>
                                 <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ old('start_date', $budget->start_date->format('Y-m-d')) }}" required>
                                 @error('start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="end_date">Date Berakhir</tags>
+                                <label for="end_date">Date Berakhir</label>
                                 <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date" value="{{ old('end_date', $budget->end_date ? $budget->end_date->format('Y-m-d') : '') }}">
                                 @error('end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -87,7 +87,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="total_budget">Total Budget (Rp) *</tags>
+                                <label for="total_budget">Total Budget (Rp) *</label>
                                 <input type="number" class="form-control @error('total_budget') is-invalid @enderror" id="total_budget" name="total_budget" value="{{ old('total_budget', $budget->total_budget) }}" min="0" required>
                                 @error('total_budget')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -95,7 +95,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="spent_amount">Amount Terpakai (Rp) *</tags>
+                                <label for="spent_amount">Amount Terpakai (Rp) *</label>
                                 <input type="number" class="form-control @error('spent_amount') is-invalid @enderror" id="spent_amount" name="spent_amount" value="{{ old('spent_amount', $budget->spent_amount) }}" min="0" required>
                                 @error('spent_amount')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -104,7 +104,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="status">Status *</tags>
+                            <label for="status">Status *</label>
                             <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
                                 <option value="active" {{ old('status', $budget->status) == 'active' ? 'selected' : '' }}>Aktif</option>
                                 <option value="completed" {{ old('status', $budget->status) == 'completed' ? 'selected' : '' }}>Completed</option>
@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags>Alokasi Category</tags>
+                            <label>Alokasi Category</label>
                             <div id="category-allocations">
                                 @if($budget->category_allocations)
                                     @foreach($budget->category_allocations as $categoryId => $allocation)

@@ -18,7 +18,7 @@
         <div class="card-body">
             <form id="category-report-filters" method="GET" action="{{ route('reports.categories.index') }}" class="form-row align-items-end">
                 <div class="form-group col-md-3 mb-3">
-                    <tags for="period">Periode</tags>
+                    <label for="period">Periode</label>
                     <select name="period" id="period" class="form-control">
                         <option value="this_month" {{ ($filters['period'] ?? 'this_month') === 'this_month' ? 'selected' : '' }}>Month ini</option>
                         <option value="this_year" {{ ($filters['period'] ?? '') === 'this_year' ? 'selected' : '' }}>Year ini</option>
@@ -28,15 +28,15 @@
                     </select>
                 </div>
                 <div class="form-group col-md-3 mb-3">
-                    <tags for="start_date">Mulai</tags>
+                    <label for="start_date">Mulai</label>
                     <input type="date" name="start_date" id="start_date" value="{{ request('start_date', $filters['start']->toDateString()) }}" class="form-control">
                 </div>
                 <div class="form-group col-md-3 mb-3">
-                    <tags for="end_date">Sampai</tags>
+                    <label for="end_date">Sampai</label>
                     <input type="date" name="end_date" id="end_date" value="{{ request('end_date', $filters['end']->toDateString()) }}" class="form-control">
                 </div>
                 <div class="form-group col-md-3 mb-3">
-                    <tags for="category_id">Category</tags>
+                    <label for="category_id">Category</label>
                     <select name="category_id" id="category_id" class="form-control">
                         <option value="">All</option>
                         @foreach($categories as $category)
@@ -45,7 +45,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-3 mb-3">
-                    <tags for="account_id">Account</tags>
+                    <label for="account_id">Account</label>
                     <select name="account_id" id="account_id" class="form-control">
                         <option value="">All</option>
                         @foreach($accounts as $account)

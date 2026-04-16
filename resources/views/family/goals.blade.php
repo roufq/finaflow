@@ -178,15 +178,15 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <tags for="contribution_amount{{ $goal->id }}">Contribution Amount (Rp)</tags>
+                                                    <label for="contribution_amount{{ $goal->id }}">Contribution Amount (Rp)</label>
                                                     <input type="number" class="form-control" id="contribution_amount{{ $goal->id }}" name="amount" min="0" step="1000" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <tags for="contribution_date{{ $goal->id }}">Contribution Date</tags>
+                                                    <label for="contribution_date{{ $goal->id }}">Contribution Date</label>
                                                     <input type="date" class="form-control" id="contribution_date{{ $goal->id }}" name="date" value="{{ date('Y-m-d') }}" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <tags for="contribution_note{{ $goal->id }}">Note (Optional)</tags>
+                                                    <label for="contribution_note{{ $goal->id }}">Note (Optional)</label>
                                                     <textarea class="form-control" id="contribution_note{{ $goal->id }}" name="note" rows="2"></textarea>
                                                 </div>
                                             </div>

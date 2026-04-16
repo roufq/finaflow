@@ -61,7 +61,7 @@
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="plan" id="plan-{{ $planKey }}" value="{{ $planKey }}" {{ $selectedPlan === $planKey ? 'checked' : '' }}>
-                                                    <tags class="form-check-tags small" for="plan-{{ $planKey }}">Select</tags>
+                                                    <label class="form-check-label small" for="plan-{{ $planKey }}">Select</label>
                                                 </div>
                                             </div>
                                             <ul class="mb-0 small text-muted">
@@ -93,10 +93,10 @@
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="hidden" name="is_active" value="0">
                     <input class="form-check-input" type="checkbox" name="is_active" id="status-active-{{ $user->id }}" value="1" {{ $user->is_active ? 'checked' : '' }}>
-                    <tags class="form-check-tags" for="status-active-{{ $user->id }}">Active</tags>
+                    <label class="form-check-label" for="status-active-{{ $user->id }}">Active</label>
                 </div>
                 <div class="form-group">
-                    <tags for="deactivation_message">Message for user (if deactivated)</tags>
+                    <label for="deactivation_message">Message for user (if deactivated)</label>
                     <textarea class="form-control" id="deactivation_message" name="deactivation_message" rows="3" placeholder="Example: Your account is temporarily deactivated. Contact admin for more info.">{{ old('deactivation_message', $user->deactivation_message) }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-outline-primary">Save Status</button>

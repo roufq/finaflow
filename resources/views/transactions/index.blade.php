@@ -191,7 +191,7 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
-                        <tags for="receiptImage">Upload Receipt Image</tags>
+                        <label for="receiptImage">Upload Receipt Image</label>
                         <input type="file" class="form-control-file" id="receiptImage" name="receipt_image" accept="image/*" required>
                         <small class="form-text text-muted">Supported formats: JPG, PNG, JPEG. Max size: 5MB</small>
                     </div>
@@ -208,27 +208,27 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="transactionDate">Date</tags>
+                                    <label for="transactionDate">Date</label>
                                     <input type="date" class="form-control" id="transactionDate" name="transaction_date">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <tags for="transactionAmount">Amount</tags>
+                                    <label for="transactionAmount">Amount</label>
                                     <input type="number" class="form-control" id="transactionAmount" name="amount" step="0.01">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <tags for="merchantName">Merchant</tags>
+                            <label for="merchantName">Merchant</label>
                             <input type="text" class="form-control" id="merchantName" name="merchant" placeholder="e.g., Indomaret, Alfamart">
                         </div>
                         <div class="form-group">
-                            <tags for="transactionDescription">Description</tags>
+                            <label for="transactionDescription">Description</label>
                             <input type="text" class="form-control" id="transactionDescription" name="description" placeholder="Transaction description">
                         </div>
                         <div class="form-group">
-                            <tags for="transactionCategory">Category</tags>
+                            <label for="transactionCategory">Category</label>
                             <select class="form-control" id="transactionCategory" name="category_id" required>
                                 <option value="">Select Category</option>
                                 @foreach($categories as $category)

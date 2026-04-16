@@ -15,15 +15,15 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <tags for="title">Title</tags>
+                    <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $document->title) }}" required>
                 </div>
                 <div class="form-group">
-                    <tags for="year">Year</tags>
+                    <label for="year">Year</label>
                     <input type="number" class="form-control" id="year" name="year" min="2000" max="{{ now()->year + 1 }}" value="{{ old('year', $document->year) }}" required>
                 </div>
                 <div class="form-group">
-                    <tags for="category">Category (optional)</tags>
+                    <label for="category">Category (optional)</label>
                     <select class="form-control" id="category" name="category">
                         <option value="">Select category</option>
                         <option value="income_proof" {{ old('category', $document->category) === 'income_proof' ? 'selected' : '' }}>Income Proof</option>
@@ -33,15 +33,15 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <tags for="notes">Notes (optional)</tags>
+                    <label for="notes">Notes (optional)</label>
                     <textarea class="form-control" id="notes" name="notes" rows="3">{{ old('notes', $document->notes) }}</textarea>
                 </div>
                 <div class="form-group">
-                    <tags>Current File</tags><br>
+                    <label>Current File</label><br>
                     <a href="{{ Storage::disk('public')->url($document->file_path) }}" target="_blank" class="btn btn-sm btn-success">View / Download</a>
                 </div>
                 <div class="form-group">
-                    <tags for="document">Replace File (optional)</tags>
+                    <label for="document">Replace File (optional)</label>
                     <input type="file" class="form-control-file" id="document" name="document">
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>

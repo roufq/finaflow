@@ -107,11 +107,11 @@
                     <form action="{{ route('integrations.telegram-bot.settings') }}" method="POST">
                         @csrf
                         <div class="form-group mb-3">
-                            <tags class="small font-weight-bold">Bot API Token</tags>
+                            <label class="small font-weight-bold">Bot API Token</label>
                             <input type="password" name="telegram_bot_token" class="form-control form-control-sm" placeholder="Contoh: 123456:ABC-DEF..." value="{{ $user->telegram_bot_token }}">
                         </div>
                         <div class="form-group mb-3">
-                            <tags class="small font-weight-bold">Bot Username</tags>
+                            <label class="small font-weight-bold">Bot Username</label>
                             <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">@</span>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <tags class="small font-weight-bold">Bridge URL (Optional)</tags>
+                            <label class="small font-weight-bold">Bridge URL (Optional)</label>
                             <input type="text" name="telegram_proxy_url" class="form-control form-control-sm" placeholder="https://my-proxy.workers.dev/bot-webhook-jembatan" value="{{ $user->telegram_proxy_url }}">
                             <small class="text-muted" style="font-size: 0.75rem;">Gunakan jika server Anda no bisa menerima koneksi langsung dari Telegram.</small>
                         </div>

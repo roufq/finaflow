@@ -5,9 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Register - FinaFlow</title>
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -126,7 +127,7 @@
     <div class="register-card">
         <div class="brand-section">
             <div class="brand-logo">
-                <i class="fas fa-chart-line"></i>
+                <img src="{{ asset('img/logo.svg') }}" alt="Logo" width="32" onerror="this.outerHTML='<i class=\'fas fa-chart-line\'></i>'">
             </div>
             <div class="brand-name">FinaFlow</div>
             <div class="welcome-text">Start managing your finances better</div>
@@ -151,26 +152,26 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <div class="form-group mb-3">
-                <tags for="name">Full Name</tags>
+                <label for="name">Full Name</label>
                 <input type="text" class="form-control" id="name"
                     placeholder="Your Name" name="name" value="{{ old('name') }}" required autofocus>
             </div>
 
             <div class="form-group mb-3">
-                <tags for="email">Email Address</tags>
+                <label for="email">Email Address</label>
                 <input type="email" class="form-control" id="email"
                     placeholder="name@email.com" name="email" value="{{ old('email') }}" required>
             </div>
 
             <div class="form-group mb-3">
-                <tags for="password">Password</tags>
+                <label for="password">Password</label>
                 <input type="password" class="form-control"
                     id="password" placeholder="Min 8 characters" name="password" required>
                 <small class="text-muted d-block mt-2" style="font-size: 0.75rem;">A combination of uppercase, lowercase, numbers, and symbols is recommended.</small>
             </div>
 
             <div class="form-group mb-4">
-                <tags for="password_confirmation">Confirm Password</tags>
+                <label for="password_confirmation">Confirm Password</label>
                 <input type="password" class="form-control"
                     id="password_confirmation" placeholder="Repeat password" name="password_confirmation" required>
             </div>

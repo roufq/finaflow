@@ -14,15 +14,15 @@
             <form action="{{ route('tax-documents.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                    <tags for="title">Title</tags>
+                    <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required>
                 </div>
                 <div class="form-group">
-                    <tags for="year">Year</tags>
+                    <label for="year">Year</label>
                     <input type="number" class="form-control" id="year" name="year" min="2000" max="{{ now()->year + 1 }}" value="{{ old('year', now()->year) }}" required>
                 </div>
                 <div class="form-group">
-                    <tags for="category">Category (optional)</tags>
+                    <label for="category">Category (optional)</label>
                     <select class="form-control" id="category" name="category">
                         <option value="">Select category</option>
                         <option value="income_proof" {{ old('category') === 'income_proof' ? 'selected' : '' }}>Income Proof</option>
@@ -32,11 +32,11 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <tags for="notes">Notes (optional)</tags>
+                    <label for="notes">Notes (optional)</label>
                     <textarea class="form-control" id="notes" name="notes" rows="3">{{ old('notes') }}</textarea>
                 </div>
                 <div class="form-group">
-                    <tags for="document">File (PDF/JPG/PNG, max 5MB)</tags>
+                    <label for="document">File (PDF/JPG/PNG, max 5MB)</label>
                     <input type="file" class="form-control-file" id="document" name="document" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Upload</button>

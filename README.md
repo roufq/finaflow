@@ -1,89 +1,87 @@
-
 # FinaFlow - Comprehensive Personal Finance Management System
 
-FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibangun dengan Laravel 12. Aplikasi ini membantu pengguna melacak pemasukan, pengeluaran, investasi, aset, hutang, dan mengelola seluruh aspek keuangan pribadi dengan mudah dan insightful.
+FinaFlow is a comprehensive personal finance management web application built with Laravel 12. This application helps users track income, expenses, investments, assets, debts, and manage all aspects of their personal finances easily and insightfully.
 
-## 🚀 Fitur Utama
+## 🚀 Key Features
 
 ### 💰 **Personal Finance Foundation**
-- **Dashboard**: Ringkasan keuangan dengan visualisasi data dan proyeksi cash flow
-- **Manajemen Transaksi**: Tambah, edit, hapus transaksi pemasukan dan pengeluaran
-- **Kategori**: Kelola kategori untuk mengorganisir transaksi (income/expense)
+- **Dashboard**: Financial summary with data visualizations and cash flow projections
+- **Transaction Management**: Add, edit, delete income and expense transactions
+- **Categories**: Manage categories to organize transactions (income/expense)
 - **Account Management**: Multiple account types (bank, cash, credit card, e-wallet, investment)
-- **Transfer Management**: Transfer antar akun dengan history lengkap
+- **Transfer Management**: Transfer between accounts with complete history
 
 ### 🎯 **Financial Planning & Goals**
-- **Goal Setting**: Financial goals setup dengan progress tracking
-- **Budget Management**: Zero-based budgeting dengan templates (50/30/20 rule)
-- **Debt Management**: Debt payoff calculators dengan snowball/avalance method
+- **Goal Setting**: Financial goals setup with progress tracking
+- **Budget Management**: Zero-based budgeting with templates (50/30/20 rule)
+- **Debt Management**: Debt payoff calculators with snowball/avalanche methods
 
 ### 📈 **Investment & Asset Tracking**
-- **Investment Portfolio**: Stock, mutual fund, crypto tracking dengan ROI calculations
-- **Asset Management**: Real estate, vehicle, personal assets dengan depreciation tracking
-- **Net Worth Dashboard**: Real-time net worth calculation dengan health score
+- **Investment Portfolio**: Stock, mutual fund, crypto tracking with ROI calculations
+- **Asset Management**: Real estate, vehicle, personal assets with depreciation tracking
+- **Net Worth Dashboard**: Real-time net worth calculation with health score
 
 ### 🧠 **Behavioral Finance & Lifestyle**
-- **Spending Triggers**: Identifikasi pola pengeluaran berdasarkan emosi dan situasi
-- **Habit Formation**: Tracking kebiasaan menabung dan pengeluaran dengan streak counter
-- **Financial Personality**: Assessment kepribadian finansial dengan rekomendasi personal
-- **Gamification**: Sistem poin, badge, dan achievement untuk motivasi finansial
-- **Subscription Management**: Tracking langganan dengan optimasi biaya dan reminder pembatalan
-- **Reward & Loyalty**: Manajemen kartu kredit rewards dan program loyalty points
+- **Spending Triggers**: Identify spending patterns based on emotions and situations
+- **Habit Formation**: Savings and spending habit tracking with streak counters
+- **Financial Personality**: Financial personality assessment with personal recommendations
+- **Gamification**: Points system, badges, and achievements for financial motivation
+- **Subscription Management**: Subscription tracking with cost optimization and cancellation reminders
+- **Reward & Loyalty**: Credit card rewards management and loyalty points programs
 
 ### Automation & Integration
-- **Smart Automation**: Builder kondisi/aksi, manual run & toggle, serta reminder tagihan otomatis
+- **Smart Automation**: Condition/action builder, manual run & toggle, and automated bill reminders
 - **Bank Integration**:
-  - CRUD koneksi bank dengan multiple account types (checking, savings, credit_card)
-  - Impor transaksi via CSV, OFX, atau API dengan auto-categorization
-  - Sinkron saldo real-time dengan deteksi duplikat transaksi
-  - Dashboard integrasi dengan status sync dan balance tracking
-  - Support untuk berbagai bank Indonesia (BCA, Mandiri, BRI, dll)
-- **API Integrations**: Integrasi kredit skor, data investasi, berita finansial, dan cuaca dengan rate limit tracking
-- **Integration Tools**: OCR struk, voice-to-text, parser email/invoice, dan quick entry lainnya
+  - CRUD bank connections with multiple account types (checking, savings, credit_card)
+  - Import transactions via CSV, OFX, or API with auto-categorization
+  - Real-time balance synchronization with duplicate transaction detection
+  - Integration dashboard with sync status and balance tracking
+- **API Integrations**: Credit score integration, investment data, financial news, and weather with rate limit tracking
+- **Integration Tools**: Receipt OCR, voice-to-text, email/invoice parser, and other quick entry tools
 
 ### 👨‍👩‍👧‍👦 **Family Finance**
-- **Shared Expenses**: Tracking pengeluaran bersama keluarga dengan split method (equal/percentage/custom)
-- **Family Goals**: Target keuangan bersama keluarga
-- **Gift Events**: Planning dan tracking budget hadiah untuk acara spesial
-- **Family Members**: Manajemen anggota keluarga untuk budgeting bersama
+- **Shared Expenses**: Family shared expense tracking with split methods (equal/percentage/custom)
+- **Family Goals**: Joint family financial targets
+- **Gift Events**: Budget planning and tracking for special events
+- **Family Members**: Family member management for joint budgeting
 
 ### Financial Coaching & Literacy
-- **Personalized Action Plans**: Rencana aksi bulanan otomatis dengan prioritas utang, tabungan darurat, dan investasi sesuai kondisi pengguna
-- **Weekly Accountability Checklist**: Checklist mingguan dengan status & reminder agar rencana terus berjalan
-- **Micro-Learning Hub**: Artikel, video, dan kuis singkat yang direkomendasikan berdasarkan persona finansial sekaligus tracking skor pemahaman
-- **Financial Journaling**: Catat refleksi, mood, dan komitmen yang bisa dikaitkan ke habit atau spending trigger
-- **Coach / HR Export**: Ekspor ringkasan kesehatan finansial siap kirim untuk coach, HR, atau program wellness perusahaan
+- **Personalized Action Plans**: Automated monthly action plans prioritizing debts, emergency funds, and investments based on user conditions
+- **Weekly Accountability Checklist**: Weekly checklists with statuses & reminders to keep plans on track
+- **Micro-Learning Hub**: Recommended short articles, videos, and quizzes based on financial personas while tracking comprehension scores
+- **Financial Journaling**: Record reflections, moods, and commitments linked to habits or spending triggers
+- **Coach / HR Export**: Export ready-to-send financial health summaries for coaches, HR, or corporate wellness programs
 
 ### Financial Education Hub
-- **Kurasi Modul Edukasi**: Library multi bahasa dengan metadata lengkap (kategori, level, estimasi waktu, tags, learning objectives, resources)
-- **Learning Path Personalization**: Engine rekomendasi yang membaca transaksi, goal, habits, triggers, serta persona finansial untuk menentukan fokus belajar berikutnya
-- **Financial News Pipeline**: Sinkronisasi otomatis berita finansial via API atau kurasi lokal dengan tagging preferensi dan jadwal cron bawaan
-- **Community Stories & Moderation**: Peer success story submissions dengan auto moderation heuristik dan riwayat approval
-- **Progress & UX Tracking**: Insight progress, profil rekomendasi, dan checklist UX yang memastikan konten edukasi selalu relevan dan actionable
+- **Curated Educational Modules**: Multi-language library with complete metadata (category, level, estimated time, tags, learning objectives, resources)
+- **Learning Path Personalization**: Recommendation engine that reads transactions, goals, habits, triggers, and financial personas to determine the next learning focus
+- **Financial News Pipeline**: Automated financial news synchronization via APIs or local curation with preference tagging and built-in cron scheduling
+- **Community Stories & Moderation**: Peer success story submissions with heuristic auto-moderation and approval history
+- **Progress & UX Tracking**: Progress insights, profile recommendations, and UX checklists ensuring educational content remains relevant and actionable
 
 ### ⚙️ **Additional Features**
-- **Multi-Language Support**: Bahasa Indonesia dan English
-- **Pengaturan**: Konfigurasi mata uang dan pengaturan lainnya
-- **Autentikasi**: Sistem login dan register yang aman
-- **Responsive Design**: Antarmuka yang responsif untuk desktop dan mobile dengan collapsible sidebar
-- **User-Scoped Data**: Semua data terisolasi per pengguna
+- **Multi-Language Support**: Indonesian and English
+- **Settings**: Currency configurations and other personal preferences
+- **Authentication**: Secure login and registration system
+- **Responsive Design**: Responsive interface for desktop and mobile with a collapsible sidebar
+- **User-Scoped Data**: All data is securely isolated per user
 
-## 🛠️ Teknologi yang Digunakan
+## 🛠️ Technologies Used
 
 - **Framework**: Laravel 12
 - **Database**: MySQL/SQLite
-- **Frontend**: Bootstrap 4 (SB Admin 2 Template)
+- **Frontend**: Bootstrap 4 (SB Admin 2 Template) / TailwindCSS Elements
 - **Authentication**: Laravel Sanctum
 - **Icons**: Font Awesome
 
-## 📋 Persyaratan Sistem
+## 📋 System Requirements
 
 - PHP >= 8.1
 - Composer
-- Node.js & NPM (untuk asset compilation)
-- MySQL atau SQLite
+- Node.js & NPM (for asset compilation)
+- MySQL or SQLite
 
-## ⚡ Instalasi
+## ⚡ Installation
 
 1. **Clone Repository**
    ```bash
@@ -103,104 +101,105 @@ FinaFlow adalah aplikasi web manajemen keuangan pribadi yang komprehensif dibang
    php artisan key:generate
    ```
 
-   Set FINANCIAL_NEWS_ENDPOINT dan FINANCIAL_NEWS_API_KEY bila menggunakan sumber berita eksternal
+   Set `FINANCIAL_NEWS_ENDPOINT` and `FINANCIAL_NEWS_API_KEY` if using external news sources.
 
 4. **Database Setup**
    ```bash
-   # Konfigurasi database di file .env
+   # Configure the database in the .env file
    php artisan migrate
    php artisan db:seed
-   # Seed modul edukasi kurasi (opsional)
+   
+   # Seed curated educational modules (optional)
    php artisan db:seed --class=EducationModuleSeeder
    ```
 
 5. **Compile Assets**
    ```bash
    npm run build
-   # atau untuk development
+   # or for development
    npm run dev
    ```
 
-6. **Jalankan Aplikasi**
+6. **Run Application**
    ```bash
    php artisan serve
    ```
 
-   Akses aplikasi di: `http://localhost:8000`
+   Access the application at: `http://localhost:8000`
 
-7. **Sinkronisasi Financial News (opsional)**
+7. **Financial News Synchronization (optional)**
    ```bash
    php artisan financial:sync-news
    ```
 
-   Jalankan perintah tersebut bila ingin segera mengisi tabel berita. Scheduler (`php artisan schedule:work`) otomatis berjalan dua kali sehari untuk menjaga konten tetap segar.
+   Run this command immediately to populate the news table. The scheduler (`php artisan schedule:work`) runs automatically twice a day to keep content fresh.
 
-## 🔐 Akun Demo
+## 🔐 Demo Accounts
 
-Untuk testing, gunakan akun berikut:
-- **Email**: `john@example.com` atau `jane@example.com`
+For testing, use the following accounts:
+- **Email**: `john@example.com` or `jane@example.com` / `admin@finaflow.test`
 - **Password**: `password`
 
 ## 🔐 Role & Access Control
 
-- Default role **user** hanya memiliki akses dashboard; izin lain diberikan per pengguna oleh admin.
-- Pengguna baru otomatis memiliki akses dasar: Dashboard, Transaksi/Tag, Akun/Transfer, Anggaran, dan Goals. Admin bisa mempersempit lewat halaman Kelola Pengguna.
-- Admin dapat mengelola peran, mengaktifkan/nonaktifkan user, dan membatasi menu sidebar per pengguna di halaman **Admin → Kelola Pengguna** (`/admin/users`).
-- Permission yang tersedia dan menu yang dilindungi:
+- The default **user** role only has access to the dashboard; further permissions are assigned per user by the administrator.
+- New users automatically have basic access: Dashboard, Transactions/Tags, Accounts/Transfers, Budgets, and Goals. Admins can restrict this via the Manage Users page.
+- Admins can manage roles, activate/deactivate users, and restrict sidebar menus per user on the **Admin → Manage Users** page (`/admin/users`).
+- Available permissions and protected menus:
   - `access dashboard`: Dashboard.
-  - `manage transactions`: Transaksi & Tag.
-  - `manage accounts`: Akun & Transfer.
-  - `manage budgets`: Anggaran & Utang.
+  - `manage transactions`: Transactions & Tags.
+  - `manage accounts`: Accounts & Transfers.
+  - `manage budgets`: Budgets & Debts.
   - `manage goals`: Goals.
   - `view reports`: Reporting, Analytics, Investments, Assets, Net Worth, Tax Documents.
   - `manage automations`: Automations & Integrations.
   - `manage family`: Subscriptions & Rewards/Loyalty.
   - `manage behavioral`: Behavioral Insights, Education, Coaching.
-- User yang dinonaktifkan tetap bisa login, tetapi melihat overlay peringatan dan tidak dapat mengakses halaman.
+- Deactivated users can still log in but will see a warning overlay and cannot access any pages.
 
-## 📊 Struktur Database
+## 📊 Database Structure
 
-### Tabel Utama:
-- **users**: Data pengguna
-- **settings**: Pengaturan pengguna (mata uang, bulan mulai)
-- **categories**: Kategori transaksi (income/expense)
-- **transactions**: Data transaksi keuangan
-- **accounts**: Manajemen rekening (bank, cash, credit card, dll)
-- **transfers**: Transfer antar rekening
-- **goals**: Target keuangan pengguna
-- **budgets**: Anggaran pengeluaran
-- **debts**: Manajemen hutang
-- **investments**: Portofolio investasi
-- **assets**: Manajemen aset fisik
-- **tags**: Tagging untuk transaksi
-- **action_plans**: Rencana aksi bulanan pengguna
-- **action_plan_tasks**: Checklist mingguan beserta status & reminder
-- **micro_learnings**: Konten micro-learning (artikel, video, kuis)
-- **micro_learning_progress**: Progres & skor pemahaman micro-learning
-- **financial_journal_entries**: Catatan refleksi & komitmen coaching
-- **community_stories**: Cerita komunitas untuk peer learning
+### Main Tables:
+- **users**: User data
+- **settings**: User settings (currency, starting month)
+- **categories**: Transaction categories (income/expense)
+- **transactions**: Financial transaction data
+- **accounts**: Account management (bank, cash, credit card, etc.)
+- **transfers**: Inter-account transfers
+- **goals**: User financial targets
+- **budgets**: Expenditure budgets
+- **debts**: Debt management
+- **investments**: Investment portfolios
+- **assets**: Physical asset management
+- **tags**: Transaction tags
+- **action_plans**: Monthly action plans
+- **action_plan_tasks**: Weekly checklists with statuses & reminders
+- **micro_learnings**: Educational content (articles, videos, quizzes)
+- **micro_learning_progress**: Micro-learning progress & scores
+- **financial_journal_entries**: Reflections & coaching commitments
+- **community_stories**: Community stories for peer learning
 
-### Tabel Behavioral Finance:
-- **spending_triggers**: Pola pemicu pengeluaran (emosi, situasi, dll)
-- **habits**: Kebiasaan finansial dengan streak tracking
-- **financial_personalities**: Assessment kepribadian finansial
-- **gamifications**: Sistem poin, badge, dan achievement
-- **subscriptions**: Tracking langganan dan biaya berulang
-- **rewards**: Manajemen rewards kartu kredit
-- **loyalty_programs**: Program loyalty points
+### Behavioral Finance Tables:
+- **spending_triggers**: Spending trigger patterns
+- **habits**: Financial habits with streak tracking
+- **financial_personalities**: Financial personality assessments
+- **gamifications**: Points, badges, and achievements
+- **subscriptions**: Subscription and recurring cost tracking
+- **rewards**: Credit card rewards
+- **loyalty_programs**: Loyalty points programs
 
-### Tabel Automation & Integration:
-- **automations**: Aturan otomatis untuk alert dan reminder
-- **bank_integrations**: Integrasi dengan rekening bank
-- **api_integrations**: Integrasi API eksternal
+### Automation & Integration Tables:
+- **automations**: Automated rules for alerts and reminders
+- **bank_integrations**: Bank account integrations
+- **api_integrations**: External API integrations
 
-### Tabel Family Finance:
-- **family_members**: Data anggota keluarga
-- **shared_expenses**: Pengeluaran bersama dengan split method
-- **family_goals**: Target keuangan keluarga
-- **gift_events**: Planning budget hadiah untuk acara
+### Family Finance Tables:
+- **family_members**: Family member data
+- **shared_expenses**: Shared expenses with split methods
+- **family_goals**: Family financial targets
+- **gift_events**: Gift budget planning for events
 
-### Relasi:
+### Relations:
 - User hasMany: Settings, Categories, Transactions, Accounts, Transfers, Goals, Budgets, Debts, Investments, Assets, SpendingTriggers, Habits, FinancialPersonalities, Gamifications, Subscriptions, Rewards, LoyaltyPrograms, Automations, BankIntegrations, ApiIntegrations, FamilyMembers, SharedExpenses, FamilyGoals, GiftEvents
 - Category hasMany Transactions
 - Account hasMany Transactions, Transfers
@@ -208,9 +207,9 @@ Untuk testing, gunakan akun berikut:
 - Transfer belongsTo FromAccount, ToAccount
 - Investment/Asset belongsTo User
 - FamilyMember hasMany SharedExpenses
-- SharedExpense belongsToMany FamilyMembers (pivot: share_amount, share_method)
+- SharedExpense belongsToMany FamilyMembers
 
-## 🗂️ Struktur Proyek
+## 🗂️ Project Structure
 
 ```
 finaflow/
@@ -248,10 +247,7 @@ finaflow/
 │       ├── AccountPolicy.php
 │       ├── BudgetPolicy.php
 │       ├── DebtPolicy.php
-│       ├── GoalPolicy.php
-│       ├── InvestmentPolicy.php
-│       ├── AssetPolicy.php
-│       └── TransferPolicy.php
+│       └── GoalPolicy.php
 ├── database/
 │   ├── migrations/
 │   │   └── [20+ migration files]
@@ -262,172 +258,81 @@ finaflow/
 │   │   ├── layouts/app.blade.php
 │   │   ├── auth/
 │   │   ├── dashboard.blade.php
-│   │   ├── settings/
-│   │   ├── categories/
-│   │   ├── transactions/
-│   │   ├── accounts/
-│   │   ├── transfers/
-│   │   ├── goals/
-│   │   ├── budgets/
-│   │   ├── debts/
-│   │   ├── investments/
-│   │   ├── assets/
-│   │   └── net-worth/
+│   │   └── ...
 │   └── css/
 ├── routes/
 │   └── web.php
 └── public/
-    ├── css/
-    ├── js/
-    └── vendor/
 ```
 
-## 🎯 Cara Penggunaan
+## 🎯 Usage
 
-1. **Login/Register**: Buat akun atau login dengan akun demo
-2. **Dashboard**: Lihat ringkasan keuangan Anda
-3. **Settings**: Atur preferensi mata uang dan bulan mulai
-4. **Categories**: Buat kategori untuk mengorganisir transaksi
-5. **Transactions**: Tambah transaksi pemasukan/pengeluaran
+1. **Login/Register**: Create an account or log in with demo credentials
+2. **Dashboard**: View your financial summaries
+3. **Settings**: Adjust preferred currency limits and reporting month start
+4. **Categories**: Pre-populated via seeders but customizable
+5. **Transactions**: Log income and expenses daily
 
-## 🔧 Perintah Artisan
+## 🔧 Artisan Commands
 
 ```bash
-# Migrasi database
+# Database migrations
 php artisan migrate
 
-# Seed database dengan data dummy
+# Seed database with dummy data
 php artisan db:seed
 
-# Reset dan seed ulang database
+# Reset and re-seed database
 php artisan migrate:fresh --seed
 
-# Jalankan server development
+# Run dev server
 php artisan serve
 
-# Generate key aplikasi
+# Generate application key
 php artisan key:generate
 
-# Clear cache
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
+# Clear application caches
+php artisan optimize:clear
 ```
 
-### Perintah tambahan
-- `php artisan bank:sync-integrations` — Sinkronisasi transaksi & saldo integrasi bank aktif (juga berjalan via scheduler hourly).
+### Additional Commands
+- `php artisan bank:sync-integrations` — Sync active bank integration transactions & balances (runs hourly via scheduler).
 
 ### Two-Factor Authentication (TOTP)
-- Setup: login → menu profil → Two-Factor Auth (`/twofactor/setup`), scan QR di aplikasi authenticator, masukkan kode 6 digit untuk aktivasi. Backup codes tersedia di halaman yang sama.
-- Login: jika 2FA aktif dan perangkat belum diingat, masukkan kode 6 digit atau backup code. Centang “Remember this device” untuk skip OTP 30 hari.
-- Jika QR gagal dimuat, gunakan secret/URI yang ditampilkan untuk menambah akun di aplikasi authenticator.
+- **Setup**: Login → Profile Menu → Two-Factor Auth (`/twofactor/setup`), scan the QR in an authenticator app, and enter a 6-digit code to activate. Backup codes are available on the same page.
+- **Login**: If 2FA is active and the device isn't remembered, enter a 6-digit code or backup code. Check "Remember this device" to skip OTP for 30 days.
 
 ## 📱 API Endpoints
 
-Aplikasi ini menggunakan RESTful routes Laravel dengan middleware auth:
+The application utilizes stateful RESTful routes with Laravel Sanctum authentication:
 
 ### Authentication Routes:
-- `GET /` - Redirect ke dashboard atau login
-- `GET/POST /login` - Autentikasi
-- `GET/POST /register` - Registrasi
+- `GET /` - Redirects to dashboard or login
+- `GET/POST /login` - Authentication
+- `GET/POST /register` - Registration
 - `POST /logout` - Logout
 
-### Main Application Routes:
-- `GET /dashboard` - Dashboard utama dengan cash flow analysis
-- `GET /settings` - Manajemen pengaturan pengguna
-- `GET /categories` - Manajemen kategori transaksi
-- `GET /transactions` - Manajemen transaksi keuangan
-- `GET /accounts` - Manajemen rekening
-- `GET /transfers` - Manajemen transfer antar rekening
-- `GET /goals` - Manajemen target keuangan
-- `GET /budgets` - Manajemen anggaran
-- `GET /debts` - Manajemen hutang
-- `GET /investments` - Manajemen portofolio investasi
-- `GET /assets` - Manajemen aset fisik
-- `GET /net-worth` - Dashboard net worth dengan health score
-- `GET /tags` - Manajemen tag transaksi
+*(Consult `routes/web.php` and `routes/api.php` for complete endpoint references)*
 
-### Behavioral Finance Routes:
-- `GET /behavioral` - Dashboard behavioral finance
-- `GET /behavioral/triggers` - Manajemen spending triggers
-- `GET /behavioral/habits` - Tracking habit formation
-- `GET /behavioral/personality` - Assessment kepribadian finansial
-- `GET /behavioral/gamification` - Sistem poin dan achievement
-- `GET /subscriptions` - Manajemen langganan
-- `GET /rewards` - Manajemen rewards dan loyalty
+## 🤝 Contribution
 
-### Automation & Integration Routes:
-- `GET /automations` - Manajemen aturan otomatis
-- `GET /bank-integrations` - Integrasi rekening bank
-- `GET /api-integrations` - Integrasi API eksternal
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Family Finance Routes:
-- `GET /family` - Dashboard keluarga
-- `GET /family/members` - Manajemen anggota keluarga
-- `GET /family/shared-expenses` - Pengeluaran bersama
-- `GET /family/goals` - Target keuangan keluarga
-- `GET /family/gift-events` - Planning hadiah dan acara
+## 📝 License
 
-## 🤝 Kontribusi
+This project is licensed under the Envato Regular / Extended License limits. Please review the licensing agreement on your purchase receipt or the corresponding License folder.
 
-1. Fork repository
-2. Buat branch fitur (`git checkout -b feature/AmazingFeature`)
-3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buat Pull Request
+## 📞 Support
 
-## 📝 Lisensi
-
-Proyek ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanjut.
-
-## 📞 Dukungan
-
-Jika Anda mengalami masalah atau memiliki pertanyaan:
-
-1. Periksa [Issues](https://github.com/your-username/finaflow/issues) yang sudah ada
-2. Buat Issue baru jika diperlukan
-3. Kontak developer untuk dukungan teknis
-
-## 🔄 Update Log
-
-### v3.0.0 (Current)
-- **Behavioral Finance & Lifestyle**: Complete behavioral insights dengan spending triggers, habit formation, financial personality assessment, dan gamification system
-- **Subscription Management**: Advanced subscription tracking dengan cost optimization dan cancellation reminders
-- **Reward & Loyalty Programs**: Comprehensive rewards management untuk kartu kredit dan loyalty points
-- **Automation & Integration**: Smart automation rules, bank integration framework, dan API integrations
-- **Family Finance**: Shared expenses dengan split methods, family goals, dan gift event planning
-- **Multi-Language Support**: Full localization untuk Bahasa Indonesia dan English
-- **Enhanced UI/UX**: Collapsible sidebar dengan toggle functionality dan improved responsive design
-- **Investment & Asset Tracking**: Complete portfolio management dengan ROI calculations
-- **Net Worth Dashboard**: Real-time net worth calculation dengan financial health score
-- **Advanced Account Management**: Multiple account types dengan transfer capabilities
-- **Financial Planning**: Goals, budgets, dan debt management
-- **Enhanced Dashboard**: Cash flow projections, burn rate, emergency fund tracking
-- **User-Scoped Architecture**: All data properly isolated per user
-- **Comprehensive CRUD**: Full create/read/update/delete untuk semua entities
-- **Responsive UI**: Modern Bootstrap interface dengan charts dan visualizations
-
-### v2.0.0
-- **Investment & Asset Tracking**: Complete portfolio management dengan ROI calculations
-- **Net Worth Dashboard**: Real-time net worth calculation dengan financial health score
-- **Advanced Account Management**: Multiple account types dengan transfer capabilities
-- **Financial Planning**: Goals, budgets, dan debt management
-- **Enhanced Dashboard**: Cash flow projections, burn rate, emergency fund tracking
-- **User-Scoped Architecture**: All data properly isolated per user
-- **Comprehensive CRUD**: Full create/read/update/delete untuk semua entities
-- **Responsive UI**: Modern Bootstrap interface dengan charts dan visualizations
-
-### v1.0.0
-- Fitur dasar manajemen keuangan
-- Sistem autentikasi
-- CRUD untuk Settings, Categories, Transactions
-- Dashboard dengan ringkasan
-- Responsive design
+If you run into issues or have questions:
+1. Ensure your server matches the minimal specs
+2. Refer to the specific `DEPLOYMENT_GUIDE.md` for production queries
+3. Open a support ticket via the Envato author dashboard
 
 ---
 
-**Dibangun dengan ❤️ menggunakan Laravel Framework**
-"# finaflow" 
-"# finaflow" 
-
+**Built with ❤️ using the Laravel Framework**

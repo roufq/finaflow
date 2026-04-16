@@ -12,7 +12,7 @@
                     <form method="POST" action="{{ route('integrations.voice-entry.store') }}">
                         @csrf
                         <div class="form-group">
-                            <tags>Transcribed Text</tags>
+                            <label>Transcribed Text</label>
                             <textarea name="voice_text" id="voice_text" class="form-control @error('voice_text') is-invalid @enderror" rows="5">{{ old('voice_text') }}</textarea>
                             @error('voice_text')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>

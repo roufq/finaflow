@@ -21,7 +21,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags for="name">Name Budget *</tags>
+                            <label for="name">Name Budget *</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -29,7 +29,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">Description</tags>
+                            <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description') }}</textarea>
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -38,7 +38,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="type">Type Budget *</tags>
+                                <label for="type">Type Budget *</label>
                                 <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
                                     <option value="">Select Type</option>
                                     <option value="zero_based" {{ old('type') == 'zero_based' ? 'selected' : '' }}>Zero-Based Budgeting</option>
@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="period">Periode *</tags>
+                                <label for="period">Periode *</label>
                                 <select class="form-control @error('period') is-invalid @enderror" id="period" name="period" required>
                                     <option value="">Select Period</option>
                                     <option value="weekly" {{ old('period') == 'weekly' ? 'selected' : '' }}>Mingguan</option>
@@ -68,7 +68,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <tags for="start_date">Date Mulai *</tags>
+                                <label for="start_date">Date Mulai *</label>
                                 <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ old('start_date') }}" required>
                                 @error('start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -76,7 +76,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <tags for="end_date">Date Berakhir</tags>
+                                <label for="end_date">Date Berakhir</label>
                                 <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date" value="{{ old('end_date') }}">
                                 @error('end_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -85,7 +85,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="total_budget">Total Budget (Rp) *</tags>
+                            <label for="total_budget">Total Budget (Rp) *</label>
                             <input type="number" class="form-control @error('total_budget') is-invalid @enderror" id="total_budget" name="total_budget" value="{{ old('total_budget') }}" min="0" required>
                             @error('total_budget')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -93,7 +93,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags>Alokasi Category</tags>
+                            <label>Alokasi Category</label>
                             <div id="category-allocations">
                                 @if(old('category_allocations'))
                                     @foreach(old('category_allocations') as $categoryId => $amount)

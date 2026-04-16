@@ -89,7 +89,7 @@
                     <form method="POST" action="{{ route('education.module.progress', $module) }}">
                         @csrf
                         <div class="form-group">
-                            <tags for="progress-range" class="text-xs text-muted">{{ __('education.module.cta') }}</tags>
+                            <label for="progress-range" class="text-xs text-muted">{{ __('education.module.cta') }}</label>
                             <input type="range" class="custom-range" id="progress-range" name="progress" min="0" max="100" value="{{ $path->progress }}">
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">{{ __('education.module.cta') }}</button>

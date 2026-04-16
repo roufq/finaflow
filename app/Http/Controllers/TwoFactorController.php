@@ -34,7 +34,7 @@ class TwoFactorController extends Controller
 
         $user = $request->user();
         if (! $totp->verify($request->secret, $request->code)) {
-            return back()->withErrors(['code' => 'Kode TOTP tidak valid.']);
+            return back()->withErrors(['code' => 'Invalid TOTP code.']);
         }
 
         $backupCodes = $this->generateBackupCodes();
@@ -48,7 +48,7 @@ class TwoFactorController extends Controller
 
         $user->logActivity('two_factor_enabled', 'Enabled TOTP 2FA');
 
-        return redirect()->route('dashboard')->with('success', '2FA diaktifkan. Simpan backup codes Anda.');
+        return redirect()->route('dashboard')->with('success', '2FA has been enabled. Please save your backup codes.');
     }
 
     public function disable(Request $request): \Illuminate\Http\RedirectResponse
@@ -64,7 +64,7 @@ class TwoFactorController extends Controller
         TwoFactorRememberToken::where('user_id', $user->id)->delete();
         $user->logActivity('two_factor_disabled', 'Disabled TOTP 2FA');
 
-        return redirect()->route('dashboard')->with('success', '2FA dimatikan.');
+        return redirect()->route('dashboard')->with('success', '2FA has been disabled.');
     }
 
     public function regenerateBackupCodes(Request $request): \Illuminate\Http\RedirectResponse
@@ -74,7 +74,7 @@ class TwoFactorController extends Controller
         $user->update(['two_factor_backup_codes' => $backupCodes]);
         $user->logActivity('two_factor_backup_regenerated', 'Regenerated 2FA backup codes');
 
-        return back()->with('success', 'Backup codes baru dibuat. Simpan dengan aman.');
+        return back()->with('success', 'New backup codes have been generated. Store them securely.');
     }
 
     public function showChallenge(): \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
@@ -106,7 +106,7 @@ class TwoFactorController extends Controller
         $isBackup = in_array($code, $backupCodes, true);
 
         if (! $isBackup && ! $totp->verify($user->two_factor_secret, $code)) {
-            return back()->withErrors(['code' => 'Kode tidak valid.']);
+            return back()->withErrors(['code' => 'Invalid code.']);
         }
 
         if ($isBackup) {

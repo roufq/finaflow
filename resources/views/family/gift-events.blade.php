@@ -238,7 +238,7 @@
                                             @csrf
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <tags for="recipient{{ $event->id }}">Recipient</tags>
+                                                    <label for="recipient{{ $event->id }}">Recipient</label>
                                                     <select class="form-control" id="recipient{{ $event->id }}" name="recipient_id" required>
                                                         <option value="" disabled {{ optional($event->recipient_details)->count() ? '' : 'selected' }}>Select Recipient</option>
                                                         @if(optional($event->recipient_details)->count() > 0)
@@ -251,20 +251,20 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <tags for="gift_name{{ $event->id }}">Gift Name</tags>
+                                                    <label for="gift_name{{ $event->id }}">Gift Name</label>
                                                     <input type="text" class="form-control" id="gift_name{{ $event->id }}" name="gift_name" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <tags for="gift_amount{{ $event->id }}">Gift Amount (Rp)</tags>
+                                                    <label for="gift_amount{{ $event->id }}">Gift Amount (Rp)</label>
                                                     <input type="number" class="form-control" id="gift_amount{{ $event->id }}" name="amount" min="0" step="1000" required>
                                                 </div>
                                                 <div class="form-group">
-                                                    <tags for="gift_description{{ $event->id }}">Description (Optional)</tags>
+                                                    <label for="gift_description{{ $event->id }}">Description (Optional)</label>
                                                     <textarea class="form-control" id="gift_description{{ $event->id }}" name="description" rows="2"></textarea>
                                                 </div>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="purchased{{ $event->id }}" name="purchased">
-                                                    <tags class="form-check-tags" for="purchased{{ $event->id }}">Already purchased</tags>
+                                                    <label class="form-check-label" for="purchased{{ $event->id }}">Already purchased</label>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

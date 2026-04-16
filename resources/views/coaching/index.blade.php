@@ -103,15 +103,15 @@
                     <form method="POST" action="{{ route('coaching.action-plan.store') }}">
                         @csrf
                         <div class="form-group">
-                            <tags class="text-xs text-muted text-uppercase">{{ __('coaching.plan.plan_month') }}</tags>
+                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.plan.plan_month') }}</label>
                             <input type="month" class="form-control" name="plan_month" value="{{ old('plan_month', now()->format('Y-m')) }}" required>
                         </div>
                         <div class="form-group">
-                            <tags class="text-xs text-muted text-uppercase">{{ __('coaching.plan.summary_notes') }}</tags>
+                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.plan.summary_notes') }}</label>
                             <textarea class="form-control" rows=2 name="summary_notes">{{ old('summary_notes') }}</textarea>
                         </div>
                         <div class="form-group">
-                            <tags class="text-xs text-muted text-uppercase">{{ __('coaching.plan.targets') }}</tags>
+                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.plan.targets') }}</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
                                 <input type="number" class="form-control" name="savings_target" placeholder="{{ __('coaching.plan.savings_target') }}">
@@ -127,7 +127,7 @@
                         </div>
                         <div class="custom-control custom-checkbox mb-3">
                             <input type="checkbox" class="custom-control-input" id="generateTasks" name="generate_tasks" value="1" checked>
-                            <tags class="custom-control-tags" for="generateTasks">{{ __('coaching.plan.generate_tasks') }}</tags>
+                            <label class="custom-control-label" for="generateTasks">{{ __('coaching.plan.generate_tasks') }}</label>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">{{ __('coaching.plan.create_new') }}</button>
                     </form>
@@ -153,20 +153,20 @@
                             <input type="hidden" name="action_plan_id" value="{{ $currentPlan->id }}">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <tags class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.add_task') }}</tags>
+                                    <label class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.add_task') }}</label>
                                     <input type="text" class="form-control" name="title" required>
                                 </div>
                                 <div class="form-group col-md-2">
-                                    <tags class="text-xs text-muted text-uppercase">Week</tags>
+                                    <label class="text-xs text-muted text-uppercase">Week</label>
                                     <input type="number" class="form-control" min="1" max="6" name="week_index" value="1">
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <tags class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.due_date') }}</tags>
+                                    <label class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.due_date') }}</label>
                                     <input type="date" class="form-control" name="due_date">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <tags class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.notes') }}</tags>
+                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.notes') }}</label>
                                 <textarea class="form-control" rows="2" name="notes"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary btn-sm">{{ __('coaching.tasks.add_task') }}</button>
@@ -268,7 +268,7 @@
                                         <form method="POST" action="{{ route('coaching.lessons.update', $lesson) }}">
                                             @csrf
                                             <div class="form-group">
-                                                <tags class="text-xs text-muted text-uppercase">{{ __('coaching.lessons.status') }}</tags>
+                                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.lessons.status') }}</label>
                                                 <select name="status" class="form-control form-control-sm">
                                                     @foreach(['not_started','in_progress','completed'] as $status)
                                                         <option value="{{ $status }}" @selected(optional($progress)->status === $status)>{{ Str::title(str_replace('_',' ',$status)) }}</option>
@@ -276,7 +276,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <tags class="text-xs text-muted text-uppercase">{{ __('coaching.lessons.score') }}</tags>
+                                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.lessons.score') }}</label>
                                                 <input type="number" class="form-control form-control-sm" name="comprehension_score" value="{{ optional($progress)->comprehension_score }}" min="0" max="100">
                                             </div>
                                             <button type="submit" class="btn btn-primary btn-sm btn-block">{{ __('coaching.lessons.status') }}</button>
@@ -298,20 +298,20 @@
                     <form method="POST" action="{{ route('coaching.journal.store') }}" class="mb-4">
                         @csrf
                         <div class="form-group">
-                            <tags class="text-xs text-muted text-uppercase">{{ __('coaching.journal.reflection') }}</tags>
+                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.journal.reflection') }}</label>
                             <textarea class="form-control" rows="2" name="reflection" required></textarea>
                         </div>
                         <div class="form-group">
-                            <tags class="text-xs text-muted text-uppercase">{{ __('coaching.journal.commitment') }}</tags>
+                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.journal.commitment') }}</label>
                             <textarea class="form-control" rows="2" name="commitment"></textarea>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <tags class="text-xs text-muted text-uppercase">{{ __('coaching.journal.mood') }}</tags>
+                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.journal.mood') }}</label>
                                 <input type="text" class="form-control" name="mood" placeholder="Calm, anxious, etc.">
                             </div>
                             <div class="form-group col-md-4">
-                                <tags class="text-xs text-muted text-uppercase">Habit</tags>
+                                <label class="text-xs text-muted text-uppercase">Habit</label>
                                 <select class="form-control" name="habit_id">
                                     <option value="">{{ __('coaching.filters.all') }}</option>
                                     @foreach($habits as $habit)
@@ -320,7 +320,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <tags class="text-xs text-muted text-uppercase">Trigger</tags>
+                                <label class="text-xs text-muted text-uppercase">Trigger</label>
                                 <select class="form-control" name="spending_trigger_id">
                                     <option value="">{{ __('coaching.filters.all') }}</option>
                                     @foreach($triggers as $trigger)

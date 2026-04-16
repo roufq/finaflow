@@ -17,11 +17,11 @@
                 @method('PUT')
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <tags>Title</tags>
+                        <label>Title</label>
                         <input type="text" name="title" class="form-control" value="{{ old('title', $module->title) }}" required>
                     </div>
                     <div class="form-group col-md-3">
-                        <tags>Category</tags>
+                        <label>Category</label>
                         <select name="category" class="form-control">
                             <option value="">{{ __('Choose category') }}</option>
                             @foreach($categories as $category)
@@ -30,7 +30,7 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <tags>Difficulty</tags>
+                        <label>Difficulty</label>
                         <select name="difficulty" class="form-control">
                             @foreach(['beginner','intermediate','advanced'] as $level)
                                 <option value="{{ $level }}" @selected(old('difficulty', $module->difficulty) === $level)>{{ ucfirst($level) }}</option>
@@ -40,25 +40,25 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <tags>Estimated Time (minutes)</tags>
+                        <label>Estimated Time (minutes)</label>
                         <input type="number" name="estimated_time" class="form-control" min="0" value="{{ old('estimated_time', $module->estimated_time) }}">
                     </div>
                     <div class="form-group col-md-4">
-                        <tags>Order</tags>
+                        <label>Order</label>
                         <input type="number" name="order" class="form-control" min="0" value="{{ old('order', $module->order) }}">
                     </div>
                     <div class="form-group col-md-4">
-                        <tags>Language</tags>
+                        <label>Language</label>
                         <input type="text" name="language" class="form-control" value="{{ old('language', $module->language) }}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <tags>Content</tags>
+                    <label>Content</label>
                     <textarea name="content" rows="6" class="form-control">{{ old('content', $module->content) }}</textarea>
                 </div>
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" @checked(old('is_active', $module->is_active))>
-                    <tags class="form-check-tags" for="is_active">Publish</tags>
+                    <label class="form-check-label" for="is_active">Publish</label>
                 </div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
             </form>

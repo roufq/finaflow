@@ -1,39 +1,39 @@
-# 🛠️ PANDUAN SETUP ENVIRONMENT DEVELOPMENT FINA FLOW
+# 🛠️ FINAFLOW DEVELOPMENT ENVIRONMENT SETUP GUIDE
 
 ## 📋 Overview
-Panduan lengkap untuk setup environment development FinaFlow di local machine. Panduan ini mencakup instalasi dependencies, konfigurasi database, dan setup aplikasi untuk development.
+Comprehensive guide to setting up the FinaFlow development environment on your local machine. This guide covers dependency installation, database configuration, and overall application setup for development purposes.
 
-## 💻 PRASYARAT SYSTEM
+## 💻 SYSTEM PREREQUISITES
 
 ### **Operating System**
-- **Windows**: 10/11 Pro (recommended) atau Windows Subsystem for Linux (WSL2)
-- **macOS**: 12.0+ (Monterey atau lebih baru)
+- **Windows**: 10/11 Pro (recommended) or Windows Subsystem for Linux (WSL2)
+- **macOS**: 12.0+ (Monterey or newer)
 - **Linux**: Ubuntu 20.04+, CentOS 8+, Fedora 34+
 
 ### **Hardware Requirements**
 - **RAM**: Minimum 8GB, Recommended 16GB+
 - **Storage**: 20GB free space
-- **CPU**: Intel i5/AMD Ryzen 5 atau lebih baik
+- **CPU**: Intel i5/AMD Ryzen 5 or better
 
 ### **Software Prerequisites**
 - **Git**: 2.30+
-- **PHP**: 8.2+ (dengan extensions tertentu)
+- **PHP**: 8.2+ (with specific extensions)
 - **Composer**: 2.0+
 - **Node.js**: 18+ LTS
 - **NPM**: 8+
-- **Database**: MySQL 8.0+ atau PostgreSQL 15+
+- **Database**: MySQL 8.0+ or PostgreSQL 15+
 
-## 🔧 INSTALASI DEPENDENCIES
+## 🔧 DEPENDENCY INSTALLATION
 
 ### **Windows Setup**
 
 #### **1. Install PHP 8.2**
 ```bash
-# Download dari https://windows.php.net/download
-# Pilih "VS16 x64 Thread Safe" version
+# Download from https://windows.php.net/download
+# Select the "VS16 x64 Thread Safe" version
 
-# Extract ke C:\php
-# Add ke PATH environment variable
+# Extract to C:\php
+# Add it to the PATH environment variable
 # C:\php
 
 # Verify installation
@@ -42,8 +42,8 @@ php --version
 
 #### **2. Install Composer**
 ```bash
-# Download dari https://getcomposer.org/download/
-# Install dengan setup wizard
+# Download from https://getcomposer.org/download/
+# Install via the setup wizard
 
 # Verify installation
 composer --version
@@ -51,8 +51,8 @@ composer --version
 
 #### **3. Install Node.js**
 ```bash
-# Download dari https://nodejs.org/ (LTS version)
-# Install dengan default settings
+# Download from https://nodejs.org/ (LTS version)
+# Install using default settings
 
 # Verify installation
 node --version
@@ -61,8 +61,8 @@ npm --version
 
 #### **4. Install Git**
 ```bash
-# Download dari https://git-scm.com/download/win
-# Install dengan default settings
+# Download from https://git-scm.com/download/win
+# Install using default settings
 
 # Configure Git
 git config --global user.name "Your Name"
@@ -71,9 +71,9 @@ git config --global user.email "your.email@example.com"
 
 #### **5. Install MySQL**
 ```bash
-# Download MySQL Installer dari https://dev.mysql.com/downloads/installer/
-# Pilih "Developer Default" setup type
-# Set root password: "password" atau sesuai keinginan
+# Download MySQL Installer from https://dev.mysql.com/downloads/installer/
+# Select "Developer Default" setup type
+# Set root password: "password" or as desired
 
 # Verify installation
 mysql --version
@@ -182,36 +182,36 @@ sudo mysql_secure_installation
 mysql --version
 ```
 
-## 📁 SETUP PROJECT
+## 📁 PROJECT SETUP
 
 ### **1. Clone Repository**
 ```bash
 # Navigate to your projects directory
-cd ~/Projects  # atau ~/Documents/Projects
+cd ~/Projects  # or ~/Documents/Projects
 
 # Clone the repository
 git clone https://github.com/yourusername/finaflow.git
 cd finaflow
 
-# Jika menggunakan branch tertentu
-git checkout develop  # atau branch yang diinginkan
+# If relying on a specific branch
+git checkout develop  # or branch you wish to use
 ```
 
 ### **2. Install PHP Dependencies**
 ```bash
-# Install semua dependencies
+# Install all backend dependencies
 composer install
 
-# Jika ada masalah memory, gunakan:
+# In case of memory limits, try substituting with:
 php -d memory_limit=-1 /usr/local/bin/composer install
 ```
 
 ### **3. Install Node Dependencies**
 ```bash
-# Install semua dependencies
+# Install all frontend dependencies
 npm install
 
-# Jika menggunakan Yarn (optional)
+# If using Yarn (optional)
 # yarn install
 ```
 
@@ -221,10 +221,10 @@ npm install
 cp .env.example .env
 
 # Edit environment file
-nano .env  # atau gunakan editor favorit Anda
+nano .env  # or your favorite text editor
 ```
 
-**Konfigurasi .env untuk development:**
+**Development .env Configuration:**
 ```env
 APP_NAME="FinaFlow Dev"
 APP_ENV=local
@@ -244,12 +244,12 @@ DB_DATABASE=finaflow_dev
 DB_USERNAME=root
 DB_PASSWORD=password
 
-# Redis (optional - untuk caching)
+# Redis (optional - for caching and queuing)
 REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
-# Mail Configuration (untuk testing)
+# Mail Configuration (for testing)
 MAIL_MAILER=log
 MAIL_HOST=127.0.0.1
 MAIL_PORT=2525
@@ -270,7 +270,7 @@ SESSION_LIFETIME=120
 # File Storage
 FILESYSTEM_DISK=local
 
-# Vite (untuk asset compilation)
+# Vite (for asset compilation)
 VITE_APP_NAME="${APP_NAME}"
 ```
 
@@ -283,7 +283,7 @@ php artisan key:generate
 
 #### **MySQL Setup**
 ```bash
-# Login ke MySQL
+# Login to MySQL
 mysql -u root -p
 
 # Create database
@@ -293,7 +293,7 @@ EXIT;
 
 #### **PostgreSQL Setup (Alternative)**
 ```bash
-# Install PostgreSQL (jika belum ada)
+# Install PostgreSQL (if you haven't yet)
 # Ubuntu/Debian:
 sudo apt install -y postgresql postgresql-contrib
 
@@ -304,80 +304,80 @@ brew services start postgresql
 # Create database
 createdb finaflow_dev
 
-# Atau via psql
+# Or via psql
 psql -c "CREATE DATABASE finaflow_dev;"
 ```
 
 ### **7. Run Migrations**
 ```bash
-# Run semua migrations
+# Run all migrations
 php artisan migrate
 
-# Jika ingin fresh install (hapus semua data)
+# If wanting a fresh install (deletes all data)
 php artisan migrate:fresh
 
-# Run seeders untuk dummy data
+# Run seeders for dummy data
 php artisan db:seed
 ```
 
 ### **8. Setup Storage Permissions**
 ```bash
-# Set permissions untuk storage dan cache
+# Set permissions for storage and cache endpoints
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
-# Untuk Windows (dalam Git Bash atau WSL)
+# For Windows (within Git Bash or WSL)
 # icacls storage /grant "Users":F /T
 # icacls bootstrap/cache /grant "Users":F /T
 ```
 
 ### **9. Build Assets**
 ```bash
-# Build assets untuk development
+# Build assets for development
 npm run dev
 
-# Atau build untuk production
+# Or build for production deployment testing
 npm run build
 
-# Untuk development dengan hot reload
+# For development involving network hot-reloading
 npm run dev -- --host
 ```
 
-## 🚀 MENJALANKAN APLIKASI
+## 🚀 RUNNING THE APPLICATION
 
 ### **Development Server**
 
 #### **Laravel Development Server**
 ```bash
-# Jalankan Laravel development server
+# Start Laravel built-in development server
 php artisan serve
 
-# Server akan berjalan di http://localhost:8000
-# Untuk custom host/port
+# The server will run at http://localhost:8000
+# For custom host/port binding
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 
-#### **Vite Development Server (untuk asset hot reload)**
+#### **Vite Development Server (for hot asset reloading)**
 ```bash
-# Terminal terpisah - jalankan Vite dev server
+# Open a separate terminal - run Vite dev server
 npm run dev
 
-# Atau dengan host binding
+# Or with host binding
 npm run dev -- --host
 ```
 
-### **Queue Worker (untuk background jobs)**
+### **Queue Worker (for background jobs)**
 ```bash
-# Terminal terpisah - jalankan queue worker
+# Separate terminal - run queue worker
 php artisan queue:work
 
-# Atau dengan custom options
+# Or append custom timeout options
 php artisan queue:work --sleep=3 --tries=3 --timeout=90
 ```
 
-### **Scheduler (untuk scheduled tasks)**
+### **Scheduler (for scheduled tasks)**
 ```bash
-# Terminal terpisah - jalankan scheduler
+# Separate terminal - run the scheduled cron
 php artisan schedule:work
 ```
 
@@ -388,35 +388,35 @@ php artisan schedule:work
 # Create testing database
 mysql -u root -p -e "CREATE DATABASE finaflow_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Copy environment untuk testing
+# Copy environment dedicated to testing
 cp .env .env.testing
 
 # Edit .env.testing
 nano .env.testing
 ```
 
-**Konfigurasi .env.testing:**
+**Configuration inside .env.testing:**
 ```env
 APP_ENV=testing
 DB_DATABASE=finaflow_test
 
-# Use in-memory database untuk testing cepat (optional)
+# Use in-memory database for ultra fast testing execution (optional)
 # DB_CONNECTION=sqlite
 # DB_DATABASE=:memory:
 ```
 
 ### **2. Run Tests**
 ```bash
-# Run semua tests
+# Run all core tests
 php artisan test
 
-# Run dengan coverage
+# Run and output code coverage
 php artisan test --coverage
 
-# Run specific test file
+# Run a specific test file exclusively
 php artisan test tests/Feature/AuthTest.php
 
-# Run dengan verbose output
+# Verbose output for deeper inspection
 php artisan test -v
 ```
 
@@ -425,19 +425,19 @@ php artisan test -v
 # Install PHPStan
 composer require --dev phpstan/phpstan
 
-# Run analysis
+# Run analysis mechanism
 ./vendor/bin/phpstan analyse
 ```
 
 ### **4. Setup Pint (Code Formatting)**
 ```bash
-# Install Laravel Pint
+# Install Laravel Pint Code Standardizer
 composer require --dev laravel/pint
 
-# Format code
+# Format code automatically 
 ./vendor/bin/pint
 
-# Check formatting
+# Check for formatting deviations
 ./vendor/bin/pint --test
 ```
 
@@ -445,10 +445,10 @@ composer require --dev laravel/pint
 
 ### **1. Laravel Debugbar**
 ```bash
-# Install debugbar untuk development
+# Install debugbar strictly for development
 composer require barryvdh/laravel-debugbar --dev
 
-# Akan otomatis aktif di environment local
+# It will inherently activate assuming the environment is set to local
 ```
 
 ### **2. Laravel Telescope (Advanced Debugging)**
@@ -458,18 +458,18 @@ composer require laravel/telescope
 php artisan telescope:install
 php artisan migrate
 
-# Akses di /telescope
+# Access the interface at /telescope
 ```
 
 ### **3. MailHog (Email Testing)**
 ```bash
-# Install MailHog untuk testing email
-# Download dari https://github.com/mailhog/MailHog/releases
+# Install MailHog to intercept emails safely 
+# Download release from https://github.com/mailhog/MailHog/releases
 
-# Jalankan MailHog
+# Execute MailHog application
 ./MailHog
 
-# Configure di .env
+# Reconfigure your .env file
 MAIL_MAILER=smtp
 MAIL_HOST=localhost
 MAIL_PORT=1025
@@ -478,15 +478,15 @@ MAIL_PORT=1025
 ### **4. Database Management**
 
 #### **TablePlus / DBeaver**
-- Download dari https://tableplus.com/ atau https://dbeaver.io/
-- Connect dengan credentials dari .env
+- Download freely from https://tableplus.com/ or https://dbeaver.io/
+- Authenticate the connection via matched credentials from `.env`.
 
 #### **Laravel Tinker**
 ```bash
-# Interactive shell untuk testing code
+# Initiate interactive shell interface
 php artisan tinker
 
-# Contoh penggunaan:
+# Example workflow usage:
 User::all()
 Transaction::where('type', 'income')->sum('amount')
 exit
@@ -496,34 +496,34 @@ exit
 
 ### **1. Application Logs**
 ```bash
-# View Laravel logs
+# View Laravel real-time logs
 tail -f storage/logs/laravel.log
 
-# Clear logs
+# Truncate and clear old logs
 php artisan log:clear
 ```
 
 ### **2. Queue Monitoring**
 ```bash
-# Check queue status
+# Check queue statuses
 php artisan queue:status
 
-# List failed jobs
+# Output list of failed jobs
 php artisan queue:failed
 
-# Retry failed jobs
+# Ask the system to retry failed jobs
 php artisan queue:retry all
 ```
 
 ### **3. Cache Management**
 ```bash
-# Clear all caches
+# Clear heavily loaded data caches
 php artisan cache:clear
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
-# Cache untuk production-like performance
+# Retain cached variants mimicking production performance
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -533,54 +533,54 @@ php artisan view:cache
 
 ### **1. Daily Development Workflow**
 ```bash
-# Start development
+# Start your day by pulling origin data
 git pull origin develop
 composer install
 npm install
 npm run dev
 
-# Terminal 1: Laravel server
+# Terminal 1: Application Server 
 php artisan serve
 
-# Terminal 2: Queue worker
+# Terminal 2: Service Queue Worker
 php artisan queue:work
 
-# Terminal 3: Vite dev server
+# Terminal 3: Vite Dev Front-end Server
 npm run dev
 ```
 
-### **2. Before Committing**
+### **2. Before Committing Code Base**
 ```bash
-# Run tests
+# Verify integrity via testing 
 php artisan test
 
-# Check code style
+# Linting and aesthetic checks
 ./vendor/bin/pint --test
 
-# Static analysis
+# Syntax vulnerability checking
 ./vendor/bin/phpstan analyse
 
-# Clear caches
+# Destroy cache fragments
 php artisan cache:clear
 php artisan config:clear
 ```
 
 ### **3. Git Workflow**
 ```bash
-# Create feature branch
+# Define a fresh feature implementation branch
 git checkout -b feature/new-feature
 
-# Make changes
+# Make changes internally
 # ...
 
-# Commit changes
+# Commit final variations
 git add .
 git commit -m "Add new feature"
 
-# Push to remote
+# Final push upstream
 git push origin feature/new-feature
 
-# Create pull request
+# Create an authoritative pull request afterward
 ```
 
 ## 🚨 TROUBLESHOOTING
@@ -589,66 +589,66 @@ git push origin feature/new-feature
 
 #### **1. Permission Issues**
 ```bash
-# Fix storage permissions
+# Repair storage directory permissions
 chmod -R 775 storage bootstrap/cache
 
-# Untuk Windows
+# For Windows Environments specifically
 icacls storage /grant "Users":F /T
 icacls bootstrap/cache /grant "Users":F /T
 ```
 
 #### **2. Database Connection Issues**
 ```bash
-# Test database connection
+# Assess the database binding 
 php artisan tinker
 DB::connection()->getPdo();
 exit
 
-# Check MySQL service
+# Double check the MySQL service is spinning actively
 sudo systemctl status mysql  # Linux
 brew services list | grep mysql  # macOS
 ```
 
 #### **3. Node.js Issues**
 ```bash
-# Clear node modules dan reinstall
+# Empty your node bundle cache explicitly
 rm -rf node_modules package-lock.json
 npm install
 
-# Check Node version
+# Check global assignments 
 node --version
 npm --version
 ```
 
 #### **4. Composer Issues**
 ```bash
-# Clear composer cache
+# Flush composer cache repository 
 composer clear-cache
 
-# Update composer
+# Self-update the internal modules
 composer self-update
 
-# Reinstall dependencies
+# Reinstall base dependencies
 rm -rf vendor composer.lock
 composer install
 ```
 
 #### **5. Port Already in Use**
 ```bash
-# Find process using port 8000
+# Dig process assignments over port 8000
 lsof -i :8000  # Linux/macOS
 netstat -ano | findstr :8000  # Windows
 
-# Kill process
+# Subjugate and kill conflicting items 
 kill -9 <PID>
 ```
 
 #### **6. Vite Hot Reload Not Working**
 ```bash
-# Clear Vite cache
+# Flush hidden Vite cache folder
 rm -rf node_modules/.vite
 
-# Restart dev server
+# Overload the restart method aggressively 
 npm run dev -- --force
 ```
 
@@ -656,66 +656,66 @@ npm run dev -- --force
 
 ### **Laravel Commands**
 ```bash
-# Create new model
+# Produce a new Eloquent model 
 php artisan make:model Transaction
 
-# Create migration
+# Render a fresh structural migration script
 php artisan make:migration create_transactions_table
 
-# Create controller
+# Spawn a dedicated functional controller
 php artisan make:controller TransactionController
 
-# Create seeder
+# Generate database seeder class format
 php artisan make:seeder TransactionSeeder
 
-# List all routes
+# Extract structured arrays of API endpoint routes
 php artisan route:list
 
-# Clear all Laravel caches
+# Purge any overarching caching mechanisms entirely
 php artisan optimize:clear
 ```
 
 ### **Database Commands**
 ```bash
-# Reset database
+# Completely erase and recreate seeded content
 php artisan migrate:fresh --seed
 
-# Create new migration
+# Execute new database layout migrations progressively 
 php artisan make:migration add_status_to_transactions_table
 
-# Run pending migrations
+# Commit pending architectural changes to DB 
 php artisan migrate
 
-# Rollback last migration
+# Step backwards chronologically into earlier migration blocks
 php artisan migrate:rollback
 ```
 
 ### **Asset Commands**
 ```bash
-# Build untuk development
+# Build raw elements mapping into functional endpoints (Dev)
 npm run dev
 
-# Build untuk production
+# Construct completely unified and minified assets package (Prod)
 npm run build
 
-# Watch untuk changes
+# Leave internal observer tracking code anomalies
 npm run watch
 ```
 
 ## 🔒 SECURITY CONSIDERATIONS
 
 ### **Development Security**
-- Jangan commit `.env` file ke Git
-- Gunakan password yang kuat untuk database
-- Enable 2FA untuk GitHub account
-- Regular update dependencies
+- Stop and restrict `.env` pushes onto an external Git repository map. 
+- Rely heavily on robust root and database user passwords.
+- Always activate a Secondary Token standard (2FA) inside a developer’s GitHub account structure natively.
+- Maintain and consistently update sub-modular dependencies frequently. 
 
 ### **Environment Variables**
 ```bash
-# Check untuk sensitive data
+# Review internally via deep text sweeps
 grep -r "password\|secret\|key" .env
 
-# Jangan commit sensitive files
+# Hardcode exceptions prohibiting public transparency limits
 echo ".env" >> .gitignore
 echo "storage/logs/*.log" >> .gitignore
 ```
@@ -724,57 +724,57 @@ echo "storage/logs/*.log" >> .gitignore
 
 ### **Development Performance Tips**
 ```bash
-# Enable OPcache untuk PHP
+# Assert the presence of optimized PHP compilation blocks 
 php -m | grep opcache
 
-# Use local Redis untuk caching
+# Setup ultra-fast internal system cache queues  
 # brew install redis (macOS)
 # sudo apt install redis-server (Linux)
 
-# Configure di .env
+# Mirror configurations inward to .env
 CACHE_DRIVER=redis
 SESSION_DRIVER=redis
 ```
 
 ### **Database Optimization**
 ```bash
-# Enable query logging untuk debugging
-# Di .env
+# Monitor the internal payload times strictly
+# Modify globally via .env bounds
 DB_LOG_QUERIES=true
 
-# Monitor slow queries
+# Evaluate lethargic internal API endpoints continuously  
 php artisan db:monitor
 ```
 
 ## 🎯 DEVELOPMENT CHECKLIST
 
 ### **Initial Setup**
-- [ ] PHP 8.2+ installed
-- [ ] Composer installed
-- [ ] Node.js 18+ installed
-- [ ] Git configured
-- [ ] Database server running
-- [ ] Project cloned
+- [ ] PHP 8.2+ installed securely
+- [ ] Composer natively distributed 
+- [ ] Node.js 18+ correctly linked
+- [ ] Git comprehensively aligned 
+- [ ] Initial Database Server properly operational 
+- [ ] Native GitHub Repo mapping cloned tightly  
 
 ### **Application Setup**
-- [ ] Dependencies installed (composer, npm)
-- [ ] Environment configured (.env)
-- [ ] Application key generated
-- [ ] Database created & migrated
-- [ ] Storage permissions set
-- [ ] Assets built
+- [ ] All external dependencies injected (composer, npm)
+- [ ] File Environment structure verified statically (.env)
+- [ ] App Core logic keys generated efficiently
+- [ ] Sub-level databases accurately constructed and mapped seamlessly 
+- [ ] Read and Write filesystem rules permitted 
+- [ ] Base frontend framework constructed logically
 
 ### **Testing Setup**
-- [ ] Testing database configured
-- [ ] Tests passing
-- [ ] Code style checked
-- [ ] Static analysis clean
+- [ ] Local testing structures built with isolated variables
+- [ ] Comprehensive test sweeps consistently completed fully green 
+- [ ] Clean and standardized formatting integrated tightly
+- [ ] Native syntax analyzer errors wiped effectively clean
 
 ### **Development Tools**
-- [ ] Debugbar installed (optional)
-- [ ] Database client configured
-- [ ] Mail testing setup (optional)
-- [ ] Version control workflow ready
+- [ ] Debug utilities loaded securely
+- [ ] Standardized client-app interactions synced natively
+- [ ] Optional mailer endpoints validated fully
+- [ ] Final version control paradigms defined openly 
 
 ---
 
@@ -782,27 +782,27 @@ php artisan db:monitor
 
 **Windows (PowerShell):**
 ```powershell
-# Run as Administrator
+# Run explicitly as Administrator internally 
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\setup-dev.ps1
 ```
 
 **macOS/Linux:**
 ```bash
-# Make executable
+# Apply executable rights explicitly
 chmod +x setup-dev.sh
 
-# Run setup
+# Complete auto-setup seamlessly 
 ./setup-dev.sh
 ```
 
-**Manual Quick Start:**
+**Manual Quick Start Validation Pipeline:**
 ```bash
-# Clone & setup
+# Raw clone setup
 git clone <repo> && cd finaflow
 composer install && npm install
 cp .env.example .env && php artisan key:generate
-# Configure database di .env
+# Validate the initial DB connection natively through .env 
 php artisan migrate && php artisan db:seed
 npm run dev &
 php artisan serve &
@@ -831,4 +831,4 @@ php artisan queue:work &
 
 ---
 
-*Panduan setup development ini dirancang untuk memudahkan developer baru memulai dengan FinaFlow. Pastikan mengikuti semua langkah dengan urut dan test setiap komponen sebelum melanjutkan ke development.*
+*This particular setup repository was strictly fabricated mapping logical guidelines intending absolute ease-of-use enabling newer developers the fundamental keys navigating FinaFlow quickly. It’s deeply suggested validating components modularly as instructed above ensuring zero-day implementation efficiency.*

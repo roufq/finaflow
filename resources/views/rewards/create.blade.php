@@ -19,7 +19,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags for="card_type">Card Type</tags>
+                            <label for="card_type">Card Type</label>
                             <select class="form-control @error('card_type') is-invalid @enderror" id="card_type" name="card_type" required>
                                 <option value="">Select Card Type</option>
                                 <option value="Visa" {{ old('card_type') == 'Visa' ? 'selected' : '' }}>Visa</option>
@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="reward_type">Reward Type</tags>
+                            <label for="reward_type">Reward Type</label>
                             <select class="form-control @error('reward_type') is-invalid @enderror" id="reward_type" name="reward_type" required>
                                 <option value="">Select Reward Type</option>
                                 <option value="Cashback" {{ old('reward_type') == 'Cashback' ? 'selected' : '' }}>Cashback</option>
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="points_earned">Points Earned</tags>
+                            <label for="points_earned">Points Earned</label>
                             <input type="number" class="form-control @error('points_earned') is-invalid @enderror" id="points_earned" name="points_earned" value="{{ old('points_earned', 0) }}" required>
                             @error('points_earned')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="points_redeemed">Points Redeemed</tags>
+                            <label for="points_redeemed">Points Redeemed</label>
                             <input type="number" class="form-control @error('points_redeemed') is-invalid @enderror" id="points_redeemed" name="points_redeemed" value="{{ old('points_redeemed', 0) }}" required>
                             @error('points_redeemed')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="cashback_amount">Cashback Amount (Rp)</tags>
+                            <label for="cashback_amount">Cashback Amount (Rp)</label>
                             <input type="number" class="form-control @error('cashback_amount') is-invalid @enderror" id="cashback_amount" name="cashback_amount" value="{{ old('cashback_amount', 0) }}" step="0.01" required>
                             @error('cashback_amount')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="expiry_date">Points Expiry Date (Optional)</tags>
+                            <label for="expiry_date">Points Expiry Date (Optional)</label>
                             <input type="date" class="form-control @error('expiry_date') is-invalid @enderror" id="expiry_date" name="expiry_date" value="{{ old('expiry_date') }}">
                             @error('expiry_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -81,7 +81,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="notes">Notes (Optional)</tags>
+                            <label for="notes">Notes (Optional)</label>
                             <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Card benefits, bonus categories, etc.">{{ old('notes') }}</textarea>
                         </div>
 

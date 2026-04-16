@@ -22,7 +22,7 @@
                         @csrf
 
                         <div class="form-group">
-                            <tags for="name">Name Tag <span class="text-danger">*</span></tags>
+                            <label for="name">Name Tag <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name') }}" required>
                             @error('name')
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="color">Color Tag</tags>
+                            <label for="color">Color Tag</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="form-group">
-                            <tags for="description">Description</tags>
+                            <label for="description">Description</label>
                             <textarea class="form-control @error('description') is-invalid @enderror"
                                       id="description" name="description" rows="3"
                                       placeholder="Deskripsikan penggunaan tag ini...">{{ old('description') }}</textarea>

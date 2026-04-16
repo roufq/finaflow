@@ -15,7 +15,7 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
-                    <tags for="from_account_id">Dari Account *</tags>
+                    <label for="from_account_id">Dari Account *</label>
                     <select class="form-control @error('from_account_id') is-invalid @enderror" id="from_account_id" name="from_account_id" required>
                         <option value="">Select Account Pengirim</option>
                         @foreach($accounts as $account)
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="to_account_id">Ke Account *</tags>
+                    <label for="to_account_id">Ke Account *</label>
                     <select class="form-control @error('to_account_id') is-invalid @enderror" id="to_account_id" name="to_account_id" required>
                         <option value="">Select Account Penerima</option>
                         @foreach($accounts as $account)
@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="amount">Amount Transfers *</tags>
+                    <label for="amount">Amount Transfers *</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Rp</span>
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="fee">Biaya Transfers</tags>
+                    <label for="fee">Biaya Transfers</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Rp</span>
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="transfers_date">Date Transfers *</tags>
+                    <label for="transfers_date">Date Transfers *</label>
                     <input type="date" class="form-control @error('transfers_date') is-invalid @enderror" id="transfers_date" name="transfers_date" value="{{ old('transfers_date', $transfer->transfers_date->format('Y-m-d')) }}" required>
                     @error('transfers_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -79,7 +79,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="description">Description</tags>
+                    <label for="description">Description</label>
                     <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $transfer->description) }}</textarea>
                     @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="reference_number">Nomor Referensi</tags>
+                    <label for="reference_number">Nomor Referensi</label>
                     <input type="text" class="form-control @error('reference_number') is-invalid @enderror" id="reference_number" name="reference_number" value="{{ old('reference_number', $transfer->reference_number) }}">
                     @error('reference_number')
                         <div class="invalid-feedback">{{ $message }}</div>

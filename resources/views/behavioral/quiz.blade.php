@@ -25,27 +25,27 @@
                             <h5>1. When you receive a bonus or unexpected income, what do you typically do?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" id="q1a" value="spender" required>
-                                <tags class="form-check-tags" for="q1a">
+                                <label class="form-check-label" for="q1a">
                                     Spend it immediately on something fun
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" id="q1b" value="saver">
-                                <tags class="form-check-tags" for="q1b">
+                                <label class="form-check-label" for="q1b">
                                     Save most of it for future security
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" id="q1c" value="investor">
-                                <tags class="form-check-tags" for="q1c">
+                                <label class="form-check-label" for="q1c">
                                     Invest it for long-term growth
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q1" id="q1d" value="avoider">
-                                <tags class="form-check-tags" for="q1d">
+                                <label class="form-check-label" for="q1d">
                                     Pay off debts or bills
-                                </tags>
+                                </label>
                             </div>
                         </div>
 
@@ -54,21 +54,21 @@
                             <h5>2. How comfortable are you with financial risk?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q2" id="q2a" value="1" required>
-                                <tags class="form-check-tags" for="q2a">
+                                <label class="form-check-label" for="q2a">
                                     Very conservative - I prefer guaranteed returns
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q2" id="q2b" value="5">
-                                <tags class="form-check-tags" for="q2b">
+                                <label class="form-check-label" for="q2b">
                                     Moderate - Some risk is okay for better returns
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q2" id="q2c" value="10">
-                                <tags class="form-check-tags" for="q2c">
+                                <label class="form-check-label" for="q2c">
                                     Very aggressive - High risk for high rewards
-                                </tags>
+                                </label>
                             </div>
                         </div>
 
@@ -77,21 +77,21 @@
                             <h5>3. When shopping, you typically:</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q3" id="q3a" value="impulsive" required>
-                                <tags class="form-check-tags" for="q3a">
+                                <label class="form-check-label" for="q3a">
                                     Buy what you want when you see it
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q3" id="q3b" value="planned">
-                                <tags class="form-check-tags" for="q3b">
+                                <label class="form-check-label" for="q3b">
                                     Plan purchases and stick to a budget
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q3" id="q3c" value="research">
-                                <tags class="form-check-tags" for="q3c">
+                                <label class="form-check-label" for="q3c">
                                     Research and compare prices extensively
-                                </tags>
+                                </label>
                             </div>
                         </div>
 
@@ -100,21 +100,21 @@
                             <h5>4. Your approach to saving money is:</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q4" id="q4a" value="minimal" required>
-                                <tags class="form-check-tags" for="q4a">
+                                <label class="form-check-label" for="q4a">
                                     I save what's left after spending
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q4" id="q4b" value="automatic">
-                                <tags class="form-check-tags" for="q4b">
+                                <label class="form-check-label" for="q4b">
                                     I set up automatic transfers to savings
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q4" id="q4c" value="strategic">
-                                <tags class="form-check-tags" for="q4c">
+                                <label class="form-check-label" for="q4c">
                                     I have multiple savings goals and strategies
-                                </tags>
+                                </label>
                             </div>
                         </div>
 
@@ -123,21 +123,21 @@
                             <h5>5. How often do you review your financial situation?</h5>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q5" id="q5a" value="rarely" required>
-                                <tags class="form-check-tags" for="q5a">
+                                <label class="form-check-label" for="q5a">
                                     Rarely - only when there's a problem
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q5" id="q5b" value="monthly">
-                                <tags class="form-check-tags" for="q5b">
+                                <label class="form-check-label" for="q5b">
                                     Monthly or when bills are due
-                                </tags>
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="q5" id="q5c" value="weekly">
-                                <tags class="form-check-tags" for="q5c">
+                                <label class="form-check-label" for="q5c">
                                     Weekly or more frequently
-                                </tags>
+                                </label>
                             </div>
                         </div>
 

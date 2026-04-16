@@ -20,6 +20,22 @@
         </a>
     </div>
 
+    <!-- 2FA Suggestion Alert -->
+    @if (! Auth::user()->hasValidTwoFactorSecret())
+    <div class="alert alert-warning shadow-sm border-0 mb-5 d-flex align-items-center" style="border-radius: 12px; background-color: #fffbeb; color: #b45309;">
+        <div class="mr-3 p-2 bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm">
+            <i class="fas fa-shield-alt text-warning fa-lg"></i>
+        </div>
+        <div class="flex-grow-1">
+            <h6 class="mb-1 font-weight-bold">Security Recommendation: Enable Two-Factor Authentication (2FA)</h6>
+            <p class="mb-0 small">Enhance your account's protection against unauthorized access. We highly recommend activating 2FA in your account settings.</p>
+        </div>
+        <a href="{{ route('twofactor.setup') }}" class="btn btn-warning btn-sm font-weight-bold ml-3 px-3 shadow-sm" style="border-radius: 8px;">
+            Set up 2FA
+        </a>
+    </div>
+    @endif
+
     <!-- Main Dashboard Row (Cards) -->
     <div class="row">
         <!-- Total Net Worth Card -->

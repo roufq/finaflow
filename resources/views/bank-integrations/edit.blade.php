@@ -16,7 +16,7 @@
                 @method('PUT')
 
                 <div class="form-group">
-                    <tags for="account_id">Select Account <span class="text-danger">*</span></tags>
+                    <label for="account_id">Select Account <span class="text-danger">*</span></label>
                     <select name="account_id" id="account_id" class="form-control @error('account_id') is-invalid @enderror" required>
                         <option value="">-- Select Account --</option>
                         @foreach($accounts as $account)
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="bank_name">Name Bank <span class="text-danger">*</span></tags>
+                    <label for="bank_name">Name Bank <span class="text-danger">*</span></label>
                     <input type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror"
                            value="{{ old('bank_name', $bankIntegration->bank_name) }}" placeholder="Contoh: BCA, Mandiri, BRI" required>
                     @error('bank_name')
@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="account_number">Nomor Rekening</tags>
+                    <label for="account_number">Nomor Rekening</label>
                     <input type="text" name="account_number" id="account_number" class="form-control @error('account_number') is-invalid @enderror"
                            value="{{ old('account_number', $bankIntegration->account_number) }}" placeholder="Contoh: 1234567890">
                     @error('account_number')
@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="account_type">Type Account <span class="text-danger">*</span></tags>
+                    <label for="account_type">Type Account <span class="text-danger">*</span></label>
                     <select name="account_type" id="account_type" class="form-control @error('account_type') is-invalid @enderror" required>
                         <option value="">-- Select Type Account --</option>
                         <option value="checking" {{ old('account_type', $bankIntegration->account_type) == 'checking' ? 'selected' : '' }}>Checking/Giro</option>
@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="integration_type">Metode Integrations <span class="text-danger">*</span></tags>
+                    <label for="integration_type">Metode Integrations <span class="text-danger">*</span></label>
                     <select name="integration_type" id="integration_type" class="form-control @error('integration_type') is-invalid @enderror" required>
                         <option value="">-- Select Metode --</option>
                         <option value="manual" {{ old('integration_type', $bankIntegration->integration_type) == 'manual' ? 'selected' : '' }}>Manual Entry</option>
@@ -82,7 +82,7 @@
 
                 <!-- API Settings (shown for API) -->
                 <div id="api-settings" class="form-group" style="display: none;">
-                    <tags>Settings API</tags>
+                    <label>Settings API</label>
                     <div class="row">
                         <div class="col-md-6">
                             <input type="text" name="credentials[api_key]" class="form-control" placeholder="API Key" value="{{ old('credentials.api_key', $bankIntegration->credentials['api_key'] ?? '') }}">
@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="form-group">
-                    <tags for="notes">Notes</tags>
+                    <label for="notes">Notes</label>
                     <textarea name="notes" id="notes" class="form-control" rows="3"
                               placeholder="Notes tambahan tentang integrations ini">{{ old('notes', $bankIntegration->notes) }}</textarea>
                 </div>
@@ -106,7 +106,7 @@
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1"
                                {{ old('is_active', $bankIntegration->is_active) ? 'checked' : '' }}>
-                        <tags class="custom-control-tags" for="is_active">Aktifkan integrations ini</tags>
+                        <label class="custom-control-label" for="is_active">Aktifkan integrations ini</label>
                     </div>
                 </div>
 

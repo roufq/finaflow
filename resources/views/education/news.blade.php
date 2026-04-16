@@ -16,7 +16,7 @@
         <div class="card-body">
             @if(!empty($newsTags))
                 <form method="GET" class="form-inline mb-4">
-                    <tags class="text-xs text-muted mr-2 mb-0">{{ __('education.news.filter_tag') }}</tags>
+                    <label class="text-xs text-muted mr-2 mb-0">{{ __('education.news.filter_tag') }}</label>
                     <select name="tag" class="form-control form-control-sm mr-2">
                         <option value="">{{ __('education.filters.all') }}</option>
                         @foreach($newsTags as $tag)
