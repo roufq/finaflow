@@ -324,7 +324,7 @@ The application utilizes stateful RESTful routes with Laravel Sanctum authentica
 
 ## 📝 License
 
-This project is licensed under the Envato Regular / Extended License limits. Please review the licensing agreement on your purchase receipt or the corresponding License folder.
+This project is licensed under the Envato Regular / Extended License limits. Please review the licensing agreement on your purchase receipt or the LICENSE file included in this repository.
 
 ## 📞 Support
 

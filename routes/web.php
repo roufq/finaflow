@@ -31,6 +31,19 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\InstallerController;
 use Illuminate\Support\Facades\Route;
 
+
+
+Route::match(['get', 'head'], '/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
+});
+
+Route::get('/index.php', function () {
+    return redirect('/');
+});
+
 Route::prefix('install')->name('installer.')->group(function () {
     Route::get('/', [InstallerController::class, 'index'])->name('index');
     Route::get('/permissions', [InstallerController::class, 'permissions'])->name('permissions');
@@ -44,13 +57,7 @@ Route::prefix('install')->name('installer.')->group(function () {
 Route::match(['get', 'post'], '/telegram/webhook', [TelegramController::class, 'webhook'])->name('telegram.webhook');
 Route::match(['get', 'post'], '/telegram/webhook/{token}', [TelegramController::class, 'webhook'])->name('telegram.webhook.custom');
 
-Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('dashboard');
-    }
 
-    return redirect()->route('login');
-});
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
