@@ -74,65 +74,32 @@ FinaFlow is a comprehensive personal finance management web application built wi
 - **Authentication**: Laravel Sanctum
 - **Icons**: Font Awesome
 
+## 📦 What's in the Box?
+
+When you purchase FinaFlow, you get:
+- **Full Source Code**: Complete Laravel 12 source code, unencrypted and fully customizable.
+- **Auto-Installer**: A built-in web installer to set up your database and environment in minutes.
+- **Database Schema**: Optimized MySQL schema with sample data to get you started.
+- **Documentation**: Comprehensive guides for installation, development, and deployment.
+
+## ⚡ Quick Installation Guide
+
+FinaFlow is designed to be easy to install even if you're not a developer:
+
+1. **Upload**: Upload all files to your web server (Public HTML or equivalent).
+2. **Setup Database**: Create a new MySQL/MariaDB database via your hosting panel (cPanel/Plesk).
+3. **Run Installer**: Visit your domain in a browser. FinaFlow will automatically detect it's not installed and guide you through the setup.
+4. **Login**: Once finished, log in with the default credentials provided during the installation process.
+
+*Note: For manual installation or local development, see the [DEVELOPMENT_SETUP.md](DEVELOPMENT_SETUP.md) file.*
+
 ## 📋 System Requirements
 
-- PHP >= 8.1
-- Composer
-- Node.js & NPM (for asset compilation)
-- MySQL or SQLite
-
-## ⚡ Installation
-
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/your-username/finaflow.git
-   cd finaflow
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   composer install
-   npm install
-   ```
-
-3. **Environment Setup**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-   Set `FINANCIAL_NEWS_ENDPOINT` and `FINANCIAL_NEWS_API_KEY` if using external news sources.
-
-4. **Database Setup**
-   ```bash
-   # Configure the database in the .env file
-   php artisan migrate
-   php artisan db:seed
-   
-   # Seed curated educational modules (optional)
-   php artisan db:seed --class=EducationModuleSeeder
-   ```
-
-5. **Compile Assets**
-   ```bash
-   npm run build
-   # or for development
-   npm run dev
-   ```
-
-6. **Run Application**
-   ```bash
-   php artisan serve
-   ```
-
-   Access the application at: `http://localhost:8000`
-
-7. **Financial News Synchronization (optional)**
-   ```bash
-   php artisan financial:sync-news
-   ```
-
-   Run this command immediately to populate the news table. The scheduler (`php artisan schedule:work`) runs automatically twice a day to keep content fresh.
+To run FinaFlow, your server should meet these requirements:
+- **PHP**: 8.2 or higher
+- **Extensions**: BCMath, CType, cURL, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
+- **Database**: MySQL 8.0+, MariaDB 10.3+, or SQLite 3.35+
+- **Web Server**: Apache or Nginx with support for URL rewriting (mod_rewrite)
 
 ## 🔐 Demo Accounts
 

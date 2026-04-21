@@ -5,19 +5,18 @@
 /* 1. Global Typography & Background */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-    background-color: #f8fafc !important;
-    color: #1a202c;
+    background-color: #f1f5f9 !important; 
+    color: #1e293b;
     min-height: 100%;
 }
 
 /* 4. Sidebar */
-.sidebar {
-    background-color: #ffffff !important;
+.sidebar { 
+    background-color: #ffffff !important; 
     border-right: 1px solid #f1f5f9;
     width: 250px !important;
     transition: all 0.2s ease-in-out;
 }
-
 .sidebar-heading {
     color: #94a3b8 !important;
     font-size: 0.65rem !important;
@@ -26,30 +25,26 @@ body {
     letter-spacing: 0.05em !important;
     padding: 1.5rem 1.5rem 0.5rem !important;
 }
-
-.sidebar .sidebar-brand {
+.sidebar .sidebar-brand { 
     padding: 2rem 1.5rem;
     height: auto;
     justify-content: flex-start;
-    color: #1a202c !important;
-    text-transform: none;
-    font-weight: 700;
-    font-size: 1.25rem;
+    color: #1a202c !important; 
+    text-transform: none; 
+    font-weight: 700; 
+    font-size: 1.25rem; 
 }
-
-.sidebar .sidebar-brand .sidebar-brand-icon {
-    color: #3b82f6 !important;
+.sidebar .sidebar-brand .sidebar-brand-icon { 
+    color: #3b82f6 !important; 
     margin-right: 0.75rem;
 }
-
 .sidebar .nav-item {
     margin: 0.25rem 1rem;
 }
-
-.sidebar .nav-item .nav-link {
-    color: #64748b !important;
-    font-weight: 500;
-    font-size: 0.9rem;
+.sidebar .nav-item .nav-link { 
+    color: #64748b !important; 
+    font-weight: 500; 
+    font-size: 0.9rem; 
     padding: 0.7rem 1.25rem;
     margin: 0.2rem 1rem;
     border-radius: 10px;
@@ -57,42 +52,36 @@ body {
     align-items: center;
     transition: all 0.2s;
 }
-
-.sidebar .nav-item .nav-link i {
-    color: #94a3b8 !important;
-    font-size: 0.95rem;
-    width: 1.5rem;
+.sidebar .nav-item .nav-link i { 
+    color: #94a3b8 !important; 
+    font-size: 0.95rem; 
+    width: 1.5rem; 
     margin-right: 0.75rem;
     opacity: 0.7;
 }
-
-.sidebar .nav-item.active .nav-link {
-    color: #0f172a !important;
-    background: #f1f5f9 !important;
+.sidebar .nav-item.active .nav-link { 
+    color: #0f172a !important; 
+    background: #f1f5f9 !important; 
     font-weight: 600;
 }
-
-.sidebar .nav-item.active .nav-link i {
-    color: #3b82f6 !important;
+.sidebar .nav-item.active .nav-link i { 
+    color: #3b82f6 !important; 
     opacity: 1;
 }
-
 .sidebar .nav-item .nav-link:hover {
-    background-color: #f8fafc;
+    background-color: #f1f5f9;
 }
 
 /* 5. Topbar */
-.topbar {
-    background-color: transparent !important;
-    box-shadow: none !important;
+.topbar { 
+    background-color: transparent !important; 
+    box-shadow: none !important; 
     border: none !important;
     height: 4.5rem;
 }
-
 .topbar .navbar-search {
     width: 400px !important;
 }
-
 .topbar .navbar-search .form-control {
     background-color: #f1f5f9 !important;
     border: none !important;
@@ -100,7 +89,6 @@ body {
     padding: 0.75rem 1rem 0.75rem 2.5rem !important;
     font-size: 0.9rem;
 }
-
 .topbar-search-icon {
     position: absolute;
     left: 1rem;
@@ -112,24 +100,22 @@ body {
 
 /* 3. Cards */
 .card {
-    border: 1px solid #f1f5f9 !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01) !important;
+    border: none !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+    background-color: #ffffff;
 }
-
 .card-header {
     background-color: transparent !important;
     border-bottom: none !important;
-    padding: 1.5rem 1.5rem 0.5rem;
+    padding: 1.75rem 1.75rem 0.5rem;
 }
-
 .card-body {
-    padding: 1.5rem;
+    padding: 1.75rem;
 }
 
 /* Burger / Toggle Button */
-#customSidebarToggleTop,
-#sidebarToggleDesktop {
+#customSidebarToggleTop, #sidebarToggleDesktop {
     color: #64748b !important;
     background-color: transparent !important;
     border: none !important;
@@ -142,15 +128,11 @@ body {
     transition: all 0.2s;
     border-radius: 10px !important;
 }
-
-#customSidebarToggleTop:hover,
-#sidebarToggleDesktop:hover {
+#customSidebarToggleTop:hover, #sidebarToggleDesktop:hover {
     background-color: #f1f5f9 !important;
     color: #0f172a !important;
 }
-
-#customSidebarToggleTop:focus,
-#sidebarToggleDesktop:focus {
+#customSidebarToggleTop:focus, #sidebarToggleDesktop:focus {
     outline: none !important;
     box-shadow: none !important;
 }
@@ -162,45 +144,22 @@ body {
     background-color: #f3f4f6;
     color: #4b5563;
 }
-
 .form-control:focus {
     background-color: #ffffff;
     border-color: #38bdf8;
     box-shadow: 0 0 0 0.2rem rgba(56, 189, 248, 0.15);
 }
-
 .form-control.search-pill {
     border-radius: 20px;
     padding-left: 1rem;
 }
 
 /* 7. Tables */
-.table-bordered {
-    border: none !important;
-}
-
-.table-bordered th,
-.table-bordered td {
-    border: none !important;
-    border-bottom: 1px solid #f9fafb !important;
-    padding: 0.85rem 1rem;
-}
-
-.table thead th {
-    border-bottom: 2px solid #f3f4f6 !important;
-    color: #6b7280;
-    font-weight: 500;
-    font-size: 0.75rem;
-    letter-spacing: 0.02em;
-}
-
-.table {
-    font-size: 0.85rem;
-}
-
-.table tbody tr:hover {
-    background-color: #f9fafb;
-}
+.table-bordered { border: none !important; }
+.table-bordered th, .table-bordered td { border: none !important; border-bottom: 1px solid #f9fafb !important; padding: 0.85rem 1rem; }
+.table thead th { border-bottom: 2px solid #f3f4f6 !important; color: #6b7280; font-weight: 500; font-size: 0.75rem; letter-spacing: 0.02em; }
+.table { font-size: 0.85rem; }
+.table tbody tr:hover { background-color: #f9fafb; }
 
 /* Custom scrollbar styles for minimalist elegant look */
 ::-webkit-scrollbar {
@@ -294,12 +253,10 @@ body {
     .sidebar.collapsed {
         width: 80px !important;
     }
-
     .sidebar.collapsed .sidebar-brand {
         padding: 1.5rem 0.5rem;
         justify-content: center;
     }
-
     .sidebar.collapsed .sidebar-brand-text,
     .sidebar.collapsed .sidebar-heading,
     .sidebar.collapsed .nav-link span,
@@ -312,7 +269,6 @@ body {
         padding: 0.75rem 0.5rem;
         margin: 4px 8px;
     }
-
     .sidebar.collapsed .nav-link i {
         margin-right: 0 !important;
         font-size: 1.2rem;
@@ -428,7 +384,7 @@ body.sidebar-open {
         border-bottom-right-radius: 1.5rem;
         background: rgba(255, 255, 255, 0.98) !important;
         backdrop-filter: blur(12px);
-        border-right: 1px solid rgba(0, 0, 0, 0.05);
+        border-right: 1px solid rgba(0,0,0,0.05);
     }
 
     body.sidebar-open #accordionSidebar,
@@ -459,13 +415,11 @@ body.sidebar-open {
         width: 100%;
     }
 }
-
 /* 8. Pagination (Scandinavian Style) */
 .pagination {
     margin-bottom: 0;
     gap: 4px;
 }
-
 .page-item .page-link {
     border: none;
     border-radius: 8px !important;
@@ -475,18 +429,15 @@ body.sidebar-open {
     transition: all 0.2s;
     background-color: #f1f5f9;
 }
-
 .page-item.active .page-link {
     background-color: #3b82f6 !important;
     color: white !important;
     box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
 }
-
 .page-item.disabled .page-link {
     background-color: transparent;
     color: #cbd5e1;
 }
-
 .page-item:not(.active):not(.disabled) .page-link:hover {
     background-color: #e2e8f0;
     color: #0f172a;
