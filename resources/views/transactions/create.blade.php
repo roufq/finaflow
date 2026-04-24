@@ -1,111 +1,141 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Add Transaction</h1>
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">New Transaction</h1>
+            <p class="text-sm font-medium text-slate-500">Record a new financial movement in your ledger.</p>
+        </div>
+        <a href="{{ route('transactions.index') }}" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to List
+        </a>
     </div>
 
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
-        <div class="card-header bg-white py-3 border-0">
-            <h6 class="m-0 font-weight-bold text-primary">Form Transactions Baru</h6>
-        </div>
-        <div class="card-body px-4 pb-4">
-            <form action="{{ route('transactions.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-4">
-                            <label class="small font-weight-bold text-gray-700" for="account_id">Account Penyalur</label>
-                            <select class="form-control form-control-modern" id="account_id" name="account_id" required>
-                                <option value="">Select Account</option>
-                                @foreach($accounts as $account)
-                                <option value="{{ $account->id }}" {{ old('account_id') == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-4">
-                            <label class="small font-weight-bold text-gray-700" for="category_id">Category</label>
-                            <select class="form-control form-control-modern" id="category_id" name="category_id" required>
-                                <option value="">Select Category</option>
-                                @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }} ({{ ucfirst($category->type) }})</option>
-                                @endforeach
-                            </select>
+    <!-- Form Card -->
+    <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+        <form action="{{ route('transactions.store') }}" method="POST" class="space-y-8">
+            @csrf
+            
+            <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <!-- Account Selection -->
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Source Account</label>
+                    <div class="relative">
+                        <select id="account_id" name="account_id" required
+                                class="w-full appearance-none rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 transition-all focus:ring-2 focus:ring-primary-500/20">
+                            <option value="">Select an account...</option>
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ old('account_id') == $account->id ? 'selected' : '' }}>
+                                    {{ $account->name }} ({{ $account->setting->currency_symbol ?? 'Rp' }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                            <i class="fas fa-chevron-down text-[10px]"></i>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-4">
-                            <label class="small font-weight-bold text-gray-700" for="transaction_date">Transaction Date</label>
-                            <input type="date" class="form-control form-control-modern" id="transaction_date" name="transaction_date" value="{{ old('transaction_date', date('Y-m-d')) }}" required>
+                <!-- Category Selection -->
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Classification</label>
+                    <div class="relative">
+                        <select id="category_id" name="category_id" required
+                                class="w-full appearance-none rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 transition-all focus:ring-2 focus:ring-primary-500/20">
+                            <option value="">Select a category...</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }} ({{ ucfirst($category->type) }})
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                            <i class="fas fa-chevron-down text-[10px]"></i>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-4">
-                            <label class="small font-weight-bold text-gray-700" for="type">Type</label>
-                            <select class="form-control form-control-modern" id="type" name="type" required>
-                                <option value="income" {{ old('type') == 'income' ? 'selected' : '' }}>Pemasukan</option>
-                                <option value="expense" {{ old('type') == 'expense' ? 'selected' : '' }}>Expense</option>
-                            </select>
-                        </div>
+                </div>
+
+                <!-- Date Selection -->
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Transaction Date</label>
+                    <input type="date" id="transaction_date" name="transaction_date" value="{{ old('transaction_date', date('Y-m-d')) }}" required
+                           class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-semibold text-slate-900 ring-1 ring-slate-200 transition-all focus:ring-2 focus:ring-primary-500/20">
+                </div>
+
+                <!-- Type Selection -->
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Flow Type</label>
+                    <div class="grid grid-cols-2 gap-3 p-1 rounded-2xl bg-slate-50 ring-1 ring-slate-200">
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="type" value="income" class="peer sr-only" {{ old('type') == 'income' ? 'checked' : '' }}>
+                            <div class="flex items-center justify-center rounded-xl py-2.5 text-xs font-bold text-slate-400 transition-all peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm">
+                                <i class="fas fa-arrow-up mr-2 text-[10px]"></i> Income
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="type" value="expense" class="peer sr-only" {{ old('type', 'expense') == 'expense' ? 'checked' : '' }}>
+                            <div class="flex items-center justify-center rounded-xl py-2.5 text-xs font-bold text-slate-400 transition-all peer-checked:bg-white peer-checked:text-rose-600 peer-checked:shadow-sm">
+                                <i class="fas fa-arrow-down mr-2 text-[10px]"></i> Expense
+                            </div>
+                        </label>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group mb-4">
-                    <label class="small font-weight-bold text-gray-700" for="amount">Nominal (<span id="currency-symbol">Rp</span>)</label>
-                    <input type="number" step="0.01" class="form-control form-control-modern font-weight-bold" id="amount" name="amount" value="{{ old('amount') }}" placeholder="0.00" required>
+            <!-- Amount Input -->
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Transaction Amount</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-6">
+                        <span id="currency-symbol" class="text-lg font-extrabold text-slate-400 transition-colors group-focus-within:text-primary-500">Rp</span>
+                    </div>
+                    <input type="number" step="0.01" id="amount" name="amount" value="{{ old('amount') }}" placeholder="0.00" required
+                           class="w-full rounded-2xl border-none bg-slate-50 pl-16 pr-5 py-5 text-2xl font-extrabold text-slate-900 ring-1 ring-slate-200 transition-all placeholder:text-slate-200 focus:ring-4 focus:ring-primary-500/10">
                 </div>
+                <p class="text-[10px] text-slate-400 font-medium ml-1">Ensure the amount is precise for accurate financial reporting.</p>
+            </div>
 
-                <div class="form-group mb-4">
-                    <label class="small font-weight-bold text-gray-700" for="description">Description (Opsional)</label>
-                    <textarea class="form-control form-control-modern" id="description" name="description" rows="3" placeholder="Apa goals transactions ini?">{{ old('description') }}</textarea>
-                </div>
+            <!-- Description -->
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Reference Notes (Optional)</label>
+                <textarea id="description" name="description" rows="3" placeholder="What is the context of this transaction?"
+                          class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 ring-1 ring-slate-200 transition-all placeholder:text-slate-300 focus:ring-2 focus:ring-primary-500/20">{{ old('description') }}</textarea>
+            </div>
 
-                <div class="d-flex justify-content-end" style="gap: 12px;">
-                    <a href="{{ route('transactions.index') }}" class="btn btn-light px-4 font-weight-bold">Cancel</a>
-                    <button type="submit" class="btn btn-primary px-5 font-weight-bold shadow-sm" style="background-color: #3b82f6;">Save Transactions</button>
-                </div>
-            </form>
-        </div>
+            <!-- Actions -->
+            <div class="pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+                <a href="{{ route('transactions.index') }}" 
+                   class="inline-flex items-center justify-center rounded-2xl px-8 py-3.5 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-10 py-3.5 text-sm font-extrabold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                    Process Transaction
+                </button>
+            </div>
+        </form>
     </div>
 </div>
-
-<style>
-    .form-control-modern {
-        border-radius: 10px !important;
-        border: 1px solid #e2e8f0 !important;
-        padding: 0.6rem 1rem !important;
-        background-color: #f8fafc !important;
-    }
-    .form-control-modern:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-        background-color: #fff !important;
-    }
-</style>
 
 @push('scripts')
 <script>
     const accountCurrencies = @json($accounts->mapWithKeys(fn($a) => [$a->id => $a->setting->currency_symbol ?? 'Rp']));
-    
-    document.getElementById('account_id').addEventListener('change', function() {
-        const symbol = accountCurrencies[this.value] || 'Rp';
-        document.getElementById('currency-symbol').textContent = symbol;
-    });
+    const currencyEl = document.getElementById('currency-symbol');
+    const accountSelect = document.getElementById('account_id');
 
-    // Handle initial state
-    window.addEventListener('DOMContentLoaded', function() {
-        const select = document.getElementById('account_id');
-        if (select.value) {
-            const symbol = accountCurrencies[select.value] || 'Rp';
-            document.getElementById('currency-symbol').textContent = symbol;
-        }
-    });
+    const updateSymbol = (id) => {
+        const symbol = accountCurrencies[id] || 'Rp';
+        currencyEl.textContent = symbol;
+    };
+
+    accountSelect.addEventListener('change', (e) => updateSymbol(e.target.value));
+    
+    if (accountSelect.value) {
+        updateSymbol(accountSelect.value);
+    }
 </script>
 @endpush
 @endsection

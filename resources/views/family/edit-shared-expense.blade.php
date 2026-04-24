@@ -12,187 +12,184 @@
             }
         }
     }
+    $selectedJson = collect($defaultSelected ?? [])->map(fn ($id) => (int) $id)->values();
 @endphp
 
 @section('content')
-<div class="container-fluid">
-
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Edit Shared Expense</h1>
-        <a href="{{ route('family.shared-expenses') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Shared Expenses
+<div class="max-w-5xl mx-auto space-y-10 animate-fade-in pb-20">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="inline-flex items-center rounded-md bg-primary-50 px-2 py-0.5 text-[10px] font-black text-primary-600 uppercase tracking-widest ring-1 ring-inset ring-primary-500/20">Modification Mode</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID: #{{ str_pad($expense->id, 5, '0', STR_PAD_LEFT) }}</span>
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 line-clamp-1">Refine shared obligation</h1>
+            <p class="text-sm font-medium text-slate-500">Update parameters for an existing collaborative financial event</p>
+        </div>
+        <a href="{{ route('family.shared-expenses') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+            <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+            Back to Audit
         </a>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Shared Expense Information</h6>
+    <form method="POST" action="{{ route('family.shared-expenses.update', $expense) }}" id="sharedExpenseForm" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        @csrf
+        @method('PUT')
+        
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Core Metadata Card -->
+            <div class="rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-xl bg-slate-900 flex items-center justify-center text-white">
+                        <i class="fas fa-edit text-xs"></i>
+                    </div>
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest">Core Parameters</h2>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('family.shared-expenses.update', $expense) }}" id="sharedExpenseForm">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="form-group">
-                            <label for="expense_name">Expense Name *</label>
-                            <input type="text" class="form-control @error('expense_name') is-invalid @enderror"
-                                   id="expense_name" name="expense_name" value="{{ old('expense_name', $expense->expense_name) }}" required>
-                            @error('expense_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control @error('description') is-invalid @enderror"
-                                  id="description" name="description" rows="3">{{ old('description', $expense->description) }}</textarea>
-                        @error('description')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                <div class="p-8 space-y-6">
+                    <div class="space-y-2">
+                        <label for="expense_name" class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Event Identifier *</label>
+                        <input type="text" id="expense_name" name="expense_name" value="{{ old('expense_name', $expense->expense_name) }}" required
+                               class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10 @error('expense_name') ring-red-500 @enderror">
+                        @error('expense_name') <p class="text-[10px] text-red-500 font-bold mt-1 ml-1">{{ $message }}</p> @enderror
                     </div>
 
-                        <div class="form-group">
-                            <label for="total_amount">Total Amount (Rp) *</label>
-                            <input type="number" class="form-control @error('total_amount') is-invalid @enderror"
-                                   id="total_amount" name="total_amount"
-                                   value="{{ old('total_amount', $expense->total_amount) }}" min="0" step="1000" required>
-                            @error('total_amount')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="total_amount" class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Principal Amount *</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400 font-bold text-xs uppercase">Rp</div>
+                                <input type="number" id="total_amount" name="total_amount" value="{{ old('total_amount', $expense->total_amount) }}" min="0" step="1000" required
+                                       class="w-full rounded-2xl border-none bg-slate-50 pl-12 pr-5 py-3.5 text-sm font-black text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10 @error('total_amount') ring-red-500 @enderror">
+                            </div>
+                            @error('total_amount') <p class="text-[10px] text-red-500 font-bold mt-1 ml-1">{{ $message }}</p> @enderror
                         </div>
 
-                    <div class="form-group">
-                        <label for="category">Category *</label>
-                        <select class="form-control @error('category') is-invalid @enderror"
-                                id="category" name="category" required>
-                            @php
-                                $categories = ['Food & Dining', 'Transportation', 'Entertainment', 'Shopping', 'Utilities', 'Healthcare', 'Education', 'Travel', 'Other'];
-                                $selectedCategory = old('category', $expense->category);
-                            @endphp
-                            <option value="">Select Category</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category }}" {{ $selectedCategory === $category ? 'selected' : '' }}>{{ $category }}</option>
-                            @endforeach
-                        </select>
-                        @error('category')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                        <div class="form-group">
-                            <label for="expense_date">Expense Date *</label>
-                            <input type="date" class="form-control @error('expense_date') is-invalid @enderror"
-                                   id="expense_date" name="expense_date"
-                                   value="{{ old('expense_date', $expense->expense_date->format('Y-m-d')) }}" required>
-                            @error('expense_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="split_method">Split Method *</label>
-                            @php
-                                $splitMethod = old('split_method', $expense->split_method);
-                            @endphp
-                            <select class="form-control @error('split_method') is-invalid @enderror" id="split_method" name="split_method" onchange="toggleSplitOptions()" required>
-                                <option value="equal" {{ $splitMethod === 'equal' ? 'selected' : '' }}>Equal</option>
-                                <option value="percentage" {{ $splitMethod === 'percentage' ? 'selected' : '' }}>Percentage</option>
-                                <option value="custom" {{ $splitMethod === 'custom' ? 'selected' : '' }}>Custom Amount</option>
+                        <div class="space-y-2">
+                            <label for="category" class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Capital Corridor *</label>
+                            <select id="category" name="category" required
+                                    class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
+                                @php
+                                    $categories = ['Food & Dining', 'Transportation', 'Entertainment', 'Shopping', 'Utilities', 'Healthcare', 'Education', 'Travel', 'Other'];
+                                    $selectedCategory = old('category', $expense->category);
+                                @endphp
+                                <option value="">Select Corridor</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat }}" {{ $selectedCategory == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                @endforeach
                             </select>
-                            @error('split_method')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="expense_date" class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Execution Date *</label>
+                            <input type="date" id="expense_date" name="expense_date" value="{{ old('expense_date', $expense->expense_date->format('Y-m-d')) }}" required
+                                   class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
                         </div>
 
-                        <div class="form-group">
-                            <label>Participants *</label>
-                            <div class="border rounded p-3" id="participantsSection">
-                                <p class="mb-3">Select family members who participated in this expense:</p>
-                                @if($members->count() > 0)
-                                    @foreach($members as $member)
-                                    @php
-                                        $isChecked = in_array($member->id, $defaultSelected ?? []);
-                                        $shareValue = $initialShares[$member->id] ?? '';
-                                    @endphp
-                                    <div class="participant-item mb-2">
-                                        <div class="form-check d-inline-block mr-3">
-                                            <input class="form-check-input participant-checkbox" type="checkbox"
-                                                   id="participant_{{ $member->id }}" name="participants[]"
-                                                   value="{{ $member->id }}"
+                        <div class="space-y-2">
+                            <label for="split_method" class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Distribution Protocol *</label>
+                            @php $splitMethod = old('split_method', $expense->split_method); @endphp
+                            <select id="split_method" name="split_method" required onchange="toggleSplitOptions()"
+                                    class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
+                                <option value="equal" {{ $splitMethod === 'equal' ? 'selected' : '' }}>Equitable Balance (Equal)</option>
+                                <option value="percentage" {{ $splitMethod === 'percentage' ? 'selected' : '' }}>Weighted Ratio (%)</option>
+                                <option value="custom" {{ $splitMethod === 'custom' ? 'selected' : '' }}>Discretionary Audit (Custom)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="description" class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contextual Description</label>
+                        <textarea id="description" name="description" rows="3" 
+                                  class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-medium text-slate-600 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">{{ old('description', $expense->description) }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unit Participants Card -->
+            <div class="rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 overflow-hidden border-b-4 border-primary-500">
+                <div class="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-xl bg-primary-500 flex items-center justify-center text-white">
+                            <i class="fas fa-users text-xs"></i>
+                        </div>
+                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest">Unit Participant Registry</h2>
+                    </div>
+                </div>
+                <div class="p-8">
+                    @if($members->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @foreach($members as $member)
+                            @php
+                                $isChecked = in_array($member->id, $defaultSelected ?? []);
+                                $shareValue = $initialShares[$member->id] ?? '';
+                            @endphp
+                            <div class="participant-item p-4 rounded-2xl ring-1 ring-slate-100 hover:bg-slate-50 transition-colors">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3 flex-1">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" id="participant_{{ $member->id }}" name="participants[]" value="{{ $member->id }}"
+                                                   class="participant-checkbox h-5 w-5 rounded-lg border-slate-300 text-primary-600 focus:ring-primary-500/20"
                                                    onchange="updateParticipantShares()"
                                                    {{ $isChecked ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="participant_{{ $member->id }}">
-                                                {{ $member->name }} ({{ $member->relationship }})
-                                            </label>
                                         </div>
-                                        <div class="participant-share d-inline-block" id="share_{{ $member->id }}" style="display: none;">
-                                            <input type="number" class="form-control form-control-sm d-inline-block w-25"
-                                                   id="share_amount_{{ $member->id }}" name="share_amount[{{ $member->id }}]"
-                                                   placeholder="Amount" min="0" step="1000"
+                                        <label for="participant_{{ $member->id }}" class="flex flex-col cursor-pointer">
+                                            <span class="text-sm font-black text-slate-900 leading-tight italic">{{ $member->name }}</span>
+                                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $member->relationship }}</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="participant-share hidden" id="share_{{ $member->id }}">
+                                        <div class="relative">
+                                            <input type="number" id="share_amount_{{ $member->id }}" name="share_amount[{{ $member->id }}]"
+                                                   class="w-24 rounded-lg border-none bg-slate-100 px-3 py-2 text-xs font-black text-slate-900 ring-1 ring-slate-200 focus:bg-white focus:ring-4 focus:ring-primary-500/10"
                                                    value="{{ $shareValue }}"
-                                                   onchange="validateShares()">
-                                            <small class="text-muted d-block" id="share_tags_{{ $member->id }}"></small>
+                                                   placeholder="Value" min="0" step="1000" onchange="validateShares()">
+                                            <div class="absolute -top-1.5 -right-1.5">
+                                                <span class="inline-flex items-center rounded-full bg-slate-900 px-1.5 py-0.5 text-[7px] font-black text-white uppercase" id="share_tags_{{ $member->id }}"></span>
+                                            </div>
                                         </div>
                                     </div>
-                                    @endforeach
-                                @else
-                                    <div class="text-center py-4">
-                                        <i class="fas fa-users fa-3x text-gray-300 mb-3"></i>
-                                        <p class="text-gray-500">No family members available. Please add members first.</p>
-                                        <a href="{{ route('family.members.create') }}" class="btn btn-primary btn-sm">Add Member</a>
-                                    </div>
-                                @endif
+                                </div>
                             </div>
-                            @error('participants')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
+                            @endforeach
                         </div>
-
-                        <div id="validationMessage" class="alert alert-warning" style="display: none;"></div>
-
-                        <div id="splitPreview" class="border rounded p-3 mb-3" style="display: none;">
-                            <h6>Split Preview</h6>
-                            <p>Total: <strong id="previewTotal">Rp 0</strong></p>
-                            <div id="participantPreviews"></div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Update Shared Expense
-                        </button>
-                        <a href="{{ route('family.shared-expenses') }}" class="btn btn-secondary">Cancel</a>
-                    </form>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-info">Tips</h6>
-                </div>
-                <div class="card-body">
-                    <ul class="mb-3">
-                        <li>Review participants before saving changes</li>
-                        <li>Ensure the split method represents the actual agreement</li>
-                        <li>Update descriptions to add important context</li>
-                        <li>Settle expenses promptly when everyone has paid</li>
-                    </ul>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i> All fields marked with * are required.
+        <div class="space-y-8">
+            <!-- Split Manifest Card -->
+            <div class="rounded-3xl bg-slate-900 p-8 text-white shadow-premium ring-1 ring-white/10" id="splitPreviewCard" style="display: none;">
+                <h3 class="text-xs font-black uppercase tracking-widest text-white/40 mb-6 italic underline decoration-primary-500/30">Modified Manifest</h3>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                        <span class="text-[10px] font-bold text-white/60 uppercase">Adjusted Aggregate</span>
+                        <span class="text-xl font-black text-primary-400" id="previewTotal">Rp 0</span>
                     </div>
+                    <div id="participantPreviews" class="space-y-4"></div>
+                    <div id="validationMessage" class="hidden rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-[10px] font-bold text-red-400 leading-relaxed uppercase tracking-tighter italic"></div>
+                </div>
+            </div>
+
+            <!-- Action Card -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6 italic underline decoration-primary-500 decoration-2">Protocol Authorization</h3>
+                <p class="text-[10px] text-slate-400 uppercase font-bold leading-relaxed mb-8">Authorizing these modifications will recalibrate all participant balanced ledgers across the ecosystem.</p>
+                
+                <div class="space-y-4">
+                    <button type="submit" class="w-full rounded-2xl bg-primary-600 px-6 py-4 text-xs font-black uppercase tracking-widest text-white shadow-premium transition-all hover:bg-primary-700 active:scale-95">
+                        Authorize Recalibration
+                    </button>
+                    <a href="{{ route('family.shared-expenses') }}" class="block w-full text-center mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors italic">Abort Modifications</a>
                 </div>
             </div>
         </div>
-    </div>
-
+    </form>
 </div>
-
-@php
-    $selectedJson = collect($defaultSelected ?? [])->map(fn ($id) => (int) $id)->values();
-@endphp
 
 <script>
 let selectedParticipants = {!! $selectedJson->toJson() !!};
@@ -202,13 +199,11 @@ function toggleSplitOptions() {
     const method = document.getElementById('split_method').value;
     const participants = document.querySelectorAll('.participant-share');
 
-    if (method === 'equal' || method === 'percentage' || method === 'custom') {
-        participants.forEach(p => p.style.display = 'inline-block');
-    } else {
-        participants.forEach(p => p.style.display = 'none');
-    }
+    participants.forEach(p => p.classList.add('hidden'));
 
-    updateParticipantShares();
+    if (method) {
+        updateParticipantShares();
+    }
 }
 
 function updateParticipantShares() {
@@ -219,112 +214,96 @@ function updateParticipantShares() {
     document.querySelectorAll('.participant-share').forEach(share => {
         const memberId = share.id.replace('share_', '');
         const isSelected = selectedParticipants.includes(memberId);
+        const tag = document.getElementById(`share_tags_${memberId}`);
+        const input = document.getElementById(`share_amount_${memberId}`);
 
         if (isSelected && method) {
-            share.style.display = 'inline-block';
+            share.classList.remove('hidden');
 
             if (method === 'equal') {
                 const equalShare = selectedParticipants.length > 0 ? totalAmount / selectedParticipants.length : 0;
-                document.getElementById(`share_amount_${memberId}`).value = equalShare.toFixed(0);
-                document.getElementById(`share_tags_${memberId}`).textContent = 'Equal share';
+                input.value = Math.round(equalShare);
+                input.readOnly = true;
+                tag.textContent = 'VAL';
             } else if (method === 'percentage') {
-                document.getElementById(`share_tags_${memberId}`).textContent = '% of total';
+                input.readOnly = false;
+                tag.textContent = '%';
             } else if (method === 'custom') {
-                document.getElementById(`share_tags_${memberId}`).textContent = 'Custom amount';
+                input.readOnly = false;
+                tag.textContent = 'Rp';
             }
         } else {
-            share.style.display = 'none';
+            share.classList.add('hidden');
         }
     });
-
-    if (method === 'percentage') {
-        validatePercentage(totalAmount);
-    } else if (method === 'custom') {
-        validateCustom(totalAmount);
-    } else {
-        document.getElementById('validationMessage').style.display = 'none';
-    }
 
     updateSplitPreview();
 }
 
-function validatePercentage() {
-    let totalShares = 0;
-    selectedParticipants.forEach(memberId => {
-        const percentage = parseFloat(document.getElementById(`share_amount_${memberId}`).value) || 0;
-        totalShares += percentage;
-    });
-
-    const validationMsg = document.getElementById('validationMessage');
-    if (totalShares !== 100) {
-        validationMsg.innerHTML = `Total percentage must equal 100%. Current: ${totalShares}%`;
-        validationMsg.style.display = 'block';
-    } else {
-        validationMsg.style.display = 'none';
-    }
-}
-
-function validateCustom(totalAmount) {
-    let totalShares = 0;
-    selectedParticipants.forEach(memberId => {
-        const amount = parseFloat(document.getElementById(`share_amount_${memberId}`).value) || 0;
-        totalShares += amount;
-    });
-
-    const validationMsg = document.getElementById('validationMessage');
-    if (Math.abs(totalShares - totalAmount) > 1) {
-        validationMsg.innerHTML = `Total custom amounts must equal total expense. Current: Rp ${totalShares.toLocaleString('id-ID')} vs Rp ${totalAmount.toLocaleString('id-ID')}`;
-        validationMsg.style.display = 'block';
-    } else {
-        validationMsg.style.display = 'none';
-    }
+function validateShares() {
+    updateSplitPreview();
 }
 
 function updateSplitPreview() {
     const totalAmount = parseFloat(document.getElementById('total_amount').value) || 0;
     const method = document.getElementById('split_method').value;
+    const manifestCard = document.getElementById('splitPreviewCard');
 
     if (selectedParticipants.length === 0 || !method || totalAmount === 0) {
-        document.getElementById('splitPreview').style.display = 'none';
+        manifestCard.style.display = 'none';
         return;
     }
 
+    manifestCard.style.display = 'block';
     document.getElementById('previewTotal').textContent = 'Rp ' + totalAmount.toLocaleString('id-ID');
-    document.getElementById('splitPreview').style.display = 'block';
 
     const previewContainer = document.getElementById('participantPreviews');
     previewContainer.innerHTML = '';
+    
+    let totalComputedShares = 0;
 
     selectedParticipants.forEach(memberId => {
-        const memberName = document.querySelector(`tags[for="participant_${memberId}"]`).textContent;
+        const memberNameLabel = document.querySelector(`label[for="participant_${memberId}"] span`).textContent;
         let shareAmount = 0;
         let shareText = '';
+        let inputVal = parseFloat(document.getElementById(`share_amount_${memberId}`).value) || 0;
 
         if (method === 'equal') {
-            shareAmount = totalAmount / selectedParticipants.length;
+            shareAmount = Math.round(totalAmount / selectedParticipants.length);
             shareText = 'Rp ' + shareAmount.toLocaleString('id-ID');
+            totalComputedShares += shareAmount;
         } else if (method === 'percentage') {
-            const percentage = parseFloat(document.getElementById(`share_amount_${memberId}`).value) || 0;
-            shareAmount = (totalAmount * percentage) / 100;
-            shareText = `${percentage}% (Rp ${shareAmount.toLocaleString('id-ID')})`;
+            shareAmount = (totalAmount * inputVal) / 100;
+            shareText = `${inputVal}% (Rp ${Math.round(shareAmount).toLocaleString('id-ID')})`;
+            totalComputedShares += inputVal;
         } else if (method === 'custom') {
-            shareAmount = parseFloat(document.getElementById(`share_amount_${memberId}`).value) || 0;
+            shareAmount = inputVal;
             shareText = 'Rp ' + shareAmount.toLocaleString('id-ID');
+            totalComputedShares += shareAmount;
         }
 
         const previewItem = document.createElement('div');
-        previewItem.className = 'd-flex justify-content-between';
-        previewItem.innerHTML = `<span>${memberName}:</span><span>${shareText}</span>`;
+        previewItem.className = 'flex justify-between items-end';
+        previewItem.innerHTML = `<span class='text-[11px] font-black uppercase text-white/40 tracking-tighter italic font-serif leading-none'>${memberNameLabel}</span><span class='text-sm font-black text-white tabular-nums'>${shareText}</span>`;
         previewContainer.appendChild(previewItem);
     });
+
+    const validationMsg = document.getElementById('validationMessage');
+    validationMsg.classList.add('hidden');
+
+    if (method === 'percentage' && Math.abs(totalComputedShares - 100) > 0.1) {
+        validationMsg.innerHTML = `<i class='fas fa-exclamation-triangle mr-1'></i> Weighted ratio imbalance: current total ${totalComputedShares}%. Verification requires precisely 100%.`;
+        validationMsg.classList.remove('hidden');
+    } else if (method === 'custom' && Math.abs(totalComputedShares - totalAmount) > 10) {
+        validationMsg.innerHTML = `<i class='fas fa-exclamation-triangle mr-1'></i> Discretionary audit mismatch: total Rp ${totalComputedShares.toLocaleString('id-ID')} vs principal Rp ${totalAmount.toLocaleString('id-ID')}.`;
+        validationMsg.classList.remove('hidden');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     selectedParticipants.forEach(memberId => {
         const checkbox = document.getElementById(`participant_${memberId}`);
-        if (checkbox) {
-            checkbox.checked = true;
-        }
+        if (checkbox) { checkbox.checked = true; }
     });
 
     Object.entries(initialShareValues).forEach(([memberId, value]) => {
@@ -344,7 +323,7 @@ document.getElementById('sharedExpenseForm').addEventListener('submit', function
     const participants = document.querySelectorAll('.participant-checkbox:checked');
     if (participants.length === 0) {
         e.preventDefault();
-        alert('Please select at least one participant.');
+        alert('Unit participation registry is empty. Protocol requires at least one operative.');
         return;
     }
 
@@ -359,18 +338,19 @@ document.getElementById('sharedExpenseForm').addEventListener('submit', function
             totalShares += amount;
         });
 
-        if (method === 'percentage' && totalShares !== 100) {
+        if (method === 'percentage' && Math.abs(totalShares - 100) > 0.01) {
             e.preventDefault();
-            alert('Total percentage must equal 100%.');
+            alert('Weighted ratio imbalance detected. Distribution must equal 100%.');
             return;
         }
 
-        if (method === 'custom' && Math.abs(totalShares - totalAmount) > 1) {
+        if (method === 'custom' && Math.abs(totalShares - totalAmount) > 10) {
             e.preventDefault();
-            alert('Total custom amounts must equal the total expense amount.');
+            alert('Audit mismatch detected. Participant aggregate must equal total principal.');
             return;
         }
     }
 });
 </script>
 @endsection
+

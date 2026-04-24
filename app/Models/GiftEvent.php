@@ -9,14 +9,22 @@ class GiftEvent extends Model
 {
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    protected $casts = [
-        'event_date' => 'date',
-        'budget_amount' => 'decimal:2',
-        'spent_amount' => 'decimal:2',
-        'recipients' => 'array',
-        'gifts' => 'array',
-        'is_completed' => 'boolean',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'event_date' => 'date',
+            'budget_amount' => 'decimal:2',
+            'spent_amount' => 'decimal:2',
+            'recipients' => 'array',
+            'gifts' => 'array',
+            'is_completed' => 'boolean',
+        ];
+    }
 
     public function user(): BelongsTo
     {
@@ -37,14 +45,54 @@ class GiftEvent extends Model
         return min(100, ($this->spent_amount / $this->budget_amount) * 100);
     }
 
+    public function getRecipientsAttribute($value): array
+    {
+        $recipients = $value;
+        while (is_string($recipients)) {
+            $decoded = json_decode($recipients, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                break;
+            }
+            $recipients = $decoded;
+            if (! is_array($recipients) && ! is_string($recipients)) {
+                break;
+            }
+            if (is_array($recipients)) {
+                break;
+            }
+        }
+
+        return is_array($recipients) ? $recipients : [];
+    }
+
+    public function getGiftsAttribute($value): array
+    {
+        $gifts = $value;
+        while (is_string($gifts)) {
+            $decoded = json_decode($gifts, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                break;
+            }
+            $gifts = $decoded;
+            if (! is_array($gifts) && ! is_string($gifts)) {
+                break;
+            }
+            if (is_array($gifts)) {
+                break;
+            }
+        }
+
+        return is_array($gifts) ? $gifts : [];
+    }
+
     public function getRecipientCountAttribute(): int
     {
-        return count($this->recipients ?? []);
+        return count($this->recipients);
     }
 
     public function getGiftCountAttribute(): int
     {
-        return count($this->gifts ?? []);
+        return count($this->gifts);
     }
 
     public function scopeCompleted($query)

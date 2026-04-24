@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Debt;
+use App\Models\Recommendation;
 use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,9 @@ class AnalyticsController extends Controller
 
         $taxInsights = $this->getTaxInsights();
 
+        $discretionaryRatio = $this->getDiscretionaryRatio();
+        $actionableTips = $this->getActionableTips($healthMetrics, $discretionaryRatio);
+
         return view('analytics.index', compact(
             'currentMonthExpense',
             'currentMonthIncome',
@@ -49,7 +53,9 @@ class AnalyticsController extends Controller
             'advice',
             'riskProfile',
             'taxInsights',
-            'currencySymbol'
+            'currencySymbol',
+            'discretionaryRatio',
+            'actionableTips'
         ));
     }
 
@@ -497,6 +503,81 @@ class AnalyticsController extends Controller
             'next_bracket' => $nextBracket,
             'estimated_tax' => (float) $estimatedTax,
         ];
+    }
+
+    private function getDiscretionaryRatio(): float
+    {
+        $totalExpense = $this->getCurrentMonthAmount('expense');
+        if ($totalExpense <= 0) {
+            return 0.0;
+        }
+
+        $essentialKeywords = ['rent', 'mortgage', 'utility', 'listrik', 'air', 'internet', 'grocery', 'sembako', 'transport', 'insurance', 'asuransi', 'medical', 'obat', 'hospital'];
+        $essentialCategoryIds = Category::where('type', 'expense')
+            ->where(function ($query) use ($essentialKeywords) {
+                foreach ($essentialKeywords as $keyword) {
+                    $query->orWhere('name', 'like', "%{$keyword}%");
+                }
+            })->pluck('id');
+
+        $essentialExpense = (float) DB::table('transactions as t')
+            ->join('accounts as a', 't.account_id', '=', 'a.id')
+            ->leftJoin('settings as s', 'a.setting_id', '=', 's.id')
+            ->where('t.type', 'expense')
+            ->where('t.user_id', Auth::id())
+            ->whereYear('t.transaction_date', now()->year)
+            ->whereMonth('t.transaction_date', now()->month)
+            ->whereIn('t.category_id', $essentialCategoryIds)
+            ->selectRaw('SUM(t.amount * COALESCE(s.exchange_rate, 1.0)) as total')
+            ->value('total') ?? 0.0;
+
+        $discretionaryExpense = max(0, $totalExpense - $essentialExpense);
+
+        return round(($discretionaryExpense / $totalExpense) * 100, 1);
+    }
+
+    private function getActionableTips(array $metrics, float $discretionaryRatio): array
+    {
+        // Try to fetch real AI recommendations first
+        $realRecs = Recommendation::where('user_id', Auth::id())
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+
+        if ($realRecs->count() > 0) {
+            return $realRecs->map(function ($rec) {
+                return [
+                    'title' => ucfirst($rec->type).' Optimization',
+                    'tip' => $rec->content,
+                ];
+            })->toArray();
+        }
+
+        // Fallback to basic logic if no AI recommendations exist
+        $tips = [];
+
+        if ($metrics['savings_rate'] < 10) {
+            $tips[] = ['title' => 'Savings Booster', 'tip' => 'Automate a 5% transfer to your savings on payday to force a higher savings rate.'];
+        }
+
+        if ($discretionaryRatio > 40) {
+            $tips[] = ['title' => 'Lifestyle Audit', 'tip' => 'Your discretionary spending is high. Review non-essential subscriptions and dining out habits.'];
+        }
+
+        if ($metrics['emergency_fund_ratio'] < 2) {
+            $tips[] = ['title' => 'Safety Net', 'tip' => 'Prioritize building your emergency fund. Aim for at least 3 months of expenses in a liquid account.'];
+        }
+
+        if ($metrics['debt_to_income'] > 30) {
+            $tips[] = ['title' => 'Debt Avalanche', 'tip' => 'Focus on paying off your highest interest rate debt first to reduce your debt-to-income ratio.'];
+        }
+
+        if (empty($tips)) {
+            $tips[] = ['title' => 'Asset Optimization', 'tip' => 'You are in a strong position. Consider diversified investment vehicles to hedge against inflation.'];
+        }
+
+        return array_slice($tips, 0, 3);
     }
 
     private function getAverageMonthlyAmount(string $type): float

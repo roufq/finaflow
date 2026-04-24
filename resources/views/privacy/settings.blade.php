@@ -1,222 +1,243 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-
- <!-- Page Heading -->
- <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">{{ __('privacy.title') }}</h1>
-  <a href="{{ route('dashboard') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-   <i class="fas fa-arrow-left fa-sm text-white-50"></i> {{ __('forms.labels.back') }} {{ __('navigation.dashboard') }}
-  </a>
- </div>
-
- @if(session('success'))
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-   <i class="fas fa-check-circle"></i> {{ session('success') }}
-   <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-    <span aria-hidden="true">&times;</span>
-   </button>
-  </div>
- @endif
-
- <div class="row">
-  <div class="col-lg-8">
-   <div class="card shadow mb-4">
-    <div class="card-header py-3">
-     <h6 class="m-0 font-weight-bold text-primary">{{ __('privacy.data_privacy_preferences') }}</h6>
-    </div>
-    <div class="card-body">
-     <form method="POST" action="{{ route('privacy.update') }}">
-      @csrf
-      @method('PUT')
-
-      <div class="form-group">
-       <div class="custom-control custom-switch">
-        <input type="hidden" name="data_analytics" value="0">
-        <input type="checkbox" class="custom-control-input" id="data_analytics"
-         name="data_analytics" value="1" {{ $privacySettings->data_analytics ? 'checked' : '' }}>
-        <label class="custom-control-label" for="data_analytics">
-         <strong>{{ __('privacy.data_analytics') }}</strong>
-        </label>
-       </div>
-       <small class="form-text text-muted">
-        {{ __('privacy.data_analytics_description') }}
-       </small>
-      </div>
-
-      <div class="form-group">
-       <div class="custom-control custom-switch">
-        <input type="hidden" name="behavioral_insights" value="0">
-        <input type="checkbox" class="custom-control-input" id="behavioral_insights"
-         name="behavioral_insights" value="1" {{ $privacySettings->behavioral_insights ? 'checked' : '' }}>
-        <label class="custom-control-label" for="behavioral_insights">
-         <strong>{{ __('privacy.behavioral_insights') }}</strong>
-        </label>
-       </div>
-       <small class="form-text text-muted">
-        {{ __('privacy.behavioral_insights_description') }}
-       </small>
-      </div>
-
-      <div class="form-group">
-       <div class="custom-control custom-switch">
-        <input type="hidden" name="third_party_sharing" value="0">
-        <input type="checkbox" class="custom-control-input" id="third_party_sharing"
-         name="third_party_sharing" value="1" {{ $privacySettings->third_party_sharing ? 'checked' : '' }}>
-        <label class="custom-control-label" for="third_party_sharing">
-         <strong>{{ __('privacy.third_party_sharing') }}</strong>
-        </label>
-       </div>
-       <small class="form-text text-muted">
-        {{ __('privacy.third_party_sharing_description') }}
-       </small>
-      </div>
-
-      <div class="form-group">
-       <div class="custom-control custom-switch">
-        <input type="hidden" name="data_anonymization" value="0">
-        <input type="checkbox" class="custom-control-input" id="data_anonymization"
-         name="data_anonymization" value="1" {{ $privacySettings->data_anonymization ? 'checked' : '' }}>
-        <label class="custom-control-label" for="data_anonymization">
-         <strong>{{ __('privacy.data_anonymization') }}</strong>
-        </label>
-       </div>
-       <small class="form-text text-muted">
-        {{ __('privacy.data_anonymization_description') }}
-       </small>
-      </div>
-
-      <button type="submit" class="btn btn-primary">
-       <i class="fas fa-save"></i> {{ __('privacy.save_privacy_settings') }}
-      </button>
-     </form>
-    </div>
-   </div>
-
-   <!-- Account Management -->
-   <div class="card shadow mb-4">
-    <div class="card-header py-3">
-     <h6 class="m-0 font-weight-bold text-warning">{{ __('privacy.account_management') }}</h6>
-    </div>
-    <div class="card-body">
-     <div class="row">
-      <div class="col-md-6">
-       <h6>{{ __('privacy.data_export') }}</h6>
-       <p class="text-muted">{{ __('privacy.data_export_description') }}</p>
-       <a href="{{ route('privacy.export-data') }}" class="btn btn-outline-primary btn-sm">
-        <i class="fas fa-download"></i> {{ __('privacy.export_my_data') }}
-       </a>
-      </div>
-      <div class="col-md-6">
-       <h6>{{ __('privacy.account_deletion') }}</h6>
-       @if($privacySettings->account_deletion)
-        <div class="alert alert-danger">
-         <strong>{{ __('privacy.deletion_requested') }}</strong><br>
-         {{ __('privacy.deletion_pending_message') }}
+<div class="max-w-6xl mx-auto space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ __('privacy.title') }}</h1>
+            <p class="text-sm font-medium text-slate-500">Manage your data fortress and security protocols for maximum capital confidentiality.</p>
         </div>
-        <form method="POST" action="{{ route('privacy.cancel-deletion') }}" class="d-inline">
-         @csrf
-         <button type="submit" class="btn btn-outline-secondary btn-sm">
-          <i class="fas fa-undo"></i> {{ __('privacy.cancel_deletion_request') }}
-         </button>
-        </form>
-       @else
-        <p class="text-muted">{{ __('privacy.account_deletion_description') }}</p>
-        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">
-         <i class="fas fa-trash"></i> {{ __('privacy.request_account_deletion') }}
-        </button>
-       @endif
-      </div>
-     </div>
+        <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+            <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+            {{ __('forms.labels.back') }}
+        </a>
     </div>
-   </div>
-  </div>
 
-  <div class="col-lg-4">
-   <div class="card shadow mb-4">
-    <div class="card-header py-3">
-     <h6 class="m-0 font-weight-bold text-info">{{ __('privacy.privacy_information') }}</h6>
+    @if(session('success'))
+    <div class="relative overflow-hidden rounded-2xl bg-emerald-50 border border-emerald-100 p-4 shadow-sm flex items-center gap-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm ring-1 ring-emerald-100">
+            <i class="fas fa-check"></i>
+        </div>
+        <p class="text-sm font-bold text-emerald-900">{{ session('success') }}</p>
     </div>
-    <div class="card-body">
-     <h6>{{ __('privacy.what_we_collect') }}</h6>
-     <ul class="mb-3">
-      <li>{{ __('privacy.financial_transaction_data') }}</li>
-      <li>{{ __('privacy.account_budget_info') }}</li>
-      <li>{{ __('privacy.behavioral_insights') }}</li>
-      <li>{{ __('privacy.usage_analytics') }}</li>
-     </ul>
+    @endif
 
-     <h6>{{ __('privacy.how_we_use_data') }}</h6>
-     <ul class="mb-3">
-      <li>{{ __('privacy.provide_services') }}</li>
-      <li>{{ __('privacy.generate_insights') }}</li>
-      <li>{{ __('privacy.improve_services') }}</li>
-      <li>{{ __('privacy.ensure_security') }}</li>
-     </ul>
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Main Privacy Matrix -->
+        <div class="lg:col-span-8 space-y-8">
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">{{ __('privacy.data_privacy_preferences') }}</h3>
+                
+                <form method="POST" action="{{ route('privacy.update') }}" class="space-y-10">
+                    @csrf
+                    @method('PUT')
 
-     <h6>{{ __('privacy.your_rights') }}</h6>
-     <ul class="mb-3">
-      <li>{{ __('privacy.access_data') }}</li>
-      <li>{{ __('privacy.correct_data') }}</li>
-      <li>{{ __('privacy.delete_account') }}</li>
-      <li>{{ __('privacy.opt_out_sharing') }}</li>
-     </ul>
+                    <div class="grid grid-cols-1 gap-8">
+                        <!-- Data Analytics -->
+                        <div class="flex items-start justify-between gap-6 p-6 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:bg-white hover:shadow-soft">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ __('privacy.data_analytics') }}</h4>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mt-1 font-medium">{{ __('privacy.data_analytics_description') }}</p>
+                            </div>
+                            <label class="relative inline-flex cursor-pointer items-center">
+                                <input type="hidden" name="data_analytics" value="0">
+                                <input type="checkbox" name="data_analytics" value="1" class="peer sr-only" {{ $privacySettings->data_analytics ? 'checked' : '' }}>
+                                <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-focus:ring-2 peer-focus:ring-primary-500/20"></div>
+                            </label>
+                        </div>
 
-     <div class="alert alert-info">
-      <i class="fas fa-shield-alt"></i> <strong>{{ __('privacy.security') }}:</strong> {{ __('privacy.security_note') }}
-     </div>
+                        <!-- Behavioral Insights -->
+                        <div class="flex items-start justify-between gap-6 p-6 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:bg-white hover:shadow-soft">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ __('privacy.behavioral_insights') }}</h4>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mt-1 font-medium">{{ __('privacy.behavioral_insights_description') }}</p>
+                            </div>
+                            <label class="relative inline-flex cursor-pointer items-center">
+                                <input type="hidden" name="behavioral_insights" value="0">
+                                <input type="checkbox" name="behavioral_insights" value="1" class="peer sr-only" {{ $privacySettings->behavioral_insights ? 'checked' : '' }}>
+                                <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-focus:ring-2 peer-focus:ring-primary-500/20"></div>
+                            </label>
+                        </div>
+
+                        <!-- Third Party Sharing -->
+                        <div class="flex items-start justify-between gap-6 p-6 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:bg-white hover:shadow-soft">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ __('privacy.third_party_sharing') }}</h4>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mt-1 font-medium">{{ __('privacy.third_party_sharing_description') }}</p>
+                            </div>
+                            <label class="relative inline-flex cursor-pointer items-center">
+                                <input type="hidden" name="third_party_sharing" value="0">
+                                <input type="checkbox" name="third_party_sharing" value="1" class="peer sr-only" {{ $privacySettings->third_party_sharing ? 'checked' : '' }}>
+                                <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-focus:ring-2 peer-focus:ring-primary-500/20"></div>
+                            </label>
+                        </div>
+
+                        <!-- Data Anonymization -->
+                        <div class="flex items-start justify-between gap-6 p-6 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:bg-white hover:shadow-soft">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ __('privacy.data_anonymization') }}</h4>
+                                <p class="text-[11px] text-slate-500 leading-relaxed mt-1 font-medium">{{ __('privacy.data_anonymization_description') }}</p>
+                            </div>
+                            <label class="relative inline-flex cursor-pointer items-center">
+                                <input type="hidden" name="data_anonymization" value="0">
+                                <input type="checkbox" name="data_anonymization" value="1" class="peer sr-only" {{ $privacySettings->data_anonymization ? 'checked' : '' }}>
+                                <div class="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-focus:ring-2 peer-focus:ring-primary-500/20"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 border-t border-slate-50 flex justify-end">
+                        <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-10 py-3.5 text-sm font-extrabold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                            <i class="fas fa-shield-alt mr-2 text-primary-400"></i>
+                            {{ __('privacy.save_privacy_settings') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Management Protocols -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8">{{ __('privacy.account_management') }}</h3>
+                <div class="grid grid-cols-1 gap-10 md:grid-cols-2">
+                    <!-- Data Export -->
+                    <div class="space-y-4">
+                        <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ __('privacy.data_export') }}</h4>
+                        <p class="text-[11px] text-slate-500 leading-relaxed">{{ __('privacy.data_export_description') }}</p>
+                        <a href="{{ route('privacy.export-data') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-50 px-6 py-2.5 text-xs font-bold text-slate-600 ring-1 ring-slate-200 transition-all hover:bg-slate-100 hover:text-slate-900">
+                            <i class="fas fa-download mr-2 text-[10px]"></i>
+                            {{ __('privacy.export_my_data') }}
+                        </a>
+                    </div>
+
+                    <!-- Account Termination -->
+                    <div class="space-y-4">
+                        <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ __('privacy.account_deletion') }}</h4>
+                        @if($privacySettings->account_deletion)
+                            <div class="rounded-2xl bg-rose-50 p-4 border border-rose-100">
+                                <p class="text-[10px] font-black text-rose-900 uppercase mb-1">{{ __('privacy.deletion_requested') }}</p>
+                                <p class="text-[10px] text-rose-700 leading-tight mb-4">{{ __('privacy.deletion_pending_message') }}</p>
+                                <form method="POST" action="{{ route('privacy.cancel-deletion') }}">
+                                    @csrf
+                                    <button type="submit" class="text-[10px] font-black text-rose-600 uppercase hover:underline">
+                                        <i class="fas fa-undo mr-1"></i> {{ __('privacy.cancel_deletion_request') }}
+                                    </button>
+                                </form>
+                            </div>
+                        @else
+                            <p class="text-[11px] text-slate-500 leading-relaxed">{{ __('privacy.account_deletion_description') }}</p>
+                            <button @click="$dispatch('open-modal', 'delete-account')" class="inline-flex items-center justify-center rounded-xl bg-rose-50 px-6 py-2.5 text-xs font-bold text-rose-600 ring-1 ring-rose-100 transition-all hover:bg-rose-100">
+                                <i class="fas fa-trash-alt mr-2 text-[10px]"></i>
+                                {{ __('privacy.request_account_deletion') }}
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Information & Policy -->
+        <div class="lg:col-span-4 space-y-8">
+            <div class="rounded-3xl bg-slate-900 p-8 text-white shadow-premium ring-1 ring-white/10">
+                <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">{{ __('privacy.privacy_information') }}</h3>
+                
+                <div class="space-y-10">
+                    <div>
+                        <h4 class="text-[10px] font-black text-white uppercase tracking-widest mb-4">{{ __('privacy.what_we_collect') }}</h4>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <span class="h-1.5 w-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span>
+                                <span class="text-[11px] font-medium text-slate-400">{{ __('privacy.financial_transaction_data') }}</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="h-1.5 w-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span>
+                                <span class="text-[11px] font-medium text-slate-400">{{ __('privacy.account_budget_info') }}</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="h-1.5 w-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5"></span>
+                                <span class="text-[11px] font-medium text-slate-400">{{ __('privacy.behavioral_insights') }}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-10 border-t border-white/5">
+                        <h4 class="text-[10px] font-black text-white uppercase tracking-widest mb-4">{{ __('privacy.your_rights') }}</h4>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <span class="h-1 w-2 rounded-full bg-emerald-500 shrink-0 mt-2"></span>
+                                <span class="text-[11px] font-medium text-slate-400">{{ __('privacy.access_data') }}</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="h-1 w-2 rounded-full bg-emerald-500 shrink-0 mt-2"></span>
+                                <span class="text-[11px] font-medium text-slate-400">{{ __('privacy.opt_out_sharing') }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-10 rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fas fa-shield-alt text-primary-400 text-xs"></i>
+                        <h5 class="text-[10px] font-black uppercase text-white">{{ __('privacy.security') }}</h5>
+                    </div>
+                    <p class="text-[10px] font-medium text-slate-500 leading-relaxed italic">{{ __('privacy.security_note') }}</p>
+                </div>
+            </div>
+
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100 text-center">
+                <i class="fas fa-file-contract text-slate-200 text-3xl mb-4"></i>
+                <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight mb-2">{{ __('privacy.need_more_info') }}</h4>
+                <div class="flex flex-col gap-1">
+                    <a href="#" class="text-[10px] font-black text-primary-600 uppercase hover:underline italic">{{ __('privacy.view_full_privacy_policy') }}</a>
+                    <a href="#" class="text-[10px] font-black text-slate-400 uppercase hover:text-slate-600 transition-colors">{{ __('privacy.contact_data_protection_officer') }}</a>
+                </div>
+            </div>
+        </div>
     </div>
-   </div>
-
-   <!-- Privacy Policy Link -->
-   <div class="card shadow mb-4">
-    <div class="card-body text-center">
-     <h6>{{ __('privacy.need_more_info') }}</h6>
-     <a href="#" class="btn btn-link">{{ __('privacy.view_full_privacy_policy') }}</a><br>
-     <a href="#" class="btn btn-link">{{ __('privacy.contact_data_protection_officer') }}</a>
-    </div>
-   </div>
-  </div>
- </div>
-
 </div>
 
-<!-- Account Deletion Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
- <div class="modal-dialog" role="document">
-  <div class="modal-content">
-   <div class="modal-header">
-    <h5 class="modal-title" id="deleteModalLabel">{{ __('privacy.confirm_account_deletion') }}</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-     <span aria-hidden="true">&times;</span>
-    </button>
-   </div>
-   <div class="modal-body">
-    <div class="alert alert-danger">
-     <strong>{{ __('privacy.warning') }}:</strong> {{ __('privacy.deletion_warning') }}
+<!-- Deletion Modal (Alpine.js powered) -->
+<div x-data="{ open: false }" @open-modal.window="if($event.detail === 'delete-account') open = true" class="relative z-50" x-show="open" x-cloak>
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="open = false"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-3xl bg-white p-8 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight">{{ __('privacy.confirm_account_deletion') }}</h3>
+                        <button @click="open = false" class="text-slate-400 hover:text-slate-600 transition-colors"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="rounded-2xl bg-rose-50 p-5 ring-1 ring-rose-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-exclamation-triangle text-rose-500"></i>
+                            <h4 class="text-[11px] font-black text-rose-900 uppercase">{{ __('privacy.warning') }}</h4>
+                        </div>
+                        <p class="text-[11px] font-bold text-rose-700 leading-relaxed">{{ __('privacy.deletion_warning') }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{{ __('privacy.before_proceeding') }}:</p>
+                        <ul class="space-y-3">
+                            @foreach([__('privacy.export_data_first'), __('privacy.family_data_deleted'), __('privacy.subscription_info_removed'), __('privacy.lose_premium_access')] as $item)
+                            <li class="flex items-center gap-3 text-[11px] font-bold text-slate-600">
+                                <i class="fas fa-check text-[8px] text-slate-300"></i>
+                                {{ $item }}
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="pt-6 border-t border-slate-50 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+                        <button @click="open = false" class="px-6 py-3 text-sm font-bold text-slate-500">{{ __('forms.labels.cancel') }}</button>
+                        <form method="POST" action="{{ route('privacy.request-deletion') }}">
+                            @csrf
+                            <button type="submit" class="w-full sm:w-auto rounded-xl bg-rose-600 px-8 py-3.5 text-sm font-extrabold text-white shadow-lg transition-all hover:bg-rose-700 active:scale-95">
+                                <i class="fas fa-trash-alt mr-2"></i>
+                                {{ __('privacy.yes_delete_account') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <p>{{ __('privacy.before_proceeding') }}</p>
-    <ul>
-     <li>{{ __('privacy.export_data_first') }}</li>
-     <li>{{ __('privacy.family_data_deleted') }}</li>
-     <li>{{ __('privacy.subscription_info_removed') }}</li>
-     <li>{{ __('privacy.lose_premium_access') }}</li>
-    </ul>
-    <p>{{ __('privacy.sure_delete') }}</p>
-   </div>
-   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('forms.labels.cancel') }}</button>
-    <form method="POST" action="{{ route('privacy.request-deletion') }}" class="d-inline">
-     @csrf
-     <button type="submit" class="btn btn-danger">
-      <i class="fas fa-trash"></i> {{ __('privacy.yes_delete_account') }}
-     </button>
-    </form>
-   </div>
-  </div>
- </div>
 </div>
-
 @endsection
-

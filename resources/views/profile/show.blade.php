@@ -1,242 +1,197 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="h3 mb-1 text-gray-800">{{ __('profile.title') }}</h1>
-            <p class="mb-0 text-muted">{{ __('profile.subtitle') }}</p>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ __('profile.title') }}</h1>
+            <p class="text-sm font-medium text-slate-500">{{ __('profile.subtitle') }}</p>
         </div>
-        <div class="btn-group">
-            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> {{ __('forms.labels.back') }} {{ __('navigation.dashboard') }}
+        <div class="flex items-center gap-3">
+            <a href="javascript:history.back()" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                {{ __('common.back') }}
             </a>
         </div>
     </div>
 
     @if (session('profileUpdated'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle"></i> {{ session('profileUpdated') }}
-            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+    <div class="relative overflow-hidden rounded-2xl bg-emerald-50 border border-emerald-100 p-4 shadow-sm flex items-center gap-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm ring-1 ring-emerald-100">
+            <i class="fas fa-check"></i>
         </div>
+        <p class="text-sm font-bold text-emerald-900">{{ session('profileUpdated') }}</p>
+    </div>
     @endif
 
     @if (session('passwordUpdated'))
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <i class="fas fa-shield-alt"></i> {{ session('passwordUpdated') }}
-            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+    <div class="relative overflow-hidden rounded-2xl bg-blue-50 border border-blue-100 p-4 shadow-sm flex items-center gap-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-blue-500 shadow-sm ring-1 ring-blue-100">
+            <i class="fas fa-shield-alt"></i>
         </div>
+        <p class="text-sm font-bold text-blue-900">{{ session('passwordUpdated') }}</p>
+    </div>
     @endif
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('profile.basic_information') }}</h6>
-                    <span class="badge badge-pill badge-success">
-                        <i class="fas fa-user-circle"></i>
-                    </span>
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Main Form Area -->
+        <div class="lg:col-span-8 space-y-8">
+            <!-- Basic Information Card -->
+            <div class="rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-500 text-white shadow-soft">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">{{ __('profile.basic_information') }}</h3>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="p-8">
                     @php
-                        $avatarUrl = $user->avatar_path ? asset('storage/'.$user->avatar_path) : asset('img/undraw_profile.svg');
+                        $avatarUrl = $user->avatar_path ? asset('storage/'.$user->avatar_path) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&color=7F9CF5&background=EBF4FF';
                     @endphp
-                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group">
-                            <label for="name">{{ __('forms.labels.name') }}</label>
-                            <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror"
-                                value="{{ old('name', $user->name) }}" required>
-                            @error('name')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">{{ __('forms.labels.email') }}</label>
-                            <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                value="{{ old('email', $user->email) }}" required>
-                            @error('email')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="avatar">Profile Photo</label>
-                            <div class="d-flex align-items-center">
-                                <img src="{{ $avatarUrl }}" alt="Profile avatar" class="rounded-circle mr-3" style="width: 60px; height: 60px; object-fit: cover;">
-                                <div class="flex-fill">
-                                    <input type="file" id="avatar" name="avatar" class="form-control-file @error('avatar') is-invalid @enderror" accept="image/*">
-                                    <small class="text-muted d-block">JPG/PNG up to 2MB.</small>
-                                    @error('avatar')
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                        <div class="flex flex-col md:flex-row gap-8 items-start">
+                            <div class="relative group">
+                                <img src="{{ $avatarUrl }}" alt="Profile avatar" class="h-24 w-24 rounded-3xl object-cover ring-4 ring-slate-50 shadow-soft transition-transform group-hover:scale-105">
+                                <label for="avatar" class="absolute -bottom-2 -right-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl bg-primary-600 text-white shadow-premium transition-all hover:bg-primary-500 active:scale-90">
+                                    <i class="fas fa-camera text-xs"></i>
+                                    <input type="file" id="avatar" name="avatar" class="hidden" accept="image/*">
+                                </label>
+                            </div>
+                            <div class="flex-1 space-y-6 w-full">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-1.5">
+                                        <label for="name" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{{ __('forms.labels.name') }}</label>
+                                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" class="w-full rounded-2xl border-none bg-slate-100/50 px-5 py-3.5 text-sm font-bold text-slate-900 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10" required>
+                                        @error('name') <p class="text-[10px] font-bold text-rose-500 ml-1 mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label for="email" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{{ __('forms.labels.email') }}</label>
+                                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="w-full rounded-2xl border-none bg-slate-100/50 px-5 py-3.5 text-sm font-bold text-slate-900 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10" required>
+                                        @error('email') <p class="text-[10px] font-bold text-rose-500 ml-1 mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                </div>
+                                <div class="flex justify-start">
+                                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-bold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                                        <i class="fas fa-save mr-2 text-primary-400"></i>
+                                        {{ __('profile.actions.update_profile') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> {{ __('profile.actions.update_profile') }}
-                        </button>
                     </form>
                 </div>
             </div>
 
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-danger">{{ __('profile.security') }}</h6>
-                    <i class="fas fa-lock text-danger"></i>
+            <!-- Security Card -->
+            <div class="rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 overflow-hidden">
+                <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500 text-white shadow-soft">
+                            <i class="fas fa-lock text-sm"></i>
+                        </div>
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">{{ __('profile.security') }}</h3>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted">{{ __('profile.security_description') }}</p>
-                    <form method="POST" action="{{ route('profile.password.update') }}">
+                <div class="p-8">
+                    <p class="text-xs font-medium text-slate-500 mb-8">{{ __('profile.security_description') }}</p>
+                    <form method="POST" action="{{ route('profile.password.update') }}" class="space-y-6">
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group">
-                            <label for="current_password">{{ __('forms.labels.current_password') }}</label>
-                            <input type="password" id="current_password" name="current_password"
-                                class="form-control @error('current_password') is-invalid @enderror" required>
-                            @error('current_password')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="space-y-1.5">
+                                <label for="current_password" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{{ __('forms.labels.current_password') }}</label>
+                                <input type="password" id="current_password" name="current_password" class="w-full rounded-2xl border-none bg-slate-100/50 px-5 py-3.5 text-sm font-bold text-slate-900 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10" required>
+                                @error('current_password') <p class="text-[10px] font-bold text-rose-500 ml-1 mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="new_password" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{{ __('forms.labels.new_password') }}</label>
+                                <input type="password" id="new_password" name="new_password" class="w-full rounded-2xl border-none bg-slate-100/50 px-5 py-3.5 text-sm font-bold text-slate-900 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10" required>
+                                @error('new_password') <p class="text-[10px] font-bold text-rose-500 ml-1 mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div class="space-y-1.5">
+                                <label for="new_password_confirmation" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">{{ __('forms.labels.confirm_new_password') }}</label>
+                                <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="w-full rounded-2xl border-none bg-slate-100/50 px-5 py-3.5 text-sm font-bold text-slate-900 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10" required>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="new_password">{{ __('forms.labels.new_password') }}</label>
-                            <input type="password" id="new_password" name="new_password"
-                                class="form-control @error('new_password') is-invalid @enderror" required>
-                            @error('new_password')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <div class="flex justify-start">
+                            <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-6 py-3 text-sm font-bold text-white shadow-premium transition-all hover:bg-rose-500 active:scale-95">
+                                <i class="fas fa-shield-alt mr-2"></i>
+                                {{ __('profile.actions.update_password') }}
+                            </button>
                         </div>
-
-                        <div class="form-group">
-                            <label for="new_password_confirmation">{{ __('forms.labels.confirm_new_password') }}</label>
-                            <input type="password" id="new_password_confirmation" name="new_password_confirmation"
-                                class="form-control" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-shield-alt"></i> {{ __('profile.actions.update_password') }}
-                        </button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <div>
-                            <span class="text-uppercase text-muted small">{{ __('profile.profile_completion') }}</span>
-                            <h3 class="mb-0">{{ $profileCompletion }}%</h3>
-                        </div>
-                        <div class="icon-circle bg-primary text-white">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                    </div>
-                    <div class="progress mb-2">
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $profileCompletion }}%;"
-                            aria-valuenow="{{ $profileCompletion }}" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small class="text-muted d-block">{{ __('profile.completion_hint') }}</small>
+        <!-- Sidebar Info Area -->
+        <div class="lg:col-span-4 space-y-8">
+            <!-- Completion Card -->
+            <div class="rounded-3xl bg-slate-900 p-8 text-white shadow-premium ring-1 ring-white/10">
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{{ __('profile.profile_completion') }}</span>
+                    <i class="fas fa-user-check text-primary-400"></i>
                 </div>
+                <h3 class="text-4xl font-extrabold tracking-tight mb-4">{{ $profileCompletion }}<span class="text-lg text-primary-400">%</span></h3>
+                <div class="w-full rounded-full bg-white/10 p-1 mb-4">
+                    <div class="h-1.5 rounded-full bg-primary-500 transition-all duration-1000" style="width: {{ $profileCompletion }}%"></div>
+                </div>
+                <p class="text-[10px] font-bold text-slate-400 leading-relaxed">{{ __('profile.completion_hint') }}</p>
             </div>
 
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('profile.stats') }}</h6>
-                </div>
-                <div class="card-body">
-                    @php
-                        $statIcons = [
-                            'accounts' => 'fas fa-university',
-                            'goals' => 'fas fa-bullseye',
-                            'subscriptions' => 'fas fa-sync-alt',
-                        ];
-                    @endphp
+            <!-- Stats Card -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-6">{{ __('profile.stats') }}</h3>
+                <div class="space-y-6">
                     @foreach ($profileStats as $key => $value)
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div>
-                                <span class="text-muted text-uppercase small">{{ __('profile.stats_labels.' . $key) }}</span>
-                                <h4 class="mb-0">{{ number_format($value) }}</h4>
+                    <div class="flex items-center justify-between group">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-primary-600 group-hover:bg-primary-50 transition-colors">
+                                <i class="{{ ['accounts' => 'fas fa-university', 'goals' => 'fas fa-bullseye', 'subscriptions' => 'fas fa-sync-alt'][$key] ?? 'fas fa-chart-line' }} text-[10px]"></i>
                             </div>
-                            <span class="badge badge-light">
-                                <i class="{{ $statIcons[$key] ?? 'fas fa-chart-line' }} text-primary"></i>
-                            </span>
+                            <span class="text-xs font-bold text-slate-500">{{ __('profile.stats_labels.' . $key) }}</span>
                         </div>
+                        <span class="text-sm font-black text-slate-900">{{ number_format($value) }}</span>
+                    </div>
                     @endforeach
-
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2">
-                            <strong>{{ __('profile.details.currency') }}:</strong>
-                            {{ optional($settings)->currency_symbol ?? '—' }}
-                        </li>
-                        <li class="mb-2">
-                            <strong>{{ __('profile.details.start_month') }}:</strong>
-                            {{ optional($settings)->start_month ? ucfirst(optional($settings)->start_month) : '—' }}
-                        </li>
-                        <li>
-                            <strong>{{ __('profile.details.risk_profile') }}:</strong>
-                            {{ optional($settings)->risk_profile ? ucfirst(optional($settings)->risk_profile) : '—' }}
-                        </li>
-                    </ul>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-slate-50 space-y-4">
+                    <div class="flex justify-between text-xs font-medium">
+                        <span class="text-slate-400">{{ __('profile.details.currency') }}</span>
+                        <span class="text-slate-900 font-bold">{{ optional($settings)->currency_symbol ?? '—' }}</span>
+                    </div>
+                    <div class="flex justify-between text-xs font-medium">
+                        <span class="text-slate-400">{{ __('profile.details.risk_profile') }}</span>
+                        <span class="text-slate-900 font-bold">{{ optional($settings)->risk_profile ? ucfirst(optional($settings)->risk_profile) : '—' }}</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-info">{{ __('profile.shortcuts') }}</h6>
-                </div>
-                <div class="card-body">
-                    <a href="{{ route('privacy.settings') }}" class="btn btn-outline-primary btn-block mb-2">
-                        <i class="fas fa-shield-alt"></i> {{ __('profile.actions.open_privacy') }}
+            <!-- Shortcuts Card -->
+            <div class="rounded-3xl bg-primary-600 p-8 text-white shadow-premium">
+                <h3 class="text-[10px] font-black text-primary-200 uppercase tracking-widest mb-6">{{ __('profile.shortcuts') }}</h3>
+                <div class="grid grid-cols-1 gap-3">
+                    <a href="{{ route('privacy.settings') }}" class="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 text-xs font-bold text-white transition-all hover:bg-white/20 active:scale-95">
+                        <i class="fas fa-user-shield text-primary-200"></i>
+                        {{ __('profile.actions.open_privacy') }}
                     </a>
-                    <a href="{{ route('settings.index') }}" class="btn btn-outline-secondary btn-block mb-2">
-                        <i class="fas fa-cogs"></i> {{ __('profile.actions.open_settings') }}
+                    <a href="{{ route('settings.index') }}" class="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 text-xs font-bold text-white transition-all hover:bg-white/20 active:scale-95">
+                        <i class="fas fa-sliders text-primary-200"></i>
+                        {{ __('profile.actions.open_settings') }}
                     </a>
-                    <button class="btn btn-outline-dark btn-block" type="button" disabled>
-                        <i class="fas fa-list"></i> {{ __('profile.actions.open_activity') }}
-                    </button>
-                    <small class="text-muted d-block mt-2">{{ __('profile.activity_placeholder') }}</small>
-                </div>
-            </div>
-
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-warning">{{ __('profile.security') }}</h6>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2">
-                            <i class="fas fa-key text-warning"></i> {{ __('profile.security_tips.tip_one') }}
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-user-shield text-warning"></i> {{ __('profile.security_tips.tip_two') }}
-                        </li>
-                        <li>
-                            <i class="fas fa-bell text-warning"></i> {{ __('profile.security_tips.tip_three') }}
-                        </li>
-                    </ul>
+                    <a href="{{ route('activity-log.index') }}" class="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 text-xs font-bold text-white transition-all hover:bg-white/20 active:scale-95">
+                        <i class="fas fa-timeline text-primary-200"></i>
+                        Activity Audit
+                    </a>
                 </div>
             </div>
         </div>

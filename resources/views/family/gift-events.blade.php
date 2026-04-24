@@ -1,442 +1,333 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Gift Events</h1>
-        <a href="{{ route('family.gift-events.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Plan New Event
-        </a>
+<div class="space-y-10 animate-fade-in pb-20" x-data="{ activeModal: null }">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-black text-amber-600 uppercase tracking-widest ring-1 ring-inset ring-amber-500/20">Cultural Milestones</span>
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 line-clamp-1">Gift Events Registry</h1>
+            <p class="text-sm font-medium text-slate-500">Curate and manage collective celebration logistics</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('family.index') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-tachometer-alt mr-2 text-slate-400"></i>
+                Dashboard
+            </a>
+            <a href="{{ route('family.gift-events.create') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                <i class="fas fa-plus mr-2 text-amber-400"></i>
+                Plan New Event
+            </a>
+        </div>
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">All Gift Events</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Actions:</div>
-                            <a class="dropdown-item" href="{{ route('family.gift-events.create') }}">
-                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Plan Event
-                            </a>
-                            <a class="dropdown-item" href="{{ route('family.index') }}">
-                                <i class="fas fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Dashboard
-                            </a>
+    <!-- Summary Metrics -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-b-4 border-amber-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-3 italic">Total Events</p>
+            <div class="flex items-end justify-between">
+                <h3 class="text-3xl font-black text-slate-900 leading-none tracking-tighter">{{ $events->count() }}</h3>
+                <div class="h-10 w-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-400">
+                    <i class="fas fa-calendar-star text-lg"></i>
+                </div>
+            </div>
+        </div>
+        <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-b-4 border-emerald-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-3 italic">Settled Events</p>
+            <div class="flex items-end justify-between">
+                <h3 class="text-3xl font-black text-slate-900 leading-none tracking-tighter">{{ $events->where('is_completed', true)->count() }}</h3>
+                <div class="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-400">
+                    <i class="fas fa-check-circle text-lg"></i>
+                </div>
+            </div>
+        </div>
+        <div class="rounded-3xl bg-slate-900 p-6 shadow-premium ring-1 ring-white/10 text-white">
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none mb-3 italic">Allocated Budget</p>
+            <div class="flex flex-col">
+                <h3 class="text-xl font-black italic tracking-tighter leading-none mb-1">Rp {{ number_format($events->sum('budget_amount'), 0, ',', '.') }}</h3>
+                <span class="text-[9px] font-bold text-white/30 uppercase tracking-widest">Total ceiling</span>
+            </div>
+        </div>
+        <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-t-4 border-red-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-3 italic">Operating Spent</p>
+            <div class="flex flex-col">
+                <h3 class="text-xl font-black text-slate-900 italic tracking-tighter leading-none mb-1">Rp {{ number_format($events->sum('spent_amount'), 0, ',', '.') }}</h3>
+                <div class="h-1.5 w-full bg-slate-100 rounded-full mt-2 overflow-hidden">
+                    @php $totalSpentProgress = $events->sum('budget_amount') > 0 ? ($events->sum('spent_amount') / $events->sum('budget_amount')) * 100 : 0; @endphp
+                    <div class="h-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]" style="width: {{ min($totalSpentProgress, 100) }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @forelse($events as $event)
+        <div class="group relative rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 overflow-hidden transition-all hover:scale-[1.01] hover:ring-amber-500/30">
+            <div class="p-8">
+                <div class="flex items-start justify-between mb-8">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center rounded-lg bg-amber-500 px-2.5 py-1 text-[9px] font-black uppercase text-white tracking-widest shadow-lg shadow-amber-500/20">{{ $event->event_type }}</span>
+                            @if($event->is_completed)
+                                <span class="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-0.5 text-[9px] font-black text-emerald-600 uppercase tracking-widest ring-1 ring-inset ring-emerald-500/20 italic">Fulfilled</span>
+                            @else
+                                <span class="inline-flex items-center rounded-lg bg-primary-50 px-2 py-0.5 text-[9px] font-black text-primary-600 uppercase tracking-widest ring-1 ring-inset ring-primary-500/20 italic">Planning phase</span>
+                            @endif
                         </div>
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight leading-tight">{{ $event->event_name }}</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-1">{{ $event->event_date->format('M d, Y') }} execution window</p>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <a href="{{ route('family.gift-events.edit', $event) }}" class="h-9 w-9 rounded-xl bg-white flex items-center justify-center text-slate-400 ring-1 ring-slate-200 transition-all hover:text-amber-600 hover:ring-amber-500/30 shadow-sm">
+                            <i class="fas fa-edit text-xs"></i>
+                        </a>
+                        <form method="POST" action="{{ route('family.gift-events.destroy', $event) }}" onsubmit="return confirm('Abort this mission?')" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="h-9 w-9 rounded-xl bg-white flex items-center justify-center text-slate-400 ring-1 ring-slate-200 transition-all hover:text-red-600 hover:ring-red-500/30 shadow-sm">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
-                <div class="card-body">
-                    @if($events->count() > 0)
-                        <div class="row">
-                            @foreach($events as $event)
-                            <div class="col-xl-6 col-lg-6 mb-4">
-                                <div class="card border-left-warning shadow h-100">
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-warning">{{ $event->event_name }}</h6>
-                                        <div class="dropdown no-arrow">
-                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink{{ $event->id }}"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                                aria-labelledby="dropdownMenuLink{{ $event->id }}">
-                                                <a class="dropdown-item" href="{{ route('family.gift-events.edit', $event) }}">
-                                                    <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
-                                                    Edit Event
-                                                </a>
-                                                <form method="POST" action="{{ route('family.gift-events.destroy', $event) }}" onsubmit="return confirm('Are you sure you want to delete this event?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger">
-                                                        <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
-                                                        Delete Event
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Event Type</div>
-                                                <span class="badge badge-warning">{{ $event->event_type }}</span>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Event Date</div>
-                                                <div class="text-gray-800">{{ $event->event_date->format('d M Y') }}</div>
-                                            </div>
-                                        </div>
 
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Budget</div>
-                                                <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                                    Rp {{ number_format($event->budget_amount, 0, ',', '.') }}
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Spent</div>
-                                                <div class="h6 mb-0 font-weight-bold text-danger">
-                                                    Rp {{ number_format($event->spent_amount, 0, ',', '.') }}
-                                                </div>
-                                            </div>
-                                        </div>
+                <div class="space-y-6">
+                    <!-- Budget Dynamics -->
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100 space-y-4">
+                        <div class="flex items-end justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest italic mb-1">Asset Allocation</span>
+                                <span class="text-xl font-black text-slate-900 tabular-nums">Rp {{ number_format($event->budget_amount, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest italic mb-1">Burn rate: {{ $event->budget_used_percentage }}%</span>
+                                <p class="text-sm font-black text-red-600 tabular-nums">Spent: Rp {{ number_format($event->spent_amount, 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                        <div class="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
+                            <div class="h-full bg-amber-500 transition-all duration-700" style="width: {{ min($event->budget_used_percentage, 100) }}%"></div>
+                        </div>
+                    </div>
 
-                                        @if($event->budget_amount > 0)
-                                        <div class="row no-gutters align-items-center mb-3">
-                                            <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                    Budget Used</div>
-                                                <div class="row no-gutters align-items-center">
-                                                    <div class="col-auto">
-                                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $event->budget_used_percentage }}%</div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="progress progress-sm mr-2">
-                                                            <div class="progress-bar bg-warning" role="progressbar"
-                                                                style="width: {{ $event->budget_used_percentage }}%" aria-valuenow="{{ $event->budget_used_percentage }}"
-                                                                aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <!-- Meta Diagnostics -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-xl bg-white shadow-soft flex items-center justify-center text-slate-400 border border-slate-100">
+                                <i class="fas fa-users text-[10px]"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-0.5">Operatives</span>
+                                <span class="text-xs font-black text-slate-900 uppercase italic">{{ $event->recipient_count }} targeted</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-xl bg-white shadow-soft flex items-center justify-center text-slate-400 border border-slate-100">
+                                <i class="fas fa-box-open text-[10px]"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-0.5">Inventory</span>
+                                <span class="text-xs font-black text-slate-900 uppercase italic">{{ $event->gift_count }} gifts planned</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <button @click="activeModal = 'gifts-{{ $event->id }}'" class="inline-flex items-center justify-center rounded-xl bg-amber-600 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-white shadow-premium transition-all hover:bg-amber-700 active:scale-95">
+                            <i class="fas fa-gift mr-2"></i> Manage Gifting
+                        </button>
+                        <button @click="activeModal = 'details-{{ $event->id }}'" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-slate-600 ring-1 ring-slate-200 shadow-premium transition-all hover:bg-slate-50 active:scale-95">
+                            <i class="fas fa-chart-line mr-2"></i> Protocol Detail
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gifts Management Modal -->
+        <div x-show="activeModal === 'gifts-{{ $event->id }}'" 
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             style="display: none;">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="activeModal = null"></div>
+            <div class="relative w-full max-w-4xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden ring-1 ring-white/20">
+                <div class="p-8 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight leading-none uppercase italic underline decoration-amber-500/20">Inventory Distribution</h3>
+                        <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest italic">{{ $event->event_name }}</p>
+                    </div>
+                    <button @click="activeModal = null" class="h-10 w-10 flex items-center justify-center rounded-2xl bg-white shadow-soft text-slate-400 hover:text-slate-900">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="p-8 max-h-[70vh] overflow-y-auto">
+                    <div class="mb-8 flex items-center justify-between">
+                        <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest italic">Allocated Assets</h4>
+                        <button @click="activeModal = 'add-gift-{{ $event->id }}'" class="inline-flex items-center rounded-xl bg-primary-600 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white shadow-premium">
+                            <i class="fas fa-plus mr-2"></i> New Allocation
+                        </button>
+                    </div>
+
+                    @php $giftList = collect($event->gifts ?? []); @endphp
+                    <div class="space-y-4">
+                        @forelse($giftList as $gift)
+                        <div class="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100 group transition-all hover:bg-white hover:shadow-soft">
+                            <div class="flex items-center gap-5">
+                                <div class="h-12 w-12 rounded-2xl bg-white shadow-soft flex items-center justify-center text-amber-500 border border-slate-100">
+                                    <i class="fas fa-gift text-xl"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-sm font-black text-slate-900 leading-none mb-1">{{ $gift['gift_name'] ?? 'N/A' }}</h5>
+                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Recipient: <span class="text-slate-900">{{ $gift['recipient_name'] ?? 'Unknown' }}</span></p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-8">
+                                <div class="text-right">
+                                    <span class="text-sm font-black text-slate-900 tabular-nums">Rp {{ number_format($gift['amount'] ?? 0, 0, ',', '.') }}</span>
+                                    <div class="mt-1">
+                                        @if($gift['purchased'] ?? false)
+                                            <span class="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-0.5 text-[8px] font-black text-emerald-600 uppercase tracking-widest ring-1 ring-inset ring-emerald-500/20 italic">Procured</span>
+                                        @else
+                                            <span class="inline-flex items-center rounded-lg bg-amber-50 px-2 py-0.5 text-[8px] font-black text-amber-600 uppercase tracking-widest ring-1 ring-inset ring-amber-500/20 italic">Planned</span>
                                         @endif
-
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Recipients</div>
-                                                <div class="h6 mb-0 font-weight-bold text-gray-800">{{ $event->recipient_count }}</div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="text-xs font-weight-bold text-uppercase mb-1">Gifts Planned</div>
-                                                <div class="h6 mb-0 font-weight-bold text-gray-800">{{ $event->gift_count }}</div>
-                                            </div>
-                                        </div>
-
-                                        @if(optional($event->recipient_details)->count() > 0)
-                                        <div class="mb-3">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">Recipients</div>
-                                            <div>
-                                                @foreach($event->recipient_details as $recipient)
-                                                <span class="badge badge-light mr-1">{{ $recipient->name }}</span>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        @endif
-
-                                        @if($event->notes)
-                                        <div class="mb-3">
-                                            <div class="text-xs font-weight-bold text-uppercase mb-1">Notes</div>
-                                            <p class="text-gray-800 small mb-0">{{ $event->notes }}</p>
-                                        </div>
-                                        @endif
-
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <button class="btn btn-warning btn-sm btn-block" data-toggle="modal" data-target="#giftModal{{ $event->id }}">
-                                                    <i class="fas fa-gift"></i> Manage Gifts
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#detailsModal{{ $event->id }}">
-                                                    <i class="fas fa-eye"></i> Details
-                                                </button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        @empty
+                        <div class="py-12 text-center">
+                            <p class="text-[10px] font-black text-slate-400 uppercase italic tracking-widest leading-none mb-2">No inventory defined</p>
+                            <p class="text-xs font-medium text-slate-400">Initialize gift allocations for this milestone.</p>
+                        </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                            <!-- Gift Management Modal -->
-                            <div class="modal fade" id="giftModal{{ $event->id }}" tabindex="-1" role="dialog" aria-labelledby="giftModalLabel{{ $event->id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="giftModalLabel{{ $event->id }}">Manage Gifts - {{ $event->event_name }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#addGiftModal{{ $event->id }}">
-                                                    <i class="fas fa-plus"></i> Add Gift
-                                                </button>
-                                            </div>
-
-                                            @php
-                                                $giftList = collect($event->gifts ?? []);
-                                            @endphp
-                                            @if($giftList->count() > 0)
-                                                <div class="table-responsive">
-                                                    <table class="table table-sm">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Recipient</th>
-                                                                <th>Gift</th>
-                                                                <th>Amount</th>
-                                                                <th>Status</th>
-                                                                <th>Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach($giftList as $gift)
-                                                            <tr>
-                                                                <td>{{ $gift['recipient_name'] ?? 'Unknown' }}</td>
-                                                                <td>{{ $gift['gift_name'] ?? 'N/A' }}</td>
-                                                                <td>Rp {{ number_format($gift['amount'] ?? 0, 0, ',', '.') }}</td>
-                                                                <td>
-                                                                    @if($gift['purchased'] ?? false)
-                                                                        <span class="badge badge-success">Purchased</span>
-                                                                    @else
-                                                                        <span class="badge badge-warning">Planned</span>
-                                                                    @endif
-                                                                </td>
-                                                                <td>
-                                                                    <button class="btn btn-sm btn-outline-primary">Edit</button>
-                                                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                                                                </td>
-                                                            </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            @else
-                                                <p class="text-muted">No gifts planned yet.</p>
-                                            @endif
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- Simple Detail Modal -->
+        <div x-show="activeModal === 'details-{{ $event->id }}'" 
+             class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             style="display: none;">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="activeModal = null"></div>
+            <div class="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-2xl overflow-hidden ring-1 ring-white/20">
+                <div class="p-8 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                    <h3 class="text-xl font-black text-slate-900 tracking-tight leading-none uppercase italic underline decoration-amber-500/20">Protocol Diagnostics</h3>
+                    <button @click="activeModal = null" class="h-10 w-10 flex items-center justify-center rounded-2xl bg-white shadow-soft text-slate-400">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-8 space-y-8">
+                    <div class="grid grid-cols-2 gap-8 text-[11px] font-black uppercase tracking-widest italic">
+                        <div class="space-y-4">
+                            <div class="space-y-1">
+                                <span class="text-slate-400 block mb-1">Operational ID</span>
+                                <span class="text-slate-900">#FF-GE-{{ $event->id }}</span>
                             </div>
-
-                            <!-- Add Gift Modal -->
-                            <div class="modal fade" id="addGiftModal{{ $event->id }}" tabindex="-1" role="dialog" aria-labelledby="addGiftModalLabel{{ $event->id }}" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="addGiftModalLabel{{ $event->id }}">Add Gift for {{ $event->event_name }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form method="POST" action="{{ route('family.gift-events.gifts.store', $event) }}">
-                                            @csrf
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="recipient{{ $event->id }}">Recipient</label>
-                                                    <select class="form-control" id="recipient{{ $event->id }}" name="recipient_id" required>
-                                                        <option value="" disabled {{ optional($event->recipient_details)->count() ? '' : 'selected' }}>Select Recipient</option>
-                                                        @if(optional($event->recipient_details)->count() > 0)
-                                                            @foreach($event->recipient_details as $recipient)
-                                                            <option value="{{ $recipient->id }}">{{ $recipient->name }} ({{ $recipient->relationship }})</option>
-                                                            @endforeach
-                                                        @else
-                                                            <option value="" disabled>No recipients available. Edit event to add family members.</option>
-                                                        @endif
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="gift_name{{ $event->id }}">Gift Name</label>
-                                                    <input type="text" class="form-control" id="gift_name{{ $event->id }}" name="gift_name" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="gift_amount{{ $event->id }}">Gift Amount (Rp)</label>
-                                                    <input type="number" class="form-control" id="gift_amount{{ $event->id }}" name="amount" min="0" step="1000" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="gift_description{{ $event->id }}">Description (Optional)</label>
-                                                    <textarea class="form-control" id="gift_description{{ $event->id }}" name="description" rows="2"></textarea>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="purchased{{ $event->id }}" name="purchased">
-                                                    <label class="form-check-label" for="purchased{{ $event->id }}">Already purchased</label>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn btn-success">Add Gift</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                            <div class="space-y-1">
+                                <span class="text-slate-400 block mb-1 underline decoration-primary-500/20">Execution Window</span>
+                                <span class="text-slate-900">{{ $event->event_date->format('l, M d, Y') }}</span>
                             </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="space-y-1">
+                                <span class="text-slate-400 block mb-1">Classification</span>
+                                <span class="text-amber-600">{{ $event->event_type }}</span>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-slate-400 block mb-1 underline decoration-primary-500/20">Budget Burn</span>
+                                <span class="text-red-500">Rp {{ number_format($event->spent_amount, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Details Modal -->
-                            <div class="modal fade" id="detailsModal{{ $event->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel{{ $event->id }}" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="detailsModalLabel{{ $event->id }}">{{ $event->event_name }} - Details</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h6>Event Information</h6>
-                                                    <table class="table table-sm">
-                                                        <tr>
-                                                            <td><strong>Type:</strong></td>
-                                                            <td>{{ $event->event_type }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Date:</strong></td>
-                                                            <td>{{ $event->event_date->format('d M Y') }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Budget:</strong></td>
-                                                            <td>Rp {{ number_format($event->budget_amount, 0, ',', '.') }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Spent:</strong></td>
-                                                            <td>Rp {{ number_format($event->spent_amount, 0, ',', '.') }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>Status:</strong></td>
-                                                            <td>
-                                                                @if($event->is_completed)
-                                                                    <span class="badge badge-success">Completed</span>
-                                                                @else
-                                                                    <span class="badge badge-warning">Planning</span>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <h6>Recipients ({{ $event->recipient_count }})</h6>
-                                                    @if(optional($event->recipient_details)->count() > 0)
-                                                        <ul class="list-group list-group-flush">
-                                                            @foreach($event->recipient_details as $recipient)
-                                                            <li class="list-group-item px-0">{{ $recipient->name }} ({{ $recipient->relationship }})</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @else
-                                                        <p class="text-muted">No recipients assigned</p>
-                                                    @endif
+                    @if($event->notes)
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                        <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Internal Memoranda</h4>
+                        <p class="text-xs font-medium text-slate-600 leading-relaxed">{{ $event->notes }}</p>
+                    </div>
+                    @endif
 
-                                                    @if($event->notes)
-                                                    <h6 class="mt-3">Notes</h6>
-                                                    <p>{{ $event->notes }}</p>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="space-y-3">
+                        <h4 class="text-[9px] font-black text-slate-400 uppercase tracking-widest italic">Designated Personnel</h4>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($event->recipient_details as $recipient)
+                            <div class="flex items-center gap-2 rounded-xl bg-slate-900 px-3 py-1.5 shadow-lg border border-white/10">
+                                <div class="h-1.5 w-1.5 rounded-full bg-amber-400"></div>
+                                <span class="text-[9px] font-black text-white uppercase tracking-widest">{{ $recipient->name }}</span>
                             </div>
                             @endforeach
                         </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-gift fa-4x text-gray-300 mb-4"></i>
-                            <h4 class="text-gray-500 mb-3">No Gift Events Yet</h4>
-                            <p class="text-gray-500 mb-4">Start planning gift events for special occasions and holidays.</p>
-                            <a href="{{ route('family.gift-events.create') }}" class="btn btn-primary btn-lg">
-                                <i class="fas fa-plus fa-sm text-white-50 mr-2"></i>Plan First Event
-                            </a>
-                        </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Add Gift Form Modal -->
+        <div x-show="activeModal === 'add-gift-{{ $event->id }}'" 
+             class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6"
+             style="display: none;">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="activeModal = 'gifts-{{ $event->id }}'"></div>
+            <div class="relative w-full max-w-lg bg-white rounded-[2rem] shadow-2xl p-8 ring-1 ring-white/20">
+                <h3 class="text-lg font-black text-slate-900 tracking-tight leading-none mb-8 uppercase italic border-l-4 border-primary-500 pl-4">Asset Provisioning</h3>
+                <form method="POST" action="{{ route('family.gift-events.gifts.store', $event) }}" class="space-y-6">
+                    @csrf
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Target Recipient</label>
+                        <select name="recipient_id" required class="w-full rounded-xl border-none bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 ring-1 ring-slate-200">
+                            <option value="">Select Operative</option>
+                            @foreach($event->recipient_details as $recipient)
+                            <option value="{{ $recipient->id }}">{{ $recipient->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Asset Descriptor</label>
+                        <input type="text" name="gift_name" required class="w-full rounded-xl border-none bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 ring-1 ring-slate-200" placeholder="e.g. Mechanical Metronome">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Valuation (Rp)</label>
+                        <input type="number" name="amount" required class="w-full rounded-xl border-none bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 ring-1 ring-slate-200" placeholder="100000">
+                    </div>
+                    <div class="flex items-center gap-3 ml-1">
+                        <input type="checkbox" name="purchased" value="1" class="h-4 w-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500/20">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mark as Procured</span>
+                    </div>
+                    <div class="pt-4 flex gap-4">
+                        <button type="submit" class="flex-1 rounded-xl bg-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-widest text-white shadow-premium">Initialize Provision</button>
+                        <button type="button" @click="activeModal = 'gifts-{{ $event->id }}'" class="rounded-xl px-6 py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 italic">Abort</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @empty
+        <div class="md:col-span-2 rounded-3xl bg-slate-100/50 border-2 border-dashed border-slate-200 p-20 text-center">
+            <div class="h-20 w-20 rounded-3xl bg-white shadow-premium flex items-center justify-center mx-auto mb-6 text-slate-200">
+                <i class="fas fa-gift text-4xl"></i>
+            </div>
+            <h3 class="text-lg font-black text-slate-900 uppercase tracking-widest mb-2 italic underline decoration-amber-500/20">No active gift protocols</h3>
+            <p class="text-sm font-medium text-slate-400 max-w-sm mx-auto mb-8">Initiate celebratory logistics to track collective generosity and household growth.</p>
+            <a href="{{ route('family.gift-events.create') }}" class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-8 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                Register First Event
+            </a>
+        </div>
+        @endforelse
     </div>
-
-    <!-- Summary Cards -->
-    @if($events->count() > 0)
-    <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Events</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $events->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Completed Events</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $events->where('is_completed', true)->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total Budget</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($events->sum('budget_amount'), 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Total Spent</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($events->sum('spent_amount'), 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
-
 </div>
 @endsection

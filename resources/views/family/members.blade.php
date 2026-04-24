@@ -1,227 +1,194 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<div class="max-w-7xl mx-auto space-y-10 animate-fade-in pb-20">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 line-clamp-1">Household Registry</h1>
+            <p class="text-sm font-medium text-slate-500">Manage unit participants and their individual balanced liquidity</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('family.index') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-th-large mr-2 text-slate-400"></i>
+                Dashboard
+            </a>
+            <a href="{{ route('family.members.create') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                <i class="fas fa-plus mr-2 text-white/50"></i>
+                Incorporate Member
+            </a>
+        </div>
+    </div>
 
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Family Members</h1>
-        <a href="{{ route('family.members.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Add Family Member
+    @if($members->count() > 0)
+    <!-- Metrics Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100 flex items-center gap-4 transition-all hover:ring-primary-500/30 group">
+            <div class="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 transition-colors group-hover:bg-primary-500 group-hover:text-white">
+                <i class="fas fa-users text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Aggregate Unit</p>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-black text-slate-900 leading-none">{{ $members->count() }}</span>
+                    <span class="text-[9px] font-bold text-slate-400 uppercase">Operatives</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100 flex items-center gap-4 transition-all hover:ring-green-500/30 group border-b-4 border-green-500">
+            <div class="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 transition-colors group-hover:bg-green-500 group-hover:text-white">
+                <i class="fas fa-user-check text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Active Status</p>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-xl font-black text-slate-900 leading-none">{{ $members->where('is_active', true)->count() }}</span>
+                    <span class="text-[9px] font-bold text-slate-400 uppercase">Verified</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100 flex items-center gap-4 transition-all hover:ring-blue-500/30 group border-b-4 border-blue-500">
+            <div class="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 transition-colors group-hover:bg-blue-500 group-hover:text-white">
+                <i class="fas fa-money-bill-wave text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Monthly Budget</p>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-sm font-black text-slate-400 uppercase leading-none">Rp</span>
+                    <span class="text-xl font-black text-slate-900 leading-none">{{ number_format($members->sum('monthly_allowance'), 0, ',', '.') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-3xl bg-slate-900 p-6 shadow-premium ring-1 ring-white/10 flex items-center gap-4 group">
+            <div class="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center text-white/40 group-hover:text-primary-400">
+                <i class="fas fa-wallet text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-white/40 uppercase tracking-widest leading-none mb-1 text-primary-400">Net Liquidity</p>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-sm font-black text-white/40 uppercase leading-none italic">Rp</span>
+                    <span class="text-xl font-black text-white leading-none tabular-nums">{{ number_format($members->sum('current_balance'), 0, ',', '.') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registry Table -->
+    <div class="rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 overflow-hidden">
+        <div class="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-8 w-8 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-lg shadow-slate-900/20">
+                    <i class="fas fa-id-card text-xs"></i>
+                </div>
+                <h2 class="text-xs font-black text-slate-900 uppercase tracking-widest italic">Unit Participant Registry</h2>
+            </div>
+            <div class="hidden sm:flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Database Synchronized</span>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-left">
+                <thead>
+                    <tr class="border-b border-slate-50">
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Identified Operative</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Nexus / Age</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic text-center">Allocated Budget</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic text-right">Current Ledger</th>
+                        <th class="px-6 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic text-center">Protocol</th>
+                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest italic text-right">Authorization</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @foreach($members as $member)
+                    <tr class="group hover:bg-slate-50/50 transition-colors">
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-4">
+                                <div class="h-12 w-12 shrink-0 rounded-2xl bg-slate-100 flex items-center justify-center ring-4 ring-white shadow-premium transition-transform group-hover:scale-105 group-hover:rotate-3 overflow-hidden border border-slate-100">
+                                    <span class="text-lg font-black text-slate-400 uppercase italic font-serif leading-none">{{ strtoupper(substr($member->name, 0, 1)) }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-black text-slate-900 italic tracking-tight">{{ $member->name }}</span>
+                                    @if($member->date_of_birth)
+                                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ $member->date_of_birth->format('d M Y') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-6">
+                            <div class="flex flex-col gap-1">
+                                <span class="inline-flex self-start rounded-md bg-slate-50 px-2 py-0.5 text-[9px] font-black text-slate-600 uppercase tracking-widest ring-1 ring-inset ring-slate-200 group-hover:bg-white">{{ $member->relationship }}</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                    @if($member->date_of_birth) {{ $member->age }} Cycles Old @else Term Undefined @endif
+                                </span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-6 text-center">
+                            @if($member->monthly_allowance > 0)
+                                <span class="text-xs font-black text-slate-900 tabular-nums italic tracking-tighter">Rp {{ number_format($member->monthly_allowance, 0, ',', '.') }}</span>
+                            @else
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">N/A</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-6 text-right">
+                            <div class="flex flex-col items-end">
+                                <span class="text-sm font-black tabular-nums {{ $member->current_balance >= 0 ? 'text-green-600' : 'text-red-500' }}">
+                                    Rp {{ number_format($member->current_balance, 0, ',', '.') }}
+                                </span>
+                                @if($member->current_balance < 0)
+                                    <span class="text-[7px] font-black text-red-400 uppercase tracking-tighter">Liquidity Deficit</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td class="px-6 py-6 text-center">
+                            @if($member->is_active)
+                                <span class="inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-[9px] font-black text-green-600 uppercase tracking-widest ring-1 ring-inset ring-green-600/20">Operational</span>
+                            @else
+                                <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[9px] font-black text-slate-400 uppercase tracking-widest ring-1 ring-inset ring-slate-200 italic">Disengaged</span>
+                            @endif
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{{ route('family.members.edit', $member) }}" 
+                                   class="h-8 w-8 rounded-lg bg-white flex items-center justify-center text-slate-400 ring-1 ring-slate-200 shadow-sm transition-all hover:bg-primary-500 hover:text-white hover:ring-primary-500 active:scale-90">
+                                    <i class="fas fa-edit text-[10px]"></i>
+                                </a>
+                                <form method="POST" action="{{ route('family.members.update', $member) }}" class="inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="is_active" value="{{ $member->is_active ? '0' : '1' }}">
+                                    <button type="submit" 
+                                            class="h-8 w-8 rounded-lg bg-white flex items-center justify-center transition-all ring-1 ring-slate-200 shadow-sm active:scale-90 {{ $member->is_active ? 'text-orange-400 hover:bg-orange-500 hover:text-white hover:ring-orange-500' : 'text-green-500 hover:bg-green-500 hover:text-white hover:ring-green-500' }}"
+                                            onclick="return confirm('Recalibrate operational status for {{ $member->name }}?')">
+                                        <i class="fas fa-{{ $member->is_active ? 'ban' : 'check' }} text-[10px]"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @else
+    <!-- Empty State -->
+    <div class="rounded-3xl bg-white shadow-premium ring-1 ring-slate-100 p-20 flex flex-col items-center text-center space-y-6">
+        <div class="h-24 w-24 rounded-[2.5rem] bg-slate-50 flex items-center justify-center text-slate-200 border-4 border-white shadow-premium animate-bounce-slow">
+            <i class="fas fa-users text-4xl"></i>
+        </div>
+        <div class="space-y-2">
+            <h3 class="text-xl font-black text-slate-900 italic tracking-tight uppercase">Operational Void Detected</h3>
+            <p class="text-sm text-slate-400 font-medium max-w-sm mx-auto">The household registry is currently vacant. Initialize unit participants to enable collaborative financial auditing.</p>
+        </div>
+        <a href="{{ route('family.members.create') }}" class="inline-flex items-center justify-center rounded-2xl bg-primary-600 px-8 py-4 text-sm font-black uppercase tracking-widest text-white shadow-premium transition-all hover:bg-primary-700 active:scale-95">
+            Initialize First Member
         </a>
     </div>
-
-    <!-- Content Row -->
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">All Family Members</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Actions:</div>
-                            <a class="dropdown-item" href="{{ route('family.members.create') }}">
-                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Add Member
-                            </a>
-                            <a class="dropdown-item" href="{{ route('family.index') }}">
-                                <i class="fas fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Dashboard
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if($members->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Name</th>
-                                        <th>Relationship</th>
-                                        <th>Age</th>
-                                        <th>Monthly Allowance</th>
-                                        <th>Current Balance</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($members as $member)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-circle bg-primary text-white mr-2" style="width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                                    {{ strtoupper(substr($member->name, 0, 1)) }}
-                                                </div>
-                                                <div>
-                                                    <div class="font-weight-bold">{{ $member->name }}</div>
-                                                    @if($member->date_of_birth)
-                                                        <small class="text-muted">{{ $member->date_of_birth->format('d/m/Y') }}</small>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge badge-info">{{ $member->relationship }}</span>
-                                        </td>
-                                        <td>
-                                            @if($member->date_of_birth)
-                                                {{ $member->age }} years old
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            Rp {{ number_format($member->monthly_allowance, 0, ',', '.') }}
-                                        </td>
-                                        <td>
-                                            <span class="font-weight-bold {{ $member->current_balance >= 0 ? 'text-success' : 'text-danger' }}">
-                                                Rp {{ number_format($member->current_balance, 0, ',', '.') }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            @if($member->is_active)
-                                                <span class="badge badge-success">Active</span>
-                                            @else
-                                                <span class="badge badge-secondary">Inactive</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('family.members.edit', $member) }}"
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form method="POST" action="{{ route('family.members.update', $member) }}"
-                                                      style="display: inline;">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <button type="submit" name="is_active" value="{{ $member->is_active ? '0' : '1' }}"
-                                                            class="btn btn-sm {{ $member->is_active ? 'btn-outline-warning' : 'btn-outline-success' }}"
-                                                            onclick="return confirm('{{ $member->is_active ? 'Deactivate' : 'Activate' }} this family member?')">
-                                                        <i class="fas fa-{{ $member->is_active ? 'ban' : 'check' }}"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-users fa-4x text-gray-300 mb-4"></i>
-                            <h4 class="text-gray-500 mb-3">No Family Members Yet</h4>
-                            <p class="text-gray-500 mb-4">Start building your family finance management by adding your first family member.</p>
-                            <a href="{{ route('family.members.create') }}" class="btn btn-primary btn-lg">
-                                <i class="fas fa-plus fa-sm text-white-50 mr-2"></i>Add First Family Member
-                            </a>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Summary Cards -->
-    @if($members->count() > 0)
-    <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Members</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $members->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Active Members</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $members->where('is_active', true)->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total Monthly Allowance</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($members->sum('monthly_allowance'), 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Total Current Balance</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($members->sum('current_balance'), 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-wallet fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     @endif
-
 </div>
-
-<script>
-$(document).ready(function() {
-    $('#dataTable').DataTable({
-        "order": [[ 0, "asc" ]],
-        "pageLength": 25,
-        "language": {
-            "search": "Search members:",
-            "lengthMenu": "Show _MENU_ members per page",
-            "info": "Showing _START_ to _END_ of _TOTAL_ members"
-        }
-    });
-});
-</script>
 @endsection

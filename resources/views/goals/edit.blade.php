@@ -1,121 +1,177 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Edit Goal: {{ $goal->name }}</h1>
-        <a href="{{ route('goals.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+<div class="max-w-4xl mx-auto space-y-10">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">Refine Aspiration</h1>
+            <p class="text-sm font-medium text-slate-500">Adjust the target parameters and progress for {{ $goal->name }}.</p>
+        </div>
+        <a href="{{ route('goals.index') }}" class="inline-flex items-center text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to List
         </a>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Form Edit Goal</h6>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('goals.update', $goal) }}" method="POST">
-                        @csrf
-                        @method('PUT')
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Main Form Area -->
+        <div class="lg:col-span-8">
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <form action="{{ route('goals.update', $goal) }}" method="POST" class="space-y-8">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="space-y-2">
+                        <label for="name" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Aspiration Label <span class="text-rose-500">*</span></label>
+                        <input type="text" id="name" name="name" value="{{ old('name', $goal->name) }}" placeholder="e.g. Dream Villa in Bali, Retirement Fund" required
+                               class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10 @error('name') ring-rose-500 @enderror">
+                        @error('name') <p class="text-[10px] font-bold text-rose-500 ml-1">{{ $message }}</p> @enderror
+                    </div>
 
-                        <div class="form-group">
-                            <label for="name">Name Goal *</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $goal->name) }}" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $goal->description) }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="category">Category *</label>
-                                <select class="form-control @error('category') is-invalid @enderror" id="category" name="category" required>
-                                    <option value="">Select Category</option>
-                                    <option value="emergency_fund" {{ old('category', $goal->category) == 'emergency_fund' ? 'selected' : '' }}>Dana Darurat</option>
-                                    <option value="vacation" {{ old('category', $goal->category) == 'vacation' ? 'selected' : '' }}>Liburan</option>
-                                    <option value="house_down_payment" {{ old('category', $goal->category) == 'house_down_payment' ? 'selected' : '' }}>Uang Muka Rumah</option>
-                                    <option value="car_purchase" {{ old('category', $goal->category) == 'car_purchase' ? 'selected' : '' }}>Pembelian Mobil</option>
-                                    <option value="education" {{ old('category', $goal->category) == 'education' ? 'selected' : '' }}>Pendidikan</option>
-                                    <option value="retirement" {{ old('category', $goal->category) == 'retirement' ? 'selected' : '' }}>Pensiun</option>
-                                    <option value="investment" {{ old('category', $goal->category) == 'investment' ? 'selected' : '' }}>Investasi</option>
-                                    <option value="debt_payoff" {{ old('category', $goal->category) == 'debt_payoff' ? 'selected' : '' }}>Pelunasan Debts</option>
-                                    <option value="business" {{ old('category', $goal->category) == 'business' ? 'selected' : '' }}>Bisnis</option>
-                                    <option value="other" {{ old('category', $goal->category) == 'other' ? 'selected' : '' }}>Lainnya</option>
+                    <!-- Category & Type -->
+                    <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                        <div class="space-y-2">
+                            <label for="category" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Thematic Focus <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <select id="category" name="category" required
+                                        class="w-full appearance-none rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10 @error('category') ring-rose-500 @enderror">
+                                    <option value="">Select Category...</option>
+                                    <option value="emergency_fund" {{ old('category', $goal->category) == 'emergency_fund' ? 'selected' : '' }}>Emergency Reserve</option>
+                                    <option value="vacation" {{ old('category', $goal->category) == 'vacation' ? 'selected' : '' }}>Leisure & Travel</option>
+                                    <option value="house_down_payment" {{ old('category', $goal->category) == 'house_down_payment' ? 'selected' : '' }}>Real Estate Equity</option>
+                                    <option value="car_purchase" {{ old('category', $goal->category) == 'car_purchase' ? 'selected' : '' }}>Automotive Purchase</option>
+                                    <option value="education" {{ old('category', $goal->category) == 'education' ? 'selected' : '' }}>Academic Growth</option>
+                                    <option value="retirement" {{ old('category', $goal->category) == 'retirement' ? 'selected' : '' }}>Retirement Security</option>
+                                    <option value="investment" {{ old('category', $goal->category) == 'investment' ? 'selected' : '' }}>Capital Reinvestment</option>
+                                    <option value="debt_payoff" {{ old('category', $goal->category) == 'debt_payoff' ? 'selected' : '' }}>Liability Liquidation</option>
+                                    <option value="business" {{ old('category', $goal->category) == 'business' ? 'selected' : '' }}>Venture Capital</option>
+                                    <option value="other" {{ old('category', $goal->category) == 'other' ? 'selected' : '' }}>Miscellaneous</option>
                                 </select>
-                                @error('category')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                    <i class="fas fa-chevron-down text-[10px]"></i>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="type">Type Goal *</label>
-                                <select class="form-control @error('type') is-invalid @enderror" id="type" name="type" required>
-                                    <option value="">Select Type</option>
-                                    <option value="short_term" {{ old('type', $goal->type) == 'short_term' ? 'selected' : '' }}>Jangka Pendek (≤ 1 year)</option>
-                                    <option value="medium_term" {{ old('type', $goal->type) == 'medium_term' ? 'selected' : '' }}>Jangka Menengah (1-5 year)</option>
-                                    <option value="long_term" {{ old('type', $goal->type) == 'long_term' ? 'selected' : '' }}>Jangka Panjang (> 5 year)</option>
+                        <div class="space-y-2">
+                            <label for="type" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Temporal Horizon <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <select id="type" name="type" required
+                                        class="w-full appearance-none rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
+                                    <option value="">Select Horizon...</option>
+                                    <option value="short_term" {{ old('type', $goal->type) == 'short_term' ? 'selected' : '' }}>Short Range (≤ 1 yr)</option>
+                                    <option value="medium_term" {{ old('type', $goal->type) == 'medium_term' ? 'selected' : '' }}>Mid Range (1-5 yrs)</option>
+                                    <option value="long_term" {{ old('type', $goal->type) == 'long_term' ? 'selected' : '' }}>Log Range (> 5 yrs)</option>
                                 </select>
-                                @error('type')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                    <i class="fas fa-chevron-down text-[10px]"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Values -->
+                    <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                        <div class="space-y-2">
+                            <label for="target_amount" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Accumulation Target <span class="text-rose-500">*</span></label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-5">
+                                    <span class="text-xs font-black text-slate-400 group-focus-within:text-primary-500">Rp</span>
+                                </div>
+                                <input type="number" id="target_amount" name="target_amount" value="{{ old('target_amount', $goal->target_amount) }}" placeholder="0.00" required
+                                       class="w-full rounded-2xl border-none bg-slate-50 pl-12 pr-5 py-3.5 text-sm font-extrabold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="target_amount">Target Amount (Rp) *</label>
-                                <input type="number" class="form-control @error('target_amount') is-invalid @enderror" id="target_amount" name="target_amount" value="{{ old('target_amount', $goal->target_amount) }}" min="0" required>
-                                @error('target_amount')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="current_amount">Amount Saat Ini (Rp) *</label>
-                                <input type="number" class="form-control @error('current_amount') is-invalid @enderror" id="current_amount" name="current_amount" value="{{ old('current_amount', $goal->current_amount) }}" min="0" required>
-                                @error('current_amount')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="target_date">Target Date *</label>
-                                <input type="date" class="form-control @error('target_date') is-invalid @enderror" id="target_date" name="target_date" value="{{ old('target_date', $goal->target_date->format('Y-m-d')) }}" required>
-                                @error('target_date')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                        <div class="space-y-2">
+                            <label for="current_amount" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Current Stash <span class="text-rose-500">*</span></label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-5">
+                                    <span class="text-xs font-black text-slate-400 group-focus-within:text-emerald-500">Rp</span>
+                                </div>
+                                <input type="number" id="current_amount" name="current_amount" value="{{ old('current_amount', $goal->current_amount) }}" placeholder="0.00" required
+                                       class="w-full rounded-2xl border-none bg-slate-50 pl-12 pr-5 py-3.5 text-sm font-extrabold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="status">Status *</label>
-                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                                <option value="active" {{ old('status', $goal->status) == 'active' ? 'selected' : '' }}>Aktif</option>
-                                <option value="completed" {{ old('status', $goal->status) == 'completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="paused" {{ old('status', $goal->status) == 'paused' ? 'selected' : '' }}>Ditunda</option>
-                                <option value="cancelled" {{ old('status', $goal->status) == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                        <div class="space-y-2">
+                            <label for="target_date" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Completion Deadline <span class="text-rose-500">*</span></label>
+                            <input type="date" id="target_date" name="target_date" value="{{ old('target_date', $goal->target_date->format('Y-m-d')) }}" required
+                                   class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="space-y-2">
+                        <label for="status" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Mission Status <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <select id="status" name="status" required
+                                    class="w-full appearance-none rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10">
+                                <option value="active" {{ old('status', $goal->status) == 'active' ? 'selected' : '' }}>Operational (Active)</option>
+                                <option value="completed" {{ old('status', $goal->status) == 'completed' ? 'selected' : '' }}>Successful (Completed)</option>
+                                <option value="paused" {{ old('status', $goal->status) == 'paused' ? 'selected' : '' }}>Suspended (Paused)</option>
+                                <option value="cancelled" {{ old('status', $goal->status) == 'cancelled' ? 'selected' : '' }}>Aborted (Cancelled)</option>
                             </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                <i class="fas fa-chevron-down text-[10px]"></i>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Update Goal</button>
-                            <a href="{{ route('goals.index') }}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </form>
+                    <!-- Description -->
+                    <div class="space-y-2">
+                        <label for="description" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Motivational Context (Optional)</label>
+                        <textarea id="description" name="description" rows="3" placeholder="Why is this target important to your mission?"
+                                  class="w-full rounded-2xl border-none bg-slate-50 px-5 py-4 text-sm font-medium text-slate-900 ring-1 ring-slate-200 transition-all placeholder:text-slate-300 focus:bg-white focus:ring-4 focus:ring-primary-500/10">{{ old('description', $goal->description) }}</textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end border-t border-slate-50">
+                        <a href="{{ route('goals.index') }}" class="inline-flex items-center justify-center rounded-2xl px-8 py-3.5 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
+                            Discard Changes
+                        </a>
+                        <button type="submit" class="inline-flex items-center justify-center rounded-2xl bg-slate-900 px-10 py-3.5 text-sm font-extrabold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                            <i class="fas fa-save mr-2 text-primary-400"></i>
+                            Update Aspiration
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Progress Sidebar -->
+        <div class="lg:col-span-4 space-y-8">
+            <div class="rounded-3xl bg-slate-900 p-8 text-white shadow-premium ring-1 ring-white/10 text-center">
+                <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-10 text-center">Velocity Overview</h3>
+                <div class="relative mx-auto flex h-32 w-32 items-center justify-center">
+                    <svg class="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="10" class="text-white/5"></circle>
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="10" 
+                                class="text-primary-500 transition-all duration-1000 ease-out"
+                                stroke-dasharray="282.7"
+                                stroke-dashoffset="{{ 282.7 - (min($goal->progress_percentage, 100) / 100 * 282.7) }}"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-black tracking-tighter text-white">{{ $goal->progress_percentage }}%</span>
+                    </div>
+                </div>
+                <div class="mt-8 space-y-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Accumulated Capital</p>
+                    <p class="text-xl font-black text-white">Rp {{ number_format($goal->current_amount, 0, ',', '.') }}</p>
+                </div>
+            </div>
+
+            <!-- Caution Card -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100 flex flex-col items-center text-center gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-500 shadow-sm border border-amber-100">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-1">State Recalibration</h4>
+                    <p class="text-[10px] font-medium text-slate-400 leading-relaxed">
+                        Updating the target parameters will immediately recalculate the achievement velocity manifest.
+                    </p>
                 </div>
             </div>
         </div>

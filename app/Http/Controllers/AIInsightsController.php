@@ -110,7 +110,7 @@ class AIInsightsController extends Controller
                 ]);
             }
 
-            return redirect()->route('insights.index')->with('success', __('insights.messages.insights_generated'));
+            return back()->with('success', __('insights.messages.insights_generated'));
         } catch (\Exception $e) {
             if ($request->expectsJson()) {
                 return response()->json([

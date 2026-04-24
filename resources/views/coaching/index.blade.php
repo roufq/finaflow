@@ -1,221 +1,186 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-            <h1 class="h3 mb-0 text-gray-800">{{ __('coaching.title') }}</h1>
-            <p class="text-muted mb-0 small">{{ __('coaching.subtitle') }}</p>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ __('coaching.title') }}</h1>
+            <p class="text-sm font-medium text-slate-500">{{ __('coaching.subtitle') }}</p>
         </div>
-        <a href="{{ route('coaching.export') }}" class="btn btn-sm btn-outline-primary">
-            <i class="fas fa-file-export fa-sm text-primary-50"></i> {{ __('coaching.export.button') }}
-        </a>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                Back
+            </a>
+            <a href="{{ route('coaching.export') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                <i class="fas fa-file-export mr-2"></i>
+                {{ __('coaching.export.button') }}
+            </a>
+        </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <div class="row">
-        <div class="col-xl-8 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('coaching.plan.current_plan') }}</h6>
-                    @if($currentPlan)
-                        <span class="badge badge-light text-uppercase">{{ $currentPlan->month_tags }}</span>
-                    @endif
+    <!-- Strategy Overview & Planning Hub -->
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Active Action Plan Core -->
+        <div class="lg:col-span-8 space-y-8">
+            <div class="rounded-3xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+                <div class="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-600 text-white shadow-soft">
+                            <i class="fas fa-chess-knight text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest">{{ __('coaching.plan.current_plan') }}</h2>
+                            @if($currentPlan)
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ $currentPlan->month_tags }} Strategic Window</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
+                
+                <div class="p-8 space-y-10">
                     @if($currentPlan)
-                        <div class="mb-4">
-                            <h5 class="font-weight-bold text-gray-800">{{ __('coaching.plan.priorities') }}</h5>
-                            <div>
+                        <!-- Strategic Priorities -->
+                        <div>
+                            <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{{ __('coaching.plan.priorities') }}</h5>
+                            <div class="flex flex-wrap gap-2">
                                 @foreach($currentPlan->focus_priorities ?? [] as $priority)
-                                    <span class="badge badge-info mr-1 mb-1">{{ Str::title(str_replace('_', ' ', $priority)) }}</span>
+                                    <span class="inline-flex items-center rounded-lg bg-primary-50 px-3 py-1.5 text-[10px] font-black text-primary-600 ring-1 ring-primary-100 uppercase tracking-tight">
+                                        {{ Str::title(str_replace('_', ' ', $priority)) }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <h5 class="font-weight-bold text-gray-800">{{ __('coaching.plan.recommended_actions') }}</h5>
-                            <div class="row">
+
+                        <!-- Executable Tactics (Recommended Actions) -->
+                        <div>
+                            <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">{{ __('coaching.plan.recommended_actions') }}</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 @foreach($currentPlan->recommended_actions ?? [] as $action)
-                                    <div class="col-md-6 mb-3">
-                                        <div class="border rounded p-3 h-100">
-                                            <h6 class="font-weight-bold mb-1">{{ $action['title'] }}</h6>
-                                            <p class="text-muted small mb-0">{{ $action['description'] ?? '' }}</p>
+                                    <div class="group p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-100 transition-all">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <div class="h-1.5 w-1.5 rounded-full bg-primary-500"></div>
+                                            <h6 class="text-xs font-black text-slate-900 uppercase tracking-tighter">{{ $action['title'] }}</h6>
                                         </div>
+                                        <p class="text-[11px] text-slate-500 leading-relaxed font-medium">{{ $action['description'] ?? '' }}</p>
                                     </div>
                                 @endforeach
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 mb-2">
-                                    <p class="text-muted text-xs mb-1">{{ __('coaching.plan.savings_target') }}</p>
-                                    <strong>Rp {{ number_format($currentPlan->savings_target, 0, ',', '.') }}</strong>
-                                </div>
+
+                        <!-- Fiscal Targets -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-slate-100">
+                            <div class="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100">
+                                <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-1">{{ __('coaching.plan.savings_target') }}</p>
+                                <p class="text-lg font-black text-slate-900 tabular-nums">Rp {{ number_format($currentPlan->savings_target, 0, ',', '.') }}</p>
                             </div>
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 mb-2">
-                                    <p class="text-muted text-xs mb-1">{{ __('coaching.plan.debt_target') }}</p>
-                                    <strong>Rp {{ number_format($currentPlan->debt_repayment_target, 0, ',', '.') }}</strong>
-                                </div>
+                            <div class="p-4 rounded-2xl bg-rose-50/50 border border-rose-100">
+                                <p class="text-[9px] font-black text-rose-600 uppercase tracking-widest mb-1">{{ __('coaching.plan.debt_target') }}</p>
+                                <p class="text-lg font-black text-slate-900 tabular-nums">Rp {{ number_format($currentPlan->debt_repayment_target, 0, ',', '.') }}</p>
                             </div>
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 mb-2">
-                                    <p class="text-muted text-xs mb-1">{{ __('coaching.plan.investment_target') }}</p>
-                                    <strong>Rp {{ number_format($currentPlan->investment_target, 0, ',', '.') }}</strong>
-                                </div>
+                            <div class="p-4 rounded-2xl bg-blue-50/50 border border-blue-100">
+                                <p class="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-1">{{ __('coaching.plan.investment_target') }}</p>
+                                <p class="text-lg font-black text-slate-900 tabular-nums">Rp {{ number_format($currentPlan->investment_target, 0, ',', '.') }}</p>
                             </div>
                         </div>
+
                         @if($currentPlan->summary_notes)
-                            <p class="text-muted small mt-2 mb-0">{{ $currentPlan->summary_notes }}</p>
+                            <div class="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 italic text-[11px] text-slate-500 font-medium leading-relaxed">
+                                "{{ $currentPlan->summary_notes }}"
+                            </div>
                         @endif
                     @else
-                        <div class="text-center py-4">
-                            <p class="text-muted mb-2">{{ __('coaching.plan.no_plan') }}</p>
+                        <div class="py-12 text-center">
+                            <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 text-slate-300 mb-4">
+                                <i class="fas fa-calendar-alt text-2xl"></i>
+                            </div>
+                            <p class="text-xs font-medium text-slate-400 italic">{{ __('coaching.plan.no_plan') }}</p>
                         </div>
                     @endif
                 </div>
             </div>
-        </div>
-        <div class="col-xl-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('coaching.plan.create_new') }}</h6>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('coaching.action-plan.store') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.plan.plan_month') }}</label>
-                            <input type="month" class="form-control" name="plan_month" value="{{ old('plan_month', now()->format('Y-m')) }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.plan.summary_notes') }}</label>
-                            <textarea class="form-control" rows=2 name="summary_notes">{{ old('summary_notes') }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.plan.targets') }}</label>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                <input type="number" class="form-control" name="savings_target" placeholder="{{ __('coaching.plan.savings_target') }}">
-                            </div>
-                            <div class="input-group mb-2">
-                                <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                <input type="number" class="form-control" name="debt_repayment_target" placeholder="{{ __('coaching.plan.debt_target') }}">
-                            </div>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
-                                <input type="number" class="form-control" name="investment_target" placeholder="{{ __('coaching.plan.investment_target') }}">
-                            </div>
-                        </div>
-                        <div class="custom-control custom-checkbox mb-3">
-                            <input type="checkbox" class="custom-control-input" id="generateTasks" name="generate_tasks" value="1" checked>
-                            <label class="custom-control-label" for="generateTasks">{{ __('coaching.plan.generate_tasks') }}</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">{{ __('coaching.plan.create_new') }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    @if($currentPlan)
-    <div class="row">
-        <div class="col-xl-8 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('coaching.tasks.title') }}</h6>
-                    <button class="btn btn-sm btn-outline-secondary" data-toggle="collapse" data-target="#newTaskForm">
-                        <i class="fas fa-plus"></i> {{ __('coaching.tasks.add_task') }}
+            <!-- Task Progression Ledger -->
+            @if($currentPlan)
+            <div class="rounded-3xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100" x-data="{ showForm: false }">
+                <div class="p-8 border-b border-slate-50 flex items-center justify-between">
+                    <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest">{{ __('coaching.tasks.title') }}</h2>
+                    <button @click="showForm = !showForm" class="inline-flex items-center justify-center rounded-xl bg-slate-100 px-4 py-2 text-xs font-black text-slate-900 hover:bg-slate-200 transition-all">
+                        <i class="fas fa-plus mr-2"></i> {{ __('coaching.tasks.add_task') }}
                     </button>
                 </div>
-                <div class="card-body">
-                    <div class="collapse mb-4" id="newTaskForm">
-                        <form method="POST" action="{{ route('coaching.tasks.store') }}">
+                
+                <div class="p-8">
+                    <!-- Dynamic Task Injector -->
+                    <div x-show="showForm" x-collapse class="mb-8 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <form method="POST" action="{{ route('coaching.tasks.store') }}" class="space-y-4">
                             @csrf
                             <input type="hidden" name="action_plan_id" value="{{ $currentPlan->id }}">
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.add_task') }}</label>
-                                    <input type="text" class="form-control" name="title" required>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="md:col-span-2">
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Task Identifier</label>
+                                    <input type="text" name="title" required class="w-full h-11 rounded-xl bg-white border-slate-200 px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500">
                                 </div>
-                                <div class="form-group col-md-2">
-                                    <label class="text-xs text-muted text-uppercase">Week</label>
-                                    <input type="number" class="form-control" min="1" max="6" name="week_index" value="1">
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Target Week</label>
+                                    <input type="number" name="week_index" min="1" max="6" value="1" class="w-full h-11 rounded-xl bg-white border-slate-200 px-4 text-xs font-bold text-slate-900">
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.due_date') }}</label>
-                                    <input type="date" class="form-control" name="due_date">
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Deadline</label>
+                                    <input type="date" name="due_date" class="w-full h-11 rounded-xl bg-white border-slate-200 px-4 text-xs font-bold text-slate-900">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.tasks.notes') }}</label>
-                                <textarea class="form-control" rows="2" name="notes"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">{{ __('coaching.tasks.add_task') }}</button>
+                            <button type="submit" class="px-6 h-11 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-soft hover:bg-primary-500 transition-all">
+                                Deploy Task
+                            </button>
                         </form>
                     </div>
 
                     @if($currentPlan->tasks->isEmpty())
-                        <p class="text-muted mb-0">{{ __('coaching.plan.generate_tasks') }}</p>
+                        <p class="text-xs text-slate-400 italic text-center py-8">Generate strategic tasks to populate this ledger.</p>
                     @else
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>{{ __('coaching.tasks.add_task') }}</th>
-                                        <th>{{ __('coaching.tasks.due_date') }}</th>
-                                        <th>{{ __('coaching.tasks.status') }}</th>
-                                        <th></th>
+                                    <tr class="border-b border-slate-50 uppercase text-[10px] font-black text-slate-400 tracking-widest">
+                                        <th class="pb-4 w-12 text-center">Wk</th>
+                                        <th class="pb-4 px-4">Task Manifest</th>
+                                        <th class="pb-4 px-4">Timeline</th>
+                                        <th class="pb-4 px-4">Execution State</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="divide-y divide-slate-50">
                                     @foreach($currentPlan->tasks->sortBy('due_date') as $task)
-                                        <tr>
-                                            <td>{{ $task->week_index }}</td>
-                                            <td>
-                                                <strong>{{ $task->title }}</strong>
-                                                @if($task->notes)
-                                                    <p class="text-muted small mb-0">{{ $task->notes }}</p>
-                                                @endif
-                                            </td>
-                                            <td>{{ optional($task->due_date)->format('d M Y') }}</td>
-                                            <td>
-                                                <form method="POST" action="{{ route('coaching.tasks.update', $task) }}" class="form-inline">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <select name="status" class="form-control form-control-sm mr-2" onchange="this.form.submit()">
-                                                        @foreach(['pending','in_progress','completed','skipped'] as $status)
-                                                            <option value="{{ $status }}" @selected($task->status === $status)>{{ Str::title(str_replace('_',' ',$status)) }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <input type="hidden" name="notes" value="{{ $task->notes }}">
-                                                </form>
-                                            </td>
-                                            <td>
+                                    <tr class="group transition-colors hover:bg-slate-50/50">
+                                        <td class="py-5 text-center">
+                                            <span class="text-[10px] font-black text-slate-400">0{{ $task->week_index }}</span>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <p class="text-sm font-black text-slate-900 uppercase tracking-tighter leading-tight">{{ $task->title }}</p>
+                                            @if($task->notes)
+                                                <p class="text-[10px] font-medium text-slate-400 mt-1 italic leading-tight">{{ $task->notes }}</p>
+                                            @endif
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">{{ optional($task->due_date)->format('M d, Y') ?? 'Flexible' }}</span>
+                                        </td>
+                                        <td class="py-5 px-4">
+                                            <form method="POST" action="{{ route('coaching.tasks.update', $task) }}" class="flex items-center gap-2">
+                                                @csrf
+                                                @method('PATCH')
+                                                <select name="status" @change="this.form.submit()" class="h-8 rounded-lg bg-slate-50 border-transparent px-2 text-[9px] font-black uppercase text-slate-600 focus:ring-1 focus:ring-primary-500 appearance-none outline-none">
+                                                    @foreach(['pending','in_progress','completed','skipped'] as $status)
+                                                        <option value="{{ $status }}" @selected($task->status === $status)>{{ Str::title(str_replace('_',' ',$status)) }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="hidden" name="notes" value="{{ $task->notes }}">
                                                 @if($task->status === 'completed')
-                                                    <span class="badge badge-success">{{ __('coaching.tasks.status') }}</span>
+                                                    <i class="fas fa-check-circle text-emerald-500 text-xs"></i>
                                                 @endif
-                                            </td>
-                                        </tr>
+                                            </form>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -223,129 +188,120 @@
                     @endif
                 </div>
             </div>
+            @endif
         </div>
-        <div class="col-xl-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('coaching.export.title') }}</h6>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small">{{ __('coaching.export.description') }}</p>
-                    <a href="{{ route('coaching.export') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-download"></i> {{ __('coaching.export.button') }}
-                    </a>
+
+        <!-- Sidebar: Initialization & Tracking -->
+        <div class="lg:col-span-4 space-y-10">
+            <!-- New Strategy Initialization -->
+            <div class="rounded-3xl bg-slate-900 p-8 shadow-soft ring-1 ring-white/10 text-white">
+                <h3 class="text-xs font-black uppercase tracking-widest mb-8 flex items-center gap-2">
+                    <i class="fas fa-plus-circle text-primary-400"></i>
+                    {{ __('coaching.plan.create_new') }}
+                </h3>
+                <form method="POST" action="{{ route('coaching.action-plan.store') }}" class="space-y-6">
+                    @csrf
+                    <div>
+                        <label class="text-[10px] font-black text-white/40 uppercase tracking-tighter mb-1.5 block">{{ __('coaching.plan.plan_month') }}</label>
+                        <input type="month" name="plan_month" value="{{ old('plan_month', now()->format('Y-m')) }}" required class="w-full h-12 rounded-xl bg-white/5 border-transparent px-4 text-xs font-bold text-white focus:ring-1 focus:ring-primary-500 outline-none">
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-white/40 uppercase tracking-tighter block">{{ __('coaching.plan.targets') }}</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/30">Rp</span>
+                            <input type="number" name="savings_target" placeholder="Savings Target" class="w-full h-11 rounded-xl bg-white/5 border-transparent pl-10 pr-4 text-xs font-bold text-white outline-none focus:ring-1 focus:ring-primary-500">
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/30">Rp</span>
+                            <input type="number" name="debt_repayment_target" placeholder="Debt Repayment" class="w-full h-11 rounded-xl bg-white/5 border-transparent pl-10 pr-4 text-xs font-bold text-white outline-none focus:ring-1 focus:ring-primary-500">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" name="generate_tasks" id="generateTasks" value="1" checked class="h-4 w-4 rounded border-white/20 bg-white/5 text-primary-500 focus:ring-0">
+                        <label for="generateTasks" class="text-[10px] font-bold text-white/60 uppercase tracking-tight">{{ __('coaching.plan.generate_tasks') }}</label>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-soft hover:bg-primary-500 transition-all">
+                        Initialize Strategy
+                    </button>
+                </form>
+            </div>
+
+            <!-- Behavioral Journaling -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6">{{ __('coaching.journal.title') }}</h3>
+                <form method="POST" action="{{ route('coaching.journal.store') }}" class="space-y-4">
+                    @csrf
+                    <div>
+                        <textarea name="reflection" rows="2" placeholder="{{ __('coaching.journal.reflection') }}" required class="w-full rounded-2xl bg-slate-50 border-transparent p-4 text-[11px] font-medium text-slate-900 placeholder-slate-400 focus:ring-1 focus:ring-primary-500 outline-none"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" name="mood" placeholder="Psych Mood" class="w-full h-10 rounded-xl bg-slate-50 border-transparent px-3 text-[10px] font-bold text-slate-900 outline-none">
+                        <select name="habit_id" class="w-full h-10 rounded-xl bg-slate-50 border-transparent px-3 text-[10px] font-bold text-slate-900 appearance-none outline-none">
+                            <option value="">Link Habit</option>
+                            @foreach($habits as $habit)
+                                <option value="{{ $habit->id }}">{{ $habit->habit_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-soft hover:bg-slate-800 transition-all">
+                        Log Entry
+                    </button>
+                </form>
+
+                <div class="mt-8 space-y-4 divide-y divide-slate-50">
+                    @foreach($journalEntries->take(3) as $entry)
+                    <div class="pt-4 first:pt-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[9px] font-black text-slate-400 uppercase">{{ $entry->logged_at->format('M d, Y') }}</span>
+                            @if($entry->mood)
+                                <span class="text-[8px] font-black text-primary-500 uppercase px-1.5 py-0.5 rounded-md bg-primary-50">{{ $entry->mood }}</span>
+                            @endif
+                        </div>
+                        <p class="text-[10px] font-medium text-slate-600 line-clamp-2 italic leading-relaxed">"{{ $entry->reflection }}"</p>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
-    @endif
 
-    <div class="row">
-        <div class="col-xl-7 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('coaching.lessons.title') }}</h6>
+    <!-- Educational Integration (Lessons) -->
+    <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-8">{{ __('coaching.lessons.title') }}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($lessons as $lesson)
+            @php($progress = $lessonProgress->get($lesson->id))
+            <div class="group p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary-100 transition-all flex flex-col">
+                <div class="flex items-start justify-between mb-4">
+                    <span class="inline-flex items-center rounded-md bg-white px-2 py-1 text-[8px] font-black uppercase ring-1 ring-inset ring-slate-100 text-slate-500">
+                        {{ ucfirst($lesson->format) }}
+                    </span>
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ $lesson->duration_minutes }} MIN</span>
                 </div>
-                <div class="card-body">
-                    @if($lessons->isEmpty())
-                        <p class="text-muted mb-0">{{ __('coaching.plan.no_plan') }}</p>
-                    @else
-                        <div class="row">
-                            @foreach($lessons as $lesson)
-                                @php($progress = $lessonProgress->get($lesson->id))
-                                <div class="col-md-6 mb-3">
-                                    <div class="border rounded p-3 h-100 d-flex flex-column">
-                                        <h5 class="font-weight-bold">{{ $lesson->title }}</h5>
-                                        @if($lesson->persona_tags)
-                                            <div class="mb-2">
-                                                @foreach($lesson->persona_tags as $tag)
-                                                    <span class="badge badge-light border mr-1 mb-1">{{ $tag }}</span>
-                                                @endforeach
-                                            </div>
-                                        @endif
-                                        <p class="text-xs text-muted mb-1">{{ __('coaching.lessons.duration') }}: {{ $lesson->duration_minutes }} min · {{ __('coaching.lessons.format') }}: {{ ucfirst($lesson->format) }}</p>
-                                        <p class="text-muted small flex-grow-1">{{ Str::limit($lesson->summary, 120) }}</p>
-                                        <form method="POST" action="{{ route('coaching.lessons.update', $lesson) }}">
-                                            @csrf
-                                            <div class="form-group">
-                                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.lessons.status') }}</label>
-                                                <select name="status" class="form-control form-control-sm">
-                                                    @foreach(['not_started','in_progress','completed'] as $status)
-                                                        <option value="{{ $status }}" @selected(optional($progress)->status === $status)>{{ Str::title(str_replace('_',' ',$status)) }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.lessons.score') }}</label>
-                                                <input type="number" class="form-control form-control-sm" name="comprehension_score" value="{{ optional($progress)->comprehension_score }}" min="0" max="100">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary btn-sm btn-block">{{ __('coaching.lessons.status') }}</button>
-                                        </form>
-                                    </div>
-                                </div>
+                <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight mb-2 leading-tight">{{ $lesson->title }}</h4>
+                <p class="text-[10px] text-slate-400 font-medium mb-6 flex-grow leading-relaxed">{{ Str::limit($lesson->summary, 100) }}</p>
+                
+                <form method="POST" action="{{ route('coaching.lessons.update', $lesson) }}" class="space-y-3 pt-4 border-t border-slate-100">
+                    @csrf
+                    <div class="flex items-center gap-2">
+                        <select name="status" class="flex-1 h-9 rounded-lg bg-white border-slate-200 px-2 text-[9px] font-black uppercase text-slate-600 outline-none focus:ring-1 focus:ring-primary-500">
+                            @foreach(['not_started','in_progress','completed'] as $status)
+                                <option value="{{ $status }}" @selected(optional($progress)->status === $status)>{{ Str::title(str_replace('_',' ',$status)) }}</option>
                             @endforeach
-                        </div>
-                    @endif
-                </div>
+                        </select>
+                        <input type="number" name="comprehension_score" value="{{ optional($progress)->comprehension_score }}" min="0" max="100" placeholder="Score" class="w-16 h-9 rounded-lg bg-white border-slate-200 px-2 text-[9px] font-black text-slate-900 outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-slate-900 text-white rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all">
+                        Update State
+                    </button>
+                </form>
             </div>
-        </div>
-        <div class="col-xl-5 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('coaching.journal.title') }}</h6>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('coaching.journal.store') }}" class="mb-4">
-                        @csrf
-                        <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.journal.reflection') }}</label>
-                            <textarea class="form-control" rows="2" name="reflection" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="text-xs text-muted text-uppercase">{{ __('coaching.journal.commitment') }}</label>
-                            <textarea class="form-control" rows="2" name="commitment"></textarea>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label class="text-xs text-muted text-uppercase">{{ __('coaching.journal.mood') }}</label>
-                                <input type="text" class="form-control" name="mood" placeholder="Calm, anxious, etc.">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="text-xs text-muted text-uppercase">Habit</label>
-                                <select class="form-control" name="habit_id">
-                                    <option value="">{{ __('coaching.filters.all') }}</option>
-                                    @foreach($habits as $habit)
-                                        <option value="{{ $habit->id }}">{{ $habit->habit_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="text-xs text-muted text-uppercase">Trigger</label>
-                                <select class="form-control" name="spending_trigger_id">
-                                    <option value="">{{ __('coaching.filters.all') }}</option>
-                                    @foreach($triggers as $trigger)
-                                        <option value="{{ $trigger->id }}">{{ $trigger->trigger_type }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">{{ __('coaching.journal.log_entry') }}</button>
-                    </form>
-
-                    <h6 class="font-weight-bold text-gray-800">{{ __('coaching.journal.recent_entries') }}</h6>
-                    @forelse($journalEntries as $entry)
-                        <div class="border-bottom py-2">
-                            <p class="mb-1 font-weight-bold">{{ $entry->logged_at->format('d M Y') }}</p>
-                            <p class="text-muted small mb-1">{{ Str::limit($entry->reflection, 120) }}</p>
-                            @if($entry->commitment)
-                                <p class="text-xs text-success mb-0"><strong>{{ __('coaching.journal.commitment') }}:</strong> {{ $entry->commitment }}</p>
-                            @endif
-                        </div>
-                    @empty
-                        <p class="text-muted mb-0">{{ __('coaching.plan.no_plan') }}</p>
-                    @endforelse
-                </div>
-            </div>
+            @empty
+            <div class="col-span-full py-12 text-center text-xs font-medium text-slate-400 italic">No assigned curriculum.</div>
+            @endforelse
         </div>
     </div>
 </div>

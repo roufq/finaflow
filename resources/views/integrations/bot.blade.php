@@ -1,92 +1,132 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">Integrations Telegram Bot</h1>
+<div class="space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">Telegram Bot Control</h1>
+            <p class="text-sm font-medium text-slate-500">Autonomous financial data ingestion via high-performance chat interface</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="javascript:history.back()" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                Back
+            </a>
+        </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px; overflow: hidden;">
-                <div class="card-header bg-gradient-primary py-4 border-0" style="background: linear-gradient(135deg, #0088cc 0%, #00acee 100%);">
-                    <div class="d-flex align-items-center">
-                        <div class="p-3 bg-white rounded-circle mr-3 shadow-sm">
-                            <i class="fab fa-telegram-plane fa-2x" style="color: #0088cc;"></i>
-                        </div>
-                        <div>
-                            <h5 class="m-0 font-weight-bold text-white">FinaFlow Chat Assistant</h5>
-                            <p class="text-white-50 mb-0 small">Catat transactions lebih cepat via Telegram</p>
-                        </div>
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Core Integration Engine -->
+        <div class="lg:col-span-8 space-y-8">
+            <div class="rounded-3xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+                <!-- Branding Header -->
+                <div class="p-8 flex items-center gap-6 text-white" style="background: linear-gradient(135deg, #0088cc 0%, #00acee 100%);">
+                    <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md shadow-soft ring-1 ring-white/30">
+                        <i class="fab fa-telegram-plane text-3xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black uppercase tracking-tight leading-none">FinaFlow Chat Assistant</h2>
+                        <p class="text-sm font-medium text-white/80 mt-2">Elevate your operational speed with cross-platform data entry</p>
                     </div>
                 </div>
-                <div class="card-body p-4">
-                    <div class="row mb-4">
-                        <div class="col-md-7">
-                            <h6 class="font-weight-bold text-dark mb-3">Apa itu Telegram Bot Integration?</h6>
-                            <p class="text-muted small leading-relaxed">
+                
+                <div class="p-8 pt-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div>
+                            <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-4">Semantic Processing Engine</h3>
+                            <p class="text-[11px] text-slate-500 font-medium leading-relaxed mb-6">
                                 Fitur ini memungkinkan Anda untuk mencatat expense harian langsung melalui aplikasi Telegram tanpa perlu membuka dashboard FinaFlow. 
-                                Cukup submit pesan singkat, dan sistem AI kami akan memprosesnya secara otomatis.
+                                Sistem AI kami akan memproses narasi teks Anda secara otomatis menjadi transaksi valid.
                             </p>
-                            <ul class="list-unstyled small text-muted">
-                                <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Gratis & Cepat</li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Deteksi Category Otomatis</li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Aman & Terenkripsi</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-5 text-center p-3 bg-light rounded" style="border: 1px dashed #cbd5e1;">
-                            <div class="mb-3 px-3 py-1 bg-white shadow-sm rounded-pill d-inline-block small font-weight-bold text-primary">Contoh Pesan:</div>
-                            <div class="text-left bg-white p-2 rounded shadow-sm mb-2" style="font-family: monospace;">
-                                <span class="text-primary font-weight-bold">You:</span> Nasi Goreng 25000
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-5 w-5 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-[10px]">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black text-slate-600 uppercase tracking-tight">Zero-Latency Submission</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="h-5 w-5 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-[10px]">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black text-slate-600 uppercase tracking-tight">AI Category Clustering</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="h-5 w-5 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center text-[10px]">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black text-slate-600 uppercase tracking-tight">Multi-layered Encryption</span>
+                                </div>
                             </div>
-                            <div class="text-left bg-white p-2 rounded shadow-sm" style="font-family: monospace;">
-                                <span class="text-info font-weight-bold">Bot:</span> 💰 Transactions Berhasil!
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col items-center text-center">
+                            <span class="px-3 py-1 bg-white rounded-full text-[8px] font-black text-primary-600 uppercase tracking-widest shadow-sm mb-6 border border-slate-100">Interaction Logic Example</span>
+                            <div class="w-full space-y-3 text-left">
+                                <div class="p-3 bg-white rounded-xl shadow-soft border border-slate-100">
+                                    <p class="text-[9px] font-black text-primary-600 uppercase mb-1">Incoming Transmission:</p>
+                                    <code class="text-[10px] font-mono font-bold text-slate-900">Nasi Goreng 25000</code>
+                                </div>
+                                <div class="p-3 bg-slate-900 rounded-xl shadow-soft">
+                                    <p class="text-[9px] font-black text-sky-400 uppercase mb-1">Bot Response:</p>
+                                    <code class="text-[10px] font-mono font-bold text-white italic">💰 Transactions Processed Successfully!</code>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="border-top pt-4">
-                        <h6 class="font-weight-bold text-dark mb-3">Status Koneksi Anda</h6>
+                    <div class="mt-10 pt-10 border-t border-slate-50">
+                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-6">Real-time Connection Topology</h3>
+                        
                         @if(!$isBotConfigured)
-                            <div class="alert alert-warning border-0 shadow-sm py-3 px-4 rounded-lg">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-exclamation-triangle fa-2x mr-3 text-warning"></i>
-                                    <div>
-                                        <h6 class="font-weight-bold mb-1">Bot Belum Dikonfigurasi!</h6>
-                                        <p class="mb-0 small">Silakan hubungi Administrator atau buka file <code>.env</code> untuk menyetel <code>TELEGRAM_BOT_TOKEN</code> dan <code>TELEGRAM_BOT_NAME</code>.</p>
-                                    </div>
+                            <div class="p-6 rounded-2xl bg-amber-50 border border-amber-100 flex items-center gap-5">
+                                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-amber-500 shadow-sm ring-1 ring-amber-200">
+                                    <i class="fas fa-exclamation-triangle text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-black text-amber-900 uppercase tracking-tight">Configuration Mismatch Detected</h4>
+                                    <p class="text-[10px] text-amber-700 font-medium leading-relaxed mt-1">Bot variables missing in system environment. Initialize <code>TELEGRAM_BOT_TOKEN</code> in your secure configuration.</p>
                                 </div>
                             </div>
                         @elseif($user->telegram_id)
-                            <div class="d-flex align-items-center p-3 bg-success-light rounded" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
-                                <div class="icon-circle bg-success text-white mr-3">
-                                    <i class="fas fa-check"></i>
+                            <div class="p-6 rounded-2xl bg-emerald-50 border border-emerald-100 flex flex-col md:flex-row md:items-center gap-6">
+                                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-emerald-500 shadow-sm ring-1 ring-emerald-200 relative">
+                                    <i class="fas fa-link text-xl"></i>
+                                    <span class="absolute top-0 right-0 h-4 w-4 bg-emerald-500 rounded-full border-2 border-white animate-pulse"></span>
                                 </div>
-                                <div>
-                                    <span class="font-weight-bold text-success">Terhubung!</span>
-                                    <p class="mb-0 text-dark small">ID Telegram: <strong>{{ $user->telegram_id }}</strong></p>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-black text-emerald-900 uppercase tracking-tight leading-none">Operational Link Established</h4>
+                                    <p class="text-[11px] text-emerald-700 font-medium mt-2">Active Node ID: <span class="font-bold font-mono">{{ $user->telegram_id }}</span></p>
                                 </div>
-                                <div class="ml-auto d-flex" style="gap: 10px;">
-                                    <a href="https://t.me/{{ $telegramBotName }}" target="_blank" class="btn btn-success btn-sm px-3 rounded-pill">Buka Bot</a>
-                                    <form action="{{ route('integrations.telegram-bot.disconnect') }}" method="POST" onsubmit="return confirm('Are you sure ingin memutuskan koneksi Telegram?')">
+                                <div class="flex gap-2">
+                                    <a href="https://t.me/{{ $telegramBotName }}" target="_blank" class="h-10 px-6 flex items-center justify-center rounded-xl bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest shadow-soft hover:bg-emerald-500 transition-all">Launch Chat</a>
+                                    <form action="{{ route('integrations.telegram-bot.disconnect') }}" method="POST" onsubmit="return confirm('Purge the current Telegram pairing session?')">
                                         @csrf
-                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3 rounded-pill">Putuskan</button>
+                                        <button type="submit" class="h-10 px-6 flex items-center justify-center rounded-xl bg-white text-rose-600 border border-rose-100 text-[10px] font-black uppercase tracking-widest hover:bg-rose-50 transition-all">Sever Link</button>
                                     </form>
                                 </div>
                             </div>
                         @else
-                            <div class="text-center py-4 px-3 bg-light rounded" style="border: 1px solid #e2e8f0;">
-                                <p class="text-muted mb-4">Account Anda belum terhubung dengan bot Telegram.</p>
-                                <a href="https://t.me/{{ $telegramBotName }}?start={{ $telegramToken }}" target="_blank" class="btn btn-primary px-5 py-2 font-weight-bold shadow mb-3" style="background-color: #0088cc; border-radius: 12px; border: none;">
-                                    Hubungkan Telegram
-                                </a>
-                                <p class="small text-muted"><strong>Penting:</strong> Setelah masuk ke Telegram, klik tombol <strong>START</strong> untuk mengaktifkan sinkronisasi.</p>
+                            <div class="p-8 rounded-2xl bg-slate-900 text-white flex flex-col items-center text-center">
+                                <div class="h-16 w-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 mb-6">
+                                    <i class="fab fa-telegram-plane text-3xl"></i>
+                                </div>
+                                <h4 class="text-lg font-black uppercase tracking-tight">Protocol Authorization Required</h4>
+                                <p class="text-sm text-white/60 max-w-sm mt-3 mb-8">Synchronize your Telegram account to activate conversational financial tracking.</p>
                                 
-                                <div class="mt-4 pt-3 border-top">
-                                    <p class="small text-uppercase font-weight-bold text-muted mb-2">Gagal redirect? Cara Manual:</p>
-                                    <div class="bg-white p-2 border rounded small text-left">
-                                        1. Buka Telegram & search: <strong>@ {{ $telegramBotName }}</strong><br>
-                                        2. Submit pesan: <code>/start {{ $telegramToken }}</code>
+                                <div class="flex flex-col items-center gap-4 w-full max-w-xs">
+                                    <a href="https://t.me/{{ $telegramBotName }}?start={{ $telegramToken }}" target="_blank" class="w-full h-14 flex items-center justify-center rounded-2xl bg-sky-500 text-white font-black uppercase tracking-widest shadow-soft hover:bg-sky-400 transition-all">
+                                        Establish Proxy Link
+                                    </a>
+                                    <p class="text-[9px] font-bold text-white/30 uppercase tracking-widest">Execute /start protocol after redirect</p>
+                                </div>
+
+                                <div class="mt-10 pt-8 border-t border-white/5 w-full text-left">
+                                    <p class="text-[9px] font-black text-white/40 uppercase tracking-widest mb-4">Fallback Manual Routing:</p>
+                                    <div class="p-4 bg-black/30 rounded-xl border border-white/5 font-mono text-[10px] space-y-2">
+                                        <p><span class="text-white/20">01.</span> Primary Search: <span class="text-sky-400">@ {{ $telegramBotName }}</span></p>
+                                        <p><span class="text-white/20">02.</span> Transmission: <span class="text-emerald-400">/start {{ $telegramToken }}</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -94,150 +134,134 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Foreground Performance Ledger -->
+            <div class="rounded-3xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+                <div class="p-6 border-b border-slate-50 flex items-center justify-between">
+                    <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Integration Forensic Trace</h3>
+                    <div class="flex h-2 w-2 rounded-full bg-slate-200"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50/50 border-b border-slate-50 text-[10px] font-bold uppercase text-slate-400 tracking-widest">
+                                <th class="px-6 py-4">Event Type</th>
+                                <th class="px-6 py-4">Contextual Narrative</th>
+                                <th class="px-6 py-4 text-right">Temporal Stamp</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            @forelse($activities ?? [] as $activity)
+                            <tr class="group hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4">
+                                    @php
+                                        $activityAction = $activity->action ?? '';
+                                        $color = \Illuminate\Support\Str::contains($activityAction, 'Connected') ? 'emerald' : 
+                                                (\Illuminate\Support\Str::contains($activityAction, 'Disconnected') ? 'rose' : 
+                                                (\Illuminate\Support\Str::contains($activityAction, 'Conflict') ? 'amber' : 'blue'));
+                                    @endphp
+                                    <span class="inline-flex items-center rounded-lg bg-{{ $color }}-50 px-2 py-1 text-[9px] font-black uppercase text-{{ $color }}-600 ring-1 ring-inset ring-{{ $color }}-100">
+                                        {{ $activityAction }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-xs font-bold text-slate-900 leading-tight">{{ $activity->description ?? 'No description available' }}</p>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ optional($activity->created_at)->diffForHumans() ?? 'Unknown time' }}</span>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="3" class="px-6 py-12 text-center text-[10px] font-medium text-slate-300 italic uppercase tracking-widest">Inaugural trace pending activity detection.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px;">
-                <div class="card-header bg-white py-3 border-0 d-flex align-items-center">
-                    <i class="fas fa-robot text-primary mr-2"></i>
-                    <h6 class="m-0 font-weight-bold text-dark">Gunakan Bot Pribadi (BYOB)</h6>
+
+        <!-- Infrastructure & Instructions -->
+        <div class="lg:col-span-4 space-y-8">
+            <!-- Infrastructure Configuration (BYOB) -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="h-8 w-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
+                        <i class="fas fa-robot text-sm"></i>
+                    </div>
+                    <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">Secure Bot Override</h3>
                 </div>
-                <div class="card-body">
-                    <p class="small text-muted mb-3">Ingin menggunakan bot Telegram buatan sendiri? Masukkan token dari <strong>@BotFather</strong> di sini.</p>
-                    
-                    <form action="{{ route('integrations.telegram-bot.settings') }}" method="POST">
+                
+                <p class="text-[10px] text-slate-500 font-medium leading-relaxed mb-8">Deploy your proprietary Telegram Bot protocols by inputting credentials from <strong>@BotFather</strong> below.</p>
+                
+                <form action="{{ route('integrations.telegram-bot.settings') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Bot API Token</label>
+                        <input type="password" name="telegram_bot_token" placeholder="123456:ABC-DEF..." value="{{ $user->telegram_bot_token }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Unique Username</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-300">@</span>
+                            <input type="text" name="telegram_bot_username" placeholder="finaflow_bot" value="{{ $user->telegram_bot_username }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent pl-8 pr-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Communication Bridge (Optional)</label>
+                        <input type="text" name="telegram_proxy_url" placeholder="https://gateway.internal/hook" value="{{ $user->telegram_proxy_url }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none">
+                        <p class="mt-1.5 text-[9px] text-slate-400 font-medium leading-tight italic">Redirects transmissions through a secured proxy gateway.</p>
+                    </div>
+                    <button type="submit" class="w-full h-12 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-soft hover:bg-slate-800 transition-all">Save Parameters</button>
+                </form>
+
+                @if($user->telegram_bot_token)
+                <div class="mt-8 pt-8 border-t border-slate-50">
+                    <form action="{{ route('integrations.telegram-bot.webhook.set') }}" method="POST">
                         @csrf
-                        <div class="form-group mb-3">
-                            <label class="small font-weight-bold">Bot API Token</label>
-                            <input type="password" name="telegram_bot_token" class="form-control form-control-sm" placeholder="Contoh: 123456:ABC-DEF..." value="{{ $user->telegram_bot_token }}">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="small font-weight-bold">Bot Username</label>
-                            <div class="input-group input-group-sm">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">@</span>
-                                </div>
-                                <input type="text" name="telegram_bot_username" class="form-control" placeholder="finaflow_bot" value="{{ $user->telegram_bot_username }}">
-                            </div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="small font-weight-bold">Bridge URL (Optional)</label>
-                            <input type="text" name="telegram_proxy_url" class="form-control form-control-sm" placeholder="https://my-proxy.workers.dev/bot-webhook-jembatan" value="{{ $user->telegram_proxy_url }}">
-                            <small class="text-muted" style="font-size: 0.75rem;">Gunakan jika server Anda no bisa menerima koneksi langsung dari Telegram.</small>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-sm btn-block rounded-pill">Save Settings</button>
+                        <button type="submit" class="w-full h-10 border border-slate-200 text-slate-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-sync-alt text-[9px]"></i>
+                            Propagate Webhook
+                        </button>
                     </form>
-
-                    @if($user->telegram_bot_token)
-                        <div class="mt-3 pt-3 border-top">
-                            <h6 class="small font-weight-bold text-dark mb-2">Sinkronisasi Webhook</h6>
-                            <p class="small text-muted mb-3">Klik tombol di bawah agar bot Anda bisa mulai menerima data dari FinaFlow.</p>
-                            <form action="{{ route('integrations.telegram-bot.webhook.set') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-outline-info btn-sm btn-block rounded-pill">
-                                    <i class="fas fa-sync-alt mr-1"></i> Daftarkan Webhook
-                                </button>
-                            </form>
-                        </div>
-                    @endif
                 </div>
+                @endif
             </div>
 
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px;">
-                <div class="card-header bg-white py-3 border-0">
-                    <h6 class="m-0 font-weight-bold text-dark">Panduan Penggunaan</h6>
-                </div>
-                <div class="card-body">
-                    <div class="timeline small">
-                        <div class="d-flex mb-4">
-                            <div class="mr-3">
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 24px; height: 24px;">1</div>
-                            </div>
-                            <div>
-                                <h6 class="font-weight-bold mb-1">Hubungkan Sesi</h6>
-                                <p class="text-muted mb-0">Klik tombol Hubungkan (Start) untuk mengaktifkan bot.</p>
-                            </div>
-                        </div>
-                        <div class="d-flex mb-4">
-                            <div class="mr-3">
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 24px; height: 24px;">2</div>
-                            </div>
-                            <div>
-                                <h6 class="font-weight-bold mb-1">Submit Transactions</h6>
-                                <p class="text-muted mb-0">Ketik [Name Item] spasi [Nominal]. Contoh: "Bensin 20000".</p>
-                            </div>
-                        </div>
-                        <div class="d-flex mb-4">
-                            <div class="mr-3">
-                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 24px; height: 24px;">3</div>
-                            </div>
-                            <div>
-                                <h6 class="font-weight-bold mb-1">Multi-Account</h6>
-                                <p class="text-muted mb-0">Tambahkan name account untuk memilih sumber dana. Contoh: "Bensin 20000 Mandiri".</p>
-                            </div>
+            <!-- Execution Manual -->
+            <div class="rounded-3xl bg-slate-50 p-8 border border-slate-100">
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest mb-8">Operational Directives</h3>
+                <div class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="h-1.5 w-1.5 mt-1.5 rounded-full bg-primary-500"></div>
+                        <div>
+                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-tighter">Handshake Protocol</h4>
+                            <p class="text-[10px] text-slate-500 font-medium leading-relaxed mt-1">Initiate command <strong>/start</strong> to pair your biometric chat identity with the FinaFlow core.</p>
                         </div>
                     </div>
-                    
-                    <div class="alert alert-info border-0 shadow-sm mt-3 py-2 px-3 small">
-                        <i class="fas fa-info-circle mr-1"></i> Bot akan menggunakan <strong>Account Utama Aktif</strong> jika name account no disertakan.
+                    <div class="flex gap-4">
+                        <div class="h-1.5 w-1.5 mt-1.5 rounded-full bg-primary-500"></div>
+                        <div>
+                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-tighter">Unified Submission</h4>
+                            <p class="text-[10px] text-slate-500 font-medium leading-relaxed mt-1">Transmit: <code>[Label] [Magnitude]</code>. For example: "Bensin 20000" to auto-log expenses.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="h-1.5 w-1.5 mt-1.5 rounded-full bg-primary-500"></div>
+                        <div>
+                            <h4 class="text-[11px] font-black text-slate-900 uppercase tracking-tighter">Multilateral Account Steering</h4>
+                            <p class="text-[10px] text-slate-500 font-medium leading-relaxed mt-1">Append account alias for precise routing. Example: "Bensin 20000 Mandiri".</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Bot History Activity -->
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 16px;">
-                <div class="card-header bg-white py-3 border-0 d-flex align-items-center">
-                    <i class="fas fa-history text-secondary mr-2"></i>
-                    <h6 class="m-0 font-weight-bold text-dark">History Aktivitas Bot</h6>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0" style="font-size: 0.85rem;">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="border-0 px-4">Aktivitas</th>
-                                    <th class="border-0">Keterangan</th>
-                                    <th class="border-0 px-4 text-right">Waktu</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($activities ?? [] as $activity)
-                                    <tr>
-                                        <td class="px-4">
-                                            @if(Str::contains($activity->action, 'Connected'))
-                                                <span class="badge badge-success text-white px-2 py-1"><i class="fas fa-link mr-1"></i> Connected</span>
-                                            @elseif(Str::contains($activity->action, 'Disconnected'))
-                                                <span class="badge badge-danger text-white px-2 py-1"><i class="fas fa-unlink mr-1"></i> Disconnected</span>
-                                            @elseif(Str::contains($activity->action, 'Conflict'))
-                                                <span class="badge badge-warning text-dark px-2 py-1"><i class="fas fa-exclamation-triangle mr-1"></i> Conflict</span>
-                                            @else
-                                                <span class="badge badge-info text-white px-2 py-1"><i class="fas fa-edit mr-1"></i> Updated</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-dark">{{ $activity->description }}</td>
-                                        <td class="px-4 text-muted text-right">{{ \Carbon\Carbon::parse($activity->created_at)->diffForHumans() }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center py-4 text-muted">Belum ada aktivitas tercatat.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="mt-8 p-4 rounded-xl bg-white border border-slate-200 flex items-start gap-3">
+                    <i class="fas fa-info-circle text-primary-500 mt-0.5 text-xs"></i>
+                    <p class="text-[9px] font-bold text-slate-600 leading-relaxed uppercase">Assistant utilizes the <strong>Primary Active Ledger</strong> as the default liquidity source.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    .bg-gradient-primary {
-        background-color: #4e73df;
-        background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-        background-size: cover;
-    }
-    .leading-relaxed {
-        line-height: 1.6;
-    }
-</style>
 @endsection

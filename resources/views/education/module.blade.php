@@ -54,7 +54,7 @@
                         <ul class="mb-0">
                             @foreach($module->resource_list as $resource)
                                 @php
-                                    $label = is_array($resource) ? ($resource['tags'] ?? ($resource['url'] ?? __('education.module.resources'))) : $resource;
+                                    $label = is_array($resource) ? ($resource['label'] ?? ($resource['url'] ?? __('education.module.resources'))) : $resource;
                                     $url = is_array($resource) ? ($resource['url'] ?? null) : null;
                                 @endphp
                                 <li>

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -28,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if ($this->app->environment('production')) {
-            DB::whenQueryingForLongerThan(self::SLOW_QUERY_THRESHOLD_MS, function (string $connection, \Illuminate\Database\Events\QueryExecuted $event) {
+            DB::whenQueryingForLongerThan(self::SLOW_QUERY_THRESHOLD_MS, function (string $connection, QueryExecuted $event) {
                 \Log::channel('daily')->warning('Slow query detected', [
                     'sql' => $event->sql,
                     'time_ms' => $event->time,
@@ -44,6 +46,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Pagination\Paginator::useBootstrapFour();
+        Paginator::useTailwind();
     }
 }

@@ -1,283 +1,252 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Integrations Bank</h1>
-        <a href="{{ route('bank-integrations.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Add Integrations
-        </a>
+<div class="space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">Bank Integrations</h1>
+            <p class="text-sm font-medium text-slate-500">Manage real-time data synchronization with your financial institutions</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                Back
+            </a>
+            <a href="{{ route('bank-integrations.create') }}" class="inline-flex items-center justify-center rounded-xl bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-premium transition-all hover:bg-primary-500 active:scale-95">
+                <i class="fas fa-plus mr-2"></i>
+                Add Integration
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <div class="relative overflow-hidden rounded-2xl bg-emerald-50 border border-emerald-100 p-4 shadow-sm flex items-center gap-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm ring-1 ring-emerald-100">
+            <i class="fas fa-check"></i>
+        </div>
+        <p class="text-sm font-bold text-emerald-900">{{ session('success') }}</p>
     </div>
     @endif
 
-    @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <!-- Financial Health Overview -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-slate-900">
+            <div class="flex items-center justify-between uppercase tracking-widest text-slate-400 font-bold text-[10px]">
+                Total Channels
+                <i class="fas fa-university text-slate-200 text-base"></i>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 mt-4">{{ $integrations->count() }}</h3>
+            <p class="text-[10px] text-slate-500 mt-1 font-bold uppercase tracking-tighter">Established gateways</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-emerald-500">
+            <div class="flex items-center justify-between uppercase tracking-widest text-slate-400 font-bold text-[10px]">
+                Operational
+                <i class="fas fa-check-circle text-emerald-400 text-base"></i>
+            </div>
+            <h3 class="text-3xl font-black text-slate-900 mt-4">{{ $integrations->where('is_active', true)->count() }}</h3>
+            <p class="text-[10px] text-slate-500 mt-1 font-bold uppercase tracking-tighter">Live & Synchronized</p>
+        </div>
+        <div class="rounded-2xl bg-slate-900 p-6 text-white shadow-soft ring-1 ring-white/10">
+            <div class="flex items-center justify-between uppercase tracking-widest text-slate-400 font-bold text-[10px]">
+                Aggregate Balance
+                <i class="fas fa-wallet text-primary-400 text-base"></i>
+            </div>
+            <h3 class="text-3xl font-black text-white mt-4 tracking-tighter">
+                Rp {{ number_format($integrations->where('is_active', true)->sum('current_balance'), 0, ',', '.') }}
+            </h3>
+            <div class="mt-2 h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <div class="h-full bg-primary-500" style="width: 85%"></div>
+            </div>
+        </div>
     </div>
-    @endif
 
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Integrations</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $integrations->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-university fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+    <!-- Integrations Ledger -->
+    <div class="rounded-2xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+        <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-widest">Connected Gateways</h2>
+            <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Bank-Grade Middleware</span>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Integrations Aktif</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $integrations->where('is_active', true)->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total Balance</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($integrations->where('is_active', true)->sum('current_balance'), 0, ',', '.') }}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-slate-50 bg-slate-50/50">
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Financial Institution</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Account Mapping</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-center">Status</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Valuation</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Last Sync</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($integrations as $integration)
+                    <tr class="group transition-colors hover:bg-slate-50/50">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-4">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-400 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-slate-100 uppercase font-black text-[10px]">
+                                    {{ substr($integration->bank_name, 0, 2) }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-extrabold text-slate-900 leading-none">{{ $integration->bank_name }}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">{{ $integration->account_number ?: 'Encrypted Number' }}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-wallet fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Integrations Bank</h6>
-        </div>
-        <div class="card-body">
-            @if($integrations->count() > 0)
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Name Bank</th>
-                            <th>Account</th>
-                            <th>Type Account</th>
-                            <th>Metode Integrations</th>
-                            <th>Status</th>
-                            <th>Balance</th>
-                            <th>Terakhir Sync</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($integrations as $integration)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                <strong>{{ $integration->bank_name }}</strong>
-                                @if($integration->account_number)
-                                <br><small class="text-muted">{{ $integration->account_number }}</small>
-                                @endif
-                            </td>
-                            <td>{{ $integration->account->name ?? 'N/A' }}</td>
-                            <td>
-                                <span class="badge badge-info">{{ ucfirst(str_replace('_', ' ', $integration->account_type)) }}</span>
-                            </td>
-                            <td>
-                                <span class="badge badge-secondary">{{ ucfirst($integration->integration_type) }}</span>
-                            </td>
-                            <td>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-700">{{ $integration->account->name ?? 'N/A' }}</span>
+                                <span class="text-[9px] font-bold text-primary-500 uppercase tracking-widest mt-0.5">{{ str_replace('_', ' ', $integration->account_type) }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            @if($integration->is_active)
+                            <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-600 ring-1 ring-emerald-100 uppercase tracking-tighter">Active</span>
+                            @else
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-black text-slate-400 ring-1 ring-slate-200 uppercase tracking-tighter">Disabled</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            @if($integration->current_balance !== null)
+                            <p class="text-sm font-black text-slate-900 tabular-nums">Rp {{ number_format($integration->current_balance, 0, ',', '.') }}</p>
+                            @if($integration->available_balance)
+                            <p class="text-[9px] font-bold text-slate-400 uppercase">Avail: Rp {{ number_format($integration->available_balance, 0, ',', '.') }}</p>
+                            @endif
+                            @else
+                            <span class="text-xs font-medium text-slate-300 italic">No balance data</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter/50">
+                                {{ $integration->last_sync_at ? $integration->last_sync_at->diffForHumans() : 'Never' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                <a href="{{ route('bank-integrations.show', $integration) }}" class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-primary-50 hover:text-primary-600" title="View Full Ledger">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </a>
+                                <a href="{{ route('bank-integrations.edit', $integration) }}" class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-amber-50 hover:text-amber-600" title="Configure Integration">
+                                    <i class="fas fa-edit text-xs"></i>
+                                </a>
                                 @if($integration->is_active)
-                                <span class="badge badge-success">Aktif</span>
-                                @else
-                                <span class="badge badge-secondary">No Aktif</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($integration->current_balance !== null)
-                                <strong>Rp {{ number_format($integration->current_balance, 0, ',', '.') }}</strong>
-                                @if($integration->available_balance)
-                                <br><small class="text-muted">Tersedia: Rp {{ number_format($integration->available_balance, 0, ',', '.') }}</small>
-                                @endif
-                                @else
-                                <span class="text-muted">-</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($integration->last_sync_at)
-                                <small>{{ $integration->last_sync_at->diffForHumans() }}</small>
-                                @else
-                                <span class="text-muted">Belum pernah</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('bank-integrations.show', $integration) }}" class="btn btn-info btn-sm">Lihat</a>
-                                <a href="{{ route('bank-integrations.edit', $integration) }}" class="btn btn-warning btn-sm">Edit</a>
-                                @if($integration->is_active)
-                                <button
-                                    type="button"
-                                    class="btn btn-success btn-sm sync-btn"
-                                    data-sync-url="{{ route('bank-integrations.sync', $integration) }}"
-                                    title="Sync Data"
-                                >
-                                    <i class="fas fa-sync"></i>
+                                <button type="button" class="sync-btn flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-emerald-200 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all shadow-sm" data-sync-url="{{ route('bank-integrations.sync', $integration) }}" title="Immediate Sync">
+                                    <i class="fas fa-sync text-xs"></i>
                                 </button>
                                 @endif
-                                <form action="{{ route('bank-integrations.destroy', $integration) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('bank-integrations.destroy', $integration) }}" method="POST" class="inline" onsubmit="return confirm('Terminate this bank integration securely?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda are you sure you want to delete integrations ini?')">Delete</button>
+                                    <button type="submit" class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600" title="Terminate Channel">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
                                 </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @else
-            <div class="text-center">
-                <i class="fas fa-university fa-3x text-gray-300 mb-3"></i>
-                <h5 class="text-gray-500">Belum ada integrations bank</h5>
-                <p class="text-gray-500">Tambahkan integrations bank untuk mengimpor transactions secara otomatis.</p>
-                <a href="{{ route('bank-integrations.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Buat Integrations Pertama
-                </a>
-            </div>
-            @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-6 py-20 text-center">
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-50 text-slate-300">
+                                    <i class="fas fa-university text-2xl"></i>
+                                </div>
+                                <p class="text-xs text-slate-400 font-medium italic">No bank integrations established yet.</p>
+                                <a href="{{ route('bank-integrations.create') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-8 py-2.5 text-xs font-bold text-white shadow-premium hover:bg-slate-800">
+                                    Begin Onboarding
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<!-- Sync Modal -->
-<div class="modal fade" id="syncModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Sinkronisasi Bank</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Modern Sync Feedback UI (replacing old modal) -->
+<div id="syncFeedback" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full mx-4 transform scale-90 transition-transform duration-300" id="feedbackCard">
+        <div class="flex flex-col items-center text-center">
+            <div id="feedbackIcon" class="h-16 w-16 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center mb-6">
+                <i class="fas fa-sync fa-spin text-2xl"></i>
             </div>
-            <div class="modal-body">
-                <div id="sync-progress" class="d-none">
-                    <div class="progress mb-3">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
-                    </div>
-                    <p class="text-center">Menyinkronkan data...</p>
-                </div>
-                <div id="sync-result"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <h4 id="feedbackTitle" class="text-lg font-black text-slate-900 mb-2">Synchronizing Channel</h4>
+            <p id="feedbackMessage" class="text-xs text-slate-500 leading-relaxed">Please wait while we establish a secure handshake with the financial provider...</p>
+            
+            <div id="feedbackActions" class="mt-8 w-full hidden">
+                <button onclick="hideFeedback()" class="w-full py-3 bg-slate-900 text-white rounded-xl text-xs font-bold shadow-premium hover:bg-slate-800">Acknowledgment</button>
             </div>
         </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const syncButtons = document.querySelectorAll('.sync-btn');
+const feedbackOverlay = document.getElementById('syncFeedback');
+const feedbackCard = document.getElementById('feedbackCard');
+const feedbackTitle = document.getElementById('feedbackTitle');
+const feedbackMessage = document.getElementById('feedbackMessage');
+const feedbackIcon = document.getElementById('feedbackIcon');
+const feedbackActions = document.getElementById('feedbackActions');
 
-    syncButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const syncUrl = this.getAttribute('data-sync-url');
-            syncIntegration(syncUrl);
-        });
-    });
+function showFeedback(title, message, spinning = true) {
+    feedbackTitle.textContent = title;
+    feedbackMessage.textContent = message;
+    feedbackIcon.innerHTML = spinning ? '<i class="fas fa-sync fa-spin text-2xl"></i>' : '<i class="fas fa-check text-2xl text-emerald-600"></i>';
+    feedbackActions.classList.add('hidden');
+    
+    feedbackOverlay.classList.remove('opacity-0', 'pointer-events-none');
+    feedbackCard.classList.remove('scale-90');
+    feedbackCard.classList.add('scale-100');
+}
 
-    function syncIntegration(syncUrl) {
-        const modal = new bootstrap.Modal(document.getElementById('syncModal'));
-        const progressDiv = document.getElementById('sync-progress');
-        const resultDiv = document.getElementById('sync-result');
+function updateFeedback(title, message, success = true) {
+    feedbackTitle.textContent = title;
+    feedbackMessage.textContent = message;
+    feedbackIcon.classList.remove('bg-primary-50', 'text-primary-600');
+    feedbackIcon.classList.add(success ? 'bg-emerald-50' : 'bg-rose-50');
+    feedbackIcon.innerHTML = success ? '<i class="fas fa-check text-2xl text-emerald-600"></i>' : '<i class="fas fa-exclamation-triangle text-2xl text-rose-500"></i>';
+    feedbackActions.classList.remove('hidden');
+}
 
-        // Show modal and progress
-        progressDiv.classList.remove('d-none');
-        resultDiv.innerHTML = '';
-        modal.show();
+function hideFeedback() {
+    feedbackOverlay.classList.add('opacity-0', 'pointer-events-none');
+    feedbackCard.classList.remove('scale-100');
+    feedbackCard.classList.add('scale-90');
+    if(window.needsReload) location.reload();
+}
 
-        // Make sync request
-        fetch(syncUrl, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(async response => {
-            let data;
-            try {
-                data = await response.json();
-            } catch (e) {
-                throw new Error('Invalid response');
-            }
-
-            progressDiv.classList.add('d-none');
-
-            if (response.ok && data.success) {
-                resultDiv.innerHTML = `
-                    <div class="alert alert-success">
-                        <h6>Sinkronisasi Berhasil!</h6>
-                        <p>${data.message}</p>
-                        ${data.data && data.data.transactions_imported ? `<p>Transactions diimpor: ${data.data.transactions_imported}</p>` : ''}
-                    </div>
-                `;
-                // Reload page after 2 seconds to show updated data
-                setTimeout(() => location.reload(), 2000);
+document.querySelectorAll('.sync-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+        const url = button.dataset.syncUrl;
+        showFeedback('Bank Handshake', 'Initializing secure communications with the provider...');
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                updateFeedback('Sync Confirmed', data.message || 'Legacy data successfully imported to vault.', true);
+                window.needsReload = true;
             } else {
-                resultDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        <h6>Sinkronisasi Gagal</h6>
-                        <p>${data.message || 'Terjadi kesalahan saat menyinkronkan.'}</p>
-                    </div>
-                `;
+                updateFeedback('Sync Rejected', data.message || 'The provider refused the handshake at this time.', false);
             }
-        })
-        .catch(error => {
-            progressDiv.classList.add('d-none');
-            resultDiv.innerHTML = `
-                <div class="alert alert-danger">
-                    <h6>Kesalahan Jaringan</h6>
-                    <p>Terjadi kesalahan saat menyinkronkan. Silakan coba lagi.</p>
-                    <small class="text-muted">${error.message || ''}</small>
-                </div>
-            `;
-            console.error('Sync error:', error);
-        });
-    }
+        } catch (e) {
+            updateFeedback('Network Error', 'The secure gateway is currently unreachable. Check your uplink.', false);
+        }
+    });
 });
 </script>
+@endpush
 @endsection

@@ -15,6 +15,16 @@ class ActivityLog extends Model
     public $timestamps = false;
 
     /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
+
+    /**
      * @return BelongsTo<User, ActivityLog>
      */
     public function user(): BelongsTo

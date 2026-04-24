@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,6 +6,103 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Inter", "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    
+    /* Executive Soft Palette - State of the Art Colors */
+    --color-primary-50: #f5f8ff;
+    --color-primary-100: #ebf1ff;
+    --color-primary-200: #d6e2ff;
+    --color-primary-300: #adc3ff;
+    --color-primary-400: #849dff;
+    --color-primary-500: #3b82f6; /* Trust Blue */
+    --color-primary-600: #2563eb;
+    --color-primary-700: #1d4ed8;
+    --color-primary-800: #1e40af;
+    --color-primary-900: #1e3a8a;
+    
+    --color-surface-50: #fafbfc;
+    --color-surface-100: #f4f5f7;
+    --color-surface-200: #e9ebef;
+    --color-surface-300: #d8dbe2;
+    
+    /* Semantic Utilities */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #0ea5e9;
+
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    
+    --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --shadow-soft: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-inner-soft: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+
+    /* Animation Tokens */
+    --animate-fade-in: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+    body {
+        @apply bg-surface-50 text-slate-800 antialiased selection:bg-primary-100 selection:text-primary-900;
+        font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+        text-rendering: optimizeLegibility;
+    }
+    
+    h1, h2, h3, h4 {
+        @apply tracking-tight font-bold text-slate-900;
+    }
+}
+
+@layer utilities {
+    .glass {
+        @apply bg-white/80 backdrop-blur-xl border-b border-white/20;
+    }
+    
+    .sidebar-item-active {
+        @apply bg-primary-50 text-primary-600 font-bold shadow-inner-soft;
+    }
+    
+    .shadow-premium {
+        box-shadow: var(--shadow-premium);
+    }
+    
+    .shadow-soft {
+        box-shadow: var(--shadow-soft);
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+        @apply bg-transparent;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-slate-200 rounded-full hover:bg-slate-300;
+    }
+
+    [x-cloak] { 
+        display: none !important; 
+    }
+}
+
+/* Data Table Adjustments */
+table {
+    @apply w-full border-collapse;
+}
+
+th {
+    @apply text-[10px] font-bold uppercase tracking-widest text-slate-400 py-4 px-6 bg-slate-50/50;
+}
+
+td {
+    @apply py-4 px-6 text-sm text-slate-600 border-b border-slate-50 transition-colors group-hover:bg-slate-50/50;
 }

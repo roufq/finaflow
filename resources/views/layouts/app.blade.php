@@ -1,864 +1,409 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-surface-50">
 
 <head>
-
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="FinaFlow - Scandinavian Clean UI">
-    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>FinaFlow - Financial Management</title>
+    <title>FinaFlow Pro - Smart Wealth Management</title>
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
-    <!-- Custom fonts for this template-->
-    <link href="{{asset('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
-    
-    <!-- Option 2: Clean Scandinavian Font (Inter) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
-    <!-- Custom styles for this template-->
-    <link href="{{asset('css/sb-admin-2.min.css')}}" rel="stylesheet">
-
-    <link href="{{ asset('css/finaflow-theme.css') }}" rel="stylesheet">
-
+    <!-- Styles & Scripts -->
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body id="page-top">
-
-    @if(Auth::check() && ! Auth::user()->is_active)
-        <div class="account-locked-overlay">
-            <div class="account-locked-card">
-                <h4 class="mb-2 text-danger">Access Disabled</h4>
-                <p class="mb-3">{{ session('account_inactive_message') ?? 'Your account has been disabled. Please contact the administrator to re-activate.' }}</p>
-                <a href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form-overlay').submit();"
-                   class="btn btn-primary btn-sm">Log Out</a>
-                <form id="logout-form-overlay" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
-        </div>
-    @endif
-
-    <!-- Page Wrapper -->
-    <div id="wrapper" class="d-flex" style="min-height: 100vh;">
+<body class="h-full font-sans text-slate-800 antialiased" data-page="{{ $page ?? '' }}" x-data="{ sidebarOpen: false }">
+    <div class="flex h-screen overflow-hidden bg-surface-50">
+        <!-- Mobile sidebar backdrop -->
+        <div x-show="sidebarOpen" x-cloak 
+             class="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden" 
+             @click="sidebarOpen = false"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"></div>
 
         <!-- Sidebar -->
-        <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar" style="flex-shrink: 0; background-color: #ffffff;">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center" href="{{ route('dashboard') }}">
-                <div class="sidebar-brand-icon">
-                    <img src="{{ asset('img/logo.svg') }}" alt="Logo" width="32" onerror="this.outerHTML='<i class=\'fas fa-chart-line\'></i>'">
+        <aside id="sidebar" 
+               class="fixed inset-y-0 left-0 z-50 w-72 transform bg-white transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
+               :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+            
+            <div class="flex h-full flex-col border-r border-slate-100">
+                <!-- Brand -->
+                <div class="flex h-20 shrink-0 items-center px-8">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500 text-white shadow-premium">
+                            <i class="fas fa-chart-line text-lg"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-slate-900">FinaFlow<span class="text-primary-500">.</span></span>
+                    </a>
                 </div>
-                <div class="sidebar-brand-text mx-3 flex-grow-1">FinaFlow</div>
-                <button type="button" class="btn btn-link d-lg-none text-gray-500 p-2 ml-auto" id="sidebarCloseMobile" style="font-size: 1.75rem; text-decoration: none; line-height: 1; z-index: 1050; position: relative;" aria-tags="Close">&times;</button>
-            </a>
 
-            <div class="sidebar-scroll">
-                <!-- Divider -->
-                <hr class="sidebar-divider my-0">
-
-                @can('access dashboard')
-                    <!-- Nav Item - Dashboard -->
-                    <li class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dashboard') }}">
-                            <i class="fas fa-fw fa-tachometer-alt"></i>
-                            <span>{{ __('dashboard.title') }}</span></a>
-                    </li>
-                @endcan
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                @can('access dashboard')
-                    <!-- Heading -->
-                    <div class="sidebar-heading">
-                        Financial Management
-                    </div>
-                @endcan
-
-                <!-- Nav Item - Settings -->
-                <li class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('settings.index') }}">
-                        <i class="fas fa-fw fa-cogs"></i>
-                        <span>{{ __('navigation.settings') }}</span></a>
-                </li>
-
-                <!-- Nav Item - Privacy Settings -->
-                <li class="nav-item {{ request()->routeIs('privacy.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('privacy.settings') }}">
-                        <i class="fas fa-fw fa-shield-alt"></i>
-                        <span>{{ __('navigation.privacy_settings') }}</span></a>
-                </li>
-
-                <!-- Nav Item - AI Insights -->
-                  <li class="nav-item {{ request()->routeIs('insights.*') ? 'active' : '' }}">
-                      <a class="nav-link" href="{{ route('insights.index') }}">
-                          <i class="fas fa-fw fa-brain"></i>
-                          <span>{{ __('navigation.ai_insights') }}</span></a>
-                  </li>
-
-                  @can('view reports')
-                      <!-- Nav Item - Custom Reporting -->
-                      <li class="nav-item {{ request()->routeIs('reporting.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('reporting.dashboard') }}">
-                              <i class="fas fa-fw fa-chart-area"></i>
-                              <span>{{ __('navigation.custom_reporting') }}</span></a>
-                      </li>
-                  @endcan
-
-                  @can('manage behavioral')
-                      <!-- Nav Item - Financial Education -->
-                      <li class="nav-item {{ request()->routeIs('education.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('education.index') }}">
-                              <i class="fas fa-fw fa-graduation-cap"></i>
-                              <span>{{ __('navigation.financial_education') }}</span></a>
-                      </li>
-                      <li class="nav-item {{ request()->routeIs('coaching.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('coaching.index') }}">
-                              <i class="fas fa-fw fa-hands-helping"></i>
-                              <span>{{ __('navigation.financial_coaching') }}</span></a>
-                      </li>
-                  @endcan
-
-                  <!-- Nav Item - Categories -->
-                  <li class="nav-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                      <a class="nav-link" href="{{ route('categories.index') }}">
-                          <i class="fas fa-fw fa-tags"></i>
-                          <span>{{ __('navigation.categories') }}</span></a>
-                  </li>
-
-                  @can('manage accounts')
-                      <!-- Nav Item - Accounts -->
-                      <li class="nav-item {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('accounts.index') }}">
-                              <i class="fas fa-fw fa-wallet"></i>
-                              <span>{{ __('navigation.accounts') }}</span></a>
-                      </li>
-                  @endcan
-
-                  @can('manage transactions')
-                      <!-- Nav Item - Transactions -->
-                      <li class="nav-item {{ request()->routeIs('transactions.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('transactions.index') }}">
-                              <i class="fas fa-fw fa-exchange-alt"></i>
-                              <span>{{ __('transactions.title') }}</span></a>
-                      </li>
-                  @endcan
-
-                  @canany(['manage accounts', 'manage transactions'])
-                      <!-- Nav Item - Transfers -->
-                      <li class="nav-item {{ request()->routeIs('transfers.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('transfers.index') }}">
-                              <i class="fas fa-fw fa-random"></i>
-                              <span>{{ __('navigation.transfers') }}</span></a>
-                      </li>
-                  @endcanany
-
-                  @can('manage goals')
-                      <!-- Nav Item - Goals -->
-                      <li class="nav-item {{ request()->routeIs('goals.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('goals.index') }}">
-                              <i class="fas fa-fw fa-bullseye"></i>
-                              <span>{{ __('navigation.goals') }}</span></a>
-                      </li>
-                  @endcan
-
-                  @can('manage budgets')
-                      <!-- Nav Item - Budgets -->
-                      <li class="nav-item {{ request()->routeIs('budgets.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('budgets.index') }}">
-                              <i class="fas fa-fw fa-calculator"></i>
-                              <span>{{ __('navigation.budgets') }}</span></a>
-                      </li>
-                  @endcan
-
-                  @can('view reports')
-                      <!-- Nav Item - Investments -->
-                      <li class="nav-item {{ request()->routeIs('investments.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('investments.index') }}">
-                              <i class="fas fa-fw fa-chart-line"></i>
-                              <span>{{ __('navigation.investments') }}</span></a>
-                      </li>
-
-                      <!-- Nav Item - Assets -->
-                      <li class="nav-item {{ request()->routeIs('assets.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('assets.index') }}">
-                              <i class="fas fa-fw fa-home"></i>
-                              <span>{{ __('navigation.assets') }}</span></a>
-                      </li>
-
-                      <!-- Nav Item - Net Worth -->
-                      <li class="nav-item {{ request()->routeIs('net-worth.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('net-worth.index') }}">
-                              <i class="fas fa-fw fa-chart-pie"></i>
-                              <span>{{ __('navigation.net_worth') }}</span></a>
-                      </li>
-
-                      <!-- Nav Item - Analytics -->
-                      <li class="nav-item {{ request()->routeIs('analytics.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('analytics.index') }}">
-                              <i class="fas fa-fw fa-chart-area"></i>
-                              <span>{{ __('navigation.analytics') }}</span></a>
-                      </li>
-                  @endcan
-
-                  @can('manage budgets')
-                      <!-- Nav Item - Debts -->
-                      <li class="nav-item {{ request()->routeIs('debts.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('debts.index') }}">
-                              <i class="fas fa-fw fa-credit-card"></i>
-                              <span>{{ __('navigation.debts') }}</span></a>
-                      </li>
-                  @endcan
-
-                <!-- Nav Item - Category Reports -->
-                <li class="nav-item {{ request()->routeIs('reports.categories.*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('reports.categories.index') }}">
-                        <i class="fas fa-fw fa-chart-bar"></i>
-                        <span>{{ __('navigation.category_reports') }}</span></a>
-                </li>
-
-                  @can('manage transactions')
-                      <!-- Nav Item - Tags -->
-                      <li class="nav-item {{ request()->routeIs('tags.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('tags.index') }}">
-                              <i class="fas fa-fw fa-hashtag"></i>
-                              <span>{{ __('navigation.tags') }}</span>
-                          </a>
-                      </li>
-                  @endcan
-
-                  @can('view reports')
-                      <!-- Nav Item - Tax Documents -->
-                      <li class="nav-item {{ request()->routeIs('tax-documents.*') ? 'active' : '' }}">
-                          <a class="nav-link" href="{{ route('tax-documents.index') }}">
-                              <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                              <span>{{ __('navigation.tax_documents') }}</span>
-                          </a>
-                      </li>
-                  @endcan
-                  
-@can('manage behavioral')
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                <!-- Heading -->
-                <div class="sidebar-heading">
-                    Behavioral Finance
-                </div>
-                    <!-- Nav Item - Behavioral -->
-                    <li class="nav-item {{ request()->routeIs('behavioral.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('behavioral.index') }}">
-                            <i class="fas fa-fw fa-brain"></i>
-                            <span>{{ __('navigation.behavioral_insights') }}</span>
-                        </a>
-                    </li>
-                @endcan
-
-                @can('manage family')
-                    <!-- Nav Item - Subscriptions -->
-                    <li class="nav-item {{ request()->routeIs('subscriptions.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('subscriptions.index') }}">
-                            <i class="fas fa-fw fa-sync-alt"></i>
-                            <span>{{ __('navigation.subscriptions') }}</span>
-                        </a>
-                    </li>
-
-                    <!-- Nav Item - Rewards -->
-                    <li class="nav-item {{ request()->routeIs('rewards.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('rewards.index') }}">
-                            <i class="fas fa-fw fa-gift"></i>
-                            <span>{{ __('navigation.rewards_loyalty') }}</span>
-                        </a>
-                    </li>
-                @endcan
-
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-
-                @can('manage automations')
-                    <div class="sidebar-heading">
-                        Automation &amp; Integrations
+                <!-- Navigation (Scrollable) -->
+                <nav class="flex-1 space-y-8 overflow-y-auto px-6 py-4 custom-scrollbar">
+                    
+                    <!-- Overview -->
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Intelligence</h3>
+                        <ul class="mt-4 space-y-1">
+                            @can('access dashboard')
+                            <li>
+                                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('dashboard') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-th-large w-5 opacity-70"></i>
+                                    <span>Control Center</span>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('view reports')
+                            <li>
+                                <a href="{{ route('analytics.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('analytics.index') || request()->routeIs('reports.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-chart-pie w-5 opacity-70"></i>
+                                    <span>Analytics</span>
+                                </a>
+                            </li>
+                            @endcan
+                            <li>
+                                <a href="{{ route('activity-log.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('activity-log.index') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-history w-5 opacity-70"></i>
+                                    <span>Activity Logs</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
 
-                    <li class="nav-item {{ request()->routeIs('automations.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('automations.index') }}">
-                            <i class="fas fa-fw fa-robot"></i>
-                            <span>{{ __('navigation.automations') }}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {{ request()->routeIs('bank-integrations.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('bank-integrations.index') }}">
-                            <i class="fas fa-fw fa-university"></i>
-                            <span>{{ __('navigation.bank_integrations') }}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {{ request()->routeIs('api-integrations.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('api-integrations.index') }}">
-                            <i class="fas fa-fw fa-plug"></i>
-                            <span>{{ __('navigation.api_integrations') }}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {{ request()->routeIs('integrations.telegram-bot') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('integrations.telegram-bot') }}">
-                            <i class="fas fa-fw fa-paper-plane"></i>
-                            <span>{{ __('navigation.telegram_bot') ?? 'Telegram Bot' }}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item {{ request()->routeIs('integrations.voice-entry') || request()->routeIs('integrations.email-parser') || request()->routeIs('integrations.reminders') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('integrations.voice-entry') }}">
-                            <i class="fas fa-fw fa-microphone"></i>
-                            <span>{{ __('navigation.integration_tools') }}</span>
-                        </a>
-                    </li>
-                @endcan
-
-                @can('access admin')
-                <hr class="sidebar-divider">
-                <div class="sidebar-heading">
-                    Admin
-                </div>
-                @can('manage users')
-                    <li class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('admin.users.index') }}">
-                            <i class="fas fa-fw fa-user-shield"></i>
-                            <span>Manage Users</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage education')
-                    <li class="nav-item {{ request()->routeIs('admin.education.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('admin.education.index') }}">
-                            <i class="fas fa-fw fa-book"></i>
-                            <span>Education Admin</span>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ request()->routeIs('admin.education-categories.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('admin.education-categories.index') }}">
-                            <i class="fas fa-fw fa-list"></i>
-                            <span>Education Categories</span>
-                        </a>
-                    </li>
-                @endcan
-                @can('manage news')
-                    <li class="nav-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('admin.news.index') }}">
-                            <i class="fas fa-fw fa-newspaper"></i>
-                            <span>News Admin</span>
-                        </a>
-                    </li>
-                @endcan
-                @endcan
-                
-                @can('manage family')
-                <!-- Divider -->
-                <hr class="sidebar-divider">
-                    <!-- Heading -->
-                    <div class="sidebar-heading">
-                        Family Finance
+                    <!-- Core Finance -->
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Liquidity</h3>
+                        <ul class="mt-4 space-y-1">
+                            @can('manage accounts')
+                            <li>
+                                <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('accounts.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-university w-5 opacity-70"></i>
+                                    <span>Cash Accounts</span>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('manage transactions')
+                            <li>
+                                <a href="{{ route('transactions.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('transactions.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-exchange-alt w-5 opacity-70"></i>
+                                    <span>Transactions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('transfers.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('transfers.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-sync-alt w-5 opacity-70"></i>
+                                    <span>Transfers</span>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('manage budgets')
+                            <li>
+                                <a href="{{ route('budgets.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('budgets.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-piggy-bank w-5 opacity-70"></i>
+                                    <span>Budgets</span>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('manage goals')
+                            <li>
+                                <a href="{{ route('goals.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('goals.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-bullseye w-5 opacity-70"></i>
+                                    <span>Goals & Milestones</span>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
                     </div>
-                    <!-- Nav Item - Family -->
-                    <li class="nav-item {{ request()->routeIs('family.*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('family.index') }}">
-                            <i class="fas fa-fw fa-users"></i>
-                            <span>{{ __('navigation.family_finance') }}</span>
-                        </a>
-                    </li>
-                @endcan
-            </div>
-        </ul>
-        <!-- End of Sidebar -->
 
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column flex-grow-1">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light topbar mb-2 static-top px-4">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="customSidebarToggleTop" class="btn btn-link d-md-none mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Sidebar Toggle (Desktop) -->
-                    <button id="sidebarToggleDesktop" class="btn btn-link d-none d-md-flex mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search position-relative">
-                        <i class="fas fa-search topbar-search-icon"></i>
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search..." aria-tags="Search">
-                    </form>
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto align-items-center">
-
-                        <li class="nav-item mx-1">
-                            <a class="nav-link" href="#">
-                                <i class="far fa-file-alt text-gray-400"></i>
-                            </a>
-                        </li>
-
-                        <li class="nav-item mx-1">
-                            <a class="nav-link" href="#">
-                                <i class="far fa-bell text-gray-400"></i>
-                            </a>
-                        </li>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small font-weight-bold">{{ Auth::check() ? Auth::user()->name : 'Guest' }}</span>
-                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-light text-primary font-weight-bold" style="width: 32px; height: 32px; font-size: 0.8rem;">
-                                    {{ Auth::check() ? substr(Auth::user()->name, 0, 1) : 'G' }}
-                                </div>
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in border-0" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{ route('profile.show') }}">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    {{ __('navigation.profile') }}
+                    <!-- Wealth & Liabilities -->
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Wealth Stack</h3>
+                        <ul class="mt-4 space-y-1">
+                            @can('view reports')
+                            <li>
+                                <a href="{{ route('net-worth.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('net-worth.index') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-briefcase w-5 opacity-70"></i>
+                                    <span>Net Worth Summary</span>
                                 </a>
-                                <a class="dropdown-item" href="{{ route('privacy.settings') }}">
-                                    <i class="fas fa-shield-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    {{ __('navigation.privacy_settings') }}
+                            </li>
+                            <li>
+                                <a href="{{ route('investments.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('investments.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-chart-line w-5 opacity-70"></i>
+                                    <span>Investments</span>
                                 </a>
-                                <a class="dropdown-item" href="{{ route('twofactor.setup') }}">
-                                    <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Two-Factor Auth
+                            </li>
+                            <li>
+                                <a href="{{ route('assets.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('assets.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-gem w-5 opacity-70"></i>
+                                    <span>Physical Assets</span>
                                 </a>
-                                <a class="dropdown-item" href="{{ route('settings.index') }}">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    {{ __('navigation.settings') }}
+                            </li>
+                            @endcan
+                            @can('manage budgets')
+                            <li>
+                                <a href="{{ route('debts.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('debts.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-hand-holding-usd w-5 opacity-70"></i>
+                                    <span>Debt Management</span>
                                 </a>
-                                <a class="dropdown-item" href="{{ route('activity-log.index') }}">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    {{ __('navigation.activity_log') }}
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        {{ __('auth.logout') }}
-                                    </button>
-                                </form>
-                            </div>
-                        </li>
+                            </li>
+                            @endcan
+                        </ul>
+                    </div>
 
-                    </ul>
+                    <!-- Engagement & Family -->
+                    @can('manage family')
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Community</h3>
+                        <ul class="mt-4 space-y-1">
+                            <li>
+                                <a href="{{ route('family.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('family.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-users w-5 opacity-70"></i>
+                                    <span>Family Connect</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('subscriptions.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('subscriptions.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-calendar-check w-5 opacity-70"></i>
+                                    <span>Subscriptions</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('rewards.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('rewards.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-medal w-5 opacity-70"></i>
+                                    <span>Loyalty & Perks</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    @endcan
 
+                    <!-- AI & Behavioral -->
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Optimization</h3>
+                        <ul class="mt-4 space-y-1">
+                            <li>
+                                <a href="{{ route('insights.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('insights.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-magic w-5 opacity-70"></i>
+                                    <span>AI Assistant</span>
+                                </a>
+                            </li>
+                            @can('manage behavioral')
+                            <li>
+                                <a href="{{ route('behavioral.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('behavioral.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-brain w-5 opacity-70"></i>
+                                    <span>Self Engineering</span>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('manage automations')
+                            <li>
+                                <a href="{{ route('automations.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('automations.*') || request()->routeIs('bank-integrations.*') || request()->routeIs('api-integrations.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-cogs w-5 opacity-70"></i>
+                                    <span>Automation Suite</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('integrations.telegram-bot') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('integrations.telegram-bot') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fab fa-telegram w-5 opacity-70"></i>
+                                    <span>Telegram Assistant</span>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </div>
+
+                    <!-- Knowledge Base -->
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Eduction</h3>
+                        <ul class="mt-4 space-y-1">
+                            <li>
+                                <a href="{{ route('education.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('education.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-graduation-cap w-5 opacity-70"></i>
+                                    <span>Academy</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('coaching.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('coaching.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-chalkboard-teacher w-5 opacity-70"></i>
+                                    <span>Coaching</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- System -->
+                    <div>
+                        <h3 class="px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Operations</h3>
+                        <ul class="mt-4 space-y-1">
+                            <li>
+                                <a href="{{ route('settings.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('settings.*') || request()->routeIs('categories.*') || request()->routeIs('tags.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-sliders-h w-5 opacity-70"></i>
+                                    <span>Global Settings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('privacy.settings') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('privacy.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-user-lock w-5 opacity-70"></i>
+                                    <span>Privacy & Data</span>
+                                </a>
+                            </li>
+                            @can('manage users')
+                            <li>
+                                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('admin.users.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-shield-alt w-5 opacity-70"></i>
+                                    <span>Identity MGMT</span>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </div>
                 </nav>
-                <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div id="pageContent" class="container-fluid" style="padding-bottom: 2rem;">
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                <!-- User Profile (Sidebar Bottom) -->
+                <div class="border-t border-slate-100 p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)]">
+                    <div class="flex items-center gap-3 rounded-2xl bg-slate-50 p-4 transition-all hover:bg-slate-100 group">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white font-bold text-primary-500 shadow-sm border border-slate-100 group-hover:scale-105 transition-transform">
+                            {{ substr(Auth::user()->name ?? 'G', 0, 1) }}
                         </div>
-                    @endif
-                    @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-tags="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-bold text-slate-900 leading-none mb-1">{{ Auth::user()->name ?? 'Guest' }}</p>
+                            <div class="flex items-center gap-1.5">
+                                <div class="h-1 w-1 rounded-full bg-green-500"></div>
+                                <p class="truncate text-[9px] uppercase font-bold tracking-widest text-slate-400">Node Administrator</p>
+                            </div>
                         </div>
-                    @endif
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" title="Logout" class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500">
+                                <i class="fas fa-power-off text-xs"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="flex flex-1 flex-col overflow-hidden">
+            
+            <!-- Topbar (Executive Glass) -->
+            <header class="glass flex h-20 shrink-0 items-center justify-between px-6 lg:px-10 z-40">
+                <div class="flex items-center gap-4">
+                    <button @click="sidebarOpen = true" class="flex h-11 w-11 items-center justify-center rounded-2xl text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-900 lg:hidden">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div class="relative hidden xl:block">
+                        <form action="{{ url()->current() }}" method="GET">
+                            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Omni-search financial logs..." class="h-12 w-96 rounded-2xl border-none outline-none bg-slate-100/80 px-11 text-sm font-medium transition-all focus:bg-white focus:ring-4 focus:ring-primary-500/10 active:scale-[0.99]">
+                        </form>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <!-- Notifications -->
+                    <div class="relative" x-data="{ open: false, hasUnread: true }">
+                        <button @click="open = !open" @click.away="open = false" class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-slate-100 text-slate-500 transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-premium hover:-translate-y-0.5 active:scale-95">
+                            <i class="far fa-bell text-base"></i>
+                            <span x-show="hasUnread" class="absolute right-4 top-4 h-2 w-2 rounded-full bg-red-500 ring-4 ring-white animate-pulse"></span>
+                        </button>
+
+                        <div x-show="open" x-cloak 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-4"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="absolute right-0 mt-3 w-80 rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 z-50">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">Intelligence Feed</h4>
+                                <button @click="hasUnread = false" class="text-[9px] font-bold text-primary-500 uppercase cursor-pointer hover:underline">Clear All</button>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <template x-if="hasUnread">
+                                    <div class="p-3 rounded-2xl bg-primary-50 border border-primary-100/50 group cursor-pointer transition-all hover:bg-white hover:shadow-soft">
+                                        <div class="flex gap-3">
+                                            <div class="h-8 w-8 rounded-xl bg-white flex items-center justify-center text-primary-500 shadow-sm">
+                                                <i class="fas fa-shield-check text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-[11px] font-bold text-slate-900 leading-tight">System Security Audit</p>
+                                                <p class="text-[9px] text-slate-500 mt-1 leading-relaxed">Account permissions for <span class="font-bold text-slate-700">{{ Auth::user()->name }}</span> were recently re-evaluated.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <div x-show="!hasUnread" x-transition class="flex flex-col items-center justify-center py-8 text-center">
+                                    <div class="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 mb-3">
+                                        <i class="fas fa-satellite-dish text-xs"></i>
+                                    </div>
+                                    <p class="text-[11px] font-bold text-slate-900 leading-tight">All systems operational</p>
+                                    <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">No critical financial alerts or intelligence gaps detected at this time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="h-8 w-px bg-slate-200 mx-2"></div>
+                    
+                    <!-- Profile Menu Trigger -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" class="flex items-center gap-3 rounded-2xl p-1 pr-4 transition-all hover:bg-white hover:shadow-premium group active:scale-95">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white font-bold text-xs ring-4 ring-slate-100 transition-transform group-hover:rotate-6">
+                                {{ substr(Auth::user()->name ?? 'A', 0, 1) }}
+                            </div>
+                            <div class="hidden text-left lg:block">
+                                <p class="text-[11px] font-bold text-slate-900 leading-none mb-0.5">{{ Auth::user()->name ?? 'Administrator' }}</p>
+                                <p class="text-[9px] font-extrabold text-primary-500 uppercase tracking-tighter">System Core</p>
+                            </div>
+                        </button>
+
+                        <div x-show="open" x-cloak 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-4"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="absolute right-0 mt-3 w-56 rounded-2xl bg-white p-2 shadow-soft ring-1 ring-slate-100 z-50">
+                            <a href="{{ route('profile.show') }}" class="flex items-center gap-3 rounded-xl px-4 py-3 text-[11px] font-black text-slate-900 uppercase tracking-tight transition-all hover:bg-slate-50">
+                                <i class="fas fa-user-circle text-slate-400"></i>
+                                Core Profile
+                            </a>
+                            <a href="{{ route('settings.index') }}" class="flex items-center gap-3 rounded-xl px-4 py-3 text-[11px] font-black text-slate-900 uppercase tracking-tight transition-all hover:bg-slate-50 text-slate-400">
+                                <i class="fas fa-sliders-h"></i>
+                                Preferences
+                            </a>
+                            <div class="my-2 h-px bg-slate-50"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[11px] font-black text-rose-600 uppercase tracking-tight transition-all hover:bg-rose-50">
+                                    <i class="fas fa-power-off"></i>
+                                    Terminate Session
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <main class="flex-1 overflow-y-auto bg-surface-50 custom-scrollbar p-6 lg:p-10">
+                <div class="animate-fade-in max-w-[1600px] mx-auto">
                     @yield('content')
                 </div>
-                <!-- /.container-fluid -->
-
-            </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; FinaFlow 2024</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
-
+            </main>
         </div>
-        <!-- End of Content Wrapper -->
-
     </div>
-    <!-- End of Page Wrapper -->
 
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
-
-    <!-- Custom sidebar toggle script -->
-    <script>
-        function updateSidebarActiveState(doc) {
-            const sidebarLinks = document.querySelectorAll('#accordionSidebar .nav-link');
-            sidebarLinks.forEach(link => link.parentElement.classList.remove('active'));
-
-            const newActiveLink = doc.querySelector('#accordionSidebar .nav-item.active .nav-link');
-            if (!newActiveLink) {
-                return;
-            }
-
-            const activeHref = newActiveLink.getAttribute('href');
-            sidebarLinks.forEach(link => {
-                if (link.getAttribute('href') === activeHref) {
-                    link.parentElement.classList.add('active');
-                }
-            });
-        }
-
-        function executePageScripts(container) {
-            const scripts = Array.from(container.querySelectorAll('script'));
-
-            const loadScript = function (index) {
-                if (index >= scripts.length) {
-                    return;
-                }
-
-                const script = scripts[index];
-
-                if (script.src && document.querySelector(`script[src="${script.src}"]`)) {
-                    loadScript(index + 1);
-                    return;
-                }
-
-                const newScript = document.createElement('script');
-                newScript.async = false;
-
-                if (script.src) {
-                    newScript.src = script.src;
-                } else {
-                    newScript.textContent = script.textContent;
-                }
-
-                [...script.attributes].forEach((attribute) => {
-                    if (attribute.name === 'src' && script.src) {
-                        return;
-                    }
-
-                    newScript.setAttribute(attribute.name, attribute.value);
-                });
-
-                newScript.onload = function () {
-                    loadScript(index + 1);
-                };
-
-                newScript.onerror = function () {
-                    loadScript(index + 1);
-                };
-
-                document.body.appendChild(newScript);
-
-                if (!script.src) {
-                    loadScript(index + 1);
-                }
-            };
-
-            loadScript(0);
-        }
-
-        function loadPage(url, pushToHistory = true) {
-            const contentContainer = document.getElementById('pageContent');
-            const sidebarScroll = document.querySelector('.sidebar-scroll');
-            const sidebarScrollTop = sidebarScroll ? sidebarScroll.scrollTop : 0;
-
-            if (!contentContainer) {
-                window.location.href = url;
-                return;
-            }
-
-            contentContainer.classList.add('content-loading');
-
-            fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to load content');
-                }
-
-                return response.text();
-            }).then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newContent = doc.getElementById('pageContent');
-
-                if (!newContent) {
-                    window.location.href = url;
-                    return;
-                }
-
-                contentContainer.innerHTML = newContent.innerHTML;
-                executePageScripts(contentContainer);
-
-                const newTitle = doc.querySelector('title');
-                if (newTitle) {
-                    document.title = newTitle.textContent;
-                }
-
-                updateSidebarActiveState(doc);
-                if (sidebarScroll) {
-                    sidebarScroll.scrollTop = sidebarScrollTop;
-                    window.sessionStorage.setItem('sidebarScrollTop', String(sidebarScrollTop));
-                }
-
-                if (pushToHistory) {
-                    history.pushState({ url }, '', url);
-                }
-
-                if (typeof contentContainer.scrollTo === 'function') {
-                    contentContainer.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
-                    contentContainer.scrollTop = 0;
-                }
-            }).catch(() => {
-                window.location.href = url;
-            }).finally(() => {
-                contentContainer.classList.remove('content-loading');
-            });
-        }
-
-        $(document).ready(function() {
-            const $sidebar = $('#accordionSidebar');
-            const $sidebarOverlay = $('#sidebarOverlay');
-            const $body = $('body');
-            let wasMobileView = isMobileView();
-
-            function isMobileView() {
-                return window.matchMedia('(max-width: 991.98px)').matches;
-            }
-
-            function openMobileSidebar() {
-                $body.addClass('sidebar-open');
-                $sidebar.addClass('mobile-open');
-            }
-
-            function closeMobileSidebar() {
-                $body.removeClass('sidebar-open sidebar-toggled');
-                $sidebar.removeClass('mobile-open');
-            }
-
-            function toggleSidebar() {
-                if (isMobileView()) {
-                    if ($sidebar.hasClass('mobile-open')) {
-                        closeMobileSidebar();
-                    } else {
-                        openMobileSidebar();
-                    }
-
-                    return;
-                }
-
-                $sidebar.toggleClass('collapsed');
-                const isCollapsed = $sidebar.hasClass('collapsed');
-                localStorage.setItem('sidebarCollapsed', isCollapsed);
-                if (isCollapsed) {
-                    $body.addClass('sidebar-toggled');
-                } else {
-                    $body.removeClass('sidebar-toggled');
-                }
-            }
-
-            function applyStoredSidebarState() {
-                const storedCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-                if (storedCollapsed) {
-                    $sidebar.addClass('collapsed');
-                    $body.addClass('sidebar-toggled');
-                } else {
-                    $sidebar.removeClass('collapsed');
-                    $body.removeClass('sidebar-toggled');
-                }
-            }
-
-            function handleResponsiveSidebar() {
-                const mobileView = isMobileView();
-
-                if (mobileView && !wasMobileView) {
-                    $sidebar.removeClass('collapsed');
-                    closeMobileSidebar();
-                } else if (!mobileView && wasMobileView) {
-                    closeMobileSidebar();
-                    applyStoredSidebarState();
-                } else if (!mobileView) {
-                    applyStoredSidebarState();
-                }
-
-                wasMobileView = mobileView;
-            }
-
-            // Sidebar toggle button in sidebar
-            $('#customSidebarToggle').on('click', function() {
-                toggleSidebar();
-            });
-
-            // Sidebar toggle button in topbar (desktop)
-            $('#sidebarToggleDesktop').on('click', function() {
-                toggleSidebar();
-            });
-
-            // Sidebar toggle button in topbar (mobile)
-            $('#customSidebarToggleTop').on('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                toggleSidebar();
-            });
-
-            handleResponsiveSidebar();
-
-            $(window).on('resize', function() {
-                handleResponsiveSidebar();
-            });
-
-            $sidebarOverlay.on('click', function() {
-                closeMobileSidebar();
-            });
-
-            $('#sidebarCloseMobile').on('click', function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                closeMobileSidebar();
-            });
-
-            if (!history.state || !history.state.url) {
-                history.replaceState({ url: window.location.href }, '', window.location.href);
-            }
-
-            $('#accordionSidebar').on('click', '.nav-link', function(event) {
-                if (event.ctrlKey || event.metaKey || event.shiftKey || event.which === 2 || this.target === '_blank') {
-                    return;
-                }
-
-                const href = this.getAttribute('href');
-
-                if (!href || href.startsWith('#')) {
-                    return;
-                }
-
-                event.preventDefault();
-                if (isMobileView()) {
-                    closeMobileSidebar();
-                }
-
-                loadPage(this.href);
-            });
-
-            // Handle ajax form submissions inside pageContent to avoid full reload
-            $('#pageContent').on('submit', 'form.page-form', function(event) {
-                event.preventDefault();
-                const form = this;
-                const action = form.getAttribute('action') || window.location.href;
-                const method = (form.getAttribute('method') || 'GET').toUpperCase();
-                const formData = new FormData(form);
-                const contentContainer = document.getElementById('pageContent');
-
-                contentContainer?.classList.add('content-loading');
-
-                fetch(action, {
-                    method: method,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: method === 'GET' ? null : formData,
-                }).then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                        return null;
-                    }
-                    if (!response.ok) {
-                        throw new Error('Failed to load content');
-                    }
-                    return response.text();
-                }).then(html => {
-                    if (!html) {
-                        return;
-                    }
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const newContent = doc.getElementById('pageContent');
-
-                    if (!newContent) {
-                        window.location.href = action;
-                        return;
-                    }
-
-                    contentContainer.innerHTML = newContent.innerHTML;
-                    executePageScripts(contentContainer);
-
-                    const newTitle = doc.querySelector('title');
-                    if (newTitle) {
-                        document.title = newTitle.textContent;
-                    }
-
-                    updateSidebarActiveState(doc);
-                }).catch(() => {
-                    window.location.href = action;
-                }).finally(() => {
-                    contentContainer?.classList.remove('content-loading');
-                });
-            });
-
-            window.addEventListener('popstate', function(event) {
-                if (event.state && event.state.url) {
-                    closeMobileSidebar();
-                    loadPage(event.state.url, false);
-                }
-            });
-
-            const savedSidebarScroll = window.sessionStorage.getItem('sidebarScrollTop');
-            if (savedSidebarScroll && document.querySelector('.sidebar-scroll')) {
-                document.querySelector('.sidebar-scroll').scrollTop = Number(savedSidebarScroll);
-            }
-
-            window.addEventListener('pagehide', () => {
-                const sidebar = document.querySelector('.sidebar-scroll');
-                if (sidebar) {
-                    window.sessionStorage.setItem('sidebarScrollTop', String(sidebar.scrollTop));
-                }
-            });
-        });
-    </script>
-    @yield('scripts')
-
+    <!-- Scripts -->
+    @stack('scripts')
 </body>
-
 </html>

@@ -1,357 +1,274 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Shared Expenses</h1>
-        <a href="{{ route('family.shared-expenses.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Add Shared Expense
-        </a>
-    </div>
-
-    <!-- Content Row -->
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">All Shared Expenses</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Actions:</div>
-                            <a class="dropdown-item" href="{{ route('family.shared-expenses.create') }}">
-                                <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Add Expense
-                            </a>
-                            <a class="dropdown-item" href="{{ route('family.index') }}">
-                                <i class="fas fa-tachometer-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Dashboard
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if($expenses->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Expense Name</th>
-                                        <th>Category</th>
-                                        <th>Total Amount</th>
-                                        <th>Split Method</th>
-                                        <th>Participants</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($expenses as $expense)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="font-weight-bold">{{ $expense->expense_name }}</div>
-                                            @if($expense->description)
-                                                <small class="text-muted">{{ Str::limit($expense->description, 50) }}</small>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="badge badge-secondary">{{ $expense->category }}</span>
-                                        </td>
-                                        <td class="font-weight-bold text-primary">
-                                            Rp {{ number_format($expense->total_amount, 0, ',', '.') }}
-                                        </td>
-                                        <td>
-                                            <span class="badge badge-info">{{ ucfirst($expense->split_method) }}</span>
-                                        </td>
-                                        <td>
-                                            {{ $expense->participant_count }} participants
-                                            @if($expense->split_method === 'equal')
-                                                <br><small class="text-muted">Rp {{ number_format($expense->average_share, 0, ',', '.') }} each</small>
-                                            @endif
-                                        </td>
-                                        <td>{{ $expense->expense_date->format('d M Y') }}</td>
-                                        <td>
-                                            @if($expense->is_settled)
-                                                <span class="badge badge-success">Settled</span>
-                                            @else
-                                                <span class="badge badge-warning">Pending</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#detailsModal{{ $expense->id }}">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#settleModal{{ $expense->id }}">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
-                                                        <i class="fas fa-ellipsis-h"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="{{ route('family.shared-expenses.edit', $expense) }}">
-                                                            <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
-                                                            Edit
-                                                        </a>
-                                                        <a class="dropdown-item" href="#" onclick="return confirm('Are you sure you want to delete this expense?')">
-                                                            <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
-                                                            Delete
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-receipt fa-4x text-gray-300 mb-4"></i>
-                            <h4 class="text-gray-500 mb-3">No Shared Expenses Yet</h4>
-                            <p class="text-gray-500 mb-4">Start tracking shared expenses with your family members.</p>
-                            <a href="{{ route('family.shared-expenses.create') }}" class="btn btn-primary btn-lg">
-                                <i class="fas fa-plus fa-sm text-white-50 mr-2"></i>Add First Expense
-                            </a>
-                        </div>
-                    @endif
-                </div>
-            </div>
+<div class="space-y-10 animate-fade-in">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">Shared Expenses</h1>
+            <p class="text-sm font-medium text-slate-500">Coordinate and track collective liquidity obligations across household members</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('family.index') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                Dashboard
+            </a>
+            <a href="{{ route('family.shared-expenses.create') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                <i class="fas fa-plus mr-2 text-primary-400"></i>
+                Log Expense
+            </a>
         </div>
     </div>
 
-    <!-- Summary Cards -->
-    @if($expenses->count() > 0)
-    <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Expenses</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $expenses->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-receipt fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    @if(session('success'))
+    <div class="rounded-2xl bg-emerald-50 border border-emerald-100 p-4 flex items-center gap-4 shadow-sm">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm ring-1 ring-emerald-100">
+            <i class="fas fa-check"></i>
         </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Settled Expenses</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $expenses->where('is_settled', true)->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total Amount</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($expenses->sum('total_amount'), 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Average per Expense</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Rp {{ number_format($expenses->avg('total_amount'), 0, ',', '.') }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calculator fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p class="text-sm font-bold text-emerald-900">{{ session('success') }}</p>
     </div>
     @endif
 
+    <!-- Collaborative Metrics -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-slate-900">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-ellipsis">Active Obligations</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-2">{{ $expenses->count() }}</h3>
+            <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tight">Total tracked events</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-emerald-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-ellipsis">Settlement Velocity</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-2">{{ $expenses->where('is_settled', true)->count() }}</h3>
+            <p class="text-[9px] text-emerald-500 mt-1 uppercase font-bold tracking-tight">Fully audited records</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-primary-500 col-span-1 md:col-span-2">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-ellipsis">Gross Collective Capital</p>
+            <h3 class="text-2xl font-black text-primary-600 mt-2">Rp {{ number_format($expenses->sum('total_amount'), 0, ',', '.') }}</h3>
+            <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tight">Aggregate household throughput</p>
+        </div>
+    </div>
+
+    <!-- Main Ledger -->
+    <div class="rounded-3xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100 border-b-4 border-slate-900">
+        <div class="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/20">
+            <div class="flex items-center gap-3">
+                <div class="h-8 w-8 rounded-xl bg-slate-900 flex items-center justify-center text-white">
+                    <i class="fas fa-receipt text-xs"></i>
+                </div>
+                <h2 class="text-sm font-black text-slate-900 uppercase tracking-widest">Shared Ledger Audit</h2>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-primary-500 animate-pulse"></span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Financial Sync</span>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-slate-50 bg-slate-50/50">
+                        <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Expense Identifier</th>
+                        <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Corridor</th>
+                        <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Aggregate</th>
+                        <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Unit Context</th>
+                        <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">Status</th>
+                        <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($expenses as $expense)
+                    <tr class="group transition-colors hover:bg-slate-50/50" x-data="{ open: false }">
+                        <td class="px-8 py-6">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-900">{{ $expense->expense_name }}</span>
+                                <span class="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">{{ $expense->expense_date->format('M d, Y') }} execution window</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="inline-flex items-center rounded-lg bg-slate-100 px-3 py-1 text-[9px] font-black uppercase text-slate-500 ring-1 ring-slate-200">
+                                {{ $expense->category }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6 text-right font-black text-slate-900 tabular-nums">
+                            Rp {{ number_format($expense->total_amount, 0, ',', '.') }}
+                        </td>
+                        <td class="px-8 py-6 text-center">
+                            <div class="flex flex-col items-center">
+                                <span class="text-xs font-black text-slate-700">{{ $expense->participant_count }}</span>
+                                <p class="text-[8px] font-bold text-slate-400 uppercase">Participants</p>
+                            </div>
+                        </td>
+                        <td class="px-8 py-6 text-center">
+                            <span class="inline-flex items-center rounded-full px-3 py-1 text-[9px] font-black uppercase ring-1 ring-inset {{ $expense->is_settled ? 'bg-emerald-50 text-emerald-600 ring-emerald-100' : 'bg-amber-50 text-amber-600 ring-amber-100' }}">
+                                {{ $expense->is_settled ? 'Settled' : 'Pending' }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button type="button" @click="$dispatch('open-modal', {id: 'details-{{ $expense->id }}'})" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-400 shadow-sm ring-1 ring-slate-200 hover:text-primary-600 hover:ring-primary-500/30 transition-all">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </button>
+                                @if(!$expense->is_settled)
+                                <button type="button" @click="$dispatch('open-modal', {id: 'settle-{{ $expense->id }}'})" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-400 shadow-sm ring-1 ring-slate-200 hover:text-emerald-600 hover:ring-emerald-500/30 transition-all">
+                                    <i class="fas fa-check-double text-xs"></i>
+                                </button>
+                                @endif
+                                <a href="{{ route('family.shared-expenses.edit', $expense) }}" class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-slate-400 shadow-sm ring-1 ring-slate-200 hover:text-amber-600 hover:ring-amber-500/30 transition-all">
+                                    <i class="fas fa-pen-fancy text-xs"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="px-8 py-24 text-center">
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="h-16 w-16 rounded-[2rem] bg-slate-50 flex items-center justify-center text-slate-200">
+                                    <i class="fas fa-receipt text-2xl"></i>
+                                </div>
+                                <p class="text-xs font-bold text-slate-400 italic">No collaborative obligations found in history.</p>
+                                <a href="{{ route('family.shared-expenses.create') }}" class="text-xs font-black text-primary-600 uppercase hover:underline">Log First Shared Event</a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-@if($expenses->count() > 0)
-    @foreach($expenses as $expense)
-    <!-- Details Modal -->
-    <div class="modal fade" id="detailsModal{{ $expense->id }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel{{ $expense->id }}" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailsModalLabel{{ $expense->id }}">{{ $expense->expense_name }} - Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Expense Information</h6>
-                            <table class="table table-sm">
-                                <tr>
-                                    <td><strong>Name:</strong></td>
-                                    <td>{{ $expense->expense_name }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Category:</strong></td>
-                                    <td>{{ $expense->category }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Total Amount:</strong></td>
-                                    <td>Rp {{ number_format($expense->total_amount, 0, ',', '.') }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Split Method:</strong></td>
-                                    <td>{{ ucfirst($expense->split_method) }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Date:</strong></td>
-                                    <td>{{ $expense->expense_date->format('d M Y') }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Status:</strong></td>
-                                    <td>
-                                        @if($expense->is_settled)
-                                            <span class="badge badge-success">Settled</span>
-                                        @else
-                                            <span class="badge badge-warning">Pending</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Participants ({{ $expense->participant_count }})</h6>
-                            @if(!empty($expense->participant_details))
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Share</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($expense->participant_details as $participant)
-                                                <tr>
-                                                    <td>
-                                                        <strong>{{ $participant['name'] }}</strong>
-                                                        @if(!empty($participant['relationship']))
-                                                            <br>
-                                                            <small class="text-muted">{{ ucfirst($participant['relationship']) }}</small>
-                                                        @endif
-                                                    </td>
-                                                    <td>Rp {{ number_format($participant['share'], 0, ',', '.') }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <p class="text-muted">{{ __('family.shared_expenses.unknown_participant') }}</p>
-                            @endif
+<!-- Dynamic Modals Container -->
+<div x-data="{ activeModal: null }" 
+     @open-modal.window="activeModal = $event.detail.id"
+     @close-modal.window="activeModal = null"
+     class="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none"
+     :class="{ 'pointer-events-auto': activeModal }">
+    
+    <!-- Modal Backdrop -->
+    <div x-show="activeModal" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm pointer-events-auto"
+         @click="activeModal = null"></div>
 
-                            @if($expense->description)
-                            <h6 class="mt-3">Description</h6>
-                            <p>{{ $expense->description }}</p>
-                            @else
-                            <p class="text-muted mt-3">No additional description provided.</p>
-                            @endif
-                        </div>
+    @foreach($expenses as $expense)
+    <!-- Details Modal: {{ $expense->id }} -->
+    <div x-show="activeModal === 'details-{{ $expense->id }}'" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         class="relative w-full max-w-2xl bg-white rounded-[2.5rem] shadow-premium ring-1 ring-slate-100 overflow-hidden pointer-events-auto">
+        
+        <div class="p-8 space-y-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="h-12 w-12 rounded-2xl bg-primary-50 text-primary-600 flex items-center justify-center">
+                        <i class="fas fa-file-invoice text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-slate-900">{{ $expense->expense_name }}</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Audit Context</p>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button @click="activeModal = null" class="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-900">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Execution Metrics</p>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-xs font-bold text-slate-500">Gross Principal</span>
+                                <span class="text-xs font-black text-slate-900">Rp {{ number_format($expense->total_amount, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-xs font-bold text-slate-500">Split Method</span>
+                                <span class="text-xs font-black text-primary-600 uppercase tracking-tighter">{{ $expense->split_method }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-xs font-bold text-slate-500">Execution Date</span>
+                                <span class="text-xs font-black text-slate-900">{{ $expense->expense_date->format('d F, Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @if($expense->description)
+                    <div>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Contextual Description</p>
+                        <p class="text-xs text-slate-600 italic leading-relaxed">{{ $expense->description }}</p>
+                    </div>
+                    @endif
                 </div>
+
+                <div class="rounded-2xl bg-slate-50 p-6">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4">Unit Participants</p>
+                    <div class="space-y-4">
+                        @foreach($expense->participant_details ?? [] as $participant)
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-black text-slate-900 leading-none">{{ $participant['name'] }}</span>
+                                <span class="text-[8px] font-bold text-slate-400 uppercase mt-0.5">{{ $participant['relationship'] }}</span>
+                            </div>
+                            <span class="text-[11px] font-black text-emerald-600">Rp {{ number_format($participant['share'], 0, ',', '.') }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-slate-100 flex justify-end">
+                <button @click="activeModal = null" class="px-8 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-black uppercase tracking-widest shadow-premium hover:bg-slate-800">Dismiss View</button>
             </div>
         </div>
     </div>
 
-    <!-- Settle Modal -->
-    <div class="modal fade" id="settleModal{{ $expense->id }}" tabindex="-1" role="dialog" aria-labelledby="settleModalLabel{{ $expense->id }}" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="settleModalLabel{{ $expense->id }}">Settle Expense - {{ $expense->expense_name }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <!-- Settle Modal: {{ $expense->id }} -->
+    <div x-show="activeModal === 'settle-{{ $expense->id }}'" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         class="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-premium ring-1 ring-slate-100 overflow-hidden pointer-events-auto">
+        <form method="POST" action="{{ route('family.shared-expenses.settle') }}" class="p-8 space-y-8">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="expense_id" value="{{ $expense->id }}">
+            
+            <div class="flex flex-col items-center text-center gap-4">
+                <div class="h-16 w-16 rounded-[2rem] bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fas fa-check-circle"></i>
                 </div>
-                <form method="POST" action="{{ route('family.shared-expenses.settle') }}">
-                    @csrf
-                    @method('PATCH')
-                    <input type="hidden" name="expense_id" value="{{ $expense->id }}">
-                    <div class="modal-body">
-                        <p>Mark this shared expense as settled? This indicates that all participants have paid their shares.</p>
-                        <div class="form-group">
-                            <label for="settlement_date{{ $expense->id }}">Settlement Date</label>
-                            <input type="date" class="form-control" id="settlement_date{{ $expense->id }}" name="settlement_date" value="{{ date('Y-m-d') }}" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success">Mark as Settled</button>
-                    </div>
-                </form>
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase tracking-tighter">Settlement Verification</h3>
+                    <p class="text-xs text-slate-400 mt-1">Audit the collective fund collection for <span class="text-slate-900 font-bold font-italic">{{ $expense->expense_name }}</span></p>
+                </div>
             </div>
-        </div>
+
+            <div class="space-y-2">
+                <label for="settlement_date{{ $expense->id }}" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Settlement Date</label>
+                <input type="date" id="settlement_date{{ $expense->id }}" name="settlement_date" value="{{ date('Y-m-d') }}" required
+                       class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-bold text-slate-900 ring-1 ring-slate-200 transition-all focus:bg-white focus:ring-4 focus:ring-emerald-500/10">
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button type="button" @click="activeModal = null" class="flex-1 px-5 py-3.5 rounded-2xl bg-white text-slate-500 text-xs font-black uppercase tracking-widest hover:text-slate-900 transition-colors">Abort</button>
+                <button type="submit" class="flex-1 px-5 py-3.5 rounded-2xl bg-emerald-500 text-white text-xs font-black uppercase tracking-widest shadow-premium hover:bg-emerald-600 active:scale-95 transition-all">Verify & Settle</button>
+            </div>
+        </form>
     </div>
     @endforeach
-@endif
+</div>
 
-<script>
-// Initialize DataTable if expenses exist
-@if($expenses->count() > 0)
-$(document).ready(function() {
-    $('#dataTable').DataTable({
-        "order": [[ 5, "desc" ]], // Sort by date descending
-        "pageLength": 10,
-        "language": {
-            "search": "Search expenses:",
-            "lengthMenu": "Show _MENU_ expenses per page",
-            "info": "Showing _START_ to _END_ of _TOTAL_ expenses"
-        }
-    });
-});
-@endif
-</script>
 @endsection
+

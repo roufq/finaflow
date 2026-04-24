@@ -1,272 +1,218 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ $budget->name }}</h1>
+<div class="max-w-6xl mx-auto space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-            <a href="{{ route('budgets.edit', $budget) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-edit fa-sm text-white-50"></i> Edit
+            <div class="flex items-center gap-3 mb-2">
+                <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ $budget->name }}</h1>
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase ring-1 ring-inset {{ $budget->status === 'active' ? 'bg-emerald-50 text-emerald-600 ring-emerald-100' : 'bg-slate-100 text-slate-500 ring-slate-200' }}">
+                    {{ $budget->status_tags }}
+                </span>
+            </div>
+            <p class="text-sm font-medium text-slate-500">Comprehensive performance analysis for the {{ $budget->period }} spending protocol.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('budgets.index') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                Back
             </a>
-            <a href="{{ route('budgets.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back
+            <a href="{{ route('budgets.edit', $budget) }}" class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-premium transition-all hover:bg-slate-800 active:scale-95">
+                <i class="fas fa-edit mr-2 text-primary-400"></i>
+                Edit Strategy
             </a>
         </div>
     </div>
 
-    <div class="row">
-        <!-- Budget Progress Card -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Progress Budget</h6>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <div class="progress-circle {{ $budget->spent_percentage > 100 ? 'over-budget' : '' }}" data-progress="{{ min($budget->spent_percentage, 100) }}">
-                            <span class="progress-text">{{ number_format($budget->spent_percentage, 1) }}%</span>
-                        </div>
-                        <h4 class="mt-3">Rp {{ number_format($budget->spent_amount, 0, ',', '.') }}</h4>
-                        <p class="text-muted">dari Rp {{ number_format($budget->total_budget, 0, ',', '.') }}</p>
-                        @if($budget->spent_percentage > 100)
-                            <p class="text-danger">Over budget: Rp {{ number_format($budget->spent_amount - $budget->total_budget, 0, ',', '.') }}</p>
-                        @else
-                            <p class="text-success">Remaining: Rp {{ number_format($budget->remaining_amount, 0, ',', '.') }}</p>
-                        @endif
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <!-- Left: Core Metrics -->
+        <div class="lg:col-span-4 space-y-8">
+            <!-- Progress Visualization -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100 text-center">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-10">Consumption Velocity</h3>
+                
+                <div class="relative mx-auto flex h-48 w-48 items-center justify-center">
+                    <svg class="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-50"></circle>
+                        @php
+                            $isOver = $budget->spent_percentage > 100;
+                            $strokeColor = $isOver ? 'text-rose-500' : ($budget->spent_percentage > 85 ? 'text-amber-500' : 'text-primary-500');
+                        @endphp
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" 
+                                class="{{ $strokeColor }} transition-all duration-1000 ease-out"
+                                stroke-dasharray="282.7"
+                                stroke-dashoffset="{{ 282.7 - (min($budget->spent_percentage, 100) / 100 * 282.7) }}"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-4xl font-black tracking-tighter text-slate-900">{{ number_format($budget->spent_percentage, 1) }}%</span>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase">Utilized</span>
                     </div>
+                </div>
+
+                <div class="mt-10 space-y-1">
+                    <h4 class="text-2xl font-black text-slate-900">Rp {{ number_format($budget->spent_amount, 0, ',', '.') }}</h4>
+                    <p class="text-[11px] font-medium text-slate-400">of Rp {{ number_format($budget->total_budget, 0, ',', '.') }} limit</p>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-50">
+                    @if($isOver)
+                        <div class="rounded-2xl bg-rose-50 p-4 text-center ring-1 ring-rose-100">
+                            <p class="text-[10px] font-black text-rose-900 uppercase">Deficit Threshold Exceeded</p>
+                            <p class="mt-1 text-sm font-bold text-rose-600">Rp {{ number_format($budget->spent_amount - $budget->total_budget, 0, ',', '.') }}</p>
+                        </div>
+                    @else
+                        <div class="rounded-2xl bg-emerald-50 p-4 text-center ring-1 ring-emerald-100">
+                            <p class="text-[10px] font-black text-emerald-900 uppercase">Available Buffer</p>
+                            <p class="mt-1 text-sm font-bold text-emerald-600">Rp {{ number_format($budget->remaining_amount, 0, ',', '.') }}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
-            <!-- Budget Details -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Detail Budget</h6>
+            <!-- Strategy Meta -->
+            <div class="rounded-3xl bg-slate-900 p-8 text-white shadow-premium ring-1 ring-white/10">
+                <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-8">Strategic parameters</h3>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Methodology</span>
+                        <span class="text-xs font-black text-white italic capitalize">{{ str_replace('_', ' ', $budget->type) }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Financial Cycle</span>
+                        <span class="text-xs font-black text-white capitalize">{{ $budget->period }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Commencement</span>
+                        <span class="text-xs font-black text-white">{{ $budget->start_date->format('d M Y') }}</span>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <strong>Type:</strong>
-                        </div>
-                        <div class="col-sm-6">
-                            {{ $budget->type_tags }}
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <strong>Periode:</strong>
-                        </div>
-                        <div class="col-sm-6">
-                            {{ $budget->period_tags }}
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <strong>Date Mulai:</strong>
-                        </div>
-                        <div class="col-sm-6">
-                            {{ $budget->start_date->format('d M Y') }}
-                        </div>
-                    </div>
-                    @if($budget->end_date)
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <strong>Date Berakhir:</strong>
-                        </div>
-                        <div class="col-sm-6">
-                            {{ $budget->end_date->format('d M Y') }}
-                        </div>
-                    </div>
-                    @endif
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <strong>Status:</strong>
-                        </div>
-                        <div class="col-sm-6">
-                            <span class="badge badge-{{ $budget->status_color }}">{{ $budget->status_tags }}</span>
-                        </div>
-                    </div>
-                    @if($budget->description)
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <strong>Description:</strong>
-                            <p class="mt-2">{{ $budget->description }}</p>
-                        </div>
-                    </div>
-                    @endif
+                @if($budget->description)
+                <div class="mt-8 pt-8 border-t border-white/5">
+                    <p class="text-[10px] font-medium text-slate-500 leading-relaxed italic">{{ $budget->description }}</p>
                 </div>
+                @endif
             </div>
         </div>
 
-        <!-- Category Allocations & Actions -->
-        <div class="col-xl-8 col-lg-7">
-            <!-- Category Allocations -->
+        <!-- Right: Distributions & Tracking -->
+        <div class="lg:col-span-8 space-y-8">
+            <!-- Distributions -->
             @if($budget->category_allocations && count($budget->category_allocations) > 0)
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Alokasi Category</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach($budget->category_allocations as $categoryId => $allocatedAmount)
-                            @php
-                                $category = \App\Models\Category::find($categoryId);
-                                if (!$category) continue;
-                                // Calculate spent amount for this category (simplified - would need actual transaction data)
-                                $spentForCategory = 0; // Placeholder
-                                $percentage = $allocatedAmount > 0 ? min(($spentForCategory / $allocatedAmount) * 100, 100) : 0;
-                            @endphp
-                            <div class="col-md-6 mb-3">
-                                <div class="card border-left-info">
-                                    <div class="card-body">
-                                        <h6 class="card-title">{{ $category->name }}</h6>
-                                        <p class="card-text">
-                                            Rp {{ number_format($spentForCategory, 0, ',', '.') }} / Rp {{ number_format($allocatedAmount, 0, ',', '.') }}
-                                        </p>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ $percentage }}%" aria-valuenow="{{ $percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <small class="text-muted">{{ number_format($percentage, 1) }}% digunakan</small>
-                                    </div>
-                                </div>
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8 text-center md:text-left">Capital Distributions</h3>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    @foreach($budget->category_allocations as $categoryId => $allocatedAmount)
+                        @php
+                            $category = \App\Models\Category::find($categoryId);
+                        @endphp
+                        @if($category)
+                        <div class="group rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-100 transition-all hover:bg-white hover:shadow-soft">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-black text-slate-900 lowercase tracking-tighter">{{ $category->name }}</span>
+                                <span class="text-[10px] font-bold text-primary-500">Target: Rp {{ number_format($allocatedAmount, 0, ',', '.') }}</span>
                             </div>
-                        @endforeach
-                    </div>
+                            <div class="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                                <div class="h-full bg-primary-500 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
             @endif
 
-            <!-- Quick Actions -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Action Cepat</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button class="btn btn-success btn-block" data-toggle="modal" data-target="#updateSpentModal">
-                                <i class="fas fa-plus"></i> Update Expense
-                            </button>
+            <!-- Operation Console -->
+            <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-8 text-center md:text-left">Liquidity Maintenance</h3>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <button @click="$dispatch('open-modal', 'update-expense')" class="flex items-center gap-4 rounded-2xl bg-emerald-50 p-6 ring-1 ring-emerald-100 transition-all hover:bg-emerald-100 text-left">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-500 shadow-sm">
+                            <i class="fas fa-plus-circle text-xl"></i>
                         </div>
-                        <div class="col-md-6">
-                            <form action="{{ route('budgets.destroy', $budget) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda are you sure you want to delete budget ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> Delete Budget
-                                </button>
-                            </form>
+                        <div>
+                            <p class="text-xs font-black text-emerald-900 uppercase">Log Consumption</p>
+                            <p class="text-[10px] font-medium text-emerald-600 mt-1">Manual adjustment for external ledger sync.</p>
                         </div>
-                    </div>
+                    </button>
+
+                    <form action="{{ route('budgets.destroy', $budget) }}" method="POST" onsubmit="return confirm('Securely archive this budget protocol?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="flex w-full items-center gap-4 rounded-2xl bg-rose-50 p-6 ring-1 ring-rose-100 transition-all hover:bg-rose-100 text-left">
+                            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-rose-500 shadow-sm">
+                                <i class="fas fa-archive text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-black text-rose-900 uppercase">Archive Strategy</p>
+                                <p class="text-[10px] font-medium text-rose-600 mt-1">Permanently remove this spending protocol.</p>
+                            </div>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Update Spent Amount Modal -->
-<div class="modal fade" id="updateSpentModal" tabindex="-1" role="dialog" aria-labelledby="updateSpentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="updateSpentModalLabel">Update Amount Terpakai</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="updateSpentForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="spent_amount">Amount Terpakai Baru (Rp)</label>
-                        <input type="number" class="form-control" id="spent_amount" name="spent_amount" value="{{ $budget->spent_amount }}" min="0" required>
-                        <small class="form-text text-muted">Masukkan amount total yang sudah terpakai</small>
+<!-- Simple Modern Modal (Tailwind based) -->
+<div x-data="{ open: false }" @open-modal.window="if($event.detail === 'update-expense') open = true" class="relative z-50" x-show="open" x-cloak>
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="open = false"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-3xl bg-white p-8 text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight">Manual Adjustments</h3>
+                        <button @click="open = false" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
                     </div>
+                    <form id="updateSpentForm" class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Consumption Volume (Rp)</label>
+                            <input type="number" name="spent_amount" value="{{ $budget->spent_amount }}" min="0" required
+                                   class="w-full rounded-2xl border-none bg-slate-50 px-5 py-3.5 text-sm font-extrabold text-slate-900 ring-1 ring-slate-200 focus:ring-4 focus:ring-primary-500/10">
+                        </div>
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+                            <button type="button" @click="open = false" class="px-6 py-3 text-sm font-bold text-slate-500">Cancel</button>
+                            <button type="submit" class="rounded-xl bg-slate-900 px-8 py-3 text-sm font-extrabold text-white shadow-lg transition-all hover:bg-slate-800">Assign Value</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-.progress-circle {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto;
-    border-radius: 50%;
-    background: conic-gradient(#4e73df 0% var(--progress), #e9ecef var(--progress) 100%);
-}
-
-.progress-circle.over-budget {
-    background: conic-gradient(#e74a3b 0% var(--progress), #e9ecef var(--progress) 100%);
-}
-
-.progress-circle::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    border-radius: 50%;
-    background: white;
-}
-
-.progress-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    font-weight: bold;
-    color: #4e73df;
-}
-
-.progress-circle.over-budget .progress-text {
-    color: #e74a3b;
-}
-</style>
-
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const progressCircles = document.querySelectorAll('.progress-circle');
-    progressCircles.forEach(circle => {
-        const progress = circle.dataset.progress;
-        circle.style.setProperty('--progress', progress + '%');
-    });
-
     // Handle update spent form
-    document.getElementById('updateSpentForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
+    const form = document.getElementById('updateSpentForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
 
-        fetch(`{{ route('budgets.updateSpent', $budget) }}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+            fetch(`{{ route('budgets.updateSpent', $budget) }}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         });
-    });
+    }
 });
 </script>
+@endpush
 @endsection

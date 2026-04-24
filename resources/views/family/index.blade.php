@@ -1,274 +1,199 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ __('family.dashboard_title') }}</h1>
+<div class="space-y-10">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-            <a href="{{ route('family.members.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> {{ __('family.buttons.add_member') }}
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">{{ __('family.dashboard_title') }}</h1>
+            <p class="text-sm font-medium text-slate-500">Collaborative financial strategy for your household ecosystem</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('family.members.create') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-user-plus mr-2 text-slate-400"></i>
+                {{ __('family.buttons.add_member') }}
             </a>
-            <a href="{{ route('family.shared-expenses.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
-                <i class="fas fa-plus fa-sm text-white-50"></i> {{ __('family.buttons.add_expense') }}
+            <a href="{{ route('family.shared-expenses.create') }}" class="inline-flex items-center justify-center rounded-xl bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-premium transition-all hover:bg-primary-500 active:scale-95">
+                <i class="fas fa-plus mr-2"></i>
+                {{ __('family.buttons.add_expense') }}
             </a>
         </div>
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-
-        <!-- Family Members Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                {{ __('family.overview.members') }}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $familyMembers->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+    <!-- Family Infrastructure Metrics -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-primary-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ __('family.overview.members') }}</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-2">{{ $familyMembers->count() }}</h3>
+            <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tight">Active Unit Members</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-emerald-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ __('family.overview.shared_expenses') }}</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-2">{{ $sharedExpenses->count() }}</h3>
+            <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tight">Collective Obligations</p>
+        </div>
+        <div class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100 border-l-4 border-blue-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ __('family.overview.goals') }}</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-2">{{ $familyGoals->count() }}</h3>
+            <p class="text-[9px] text-slate-500 mt-1 uppercase font-bold tracking-tight">Shared Aspirations</p>
+        </div>
+        <div class="rounded-2xl bg-slate-900 p-6 shadow-soft ring-1 ring-white/10 text-white">
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">{{ __('family.overview.events') }}</p>
+            <h3 class="text-2xl font-black text-white mt-2">{{ $upcomingEvents->count() }}</h3>
+            <div class="mt-2 h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                <div class="h-full bg-primary-500" style="width: 75%"></div>
             </div>
         </div>
-
-        <!-- Shared Expenses Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                {{ __('family.overview.shared_expenses') }}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $sharedExpenses->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-receipt fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Family Goals Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                {{ __('family.overview.goals') }}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $familyGoals->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-bullseye fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Upcoming Events Card -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                {{ __('family.overview.events') }}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $upcomingEvents->count() }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-gift fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-
-        <!-- Family Members Overview -->
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Family Members</h6>
-                    <a href="{{ route('family.members') }}" class="btn btn-primary btn-sm">View All</a>
-                </div>
-                <div class="card-body">
-                    @if($familyMembers->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>{{ __('family.members.name') }}</th>
-                                        <th>{{ __('family.members.relationship') }}</th>
-                                        <th>{{ __('family.members.allowance') }}</th>
-                                        <th>{{ __('family.members.balance') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($familyMembers as $member)
-                                    <tr>
-                                        <td>{{ $member->name }}</td>
-                                        <td>{{ $member->relationship }}</td>
-                                        <td>Rp {{ number_format($member->monthly_allowance, 0, ',', '.') }}</td>
-                                        <td>Rp {{ number_format($member->current_balance, 0, ',', '.') }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-users fa-3x text-gray-300 mb-3"></i>
-                            <p class="text-gray-500">{{ __('family.empty_states.members.description') }}</p>
-                            <a href="{{ route('family.members.create') }}" class="btn btn-primary">{{ __('family.empty_states.members.cta') }}</a>
-                        </div>
-                    @endif
-                </div>
+    <!-- Unit Management Grid -->
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
+        <!-- Family Members Ledger -->
+        <div class="rounded-2xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+            <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+                <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest">Unit Members</h2>
+                <a href="{{ route('family.members') }}" class="text-[10px] font-black text-primary-600 uppercase hover:underline">Auditing View</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-slate-50 bg-slate-50/50">
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ __('family.members.name') }}</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Persona</th>
+                            <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Allowance</th>
+                            <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        @forelse($familyMembers as $member)
+                        <tr class="group transition-colors hover:bg-slate-50/50">
+                            <td class="px-6 py-4 font-bold text-slate-900 text-sm italic">{{ $member->name }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center rounded-lg bg-slate-100 px-2.5 py-1 text-[9px] font-black uppercase text-slate-500">{{ $member->relationship }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-right tabular-nums text-sm font-bold text-slate-600">Rp {{ number_format($member->monthly_allowance, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-right tabular-nums text-sm font-black text-primary-600">Rp {{ number_format($member->current_balance, 0, ',', '.') }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center flex flex-col items-center gap-4">
+                                <div class="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-200">
+                                    <i class="fas fa-users-slash text-xl"></i>
+                                </div>
+                                <p class="text-[10px] font-medium text-slate-400 italic">No members defined in your household.</p>
+                                <a href="{{ route('family.members.create') }}" class="text-xs font-black text-primary-600 uppercase hover:underline">Add First Member</a>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Recent Shared Expenses -->
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-success">{{ __('family.shared_expenses.title') }}</h6>
-                    <a href="{{ route('family.shared-expenses') }}" class="btn btn-success btn-sm">{{ __('family.buttons.view_all') }}</a>
-                </div>
-                <div class="card-body">
-                    @if($sharedExpenses->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-bordered" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>{{ __('family.shared_expenses.name') }}</th>
-                                        <th>{{ __('family.shared_expenses.amount') }}</th>
-                                        <th>{{ __('family.shared_expenses.date') }}</th>
-                                        <th>{{ __('family.shared_expenses.status') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($sharedExpenses as $expense)
-                                    <tr>
-                                        <td>{{ $expense->expense_name }}</td>
-                                        <td>Rp {{ number_format($expense->total_amount, 0, ',', '.') }}</td>
-                                        <td>{{ $expense->expense_date->format('d/m/Y') }}</td>
-                                        <td>
-                                            @if($expense->is_settled)
-                                                <span class="badge badge-success">{{ __('family.statuses.settled') }}</span>
-                                            @else
-                                                <span class="badge badge-warning">{{ __('family.statuses.pending') }}</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-receipt fa-3x text-gray-300 mb-3"></i>
-                            <p class="text-gray-500">{{ __('family.empty_states.expenses.description') }}</p>
-                            <a href="{{ route('family.shared-expenses.create') }}" class="btn btn-success">{{ __('family.empty_states.expenses.cta') }}</a>
-                        </div>
-                    @endif
-                </div>
+        <!-- Collective Liquidity Ledger (Expenses) -->
+        <div class="rounded-2xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+            <div class="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+                <h2 class="text-xs font-bold text-slate-900 uppercase tracking-widest">{{ __('family.shared_expenses.title') }}</h2>
+                <a href="{{ route('family.shared-expenses') }}" class="text-[10px] font-black text-emerald-600 uppercase hover:underline">{{ __('family.buttons.view_all') }}</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-slate-50 bg-slate-50/50">
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Expense Identifier</th>
+                            <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Aggregate</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-center">Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        @forelse($sharedExpenses as $expense)
+                        <tr class="group transition-colors hover:bg-slate-50/50">
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-900 leading-none">{{ $expense->expense_name }}</span>
+                                    <span class="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">{{ $expense->expense_date->format('M d, Y') }} execution window</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right tabular-nums text-sm font-black text-slate-900">Rp {{ number_format($expense->total_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="inline-flex items-center rounded-full px-2.5 py-1 text-[9px] font-black uppercase ring-1 ring-inset {{ $expense->is_settled ? 'bg-emerald-50 text-emerald-600 ring-emerald-100' : 'bg-amber-50 text-amber-600 ring-amber-100' }}">
+                                    {{ $expense->is_settled ? __('family.statuses.settled') : __('family.statuses.pending') }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-12 text-center text-xs font-medium text-slate-400 italic">No shared obligations recorded.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
-
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-
-        <!-- Family Goals -->
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-info">{{ __('family.goals.title') }}</h6>
-                    <div class="btn-group">
-                        <a href="{{ route('family.goals') }}" class="btn btn-outline-info btn-sm text-info border-info">
-                            {{ __('family.buttons.view_all') }}
-                        </a>
-                        <a href="{{ route('family.goals.create') }}" class="btn btn-info btn-sm">{{ __('family.buttons.add_goal') }}</a>
+    <!-- Strategic Aspirations & Events Grid -->
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
+        <!-- Joint Aspirations (Goals) -->
+        <div class="rounded-3xl bg-white p-8 shadow-premium ring-1 ring-slate-100">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">{{ __('family.goals.title') }}</h3>
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('family.goals') }}" class="text-[10px] font-black text-slate-400 uppercase hover:text-primary-600 transition-colors">Audit</a>
+                    <a href="{{ route('family.goals.create') }}" class="h-8 px-3 flex items-center justify-center rounded-lg bg-primary-600 text-white text-[9px] font-black uppercase shadow-soft hover:bg-primary-500 transition-all">
+                        {{ __('family.buttons.add_goal') }}
+                    </a>
+                </div>
+            </div>
+            <div class="space-y-8">
+                @forelse($familyGoals as $goal)
+                <div class="relative group">
+                    <div class="flex items-end justify-between mb-3">
+                        <div>
+                            <h4 class="text-sm font-black text-slate-900 uppercase tracking-tight">{{ $goal->goal_name }}</h4>
+                            <p class="text-[10px] font-bold text-slate-400 mt-1">Capital Accumulation: <span class="text-slate-900">Rp {{ number_format($goal->current_amount, 0, ',', '.') }}</span></p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xl font-black text-primary-600 tracking-tighter">{{ $goal->progress_percentage }}%</span>
+                            <p class="text-[8px] font-bold text-slate-400 uppercase">of Rp {{ number_format($goal->target_amount, 0, ',', '.') }}</p>
+                        </div>
+                    </div>
+                    <div class="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div class="h-full bg-primary-500 transition-all duration-1000 ease-out" style="width: {{ $goal->progress_percentage }}%"></div>
                     </div>
                 </div>
-                <div class="card-body">
-                    @if($familyGoals->count() > 0)
-                        @foreach($familyGoals as $goal)
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="font-weight-bold">{{ $goal->goal_name }}</span>
-                                <span class="text-muted">{{ $goal->progress_percentage }}% Complete</span>
-                            </div>
-                            <div class="progress mb-2">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: {{ $goal->progress_percentage }}%"
-                                    aria-valuenow="{{ $goal->progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                            <small class="text-muted">
-                                Rp {{ number_format($goal->current_amount, 0, ',', '.') }} of Rp {{ number_format($goal->target_amount, 0, ',', '.') }}
-                            </small>
-                        </div>
-                        @endforeach
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-bullseye fa-3x text-gray-300 mb-3"></i>
-                            <p class="text-gray-500">{{ __('family.empty_states.goals.description') }}</p>
-                            <a href="{{ route('family.goals.create') }}" class="btn btn-info">{{ __('family.empty_states.goals.cta') }}</a>
-                        </div>
-                    @endif
-                </div>
+                @empty
+                <div class="py-10 text-center text-xs font-medium text-slate-400 italic">Define joint milestones to synchronize your household growth.</div>
+                @endforelse
             </div>
         </div>
 
-        <!-- Upcoming Gift Events -->
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-warning">{{ __('family.events.title') }}</h6>
-                    <div class="btn-group">
-                        <a href="{{ route('family.gift-events') }}" class="btn btn-light btn-sm text-warning border-warning">
-                            {{ __('family.buttons.view_all') }}
-                        </a>
-                        <a href="{{ route('family.gift-events.create') }}" class="btn btn-warning btn-sm">{{ __('family.buttons.add_event') }}</a>
+        <!-- Household Milestones (Events) -->
+        <div class="rounded-3xl bg-slate-50 p-8 border border-slate-100">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">{{ __('family.events.title') }}</h3>
+                <a href="{{ route('family.gift-events.create') }}" class="h-8 px-3 flex items-center justify-center rounded-lg bg-slate-900 text-white text-[9px] font-black uppercase shadow-soft hover:bg-slate-800 transition-all">New Milestone</a>
+            </div>
+            <div class="grid grid-cols-1 gap-4">
+                @forelse($upcomingEvents as $event)
+                <div class="flex items-center gap-6 p-5 rounded-2xl bg-white shadow-soft transition-transform hover:scale-[1.02]">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 shadow-sm border border-amber-200">
+                        <i class="fas fa-gift text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-black text-slate-900 uppercase tracking-tighter leading-none">{{ $event->event_name }}</h4>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ $event->event_date->format('M d, Y') }}</span>
+                            <span class="h-1 w-1 rounded-full bg-slate-200"></span>
+                            <span class="text-[9px] font-black text-amber-600">Rp {{ number_format($event->budget_amount, 0, ',', '.') }} Allocated</span>
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    @if($upcomingEvents->count() > 0)
-                        @foreach($upcomingEvents as $event)
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="mr-3">
-                                <i class="fas fa-gift fa-2x text-warning"></i>
-                            </div>
-                            <div>
-                                <div class="font-weight-bold">{{ $event->event_name }}</div>
-                                <div class="text-muted small">{{ $event->event_date->format('d M Y') }}</div>
-                                <div class="text-muted small">{{ __('family.events.budget') }}: Rp {{ number_format($event->budget_amount, 0, ',', '.') }}</div>
-                            </div>
-                        </div>
-                        @endforeach
-                    @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-calendar-alt fa-3x text-gray-300 mb-3"></i>
-                            <p class="text-gray-500">{{ __('family.empty_states.events.description') }}</p>
-                            <a href="{{ route('family.gift-events.create') }}" class="btn btn-warning">{{ __('family.empty_states.events.cta') }}</a>
-                        </div>
-                    @endif
-                </div>
+                @empty
+                <div class="py-10 text-center text-xs font-medium text-slate-400 italic">No upcoming family events or gift registries.</div>
+                @endforelse
             </div>
         </div>
-
     </div>
-
 </div>
 @endsection

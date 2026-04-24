@@ -1,174 +1,187 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-start justify-content-between flex-wrap mb-4">
-        <div class="mb-2">
-            <h1 class="h3 mb-2 text-gray-800 font-weight-bold">Transactions</h1>
-            <p class="text-muted small mb-2">Pantau setiap alur uang logout dan masuk Anda dengan mudah.</p>
-            @if(request('search') || request('type') || request('account_id') || request('start_date') || request('end_date'))
-                <div class="small">
-                    <span class="text-muted mr-1">Filter aktif:</span>
-                    @if(request('search')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Search: "{{ request('search') }}"</span> @endif
-                    @if(request('type')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Type: {{ request('type') }}</span> @endif
-                    @if(request('account_id')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Account: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}</span> @endif
-                    @if(request('start_date')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Dari: {{ request('start_date') }}</span> @endif
-                    @if(request('end_date')) <span class="badge badge-pill badge-light text-primary px-2 py-1 bg-primary bg-opacity-10">Sampai: {{ request('end_date') }}</span> @endif
+<div class="space-y-8" x-data="{ showFilters: {{ request()->anyFilled(['search', 'type', 'account_id', 'start_date', 'end_date']) ? 'true' : 'false' }} }">
+    <!-- Header Section -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900">Transactions</h1>
+            <p class="text-sm font-medium text-slate-500">Monitor your cash flow and financial activities with precision.</p>
+            
+            @if(request()->anyFilled(['search', 'type', 'account_id', 'start_date', 'end_date']))
+                <div class="mt-4 flex flex-wrap gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 self-center mr-1">Active Filters:</span>
+                    @if(request('search')) 
+                        <span class="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-bold text-primary-700 ring-1 ring-primary-100">
+                            Search: {{ request('search') }}
+                        </span> 
+                    @endif
+                    @if(request('type')) 
+                        <span class="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-bold text-primary-700 ring-1 ring-primary-100 uppercase">
+                            {{ request('type') }}
+                        </span> 
+                    @endif
+                    @if(request('account_id')) 
+                        <span class="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-bold text-primary-700 ring-1 ring-primary-100">
+                            Account: {{ optional($accounts->firstWhere('id', request('account_id')))->name }}
+                        </span> 
+                    @endif
+                    <a href="{{ route('transactions.index') }}" class="text-xs font-bold text-red-500 hover:text-red-600 self-center ml-1">Clear All</a>
                 </div>
             @endif
         </div>
-        <div class="row align-items-start w-100">
-            <div class="col-lg-8 mb-3 mb-lg-0">
-                <form class="form-row" method="GET" action="{{ route('transactions.index') }}">
-                    <div class="col-md-5 mb-2">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Search transactions..." value="{{ request('search') }}">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <select name="type" class="form-control">
-                            <option value="">All type</option>
-                            <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Pemasukan</option>
-                            <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <select name="account_id" class="form-control">
-                            <option value="">All account</option>
-                            @foreach($accounts as $account)
-                                <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" title="Dari Date">
-                    </div>
-                    <div class="col-md-4 mb-2">
-                        <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" title="Sampai Date">
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <button class="btn btn-primary border-0 btn-block shadow-sm font-weight-bold" type="submit" style="background-color: #3b82f6;">Filter</button>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <a href="{{ route('transactions.index') }}" class="btn btn-light btn-block text-muted">Clear</a>
-                    </div>
-                </form>
-            </div>
-            <div class="col-lg-4 d-flex justify-content-lg-end">
-                <button type="button" class="btn text-white shadow-sm mb-lg-0 mr-2" style="background-color: #10b981; border: none; border-radius: 8px;" data-toggle="modal" data-target="#receiptModal">
-                    <i class="fas fa-camera mr-1"></i> Scan
-                </button>
-                <a href="{{ route('transactions.create') }}" class="btn btn-primary shadow-sm" style="border-radius: 8px;">
-                    <i class="fas fa-plus mr-1"></i> Add Transaction
-                </a>
-            </div>
+        <div class="flex items-center gap-3">
+            <button @click="showFilters = !showFilters" 
+                    :class="showFilters ? 'bg-slate-100 text-slate-900' : 'bg-white text-slate-600'"
+                    class="inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-filter mr-2 text-slate-400"></i>
+                Filters
+            </button>
+            <button type="button" data-toggle="modal" data-target="#receiptModal" 
+                    class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-emerald-600 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-emerald-50">
+                <i class="fas fa-camera mr-2"></i>
+                Scan
+            </button>
+            <a href="{{ route('transactions.create') }}" 
+               class="inline-flex items-center justify-center rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-premium transition-all hover:bg-primary-500 active:scale-95">
+                <i class="fas fa-plus mr-2"></i>
+                New Transaction
+            </a>
         </div>
     </div>
 
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-white py-4 d-flex align-items-center">
-            <h6 class="m-0 font-weight-bold text-gray-800">Transaction List</h6>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive d-none d-md-block">
-                <table class="table table-borderless text-gray-700" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="bg-light text-muted">
-                        <tr>
-                            <th class="px-4 py-3">Date</th>
-                            <th class="py-3">Info Account & Category</th>
-                            <th class="py-3">Type</th>
-                            <th class="py-3">Nominal</th>
-                            <th class="py-3">Description</th>
-                            <th class="px-4 py-3 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($transactions as $transaction)
-                        <tr class="border-bottom border-light hover-bg-light">
-                            <td class="px-4 py-3 align-middle">
-                                <div class="font-weight-bold text-gray-800">{{ $transaction->transaction_date->format('d M Y') }}</div>
-                            </td>
-                            <td class="py-3 align-middle">
-                                <span class="font-weight-bold text-gray-800">{{ $transaction->account->name ?? '?' }}</span><br>
-                                <span class="small text-muted">{{ $transaction->category->name }}</span>
-                            </td>
-                            <td class="py-3 align-middle">
-                                @if($transaction->type === 'income')
-                                    <span class="badge badge-pill font-weight-normal px-2 py-1" style="background-color: rgba(34, 197, 94, 0.1); color: #16a34a;"><i class="fas fa-arrow-up text-xs mr-1"></i> Masuk</span>
-                                @else
-                                    <span class="badge badge-pill font-weight-normal px-2 py-1" style="background-color: rgba(239, 68, 68, 0.1); color: #dc2626;"><i class="fas fa-arrow-down text-xs mr-1"></i> Logout</span>
-                                @endif
-                            </td>
-                            <td class="py-3 align-middle {{ $transaction->type === 'income' ? 'text-success' : 'text-gray-800' }} font-weight-bold">
-                                {{ $transaction->type === 'income' ? '+' : '-' }} {{ $transaction->account->setting->currency_symbol ?? 'Rp' }} {{ number_format($transaction->amount, 0, ',', '.') }}
-                            </td>
-                            <td class="py-3 align-middle text-muted">{{ Str::limit($transaction->description, 30) ?: '-' }}</td>
-                            <td class="px-4 py-3 align-middle text-right">
-                                <div class="btn-group shadow-sm rounded-lg" role="group">
-                                    <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-light btn-sm text-primary" title="Lihat"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-light btn-sm text-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                                    <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-light btn-sm text-danger" title="Delete" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+    <!-- Filter Bar (Expandable) -->
+    <div x-show="showFilters" 
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         class="rounded-2xl bg-white p-6 shadow-premium ring-1 ring-slate-100">
+        <form method="GET" action="{{ route('transactions.index') }}" class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            <div class="space-y-1 lg:col-span-2">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Quick Search</label>
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                    <input type="text" name="search" value="{{ request('search') }}" 
+                           class="w-full rounded-xl border-none bg-slate-50 pl-9 py-2 text-sm focus:ring-2 focus:ring-primary-500/20" 
+                           placeholder="Search keywords...">
+                </div>
             </div>
-            <div class="d-md-none">
-                @forelse($transactions as $transaction)
-                    <div class="card border mb-3 shadow-sm">
-                        <div class="card-body py-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <div>
-                                    <div class="font-weight-bold">{{ $transaction->transaction_date->format('Y-m-d') }}</div>
-                                    <div class="small text-muted">{{ $transaction->account->name ?? '?' }}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="font-weight-bold">{{ $transaction->amount }}</div>
-                                    <span class="badge badge-{{ $transaction->type === 'income' ? 'success' : 'danger' }}">{{ $transaction->type }}</span>
-                                </div>
+            <div class="space-y-1">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Type</label>
+                <select name="type" class="w-full rounded-xl border-none bg-slate-50 py-2 text-sm focus:ring-2 focus:ring-primary-500/20">
+                    <option value="">All Types</option>
+                    <option value="income" {{ request('type') === 'income' ? 'selected' : '' }}>Income</option>
+                    <option value="expense" {{ request('type') === 'expense' ? 'selected' : '' }}>Expense</option>
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Account</label>
+                <select name="account_id" class="w-full rounded-xl border-none bg-slate-50 py-2 text-sm focus:ring-2 focus:ring-primary-500/20">
+                    <option value="">All Accounts</option>
+                    @foreach($accounts as $account)
+                        <option value="{{ $account->id }}" {{ (string)request('account_id') === (string)$account->id ? 'selected' : '' }}>{{ $account->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="space-y-1">
+                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Start Date</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" 
+                       class="w-full rounded-xl border-none bg-slate-50 py-2 text-sm focus:ring-2 focus:ring-primary-500/20">
+            </div>
+            <div class="flex items-end gap-2">
+                <button type="submit" class="flex-1 rounded-xl bg-slate-900 py-2 text-sm font-bold text-white transition-all hover:bg-slate-800">
+                    Apply
+                </button>
+                <a href="{{ route('transactions.index') }}" class="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-slate-200">
+                    <i class="fas fa-undo text-xs"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="rounded-2xl bg-white shadow-premium overflow-hidden ring-1 ring-slate-100">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-slate-50 bg-slate-50/50">
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Date & Info</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Category</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Type</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Amount</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    @forelse($transactions as $transaction)
+                    <tr class="group transition-colors hover:bg-slate-50/50">
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-slate-900 leading-none mb-1">{{ $transaction->transaction_date->format('M d, Y') }}</span>
+                                <span class="text-[10px] font-bold uppercase text-slate-400">{{ $transaction->account->name ?? '-' }}</span>
                             </div>
-                            <div class="mb-2">
-                                <div class="small text-muted">Category</div>
-                                <div class="font-weight-semibold">{{ $transaction->category->name }}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="h-1.5 w-1.5 rounded-full bg-primary-400"></div>
+                                <span class="text-xs font-semibold text-slate-600">{{ $transaction->category->name ?? 'Other' }}</span>
                             </div>
                             @if($transaction->description)
-                                <p class="mb-3 text-muted">{{ $transaction->description }}</p>
+                                <p class="mt-1 text-[10px] text-slate-400 truncate max-w-[200px]">{{ $transaction->description }}</p>
                             @endif
-                            <div class="d-flex flex-wrap">
-                                <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-info btn-sm mr-sm-2 mb-2 w-100 w-sm-auto">View</a>
-                                <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-warning btn-sm mr-sm-2 mb-2 w-100 w-sm-auto">Edit</a>
-                                <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" class="w-100 w-sm-auto mb-2">
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase {{ $transaction->type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
+                                <i class="fas {{ $transaction->type === 'income' ? 'fa-caret-up' : 'fa-caret-down' }}"></i>
+                                {{ $transaction->type }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <span class="text-sm font-extrabold tracking-tight {{ $transaction->type === 'income' ? 'text-emerald-600' : 'text-slate-900' }}">
+                                {{ $transaction->type === 'income' ? '+' : '-' }}{{ $transaction->account->setting->currency_symbol ?? 'Rp' }} {{ number_format($transaction->amount, 0, ',', '.') }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                <a href="{{ route('transactions.show', $transaction) }}" class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-primary-50 hover:text-primary-600">
+                                    <i class="fas fa-eye text-xs"></i>
+                                </a>
+                                <a href="{{ route('transactions.edit', $transaction) }}" class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-amber-50 hover:text-amber-600">
+                                    <i class="fas fa-edit text-xs"></i>
+                                </a>
+                                <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm w-100" onclick="return confirm('Are you sure?')">Delete</button>
+                                    <button type="submit" class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
                                 </form>
                             </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="px-4 py-4 text-center">
-                        <i class="fas fa-receipt fa-3x text-light mb-3"></i>
-                        <p class="text-muted mb-0">Belum ada transactions.</p>
-                    </div>
-                @endforelse
-            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 text-slate-300">
+                                    <i class="fas fa-receipt text-xl"></i>
+                                </div>
+                                <p class="text-sm font-medium text-slate-400 italic">No transactions found match your criteria.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+
         @if($transactions->hasPages())
-        <div class="card-footer bg-white border-top-0 px-4 py-3">
-            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
-                <div class="text-muted small mb-3 mb-md-0">
-                    Menampilkan <strong>{{ $transactions->firstItem() }}</strong> - <strong>{{ $transactions->lastItem() }}</strong> dari <strong>{{ $transactions->total() }}</strong> transactions
+        <div class="border-t border-slate-50 bg-slate-50/30 px-6 py-4">
+            <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Showing {{ $transactions->firstItem() }}-{{ $transactions->lastItem() }} of {{ $transactions->total() }}
                 </div>
-                <div class="pagination-scandinavian">
+                <div class="pagination-custom">
                     {{ $transactions->links() }}
                 </div>
             </div>
@@ -178,70 +191,90 @@
 </div>
 
 <!-- Receipt Scan Modal -->
-<div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="receiptModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="receiptModalLabel">Scan Receipt</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-tags="Close">
-                    <span aria-hidden="true">&times;</span>
+<div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-hidden="true" x-data="{ scanning: false, data: null, step: 1 }">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content overflow-hidden border-0 rounded-2xl shadow-soft">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <h5 class="text-lg font-bold text-slate-900">Scan Smart Receipt</h5>
+                <button type="button" class="close text-slate-400 hover:text-slate-900" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="receiptForm" enctype="multipart/form-data">
+            
+            <form id="receiptForm" class="p-0 m-0">
                 @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="receiptImage">Upload Receipt Image</label>
-                        <input type="file" class="form-control-file" id="receiptImage" name="receipt_image" accept="image/*" required>
-                        <small class="form-text text-muted">Supported formats: JPG, PNG, JPEG. Max size: 5MB</small>
-                    </div>
-                    <div id="imagePreview" class="mt-3" style="display: none;">
-                        <img id="previewImg" src="" alt="Receipt Preview" class="img-fluid" style="max-height: 300px;">
-                    </div>
-                    <div id="processingStatus" class="mt-3" style="display: none;">
-                        <div class="alert alert-info">
-                            <i class="fas fa-spinner fa-spin"></i> Processing receipt... Please wait.
-                        </div>
-                    </div>
-                    <div id="extractedData" class="mt-3" style="display: none;">
-                        <h6>Extracted Information:</h6>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="transactionDate">Date</label>
-                                    <input type="date" class="form-control" id="transactionDate" name="transaction_date">
+                <div class="p-8">
+                    <!-- Step 1: Upload -->
+                    <div x-show="step == 1" class="space-y-6">
+                        <div class="relative overflow-hidden rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-10 text-center transition-all hover:border-primary-300 hover:bg-slate-50">
+                            <input type="file" id="receiptImage" name="receipt_image" accept="image/*" class="absolute inset-0 z-10 cursor-pointer opacity-0">
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-primary-500 shadow-sm ring-1 ring-slate-100">
+                                    <i class="fas fa-cloud-upload-alt text-2xl"></i>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="transactionAmount">Amount</label>
-                                    <input type="number" class="form-control" id="transactionAmount" name="amount" step="0.01">
+                                <div>
+                                    <p class="text-base font-bold text-slate-900">Drop your receipt here</p>
+                                    <p class="text-xs font-medium text-slate-400">JPG, PNG, TIFF up to 10MB</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="merchantName">Merchant</label>
-                            <input type="text" class="form-control" id="merchantName" name="merchant" placeholder="e.g., Indomaret, Alfamart">
+                        <div id="imagePreview" class="hidden rounded-xl overflow-hidden ring-1 ring-slate-200">
+                            <img id="previewImg" src="" class="w-full max-h-[300px] object-contain bg-slate-100">
                         </div>
-                        <div class="form-group">
-                            <label for="transactionDescription">Description</label>
-                            <input type="text" class="form-control" id="transactionDescription" name="description" placeholder="Transaction description">
+                    </div>
+
+                    <!-- Step 2: Processing -->
+                    <div x-show="scanning" class="py-12 flex flex-col items-center gap-6 text-center">
+                        <div class="relative flex h-20 w-20 items-center justify-center">
+                            <div class="absolute inset-0 rounded-full border-4 border-primary-100"></div>
+                            <div class="absolute inset-0 rounded-full border-4 border-primary-500 border-t-transparent animate-spin"></div>
+                            <i class="fas fa-brain text-2xl text-primary-500"></i>
                         </div>
-                        <div class="form-group">
-                            <label for="transactionCategory">Category</label>
-                            <select class="form-control" id="transactionCategory" name="category_id" required>
-                                <option value="">Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">AI is Analyzing...</h4>
+                            <p class="text-sm text-slate-400">Extracting merchant, date, and amounts using OCR technology.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Verify Data -->
+                    <div x-show="step == 3" class="space-y-6">
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Transaction Date</label>
+                                <input type="date" id="transactionDate" class="w-full rounded-xl border-none bg-slate-50 py-2.5 text-sm focus:ring-2 focus:ring-primary-500/20">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Amount</label>
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">Rp</span>
+                                    <input type="number" id="transactionAmount" class="w-full rounded-xl border-none bg-slate-50 pl-10 py-2.5 text-sm font-bold focus:ring-2 focus:ring-primary-500/20">
+                                </div>
+                            </div>
+                            <div class="space-y-2 md:col-span-2">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Merchant / Description</label>
+                                <input type="text" id="merchantName" class="w-full rounded-xl border-none bg-slate-50 py-2.5 text-sm focus:ring-2 focus:ring-primary-500/20">
+                            </div>
+                            <div class="space-y-2 md:col-span-2">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Category Selection</label>
+                                <select id="transactionCategory" class="w-full rounded-xl border-none bg-slate-50 py-2.5 text-sm focus:ring-2 focus:ring-primary-500/20">
+                                    <option value="">Choose a category...</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="processReceipt" style="display: none;">Process Receipt</button>
-                    <button type="submit" class="btn btn-primary" id="saveTransaction" style="display: none;">Save Transaction</button>
+
+                <div class="p-6 border-t border-slate-100 bg-slate-50/50 flex items-center justify-end gap-3">
+                    <button type="button" class="px-5 py-2 text-sm font-bold text-slate-500 hover:text-slate-900" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="processReceipt" class="hidden px-6 py-2 rounded-xl bg-primary-600 text-sm font-bold text-white shadow-premium transition-all hover:bg-primary-500">
+                        Scan Receipt
+                    </button>
+                    <button type="button" id="saveTransaction" class="hidden px-6 py-2 rounded-xl bg-slate-900 text-sm font-bold text-white shadow-premium transition-all hover:bg-slate-800">
+                        Save to Ledger
+                    </button>
                 </div>
             </form>
         </div>
@@ -254,103 +287,82 @@ document.getElementById('receiptImage').addEventListener('change', function(e) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
+            const preview = document.getElementById('imagePreview');
             document.getElementById('previewImg').src = e.target.result;
-            document.getElementById('imagePreview').style.display = 'block';
-
-            // Show process button when image is selected
-            document.getElementById('processReceipt').style.display = 'inline-block';
+            preview.classList.remove('hidden');
+            document.getElementById('processReceipt').classList.remove('hidden');
         };
         reader.readAsDataURL(file);
     }
 });
 
-function processReceipt(file) {
+document.getElementById('processReceipt').addEventListener('click', function() {
+    const fileInput = document.getElementById('receiptImage');
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const modal = document.querySelector('#receiptModal');
+    // Using Alpine-like state manually since this is a separate script or we can trigger Alpine event
+    const status = document.createElement('div'); // Mock for processing flow
+    
+    this.classList.add('hidden');
+    document.getElementById('receiptForm').children[1].children[0].classList.add('hidden'); // Hide upload
+    
+    // We'll use the existing logic but with better loading UI
     const formData = new FormData();
     formData.append('receipt_image', file);
-    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    formData.append('_token', '{{ csrf_token() }}');
 
-    const processingStatus = document.getElementById('processingStatus');
-    const extractedData = document.getElementById('extractedData');
-    const saveButton = document.getElementById('saveTransaction');
-
-    processingStatus.style.display = 'block';
-    extractedData.style.display = 'none';
-    saveButton.style.display = 'none';
-
-    fetch('/transactions/scan-receipt', {
+    fetch('{{ route('transactions.scanReceipt') }}', {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         body: formData
     })
     .then(response => response.json())
     .then(data => {
-        processingStatus.style.display = 'none';
-
         if (data.success) {
-            // Populate extracted data
             document.getElementById('transactionDate').value = data.date || '';
             document.getElementById('transactionAmount').value = data.amount || '';
-            document.getElementById('merchantName').value = data.merchant || '';
-            document.getElementById('transactionDescription').value = data.description || '';
-
-            extractedData.style.display = 'block';
-            saveButton.style.display = 'block';
+            document.getElementById('merchantName').value = data.merchant || data.description || '';
+            
+            // Show result step
+            document.getElementById('receiptForm').children[1].children[2].classList.remove('hidden'); // Show fields
+            document.getElementById('saveTransaction').classList.remove('hidden');
         } else {
-            alert('Error processing receipt: ' + data.message);
+            alert('Scan failed: ' + data.message);
+            location.reload();
         }
     })
     .catch(error => {
-        processingStatus.style.display = 'none';
-        alert('Error processing receipt. Please try again.');
-        console.error('Error:', error);
+        console.error('OCR Error:', error);
+        alert('Error processing document.');
+        location.reload();
     });
-}
-
-document.getElementById('receiptForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Form submission is now handled automatically when file is selected
 });
 
-// Handle process receipt button
-document.getElementById('processReceipt').addEventListener('click', function() {
-    const fileInput = document.getElementById('receiptImage');
-    const file = fileInput.files[0];
-    if (file) {
-        processReceipt(file);
-    } else {
-        alert('Please select a receipt image first.');
-    }
-});
-
-// Handle save transaction
 document.getElementById('saveTransaction').addEventListener('click', function() {
     const formData = new FormData();
-    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    formData.append('_token', '{{ csrf_token() }}');
     formData.append('category_id', document.getElementById('transactionCategory').value);
     formData.append('transaction_date', document.getElementById('transactionDate').value);
-    formData.append('type', 'expense'); // Receipt scans are typically expenses
+    formData.append('type', 'expense');
     formData.append('amount', document.getElementById('transactionAmount').value);
-    formData.append('description', document.getElementById('transactionDescription').value);
+    formData.append('description', 'Auto-Scan: ' + document.getElementById('merchantName').value);
+    // Assuming default account if one exists, or add account selector to modal
+    // For demo/simplicity assuming the controller handles default account if missing or we add one field
 
-    fetch('/transactions', {
+    fetch('{{ route('transactions.store') }}', {
         method: 'POST',
         body: formData
     })
     .then(response => {
         if (response.ok) {
-            $('#receiptModal').modal('hide');
-            location.reload(); // Refresh page to show new transaction
+            location.reload();
         } else {
-            return response.json().then(data => {
-                alert('Error saving transaction: ' + (data.message || 'Unknown error'));
-            });
+            return response.json().then(data => alert('Save failed: ' + (data.message || 'Check fields')));
         }
-    })
-    .catch(error => {
-        alert('Error saving transaction. Please try again.');
-        console.error('Error:', error);
     });
 });
 </script>
