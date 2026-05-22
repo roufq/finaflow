@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Models\Scopes\UserScope;
+use App\Services\CsvParser;
+use App\Services\OfxParser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Http;
 
 class BankIntegration extends Model
 {
@@ -112,13 +115,70 @@ class BankIntegration extends Model
     }
 
     /**
-     * Sync via API (placeholder for actual bank API integration)
+     * Sync via API (Integration with Open Banking Aggregator - e.g. Brick)
      */
     private function syncViaApi(): array
     {
         \Log::info("API sync attempted for {$this->bank_name}");
 
-        return $this->generateSimulatedTransactions();
+        $clientId = config('services.brick.client_id');
+        $clientSecret = config('services.brick.client_secret');
+        $baseUrl = rtrim(config('services.brick.base_url', 'https://sandbox.onebrick.io'), '/');
+
+        // Jika API Key belum diisi di .env, kita kembalikan ke transaksi simulasi agar aplikasi tidak rusak
+        if (empty($clientId) || empty($clientSecret)) {
+            \Log::warning('Brick API keys not configured in .env. Falling back to simulated data.');
+
+            return $this->generateSimulatedTransactions();
+        }
+
+        $accessToken = $this->credentials['access_token'] ?? null;
+        if (! $accessToken) {
+            throw new \Exception('Access token bank tidak ditemukan (Atau Anda belum menghubungkan ulang bank anda lewat Widget API).');
+        }
+
+        $startDate = $this->last_sync_at ? $this->last_sync_at->format('Y-m-d') : now()->subDays(30)->format('Y-m-d');
+        $endDate = now()->format('Y-m-d');
+
+        try {
+            // Memanggil API Brick untuk mengambil list transaksi
+            $response = Http::withToken($clientSecret)
+                ->withHeaders([
+                    'X-Client-Id' => $clientId,
+                    'publicAccessToken' => 'Bearer '.$accessToken,
+                ])
+                ->timeout(30)
+                ->get($baseUrl.'/v1/transaction/list', [
+                    'from' => $startDate,
+                    'to' => $endDate,
+                ]);
+
+            if (! $response->successful()) {
+                throw new \Exception('Gagal terhubung ke gerbang bank API: '.$response->json('message', $response->body()));
+            }
+
+            $rawTransactions = $response->json('data') ?? [];
+            $mappedTransactions = [];
+
+            foreach ($rawTransactions as $trx) {
+                // Parsing data dari standar Brick ke standar database FinaFlow
+                $amount = (float) ($trx['amount'] ?? 0);
+                $type = (($trx['direction'] ?? 'out') === 'in') ? 'income' : 'expense';
+
+                $mappedTransactions[] = [
+                    'date' => date('Y-m-d', strtotime($trx['date'] ?? now())),
+                    'description' => $trx['description'] ?? 'Transaksi Bank',
+                    'amount' => $amount,
+                    'type' => $type,
+                ];
+            }
+
+            return $mappedTransactions;
+
+        } catch (\Exception $e) {
+            \Log::error('Bank API Fetch Error: '.$e->getMessage());
+            throw new \Exception('Koneksi API Gagal: '.$e->getMessage());
+        }
     }
 
     /**
@@ -132,7 +192,7 @@ class BankIntegration extends Model
             throw new \Exception('CSV file not found or not configured');
         }
 
-        $parser = app(\App\Services\CsvParser::class);
+        $parser = app(CsvParser::class);
         $result = $parser->parseFile(storage_path('app/'.$csvPath));
 
         if (! $result['success']) {
@@ -158,7 +218,7 @@ class BankIntegration extends Model
             throw new \Exception('Unable to read OFX file');
         }
 
-        $parser = app(\App\Services\OfxParser::class);
+        $parser = app(OfxParser::class);
         $result = $parser->parse($ofxContent);
 
         if (! empty($result['errors'])) {

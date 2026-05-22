@@ -218,6 +218,12 @@
                                     <span>Telegram Assistant</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('email-sources.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all hover:bg-slate-50 {{ request()->routeIs('email-sources.*') ? 'sidebar-item-active shadow-sm' : 'text-slate-600' }}">
+                                    <i class="fas fa-envelope-open-text w-5 opacity-70"></i>
+                                    <span>Email Parser</span>
+                                </a>
+                            </li>
                             @endcan
                         </ul>
                     </div>

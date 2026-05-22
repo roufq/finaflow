@@ -20,31 +20,43 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<void> _fetchTransactions() async {
     setState(() => _isLoading = true);
-    final data = await ApiService.getTransactions();
-    setState(() {
-      _transactions = data;
-      _isLoading = false;
-    });
+    try {
+      final data = await ApiService.getTransactions();
+      setState(() { _transactions = data; _isLoading = false; });
+    } catch (e) {
+      setState(() => _isLoading = false);
+    }
   }
 
-  void _deleteTransaction(int id) async {
-    final success = await ApiService.deleteTransaction(id);
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Transaksi dihapus')));
-      _fetchTransactions();
-    }
+  void _confirmDelete(int id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Hapus Transaksi?'),
+        content: const Text('Data yang dihapus tidak bisa dikembalikan.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(onPressed: () async {
+            Navigator.pop(context);
+            final success = await ApiService.deleteTransaction(id);
+            if (success) _fetchTransactions();
+          }, child: const Text('Hapus', style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FE),
       appBar: AppBar(title: const Text('Riwayat Transaksi', style: TextStyle(fontWeight: FontWeight.bold))),
       body: RefreshIndicator(
         onRefresh: _fetchTransactions,
         child: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _transactions.isEmpty
-            ? const Center(child: Text('Belum ada transaksi'))
+            ? ListView(children: const [SizedBox(height: 100), Center(child: Text('Belum ada transaksi'))])
             : ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: _transactions.length,
@@ -52,16 +64,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   final tx = _transactions[index];
                   final isIncome = tx['type'] == 'income';
                   return Card(
+                    elevation: 0,
                     margin: const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.grey[200]!)),
                     child: ListTile(
-                      leading: Icon(isIncome ? Icons.download : Icons.upload, color: isIncome ? Colors.green : Colors.red),
-                      title: Text(tx['description'] ?? 'Tanpa Keterangan'),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      leading: Icon(isIncome ? Icons.add_circle_outline : Icons.remove_circle_outline, color: isIncome ? Colors.green : Colors.red),
+                      title: Text(tx['description'] ?? 'Transaksi', style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text('${tx['category']['name']} • ${tx['transaction_date']}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(currencyFormat.format(tx['amount']), style: TextStyle(color: isIncome ? Colors.green : Colors.red, fontWeight: FontWeight.bold)),
-                          IconButton(icon: const Icon(Icons.delete_outline, size: 20), onPressed: () => _deleteTransaction(tx['id'])),
+                          const SizedBox(width: 8),
+                          IconButton(icon: const Icon(Icons.close, size: 18, color: Colors.grey), onPressed: () => _confirmDelete(tx['id'])),
                         ],
                       ),
                     ),

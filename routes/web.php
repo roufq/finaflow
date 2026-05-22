@@ -195,6 +195,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/integrations/telegram-bot/disconnect', [IntegrationToolController::class, 'disconnect'])->name('integrations.telegram-bot.disconnect');
         Route::get('/integrations/reminders', [IntegrationToolController::class, 'reminders'])->name('integrations.reminders');
         Route::post('/integrations/reminders', [IntegrationToolController::class, 'storeReminder'])->name('integrations.reminders.store');
+
+        Route::resource('email-sources', \App\Http\Controllers\EmailSourceController::class)->only(['index', 'store', 'destroy']);
+        Route::post('email-sources/{emailSource}/toggle', [\App\Http\Controllers\EmailSourceController::class, 'toggle'])->name('email-sources.toggle');
     });
 
     // Family Finance Routes

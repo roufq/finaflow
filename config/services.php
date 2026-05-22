@@ -51,4 +51,10 @@ return [
         'base_url' => env('TELEGRAM_BASE_URL', 'https://api.telegram.org'),
     ],
 
+    'brick' => [
+        'client_id' => env('BRICK_CLIENT_ID'),
+        'client_secret' => env('BRICK_CLIENT_SECRET'),
+        'base_url' => env('BRICK_BASE_URL', 'https://sandbox.onebrick.io'),
+    ],
+
 ];
