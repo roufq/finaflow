@@ -30,11 +30,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if ($this->app->environment('production')) {
-            DB::whenQueryingForLongerThan(self::SLOW_QUERY_THRESHOLD_MS, function (string $connection, QueryExecuted $event) {
+            DB::whenQueryingForLongerThan(self::SLOW_QUERY_THRESHOLD_MS, function ($connection, QueryExecuted $event) {
                 \Log::channel('daily')->warning('Slow query detected', [
                     'sql' => $event->sql,
                     'time_ms' => $event->time,
-                    'connection' => $connection,
+                    'connection' => $connection->getName(),
                     'bindings' => $event->bindings,
                 ]);
             });
