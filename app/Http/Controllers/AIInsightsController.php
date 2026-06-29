@@ -242,8 +242,19 @@ class AIInsightsController extends Controller
         }
 
         // Create anomalies
-        foreach ($anomalies as $anomaly) {
-            Anomaly::create(array_merge($anomaly, ['user_id' => $userId]));
+        foreach ($anomalies as $anomalyData) {
+            $anomaly = Anomaly::create(array_merge($anomalyData, ['user_id' => $userId]));
+            
+            // Notify user
+            $user = \App\Models\User::find($userId);
+            if ($user) {
+                $user->notify(new \App\Notifications\SystemAlertNotification(
+                    'Anomali Pengeluaran',
+                    $anomalyData['description'],
+                    $anomalyData['severity'] > 1 ? 'warning' : 'info',
+                    route('insights.anomalies')
+                ));
+            }
         }
     }
 

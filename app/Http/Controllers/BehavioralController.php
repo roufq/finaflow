@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SpendingTrigger;
-use App\Models\Habit;
 use App\Models\FinancialPersonality;
 use App\Models\Gamification;
+use App\Models\Habit;
+use App\Models\SpendingTrigger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +26,7 @@ class BehavioralController extends Controller
     public function triggers()
     {
         $triggers = SpendingTrigger::where('user_id', Auth::id())->get();
+
         return view('behavioral.triggers', compact('triggers'));
     }
 
@@ -56,6 +57,7 @@ class BehavioralController extends Controller
     public function habits()
     {
         $habits = Habit::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+
         return view('behavioral.habits', compact('habits'));
     }
 
@@ -101,6 +103,7 @@ class BehavioralController extends Controller
     public function personality()
     {
         $personality = FinancialPersonality::where('user_id', Auth::id())->latest()->first();
+
         return view('behavioral.personality', compact('personality'));
     }
 
@@ -136,7 +139,25 @@ class BehavioralController extends Controller
     public function gamification()
     {
         $gamification = Gamification::where('user_id', Auth::id())->first();
+
         return view('behavioral.gamification', compact('gamification'));
+    }
+
+    public function initializeGamification()
+    {
+        Gamification::firstOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'points' => 0,
+                'level' => 1,
+                'badges' => [],
+                'achievements' => [],
+                'activity_log' => [],
+                'streak_days' => 0,
+            ]
+        );
+
+        return redirect()->route('behavioral.gamification')->with('success', 'Gamification initialized successfully!');
     }
 
     private function generateRecommendations(string $personalityType): array

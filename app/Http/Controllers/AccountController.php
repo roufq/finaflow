@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,8 +21,8 @@ class AccountController extends Controller
             ->orderBy('name')
             ->get();
 
-        $primarySetting = \App\Models\Setting::where('user_id', Auth::id())->where('is_default', true)->first()
-            ?? \App\Models\Setting::where('user_id', Auth::id())->first();
+        $primarySetting = Setting::where('user_id', Auth::id())->where('is_default', true)->first()
+            ?? Setting::where('user_id', Auth::id())->first();
         $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
 
         $totalBalance = $accounts->sum(function ($account) use ($primarySetting) {
@@ -53,7 +54,7 @@ class AccountController extends Controller
             'savings' => 'Savings Account',
         ];
 
-        $settings = \App\Models\Setting::where('user_id', Auth::id())->get();
+        $settings = Setting::where('user_id', Auth::id())->get();
 
         return view('accounts.create', compact('accountTypes', 'settings'));
     }
@@ -132,7 +133,7 @@ class AccountController extends Controller
             'savings' => 'Savings Account',
         ];
 
-        $settings = \App\Models\Setting::where('user_id', Auth::id())->get();
+        $settings = Setting::where('user_id', Auth::id())->get();
 
         return view('accounts.edit', compact('account', 'accountTypes', 'settings'));
     }

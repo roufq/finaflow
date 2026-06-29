@@ -38,6 +38,7 @@ class ScheduleBankSyncs extends Command
 
         if ($integrations->isEmpty()) {
             $this->info('No active bank integrations found.');
+
             return;
         }
 

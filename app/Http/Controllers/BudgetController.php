@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Category;
+use App\Models\Setting;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +23,8 @@ class BudgetController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $primarySetting = \App\Models\Setting::where('user_id', Auth::id())->where('is_default', true)->first()
-            ?? \App\Models\Setting::where('user_id', Auth::id())->first();
+        $primarySetting = Setting::where('user_id', Auth::id())->where('is_default', true)->first()
+            ?? Setting::where('user_id', Auth::id())->first();
         $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
 
         return view('budgets.index', compact('budgets', 'currencySymbol'));

@@ -37,12 +37,12 @@ class TestScanReceipt extends Command
 
         // Check route list
         $this->info('Available transaction routes:');
-        $routes = collect(Route::getRoutes())->filter(function($route) {
+        $routes = collect(Route::getRoutes())->filter(function ($route) {
             return str_contains($route->uri(), 'transactions');
         });
 
         foreach ($routes as $route) {
-            $this->line('  ' . $route->methods()[0] . ' ' . $route->uri() . ' -> ' . $route->getActionName());
+            $this->line('  '.$route->methods()[0].' '.$route->uri().' -> '.$route->getActionName());
         }
 
         $this->info('Test completed.');

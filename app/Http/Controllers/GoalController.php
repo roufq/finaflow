@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Goal;
-use App\Models\GoalProgress;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
 
 class GoalController extends Controller
 {
@@ -81,6 +80,7 @@ class GoalController extends Controller
     public function edit(Goal $goal)
     {
         $this->authorize('update', $goal);
+
         return view('goals.edit', compact('goal'));
     }
 
@@ -104,7 +104,7 @@ class GoalController extends Controller
 
         $goal->update($request->only([
             'name', 'description', 'category', 'type',
-            'target_amount', 'current_amount', 'target_date', 'status'
+            'target_amount', 'current_amount', 'target_date', 'status',
         ]));
 
         return redirect()->route('goals.index')->with('success', 'Goal updated successfully!');

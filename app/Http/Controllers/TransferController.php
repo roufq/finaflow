@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transfer;
 use App\Models\Account;
+use App\Models\Transfer;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TransferController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -72,7 +73,7 @@ class TransferController extends Controller
                 ->withErrors(['amount' => 'Saldo akun pengirim tidak mencukupi.']);
         }
 
-        DB::transaction(function () use ($validated, $fromAccount, $toAccount) {
+        DB::transaction(function () use ($validated) {
             $transfer = Transfer::create($validated);
             $transfer->processTransfer();
         });
@@ -168,7 +169,7 @@ class TransferController extends Controller
         $this->authorize('delete', $transfer);
 
         // Only allow deleting pending or failed transfers
-        if (!in_array($transfer->status, ['pending', 'failed'])) {
+        if (! in_array($transfer->status, ['pending', 'failed'])) {
             return redirect()->route('transfers.index')
                 ->with('error', 'Hanya transfer dengan status pending atau failed yang dapat dihapus.');
         }

@@ -14,6 +14,7 @@ class AutomationController extends Controller
     public function index()
     {
         $automations = Automation::where('user_id', Auth::id())->get();
+
         return view('automations.index', compact('automations'));
     }
 
@@ -61,6 +62,7 @@ class AutomationController extends Controller
     public function show(Automation $automation)
     {
         $this->authorize('view', $automation);
+
         return view('automations.show', compact('automation'));
     }
 
@@ -70,6 +72,7 @@ class AutomationController extends Controller
     public function edit(Automation $automation)
     {
         $this->authorize('update', $automation);
+
         return view('automations.edit', compact('automation'));
     }
 
@@ -119,7 +122,7 @@ class AutomationController extends Controller
     {
         $this->authorize('view', $automation);
 
-        if (!$automation->is_active) {
+        if (! $automation->is_active) {
             return response()->json(['error' => 'Automation is not active'], 400);
         }
 
@@ -130,12 +133,12 @@ class AutomationController extends Controller
             return response()->json([
                 'success' => true,
                 'results' => $results,
-                'message' => 'Automation executed successfully'
+                'message' => 'Automation executed successfully',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Failed to execute automation: ' . $e->getMessage()
+                'error' => 'Failed to execute automation: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -147,12 +150,12 @@ class AutomationController extends Controller
     {
         $this->authorize('update', $automation);
 
-        $automation->update(['is_active' => !$automation->is_active]);
+        $automation->update(['is_active' => ! $automation->is_active]);
 
         return response()->json([
             'success' => true,
             'is_active' => $automation->is_active,
-            'message' => 'Automation ' . ($automation->is_active ? 'activated' : 'deactivated')
+            'message' => 'Automation '.($automation->is_active ? 'activated' : 'deactivated'),
         ]);
     }
 

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\UserPrivacySetting;
+use Illuminate\Database\Seeder;
 
 class PrivacySettingsSeeder extends Seeder
 {
@@ -29,8 +28,8 @@ class PrivacySettingsSeeder extends Seeder
                     'custom_settings' => json_encode([
                         'marketing_emails' => false,
                         'survey_participation' => false,
-                        'data_retention_years' => 7
-                    ])
+                        'data_retention_years' => 7,
+                    ]),
                 ]
             );
         }

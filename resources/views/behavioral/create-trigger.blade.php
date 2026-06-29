@@ -1,97 +1,134 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<div class="w-full">
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ __('behavioral.triggers.create_title') }}</h1>
+    <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div class="flex items-center gap-4">
+            <a href="{{ route('behavioral.triggers') }}" class="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-premium ring-1 ring-slate-200 transition-all hover:bg-slate-50">
+                <i class="fas fa-arrow-left mr-2 text-slate-400"></i>
+                Back
+            </a>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">{{ __('behavioral.triggers.create_title') ?? 'Add New Trigger' }}</h1>
+        </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('behavioral.triggers.trigger_details') }}</h6>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('behavioral.triggers.store') }}">
-                        @csrf
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Form Section -->
+        <div class="lg:col-span-2">
+            <div class="rounded-3xl bg-white p-6 shadow-premium ring-1 ring-slate-100">
+                <h2 class="text-lg font-bold text-slate-900 mb-6">{{ __('behavioral.triggers.trigger_details') ?? 'Trigger Details' }}</h2>
+                
+                <form method="POST" action="{{ route('behavioral.triggers.store') }}">
+                    @csrf
 
-                        <div class="form-group">
-                            @php
-                                $triggerOptions = [
-                                    'emotional' => __('behavioral.triggers.emotional'),
-                                    'social' => __('behavioral.triggers.social_pressure'),
-                                    'impulse' => __('behavioral.triggers.impulse_buying'),
-                                    'reward' => __('behavioral.triggers.reward_shopping'),
-                                    'boredom' => __('behavioral.triggers.boredom_shopping'),
-                                    'stress' => __('behavioral.triggers.stress_relief'),
-                                    'other' => __('behavioral.triggers.other'),
-                                ];
-                            @endphp
-                            <label for="trigger_type">{{ __('behavioral.triggers.trigger_type') }}</label>
-                            <select class="form-control @error('trigger_type') is-invalid @enderror" id="trigger_type" name="trigger_type" required>
-                                <option value="">{{ __('behavioral.triggers.select_trigger_type') }}</option>
-                                @foreach ($triggerOptions as $value => $label)
-                                    <option value="{{ $value }}" {{ old('trigger_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                            @error('trigger_type')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <div class="mb-5">
+                        @php
+                            $triggerOptions = [
+                                'emotional' => __('behavioral.triggers.emotional') ?? 'Emotional',
+                                'social' => __('behavioral.triggers.social_pressure') ?? 'Social Pressure',
+                                'impulse' => __('behavioral.triggers.impulse_buying') ?? 'Impulse Buying',
+                                'reward' => __('behavioral.triggers.reward_shopping') ?? 'Reward Shopping',
+                                'boredom' => __('behavioral.triggers.boredom_shopping') ?? 'Boredom',
+                                'stress' => __('behavioral.triggers.stress_relief') ?? 'Stress Relief',
+                                'other' => __('behavioral.triggers.other') ?? 'Other',
+                            ];
+                        @endphp
+                        <label for="trigger_type" class="block text-sm font-bold text-slate-700">{{ __('behavioral.triggers.trigger_type') ?? 'Trigger Type' }}</label>
+                        <select id="trigger_type" name="trigger_type" required 
+                                class="mt-2 block w-full rounded-xl border-0 py-3 px-4 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6 @error('trigger_type') ring-red-500 focus:ring-red-500 @enderror">
+                            <option value="">{{ __('behavioral.triggers.select_trigger_type') ?? 'Select Trigger Type' }}</option>
+                            @foreach ($triggerOptions as $value => $label)
+                                <option value="{{ $value }}" {{ old('trigger_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('trigger_type')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                        <div class="form-group">
-                            <label for="description">{{ __('behavioral.triggers.description') }}</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" placeholder="{{ __('behavioral.triggers.describe_trigger') }}" required>{{ old('description') }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <div class="mb-5">
+                        <label for="description" class="block text-sm font-bold text-slate-700">{{ __('behavioral.triggers.description') ?? 'Description' }}</label>
+                        <textarea id="description" name="description" rows="3" required placeholder="{{ __('behavioral.triggers.describe_trigger') ?? 'Describe when and why this occurs...' }}" 
+                                  class="mt-2 block w-full rounded-xl border-0 py-3 px-4 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6 custom-scrollbar @error('description') ring-red-500 focus:ring-red-500 @enderror">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                        <div class="form-group">
-                            <label for="amount_threshold">{{ __('behavioral.triggers.amount_threshold') }}</label>
-                            <input type="number" class="form-control @error('amount_threshold') is-invalid @enderror" id="amount_threshold" name="amount_threshold" value="{{ old('amount_threshold') }}" placeholder="{{ __('behavioral.triggers.minimum_amount') }}" required>
-                            @error('amount_threshold')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <div class="mb-5">
+                        <label for="amount_threshold" class="block text-sm font-bold text-slate-700">{{ __('behavioral.triggers.amount_threshold') ?? 'Amount Threshold (Rp)' }}</label>
+                        <input type="number" id="amount_threshold" name="amount_threshold" value="{{ old('amount_threshold') }}" required placeholder="{{ __('behavioral.triggers.minimum_amount') ?? 'Minimum amount that triggers this' }}" 
+                               class="mt-2 block w-full rounded-xl border-0 py-3 px-4 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6 @error('amount_threshold') ring-red-500 focus:ring-red-500 @enderror">
+                        @error('amount_threshold')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                        <div class="form-group">
-                            <label for="frequency">{{ __('behavioral.triggers.initial_frequency') }}</label>
-                            <input type="number" class="form-control @error('frequency') is-invalid @enderror" id="frequency" name="frequency" value="{{ old('frequency', 1) }}" min="1" required>
-                            @error('frequency')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <div class="mb-8">
+                        <label for="frequency" class="block text-sm font-bold text-slate-700">{{ __('behavioral.triggers.initial_frequency') ?? 'Initial Frequency' }}</label>
+                        <input type="number" id="frequency" name="frequency" value="{{ old('frequency', 1) }}" min="1" required 
+                               class="mt-2 block w-full rounded-xl border-0 py-3 px-4 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm sm:leading-6 @error('frequency') ring-red-500 focus:ring-red-500 @enderror">
+                        @error('frequency')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                        <button type="submit" class="btn btn-primary">{{ __('behavioral.triggers.save_trigger') }}</button>
-                        <a href="{{ route('behavioral.triggers') }}" class="btn btn-secondary">{{ __('behavioral.triggers.cancel') }}</a>
-                    </form>
-                </div>
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+                        <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-500 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-primary-600 hover:shadow active:scale-95">
+                            {{ __('behavioral.triggers.save_trigger') ?? 'Save Trigger' }}
+                        </button>
+                        <a href="{{ route('behavioral.triggers') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-2.5 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition-all hover:bg-slate-50 active:scale-95">
+                            {{ __('behavioral.triggers.cancel') ?? 'Cancel' }}
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">{{ __('behavioral.triggers.help') }}</h6>
+        <!-- Help Section -->
+        <div class="lg:col-span-1">
+            <div class="rounded-3xl bg-slate-50 p-6 shadow-inner ring-1 ring-slate-200/60">
+                <div class="mb-4 flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary-500 shadow-sm">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">{{ __('behavioral.triggers.help') ?? 'Help' }}</h3>
                 </div>
-                <div class="card-body">
-                    <h6>{{ __('behavioral.triggers.what_is_trigger') }}</h6>
-                    <p class="small">{{ __('behavioral.triggers.trigger_explanation') }}</p>
+                
+                <div class="space-y-6 text-sm text-slate-600">
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-1">{{ __('behavioral.triggers.what_is_trigger') ?? 'What is a Spending Trigger?' }}</h4>
+                        <p class="leading-relaxed">{{ __('behavioral.triggers.trigger_explanation') ?? 'A spending trigger is a situation, emotion, or circumstance that prompts you to make unplanned purchases.' }}</p>
+                    </div>
 
-                    <h6>{{ __('behavioral.triggers.common_examples') }}</h6>
-                    <ul class="small">
-                        <li><strong>{{ __('behavioral.triggers.emotional') }}:</strong> {{ __('behavioral.insights.emotional_desc') }}</li>
-                        <li><strong>{{ __('behavioral.triggers.social_pressure') }}:</strong> {{ __('behavioral.insights.social_desc') }}</li>
-                        <li><strong>{{ __('behavioral.triggers.impulse_buying') }}:</strong> {{ __('behavioral.insights.impulse_desc') }}</li>
-                        <li><strong>{{ __('behavioral.triggers.reward_shopping') }}:</strong> {{ __('behavioral.insights.reward_desc') }}</li>
-                    </ul>
+                    <div>
+                        <h4 class="font-bold text-slate-900 mb-2">{{ __('behavioral.triggers.common_examples') ?? 'Common Examples:' }}</h4>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-[6px] text-primary-400 mt-2 shrink-0"></i>
+                                <span><strong class="text-slate-800">{{ __('behavioral.triggers.emotional') ?? 'Emotional Spending' }}:</strong> {{ __('behavioral.insights.emotional_desc') ?? 'Shopping when stressed or bored.' }}</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-[6px] text-primary-400 mt-2 shrink-0"></i>
+                                <span><strong class="text-slate-800">{{ __('behavioral.triggers.social_pressure') ?? 'Social Pressure' }}:</strong> {{ __('behavioral.insights.social_desc') ?? 'Keeping up with friends or family.' }}</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-[6px] text-primary-400 mt-2 shrink-0"></i>
+                                <span><strong class="text-slate-800">{{ __('behavioral.triggers.impulse_buying') ?? 'Impulse Buying' }}:</strong> {{ __('behavioral.insights.impulse_desc') ?? 'Online shopping temptations.' }}</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fas fa-circle text-[6px] text-primary-400 mt-2 shrink-0"></i>
+                                <span><strong class="text-slate-800">{{ __('behavioral.triggers.reward_shopping') ?? 'Reward Shopping' }}:</strong> {{ __('behavioral.insights.reward_desc') ?? 'Treating yourself after achievements.' }}</span>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <h6>{{ __('behavioral.triggers.why_track') }}</h6>
-                    <p class="small">{{ __('behavioral.triggers.why_track_description') }}</p>
+                    <div class="pt-4 border-t border-slate-200/60">
+                        <h4 class="font-bold text-slate-900 mb-1">{{ __('behavioral.triggers.why_track') ?? 'Why Track Triggers?' }}</h4>
+                        <p class="leading-relaxed">{{ __('behavioral.triggers.why_track_description') ?? 'By identifying your spending triggers, you can develop strategies to avoid or manage them effectively.' }}</p>
+                    </div>
                 </div>
             </div>
         </div>

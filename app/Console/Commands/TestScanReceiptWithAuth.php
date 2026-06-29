@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Console\Command;
 
 class TestScanReceiptWithAuth extends Command
 {
@@ -37,16 +35,17 @@ class TestScanReceiptWithAuth extends Command
         $tempPath = storage_path('app/test-receipt.png');
         file_put_contents($tempPath, $testImageContent);
 
-        $this->info('Created test image at: ' . $tempPath);
+        $this->info('Created test image at: '.$tempPath);
 
         // Get the first user for testing
         $user = User::first();
-        if (!$user) {
+        if (! $user) {
             $this->error('No users found in database. Please run php artisan db:seed first.');
+
             return;
         }
 
-        $this->info('Using user: ' . $user->email);
+        $this->info('Using user: '.$user->email);
 
         // Simulate authentication by setting session
         // This is a simplified test - in real scenario you'd need proper session handling
@@ -61,7 +60,7 @@ class TestScanReceiptWithAuth extends Command
         $this->info('Sample curl command:');
         $this->line('curl -X POST http://127.0.0.1:8000/transactions/scan-receipt \\');
         $this->line('  -H "Accept: application/json" \\');
-        $this->line('  -F "receipt_image=@' . $tempPath . '" \\');
+        $this->line('  -F "receipt_image=@'.$tempPath.'" \\');
         $this->line('  -b "laravel_session=YOUR_SESSION_COOKIE_HERE"');
 
         // Clean up

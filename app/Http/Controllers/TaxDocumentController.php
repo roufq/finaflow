@@ -12,6 +12,7 @@ class TaxDocumentController extends Controller
     public function index()
     {
         $documents = TaxDocument::orderBy('year', 'desc')->orderBy('created_at', 'desc')->get();
+
         return view('tax-documents.index', compact('documents'));
     }
 
@@ -24,7 +25,7 @@ class TaxDocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'year' => 'required|integer|min:2000|max:' . (now()->year + 1),
+            'year' => 'required|integer|min:2000|max:'.(now()->year + 1),
             'category' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
             'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -58,7 +59,7 @@ class TaxDocumentController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'year' => 'required|integer|min:2000|max:' . (now()->year + 1),
+            'year' => 'required|integer|min:2000|max:'.(now()->year + 1),
             'category' => 'nullable|string|max:100',
             'notes' => 'nullable|string',
             'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
@@ -90,4 +91,3 @@ class TaxDocumentController extends Controller
         return redirect()->route('tax-documents.index')->with('success', 'Tax document deleted successfully.');
     }
 }
-

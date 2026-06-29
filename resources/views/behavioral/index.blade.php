@@ -79,21 +79,21 @@
 
     <!-- Quick Action Bar -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <a href="{{ route('behavioral.triggers.create') }}" class="group flex items-center justify-between p-4 rounded-2xl bg-white shadow-premium ring-1 ring-slate-100 hover:ring-primary-500/30 transition-all">
+        <a href="{{ route('behavioral.triggers') }}" class="group flex items-center justify-between p-4 rounded-2xl bg-white shadow-premium ring-1 ring-slate-100 hover:ring-primary-500/30 transition-all">
             <div class="flex items-center gap-3">
                 <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-bolt"></i>
                 </div>
-                <span class="text-xs font-bold text-slate-700">Add Trigger</span>
+                <span class="text-xs font-bold text-slate-700">My Triggers</span>
             </div>
             <i class="fas fa-chevron-right text-[10px] text-slate-300"></i>
         </a>
-        <a href="{{ route('behavioral.habits.create') }}" class="group flex items-center justify-between p-4 rounded-2xl bg-white shadow-premium ring-1 ring-slate-100 hover:ring-primary-500/30 transition-all">
+        <a href="{{ route('behavioral.habits') }}" class="group flex items-center justify-between p-4 rounded-2xl bg-white shadow-premium ring-1 ring-slate-100 hover:ring-primary-500/30 transition-all">
             <div class="flex items-center gap-3">
                 <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-leaf"></i>
                 </div>
-                <span class="text-xs font-bold text-slate-700">New Habit</span>
+                <span class="text-xs font-bold text-slate-700">My Habits</span>
             </div>
             <i class="fas fa-chevron-right text-[10px] text-slate-300"></i>
         </a>

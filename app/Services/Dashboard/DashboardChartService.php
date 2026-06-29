@@ -2,6 +2,7 @@
 
 namespace App\Services\Dashboard;
 
+use App\Models\Setting;
 use Carbon\Carbon;
 
 class DashboardChartService
@@ -39,8 +40,8 @@ class DashboardChartService
         $recentTransactions = $this->dataService->getRecentTransactions($userId);
 
         // Multi-currency: Get the primary symbol
-        $primarySetting = \App\Models\Setting::where('user_id', $userId)->where('is_default', true)->first()
-            ?? \App\Models\Setting::where('user_id', $userId)->first();
+        $primarySetting = Setting::where('user_id', $userId)->where('is_default', true)->first()
+            ?? Setting::where('user_id', $userId)->first();
         $currencySymbol = $primarySetting->currency_symbol ?? 'Rp';
 
         // Previous month's health metrics for trend comparison

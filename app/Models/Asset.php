@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Asset extends Model
 {
-    use \App\Models\Scopes\UserScope;
+    use UserScope;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 

@@ -3,22 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TagController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $tags = Tag::where('user_id', Auth::id())
-                   ->orderBy('name')
-                   ->get();
+            ->orderBy('name')
+            ->get();
 
         return view('tags.index', compact('tags'));
     }
@@ -57,7 +58,7 @@ class TagController extends Controller
         ]);
 
         return redirect()->route('tags.index')
-                        ->with('success', 'Tag berhasil dibuat.');
+            ->with('success', 'Tag berhasil dibuat.');
     }
 
     /**
@@ -68,9 +69,9 @@ class TagController extends Controller
         $this->authorize('view', $tag);
 
         $transactions = $tag->transactions()
-                           ->with(['category', 'account'])
-                           ->latest('transaction_date')
-                           ->paginate(15);
+            ->with(['category', 'account'])
+            ->latest('transaction_date')
+            ->paginate(15);
 
         return view('tags.show', compact('tag', 'transactions'));
     }
@@ -99,7 +100,7 @@ class TagController extends Controller
                 'max:255',
                 Rule::unique('tags')->where(function ($query) use ($tag) {
                     return $query->where('user_id', Auth::id())
-                               ->where('id', '!=', $tag->id);
+                        ->where('id', '!=', $tag->id);
                 }),
             ],
             'color' => 'nullable|string|regex:/^#[a-fA-F0-9]{6}$/',
@@ -113,7 +114,7 @@ class TagController extends Controller
         ]);
 
         return redirect()->route('tags.index')
-                        ->with('success', 'Tag berhasil diperbarui.');
+            ->with('success', 'Tag berhasil diperbarui.');
     }
 
     /**
@@ -126,12 +127,12 @@ class TagController extends Controller
         // Check if tag is being used by transactions
         if ($tag->transactions()->count() > 0) {
             return redirect()->route('tags.index')
-                           ->with('error', 'Tag tidak dapat dihapus karena masih digunakan oleh transaksi.');
+                ->with('error', 'Tag tidak dapat dihapus karena masih digunakan oleh transaksi.');
         }
 
         $tag->delete();
 
         return redirect()->route('tags.index')
-                        ->with('success', 'Tag berhasil dihapus.');
+            ->with('success', 'Tag berhasil dihapus.');
     }
 }

@@ -15,7 +15,7 @@ class PrivacyController extends Controller
     {
         $privacySettings = UserPrivacySetting::where('user_id', Auth::id())->first();
 
-        if (!$privacySettings) {
+        if (! $privacySettings) {
             // Create default privacy settings for the user
             $privacySettings = UserPrivacySetting::create([
                 'user_id' => Auth::id(),
@@ -119,7 +119,7 @@ class PrivacyController extends Controller
         ];
 
         return response()->json($data, 200, [
-            'Content-Disposition' => 'attachment; filename="user-data-export.json"'
+            'Content-Disposition' => 'attachment; filename="user-data-export.json"',
         ]);
     }
 }

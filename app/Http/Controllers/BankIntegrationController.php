@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBankIntegrationRequest;
 use App\Http\Requests\UpdateBankIntegrationRequest;
 use App\Models\BankIntegration;
 use App\Services\EventTracker;
+use App\Services\OfxParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -210,7 +211,7 @@ class BankIntegrationController extends Controller
 
             // Parse and validate the OFX file
             $ofxContent = file_get_contents(storage_path('app/'.$filePath));
-            $parser = app(\App\Services\OfxParser::class);
+            $parser = app(OfxParser::class);
             $result = $parser->parse($ofxContent);
 
             return response()->json([

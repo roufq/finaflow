@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\User;
 use App\Models\Category;
+use App\Models\User;
+use Illuminate\Console\Command;
 
 class DebugSeeder extends Command
 {
@@ -56,11 +56,11 @@ class DebugSeeder extends Command
             $transport = $categories->where('name', 'Transportation')->first();
             $entertainment = $categories->where('name', 'Entertainment')->first();
 
-            $this->line("  Salary: " . ($salary ? "Found (ID: {$salary->id})" : "NOT FOUND"));
-            $this->line("  Freelance: " . ($freelance ? "Found (ID: {$freelance->id})" : "NOT FOUND"));
-            $this->line("  Food & Dining: " . ($food ? "Found (ID: {$food->id})" : "NOT FOUND"));
-            $this->line("  Transportation: " . ($transport ? "Found (ID: {$transport->id})" : "NOT FOUND"));
-            $this->line("  Entertainment: " . ($entertainment ? "Found (ID: {$entertainment->id})" : "NOT FOUND"));
+            $this->line('  Salary: '.($salary ? "Found (ID: {$salary->id})" : 'NOT FOUND'));
+            $this->line('  Freelance: '.($freelance ? "Found (ID: {$freelance->id})" : 'NOT FOUND'));
+            $this->line('  Food & Dining: '.($food ? "Found (ID: {$food->id})" : 'NOT FOUND'));
+            $this->line('  Transportation: '.($transport ? "Found (ID: {$transport->id})" : 'NOT FOUND'));
+            $this->line('  Entertainment: '.($entertainment ? "Found (ID: {$entertainment->id})" : 'NOT FOUND'));
         }
 
         $this->info('Debug completed.');

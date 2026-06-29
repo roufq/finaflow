@@ -12,14 +12,14 @@ class SetLocale
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $availableLocales = config('app.available_locales', ['en', 'id']);
         $locale = $request->query('lang', session('locale', config('app.locale')));
 
-        if (!in_array($locale, $availableLocales, true)) {
+        if (! in_array($locale, $availableLocales, true)) {
             $locale = config('app.fallback_locale', 'en');
         }
 

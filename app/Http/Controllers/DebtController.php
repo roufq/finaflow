@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Debt;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DebtController extends Controller
 {
@@ -73,6 +73,7 @@ class DebtController extends Controller
     public function show(Debt $debt)
     {
         $this->authorize('view', $debt);
+
         return view('debts.show', compact('debt'));
     }
 
@@ -82,6 +83,7 @@ class DebtController extends Controller
     public function edit(Debt $debt)
     {
         $this->authorize('update', $debt);
+
         return view('debts.edit', compact('debt'));
     }
 
@@ -109,7 +111,7 @@ class DebtController extends Controller
         $debt->update($request->only([
             'name', 'description', 'type', 'lender', 'original_amount',
             'current_balance', 'interest_rate', 'minimum_payment', 'due_date',
-            'status', 'payoff_strategy'
+            'status', 'payoff_strategy',
         ]));
 
         return redirect()->route('debts.index')->with('success', 'Debt updated successfully!');
@@ -142,7 +144,7 @@ class DebtController extends Controller
         return response()->json([
             'success' => true,
             'payoff_progress' => $debt->payoff_progress,
-            'remaining_balance' => $debt->current_balance
+            'remaining_balance' => $debt->current_balance,
         ]);
     }
 
@@ -171,7 +173,7 @@ class DebtController extends Controller
         $this->authorize('update', $debt);
 
         $request->validate([
-            'payment_amount' => 'required|numeric|min:0|max:' . $debt->current_balance,
+            'payment_amount' => 'required|numeric|min:0|max:'.$debt->current_balance,
             'payment_date' => 'required|date',
             'notes' => 'nullable|string|max:255',
         ]);

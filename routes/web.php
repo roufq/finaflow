@@ -1,42 +1,57 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\Admin\EducationAdminController;
+use App\Http\Controllers\Admin\EducationCategoryAdminController;
+use App\Http\Controllers\Admin\FinancialNewsAdminController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AIInsightsController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\ApiIntegrationController;
+use App\Http\Controllers\AssetController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AutomationController;
 use App\Http\Controllers\BankIntegrationController;
 use App\Http\Controllers\BehavioralController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryReportController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DebtController;
 use App\Http\Controllers\EducationController;
+use App\Http\Controllers\EmailSourceController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\FinancialCoachingController;
+use App\Http\Controllers\GoalController;
 use App\Http\Controllers\IntegrationToolController;
+use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\NetWorthController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportingController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StorageAccessController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\TaxDocumentController;
 use App\Http\Controllers\TelegramController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TransferController;
 use App\Http\Controllers\TwoFactorController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\InstallerController;
 use Illuminate\Support\Facades\Route;
-
-
 
 Route::match(['get', 'head'], '/', function () {
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
+
     return redirect()->route('login');
 });
 
@@ -44,20 +59,8 @@ Route::get('/index.php', function () {
     return redirect('/');
 });
 
-Route::prefix('install')->name('installer.')->group(function () {
-    Route::get('/', [InstallerController::class, 'index'])->name('index');
-    Route::get('/permissions', [InstallerController::class, 'permissions'])->name('permissions');
-    Route::get('/environment', [InstallerController::class, 'environment'])->name('environment');
-    Route::post('/environment', [InstallerController::class, 'saveEnvironment'])->name('saveEnvironment');
-    Route::get('/database', [InstallerController::class, 'database'])->name('database');
-    Route::post('/database', [InstallerController::class, 'runDatabase'])->name('runDatabase');
-    Route::get('/finish', [InstallerController::class, 'finish'])->name('finish');
-});
-
 Route::match(['get', 'post'], '/telegram/webhook', [TelegramController::class, 'webhook'])->name('telegram.webhook');
 Route::match(['get', 'post'], '/telegram/webhook/{token}', [TelegramController::class, 'webhook'])->name('telegram.webhook.custom');
-
-
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
@@ -93,34 +96,39 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/security', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
     Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index')->middleware('permission:view reports');
     Route::get('/reports/categories', [CategoryReportController::class, 'index'])->name('reports.categories.index');
     Route::get('/reports/categories/export/pdf', [CategoryReportController::class, 'export'])->name('reports.categories.export');
     Route::get('/reports/categories/{category}/detail', [CategoryReportController::class, 'detail'])->name('reports.categories.detail');
-    Route::resource('settings', \App\Http\Controllers\SettingController::class);
-    Route::resource('categories', \App\Http\Controllers\CategoryController::class);
+    Route::resource('settings', SettingController::class);
+    Route::resource('categories', CategoryController::class);
 
-    Route::resource('transactions', \App\Http\Controllers\TransactionController::class)->middleware('permission:manage transactions');
-    Route::post('transactions/scan-receipt', [\App\Http\Controllers\TransactionController::class, 'scanReceipt'])->name('transactions.scanReceipt')->middleware('permission:manage transactions');
+    Route::resource('transactions', TransactionController::class)->middleware('permission:manage transactions');
+    Route::post('transactions/scan-receipt', [TransactionController::class, 'scanReceipt'])->name('transactions.scanReceipt')->middleware('permission:manage transactions');
 
-    Route::resource('accounts', \App\Http\Controllers\AccountController::class)->middleware('permission:manage accounts');
-    Route::resource('transfers', \App\Http\Controllers\TransferController::class)->middleware('permission:manage accounts|manage transactions');
+    Route::resource('accounts', AccountController::class)->middleware('permission:manage accounts');
+    Route::resource('transfers', TransferController::class)->middleware('permission:manage accounts|manage transactions');
 
-    Route::resource('goals', \App\Http\Controllers\GoalController::class)->middleware('permission:manage goals');
-    Route::post('goals/{goal}/update-progress', [\App\Http\Controllers\GoalController::class, 'updateProgress'])->name('goals.updateProgress')->middleware('permission:manage goals');
+    Route::resource('goals', GoalController::class)->middleware('permission:manage goals');
+    Route::post('goals/{goal}/update-progress', [GoalController::class, 'updateProgress'])->name('goals.updateProgress')->middleware('permission:manage goals');
 
-    Route::resource('budgets', \App\Http\Controllers\BudgetController::class)->middleware('permission:manage budgets');
-    Route::post('budgets/{budget}/update-spent', [\App\Http\Controllers\BudgetController::class, 'updateSpent'])->name('budgets.updateSpent')->middleware('permission:manage budgets');
+    Route::resource('budgets', BudgetController::class)->middleware('permission:manage budgets');
+    Route::post('budgets/{budget}/update-spent', [BudgetController::class, 'updateSpent'])->name('budgets.updateSpent')->middleware('permission:manage budgets');
 
-    Route::resource('debts', \App\Http\Controllers\DebtController::class)->middleware('permission:manage budgets');
-    Route::post('debts/{debt}/add-payment', [\App\Http\Controllers\DebtController::class, 'addPayment'])->name('debts.addPayment')->middleware('permission:manage budgets');
+    Route::resource('debts', DebtController::class)->middleware('permission:manage budgets');
+    Route::post('debts/{debt}/add-payment', [DebtController::class, 'addPayment'])->name('debts.addPayment')->middleware('permission:manage budgets');
 
-    Route::resource('tags', \App\Http\Controllers\TagController::class)->middleware('permission:manage transactions');
+    Route::resource('tags', TagController::class)->middleware('permission:manage transactions');
 
-    Route::resource('investments', \App\Http\Controllers\InvestmentController::class)->middleware('permission:view reports');
-    Route::resource('assets', \App\Http\Controllers\AssetController::class)->middleware('permission:view reports');
-    Route::get('/net-worth', [\App\Http\Controllers\NetWorthController::class, 'index'])->name('net-worth.index')->middleware('permission:view reports');
+    Route::resource('investments', InvestmentController::class)->middleware('permission:view reports');
+    Route::resource('assets', AssetController::class)->middleware('permission:view reports');
+    Route::get('/net-worth', [NetWorthController::class, 'index'])->name('net-worth.index')->middleware('permission:view reports');
 
     Route::resource('tax-documents', TaxDocumentController::class)->middleware('permission:view reports');
 
@@ -138,6 +146,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/behavioral/personality/quiz', [BehavioralController::class, 'takePersonalityQuiz'])->name('behavioral.personality.quiz');
         Route::post('/behavioral/personality/quiz', [BehavioralController::class, 'storePersonalityQuiz'])->name('behavioral.personality.quiz.store');
         Route::get('/behavioral/gamification', [BehavioralController::class, 'gamification'])->name('behavioral.gamification');
+        Route::post('/behavioral/gamification/initialize', [BehavioralController::class, 'initializeGamification'])->name('behavioral.initialize-gamification');
     });
 
     // Subscription Management Routes
@@ -196,8 +205,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/integrations/reminders', [IntegrationToolController::class, 'reminders'])->name('integrations.reminders');
         Route::post('/integrations/reminders', [IntegrationToolController::class, 'storeReminder'])->name('integrations.reminders.store');
 
-        Route::resource('email-sources', \App\Http\Controllers\EmailSourceController::class)->only(['index', 'store', 'destroy']);
-        Route::post('email-sources/{emailSource}/toggle', [\App\Http\Controllers\EmailSourceController::class, 'toggle'])->name('email-sources.toggle');
+        Route::resource('email-sources', EmailSourceController::class)->only(['index', 'store', 'destroy']);
+        Route::post('email-sources/{emailSource}/toggle', [EmailSourceController::class, 'toggle'])->name('email-sources.toggle');
     });
 
     // Family Finance Routes
@@ -276,27 +285,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/coaching/export', [FinancialCoachingController::class, 'exportSummary'])->name('coaching.export');
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/education', [\App\Http\Controllers\Admin\EducationAdminController::class, 'index'])->name('education.index');
-        Route::get('/education/create', [\App\Http\Controllers\Admin\EducationAdminController::class, 'create'])->name('education.create');
-        Route::get('/education/{module}', [\App\Http\Controllers\Admin\EducationAdminController::class, 'show'])->name('education.show');
-        Route::get('/education/{module}/edit', [\App\Http\Controllers\Admin\EducationAdminController::class, 'edit'])->name('education.edit');
-        Route::post('/education', [\App\Http\Controllers\Admin\EducationAdminController::class, 'store'])->name('education.store');
-        Route::put('/education/{module}', [\App\Http\Controllers\Admin\EducationAdminController::class, 'update'])->name('education.update');
-        Route::delete('/education/{module}', [\App\Http\Controllers\Admin\EducationAdminController::class, 'destroy'])->name('education.destroy');
+        Route::get('/education', [EducationAdminController::class, 'index'])->name('education.index');
+        Route::get('/education/create', [EducationAdminController::class, 'create'])->name('education.create');
+        Route::get('/education/{module}', [EducationAdminController::class, 'show'])->name('education.show');
+        Route::get('/education/{module}/edit', [EducationAdminController::class, 'edit'])->name('education.edit');
+        Route::post('/education', [EducationAdminController::class, 'store'])->name('education.store');
+        Route::put('/education/{module}', [EducationAdminController::class, 'update'])->name('education.update');
+        Route::delete('/education/{module}', [EducationAdminController::class, 'destroy'])->name('education.destroy');
 
-        Route::get('/news', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'index'])->name('news.index');
-        Route::get('/news/create', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'create'])->name('news.create');
-        Route::get('/news/{news}', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'show'])->name('news.show');
-        Route::get('/news/{news}/edit', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'edit'])->name('news.edit');
-        Route::post('/news', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'store'])->name('news.store');
-        Route::put('/news/{news}', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'update'])->name('news.update');
-        Route::delete('/news/{news}', [\App\Http\Controllers\Admin\FinancialNewsAdminController::class, 'destroy'])->name('news.destroy');
+        Route::get('/news', [FinancialNewsAdminController::class, 'index'])->name('news.index');
+        Route::get('/news/create', [FinancialNewsAdminController::class, 'create'])->name('news.create');
+        Route::get('/news/{news}', [FinancialNewsAdminController::class, 'show'])->name('news.show');
+        Route::get('/news/{news}/edit', [FinancialNewsAdminController::class, 'edit'])->name('news.edit');
+        Route::post('/news', [FinancialNewsAdminController::class, 'store'])->name('news.store');
+        Route::put('/news/{news}', [FinancialNewsAdminController::class, 'update'])->name('news.update');
+        Route::delete('/news/{news}', [FinancialNewsAdminController::class, 'destroy'])->name('news.destroy');
 
-        Route::get('/education-categories', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'index'])->name('education-categories.index');
-        Route::get('/education-categories/create', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'create'])->name('education-categories.create');
-        Route::post('/education-categories', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'store'])->name('education-categories.store');
-        Route::get('/education-categories/{educationCategory}/edit', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'edit'])->name('education-categories.edit');
-        Route::put('/education-categories/{educationCategory}', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'update'])->name('education-categories.update');
-        Route::delete('/education-categories/{educationCategory}', [\App\Http\Controllers\Admin\EducationCategoryAdminController::class, 'destroy'])->name('education-categories.destroy');
+        Route::get('/education-categories', [EducationCategoryAdminController::class, 'index'])->name('education-categories.index');
+        Route::get('/education-categories/create', [EducationCategoryAdminController::class, 'create'])->name('education-categories.create');
+        Route::post('/education-categories', [EducationCategoryAdminController::class, 'store'])->name('education-categories.store');
+        Route::get('/education-categories/{educationCategory}/edit', [EducationCategoryAdminController::class, 'edit'])->name('education-categories.edit');
+        Route::put('/education-categories/{educationCategory}', [EducationCategoryAdminController::class, 'update'])->name('education-categories.update');
+        Route::delete('/education-categories/{educationCategory}', [EducationCategoryAdminController::class, 'destroy'])->name('education-categories.destroy');
     });
 });

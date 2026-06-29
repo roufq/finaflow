@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\TelegramController;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -37,7 +38,7 @@ class TelegramPollCommand extends Command
             }
 
             // 2. Personal Bots Polling
-            $userBots = \App\Models\User::whereNotNull('telegram_bot_token')->get();
+            $userBots = User::whereNotNull('telegram_bot_token')->get();
             foreach ($userBots as $user) {
                 $this->pollBot($user->telegram_bot_token, $offsets, "user_{$user->id}", $user);
             }

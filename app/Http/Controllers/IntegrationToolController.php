@@ -10,7 +10,9 @@ use App\Services\TransactionCategorizer;
 use App\Services\VoiceEntryParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class IntegrationToolController extends Controller
 {
@@ -19,13 +21,13 @@ class IntegrationToolController extends Controller
         $user = Auth::user();
 
         if (empty($user->remember_token)) {
-            $user->update(['remember_token' => \Illuminate\Support\Str::random(60)]);
+            $user->update(['remember_token' => Str::random(60)]);
         }
 
         // Ensure user has a webhook token for their custom bot
         if (! $user->telegram_webhook_token) {
             $user->update([
-                'telegram_webhook_token' => \Illuminate\Support\Str::random(40),
+                'telegram_webhook_token' => Str::random(40),
             ]);
         }
 
@@ -89,7 +91,7 @@ class IntegrationToolController extends Controller
         $url = "{$baseUrl}/bot{$user->telegram_bot_token}/setWebhook?url={$webhookUrl}";
 
         try {
-            $response = \Illuminate\Support\Facades\Http::withoutVerifying()->get($url);
+            $response = Http::withoutVerifying()->get($url);
             if ($response->successful()) {
                 $user->logActivity('Telegram Webhook Registered', 'Webhook registered to '.($user->telegram_proxy_url ? "Proxy: {$user->telegram_proxy_url}" : "App: {$appWebhookUrl}"));
 

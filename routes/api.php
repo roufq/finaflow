@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BudgetApiController;
+use App\Http\Controllers\Api\EmailWebhookController;
 use App\Http\Controllers\Api\GoalApiController;
 use App\Http\Controllers\Api\MobileController;
 use App\Http\Controllers\Api\ProfileApiController;
@@ -15,7 +16,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
     // Public Webhooks
-    Route::post('/webhooks/email-parser', [\App\Http\Controllers\Api\EmailWebhookController::class, 'handle']);
+    Route::post('/webhooks/email-parser', [EmailWebhookController::class, 'handle']);
 
     // Protected Endpoints (Requires Sanctum Token)
     Route::middleware('auth:sanctum')->group(function () {

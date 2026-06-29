@@ -24,8 +24,9 @@ class EmailWebhookController extends Controller
         $senderEmail = $this->extractEmailAddress($sender);
         $recipientEmail = $this->extractEmailAddress($recipient);
 
-        if (!$senderEmail || !$body) {
+        if (! $senderEmail || ! $body) {
             Log::warning('Email Webhook failed: Missing sender or body');
+
             return response()->json(['status' => 'ignored', 'reason' => 'Missing sender or body'], 200); // 200 agar provider tidak retry terus menerus
         }
 
@@ -36,13 +37,13 @@ class EmailWebhookController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Transaction created successfully',
-                'transaction_id' => $transaction->id
+                'transaction_id' => $transaction->id,
             ], 200);
         }
 
         return response()->json([
-            'status' => 'ignored', 
-            'reason' => 'Unregistered source or unable to parse'
+            'status' => 'ignored',
+            'reason' => 'Unregistered source or unable to parse',
         ], 200);
     }
 
@@ -54,6 +55,7 @@ class EmailWebhookController extends Controller
         if (preg_match('/<([^>]+)>/', $text, $matches)) {
             return trim($matches[1]);
         }
+
         return trim($text);
     }
 }

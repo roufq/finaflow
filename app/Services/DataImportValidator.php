@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BankIntegration;
 use App\Models\Transaction;
+use Carbon\Carbon;
 
 class DataImportValidator
 {
@@ -17,7 +18,7 @@ class DataImportValidator
             'severity' => 'low', // low, medium, high
             'errors' => [],
             'warnings' => [],
-            'recommendations' => []
+            'recommendations' => [],
         ];
 
         // Validate transactions
@@ -25,7 +26,7 @@ class DataImportValidator
             $transactionValidation = $this->validateTransactions($integration, $importData['transactions']);
             $result = array_merge($result, $transactionValidation);
 
-            if (!$transactionValidation['valid']) {
+            if (! $transactionValidation['valid']) {
                 $result['valid'] = false;
                 $result['severity'] = max($result['severity'], $transactionValidation['severity']);
             }
@@ -34,7 +35,7 @@ class DataImportValidator
         // Validate balance
         if (isset($importData['balance'])) {
             $balanceValidation = $this->validateBalance($integration, $importData['balance'], $importData['transactions'] ?? []);
-            if (!$balanceValidation['valid']) {
+            if (! $balanceValidation['valid']) {
                 $result['valid'] = false;
                 $result['severity'] = max($result['severity'], $balanceValidation['severity']);
                 $result['errors'] = array_merge($result['errors'], $balanceValidation['errors']);
@@ -59,13 +60,14 @@ class DataImportValidator
             'valid' => true,
             'severity' => 'low',
             'errors' => [],
-            'warnings' => []
+            'warnings' => [],
         ];
 
         if (empty($transactions)) {
             $result['valid'] = false;
             $result['severity'] = 'high';
             $result['errors'][] = 'No transactions found in import data';
+
             return $result;
         }
 
@@ -73,26 +75,26 @@ class DataImportValidator
         foreach ($transactions as $index => $transaction) {
             $transactionErrors = $this->validateTransaction($transaction, $index + 1);
 
-            if (!empty($transactionErrors['errors'])) {
+            if (! empty($transactionErrors['errors'])) {
                 $result['valid'] = false;
                 $result['severity'] = max($result['severity'], 'medium');
                 $result['errors'] = array_merge($result['errors'], $transactionErrors['errors']);
             }
 
-            if (!empty($transactionErrors['warnings'])) {
+            if (! empty($transactionErrors['warnings'])) {
                 $result['warnings'] = array_merge($result['warnings'], $transactionErrors['warnings']);
             }
         }
 
         // Check for date range consistency
         $dates = array_column($transactions, 'date');
-        if (!empty($dates)) {
+        if (! empty($dates)) {
             sort($dates);
             $oldestDate = reset($dates);
             $newestDate = end($dates);
 
             if ($oldestDate && $newestDate) {
-                $daysDiff = \Carbon\Carbon::parse($oldestDate)->diffInDays(\Carbon\Carbon::parse($newestDate));
+                $daysDiff = Carbon::parse($oldestDate)->diffInDays(Carbon::parse($newestDate));
 
                 if ($daysDiff > 365) {
                     $result['warnings'][] = 'Transaction date range spans more than a year. This may indicate incomplete data.';
@@ -106,7 +108,7 @@ class DataImportValidator
 
         // Check for amount distribution
         $amounts = array_column($transactions, 'amount');
-        if (!empty($amounts)) {
+        if (! empty($amounts)) {
             $avgAmount = array_sum($amounts) / count($amounts);
             $maxAmount = max($amounts);
             $minAmount = min($amounts);
@@ -134,7 +136,7 @@ class DataImportValidator
         // Required fields
         if (empty($transaction['date'])) {
             $errors[] = "Row {$rowNumber}: Missing transaction date";
-        } elseif (!strtotime($transaction['date'])) {
+        } elseif (! strtotime($transaction['date'])) {
             $errors[] = "Row {$rowNumber}: Invalid date format '{$transaction['date']}'";
         }
 
@@ -144,20 +146,20 @@ class DataImportValidator
             $warnings[] = "Row {$rowNumber}: Transaction description is very short";
         }
 
-        if (!isset($transaction['amount']) || $transaction['amount'] <= 0) {
+        if (! isset($transaction['amount']) || $transaction['amount'] <= 0) {
             $errors[] = "Row {$rowNumber}: Invalid or missing transaction amount";
         } elseif ($transaction['amount'] > 100000000) { // 100 million
             $warnings[] = "Row {$rowNumber}: Transaction amount is unusually high";
         }
 
-        if (empty($transaction['type']) || !in_array($transaction['type'], ['income', 'expense'])) {
+        if (empty($transaction['type']) || ! in_array($transaction['type'], ['income', 'expense'])) {
             $errors[] = "Row {$rowNumber}: Invalid transaction type. Must be 'income' or 'expense'";
         }
 
         // Date validation
-        if (!empty($transaction['date'])) {
-            $transactionDate = \Carbon\Carbon::parse($transaction['date']);
-            $now = \Carbon\Carbon::now();
+        if (! empty($transaction['date'])) {
+            $transactionDate = Carbon::parse($transaction['date']);
+            $now = Carbon::now();
 
             if ($transactionDate->isFuture()) {
                 $warnings[] = "Row {$rowNumber}: Transaction date is in the future";
@@ -180,7 +182,7 @@ class DataImportValidator
             'valid' => true,
             'severity' => 'low',
             'errors' => [],
-            'warnings' => []
+            'warnings' => [],
         ];
 
         // Calculate expected balance from transactions
@@ -258,6 +260,7 @@ class DataImportValidator
         if (empty($transactions)) {
             $warnings[] = 'No transaction data found';
             $recommendations[] = 'Ensure your CSV file contains transaction data with columns for date, description, and amount';
+
             return ['warnings' => $warnings, 'recommendations' => $recommendations];
         }
 
@@ -266,8 +269,8 @@ class DataImportValidator
             $dates = array_column($transactions, 'date');
             sort($dates);
 
-            $oldestDate = \Carbon\Carbon::parse($dates[0]);
-            $newestDate = \Carbon\Carbon::parse(end($dates));
+            $oldestDate = Carbon::parse($dates[0]);
+            $newestDate = Carbon::parse(end($dates));
             $daysSpan = $oldestDate->diffInDays($newestDate);
             $expectedTransactions = max(1, $daysSpan / 7); // Expect at least weekly transactions
 
@@ -281,7 +284,7 @@ class DataImportValidator
         $descriptions = array_count_values(array_column($transactions, 'description'));
         arsort($descriptions);
 
-        $recurringTransactions = array_filter($descriptions, function($count) {
+        $recurringTransactions = array_filter($descriptions, function ($count) {
             return $count >= 3; // Transactions that appear 3+ times
         });
 
@@ -292,11 +295,11 @@ class DataImportValidator
 
         // Check amount distribution
         $amounts = array_column($transactions, 'amount');
-        $totalIncome = array_sum(array_map(function($t) {
+        $totalIncome = array_sum(array_map(function ($t) {
             return $t['type'] === 'income' ? $t['amount'] : 0;
         }, $transactions));
 
-        $totalExpense = array_sum(array_map(function($t) {
+        $totalExpense = array_sum(array_map(function ($t) {
             return $t['type'] === 'expense' ? $t['amount'] : 0;
         }, $transactions));
 
@@ -311,7 +314,7 @@ class DataImportValidator
         }
 
         // Check for balance information
-        if (!isset($importData['balance'])) {
+        if (! isset($importData['balance'])) {
             $recommendations[] = 'Consider including account balance information in your CSV for validation';
         }
 
@@ -329,7 +332,7 @@ class DataImportValidator
             $messages[] = [
                 'type' => 'error',
                 'message' => $error,
-                'severity' => $validation['severity']
+                'severity' => $validation['severity'],
             ];
         }
 
@@ -337,7 +340,7 @@ class DataImportValidator
             $messages[] = [
                 'type' => 'warning',
                 'message' => $warning,
-                'severity' => 'medium'
+                'severity' => 'medium',
             ];
         }
 
@@ -345,7 +348,7 @@ class DataImportValidator
             $messages[] = [
                 'type' => 'info',
                 'message' => $recommendation,
-                'severity' => 'low'
+                'severity' => 'low',
             ];
         }
 

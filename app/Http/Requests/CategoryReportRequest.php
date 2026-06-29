@@ -34,7 +34,7 @@ class CategoryReportRequest extends FormRequest
     }
 
     /**
-     * @return array{period:string, start: \Carbon\CarbonImmutable, end: \Carbon\CarbonImmutable, category_id: int|null, account_id: int|null, view: string}
+     * @return array{period:string, start: CarbonImmutable, end: CarbonImmutable, category_id: int|null, account_id: int|null, view: string}
      */
     public function filters(): array
     {

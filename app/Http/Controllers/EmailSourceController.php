@@ -11,6 +11,7 @@ class EmailSourceController extends Controller
     public function index()
     {
         $emailSources = EmailSource::where('user_id', Auth::id())->get();
+
         return view('email-sources.index', compact('emailSources'));
     }
 
@@ -56,7 +57,7 @@ class EmailSourceController extends Controller
         }
 
         $emailSource->update([
-            'is_active' => !$emailSource->is_active,
+            'is_active' => ! $emailSource->is_active,
         ]);
 
         return back()->with('success', 'Status sumber email diperbarui.');

@@ -15,7 +15,7 @@ class LanguageController extends Controller
     {
         $availableLocales = config('app.available_locales', ['en', 'id']);
 
-        if (!in_array($locale, $availableLocales, true)) {
+        if (! in_array($locale, $availableLocales, true)) {
             $locale = config('app.fallback_locale', 'en');
         }
 

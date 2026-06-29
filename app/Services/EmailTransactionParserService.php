@@ -16,13 +16,14 @@ class EmailTransactionParserService
     public function parseEmailContent(string $senderEmail, string $recipientEmail, string $subject, string $body)
     {
         // 1. Check if recipient or sender is a registered EmailSource
-        $source = EmailSource::where(function($q) use ($senderEmail, $recipientEmail) {
-                $q->where('email_address', $senderEmail)
-                  ->orWhere('email_address', $recipientEmail);
-            })->where('is_active', true)->first();
-            
-        if (!$source) {
+        $source = EmailSource::where(function ($q) use ($senderEmail, $recipientEmail) {
+            $q->where('email_address', $senderEmail)
+                ->orWhere('email_address', $recipientEmail);
+        })->where('is_active', true)->first();
+
+        if (! $source) {
             Log::info("EmailTransactionParserService: Email ignored. Unregistered source. Sender: {$senderEmail}, Recipient: {$recipientEmail}");
+
             return false;
         }
 
@@ -33,8 +34,9 @@ class EmailTransactionParserService
 
         // 2. Extract Amount
         $amount = $this->extractAmount($body);
-        if (!$amount) {
-            Log::info("EmailTransactionParserService: Could not detect amount in email body.");
+        if (! $amount) {
+            Log::info('EmailTransactionParserService: Could not detect amount in email body.');
+
             return false;
         }
 
@@ -79,17 +81,19 @@ class EmailTransactionParserService
             $numberStr = str_replace(',', '', $matches[1]);
             // If it uses dots for thousands
             if (substr_count($numberStr, '.') > 1 || (strlen($numberStr) - strrpos($numberStr, '.')) == 4) {
-                 $numberStr = str_replace('.', '', $numberStr);
+                $numberStr = str_replace('.', '', $numberStr);
             }
+
             return (float) $numberStr;
         }
+
         return null;
     }
 
     protected function extractBankName(string $body, string $subject, int $userId): string
     {
         $userAccounts = Account::where('user_id', $userId)->pluck('name')->toArray();
-        $textToSearch = strtoupper($subject . ' ' . $body);
+        $textToSearch = strtoupper($subject.' '.$body);
 
         // Tahap 1: Cek nama persis (exact match)
         foreach ($userAccounts as $accountName) {
@@ -105,14 +109,14 @@ class EmailTransactionParserService
             foreach ($words as $word) {
                 $word = trim($word);
                 // Hanya cari kata unik (panjang > 2 dan bukan kata umum)
-                if (strlen($word) > 2 && !in_array($word, $ignoreWords)) {
+                if (strlen($word) > 2 && ! in_array($word, $ignoreWords)) {
                     if (strpos($textToSearch, $word) !== false) {
                         return $accountName;
                     }
                 }
             }
         }
-        
+
         return 'Email/Bank Default';
     }
 
@@ -122,7 +126,7 @@ class EmailTransactionParserService
             ->where('name', 'like', "%{$bankName}%")
             ->first();
 
-        if (!$account) {
+        if (! $account) {
             $account = Account::create([
                 'user_id' => $userId,
                 'name' => $bankName,
@@ -136,7 +140,7 @@ class EmailTransactionParserService
 
     protected function detectTransactionType(string $body, string $subject): string
     {
-        $text = strtolower($subject . ' ' . $body);
+        $text = strtolower($subject.' '.$body);
 
         $expenseKeywords = ['keluar', 'debet', 'pembayaran', 'transfer ke', 'pembelian', 'tagihan', 'bayar', 'beli', 'nasi', 'makan', 'gojek', 'grab', 'tokopedia', 'shopee'];
         $incomeKeywords = ['masuk', 'kredit', 'penerimaan', 'transfer dari', 'gaji', 'bonus', 'refund', 'pencairan', 'pemberian'];
@@ -165,7 +169,7 @@ class EmailTransactionParserService
         if (preg_match('/(?:untuk|keterangan|pesan|berita)\s*:\s*(.*?)(?:\n|\r|\.|$)/i', $body, $matches)) {
             return trim($matches[1]);
         }
-        
+
         // If it's short, just use the subject
         if (strlen($subject) > 5 && strlen($subject) < 100) {
             return $subject;

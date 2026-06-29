@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
 class TestScanReceiptWithApi extends Command
@@ -53,37 +53,38 @@ class TestScanReceiptWithApi extends Command
         $tempPath = storage_path('app/test-receipt.png');
         file_put_contents($tempPath, $testImageContent);
 
-        $this->info('Created test image at: ' . $tempPath);
+        $this->info('Created test image at: '.$tempPath);
 
         // Get the first user for testing
         $user = User::first();
-        if (!$user) {
+        if (! $user) {
             $this->error('No users found in database. Please run php artisan db:seed first.');
+
             return;
         }
 
-        $this->info('Using user: ' . $user->email);
+        $this->info('Using user: '.$user->email);
 
         // Authenticate the user
         Auth::login($user);
 
         // Get the session ID
         $sessionId = Session::getId();
-        $this->info('Session ID: ' . $sessionId);
+        $this->info('Session ID: '.$sessionId);
 
         // Generate CSRF token
         $csrfToken = csrf_token();
-        $this->info('CSRF Token: ' . $csrfToken);
+        $this->info('CSRF Token: '.$csrfToken);
 
         // Test the endpoint with session cookie only (CSRF disabled for this route)
         try {
             $response = Http::timeout(30)
                 ->withCookies([
-                    'laravel_session' => $sessionId
+                    'laravel_session' => $sessionId,
                 ], '127.0.0.1')
                 ->withHeaders([
                     'Referer' => 'http://127.0.0.1:8000/transactions',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
                 ])
                 ->attach(
                     'receipt_image',
@@ -92,18 +93,18 @@ class TestScanReceiptWithApi extends Command
                 )
                 ->post('http://127.0.0.1:8000/transactions/scan-receipt');
 
-            $this->info('Response status: ' . $response->status());
+            $this->info('Response status: '.$response->status());
 
             if ($response->successful()) {
                 $data = $response->json();
                 $this->info('Response data:');
                 $this->line(json_encode($data, JSON_PRETTY_PRINT));
             } else {
-                $this->error('Request failed: ' . $response->body());
+                $this->error('Request failed: '.$response->body());
             }
 
         } catch (\Exception $e) {
-            $this->error('Exception occurred: ' . $e->getMessage());
+            $this->error('Exception occurred: '.$e->getMessage());
         }
 
         // Clean up

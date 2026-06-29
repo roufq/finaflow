@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -44,7 +45,7 @@ class ProfileController extends Controller
         $profileCompletion = (int) round((collect($completionSegments)->filter()->count() / count($completionSegments)) * 100);
 
         if (empty($user->remember_token)) {
-            $user->update(['remember_token' => \Illuminate\Support\Str::random(60)]);
+            $user->update(['remember_token' => Str::random(60)]);
         }
 
         return view('profile.show', [

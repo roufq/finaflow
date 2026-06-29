@@ -2,6 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Account;
+use App\Models\Category;
+use App\Models\Transaction;
+use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -26,9 +30,9 @@ class TransactionTest extends TestCase
 
     public function test_transactions_index_displays_for_user(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $user->assignRole('user');
-        \App\Models\Account::factory()->for($user)->create();
+        Account::factory()->for($user)->create();
 
         $response = $this->actingAs($user)->get('/transactions');
 
@@ -38,9 +42,9 @@ class TransactionTest extends TestCase
 
     public function test_api_transactions_returns_json_for_user(): void
     {
-        $user = \App\Models\User::factory()->create();
+        $user = User::factory()->create();
         $user->assignRole('user');
-        \App\Models\Transaction::factory()->for($user)->for(\App\Models\Account::factory()->for($user))->for(\App\Models\Category::factory()->for($user))->create();
+        Transaction::factory()->for($user)->for(Account::factory()->for($user))->for(Category::factory()->for($user))->create();
 
         $response = $this->actingAs($user)->get('/api/v1/transactions');
 

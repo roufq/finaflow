@@ -10,7 +10,7 @@ class SecurityHeaders
 {
     public function handle(Request $request, Closure $next): Response
     {
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        /** @var Response $response */
         $response = $next($request);
 
         $headers = [

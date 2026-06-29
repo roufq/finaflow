@@ -14,6 +14,7 @@ class ApiIntegrationController extends Controller
     public function index()
     {
         $integrations = ApiIntegration::where('user_id', Auth::id())->get();
+
         return view('api-integrations.index', compact('integrations'));
     }
 
@@ -61,6 +62,7 @@ class ApiIntegrationController extends Controller
     public function show(ApiIntegration $apiIntegration)
     {
         $this->ensureOwner($apiIntegration);
+
         return view('api-integrations.show', compact('apiIntegration'));
     }
 
@@ -96,7 +98,7 @@ class ApiIntegrationController extends Controller
         ]);
 
         $apiIntegration->update($request->only([
-            'provider', 'api_key', 'settings', 'is_active'
+            'provider', 'api_key', 'settings', 'is_active',
         ]));
 
         return redirect()->route('api-integrations.index')->with('success', 'API integration updated successfully.');
@@ -120,10 +122,10 @@ class ApiIntegrationController extends Controller
     {
         $this->ensureOwner($apiIntegration);
 
-        if (!$apiIntegration->checkRateLimit()) {
+        if (! $apiIntegration->checkRateLimit()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rate limit exceeded. Please try again later.'
+                'message' => 'Rate limit exceeded. Please try again later.',
             ], 429);
         }
 
@@ -135,12 +137,12 @@ class ApiIntegrationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => $result['message'],
-                'data' => $result['data']
+                'data' => $result['data'],
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => $result['message']
+                'message' => $result['message'],
             ], 500);
         }
     }
@@ -165,10 +167,10 @@ class ApiIntegrationController extends Controller
             ->where('is_active', true)
             ->first();
 
-        if (!$integration) {
+        if (! $integration) {
             return response()->json([
                 'success' => false,
-                'message' => 'Integration not found or not active'
+                'message' => 'Integration not found or not active',
             ], 404);
         }
 
@@ -177,7 +179,7 @@ class ApiIntegrationController extends Controller
         return response()->json([
             'success' => $result['success'],
             'data' => $result['data'] ?? null,
-            'message' => $result['message'] ?? null
+            'message' => $result['message'] ?? null,
         ]);
     }
 

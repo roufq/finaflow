@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Account;
-use App\Models\Investment;
 use App\Models\Asset;
 use App\Models\Debt;
+use App\Models\Investment;
 use Illuminate\Support\Facades\DB;
 
 class NetWorthController extends Controller
@@ -91,7 +90,7 @@ class NetWorthController extends Controller
                 'month' => $date->format('M Y'),
                 'net_worth' => $netWorth,
                 'assets' => $cash + $investments + $assets,
-                'liabilities' => $debts
+                'liabilities' => $debts,
             ];
         }
 
@@ -128,9 +127,15 @@ class NetWorthController extends Controller
 
         // Asset Diversity Score (20 points)
         $assetTypes = 0;
-        if (Account::where('user_id', auth()->id())->active()->count() > 0) $assetTypes++;
-        if (Investment::withoutGlobalScopes()->where('user_id', auth()->id())->count() > 0) $assetTypes++;
-        if (Asset::withoutGlobalScopes()->where('user_id', auth()->id())->count() > 0) $assetTypes++;
+        if (Account::where('user_id', auth()->id())->active()->count() > 0) {
+            $assetTypes++;
+        }
+        if (Investment::withoutGlobalScopes()->where('user_id', auth()->id())->count() > 0) {
+            $assetTypes++;
+        }
+        if (Asset::withoutGlobalScopes()->where('user_id', auth()->id())->count() > 0) {
+            $assetTypes++;
+        }
 
         $score += min($assetTypes * 7, 20); // Max 20 points for 3+ asset types
 
@@ -158,7 +163,7 @@ class NetWorthController extends Controller
             'score' => $score,
             'max_score' => $maxScore,
             'percentage' => round(($score / $maxScore) * 100, 1),
-            'grade' => $this->getHealthGrade($score)
+            'grade' => $this->getHealthGrade($score),
         ];
     }
 
@@ -171,7 +176,7 @@ class NetWorthController extends Controller
             $allocation[$type] = [
                 'amount' => $value,
                 'percentage' => $totalAssets > 0 ? round(($value / $totalAssets) * 100, 1) : 0,
-                'label' => ucfirst(str_replace('_', ' ', $type))
+                'label' => ucfirst(str_replace('_', ' ', $type)),
             ];
         }
 
@@ -210,10 +215,10 @@ class NetWorthController extends Controller
         // Get emergency fund accounts
         $emergencyAccounts = Account::where('user_id', auth()->id())
             ->active()
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->whereIn('type', ['savings', 'bank'])
-                      ->where('name', 'like', '%emergency%')
-                      ->orWhere('name', 'like', '%darurat%');
+                    ->where('name', 'like', '%emergency%')
+                    ->orWhere('name', 'like', '%darurat%');
             })
             ->sum('balance');
 
@@ -236,11 +241,22 @@ class NetWorthController extends Controller
 
     private function getHealthGrade($score)
     {
-        if ($score >= 90) return 'Excellent';
-        if ($score >= 80) return 'Very Good';
-        if ($score >= 70) return 'Good';
-        if ($score >= 60) return 'Fair';
-        if ($score >= 50) return 'Poor';
+        if ($score >= 90) {
+            return 'Excellent';
+        }
+        if ($score >= 80) {
+            return 'Very Good';
+        }
+        if ($score >= 70) {
+            return 'Good';
+        }
+        if ($score >= 60) {
+            return 'Fair';
+        }
+        if ($score >= 50) {
+            return 'Poor';
+        }
+
         return 'Critical';
     }
 }

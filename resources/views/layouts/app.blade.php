@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Navigation (Scrollable) -->
-                <nav class="flex-1 space-y-8 overflow-y-auto px-6 py-4 custom-scrollbar">
+                <nav id="sidebar-nav" class="flex-1 space-y-8 overflow-y-auto px-6 py-4 custom-scrollbar">
                     
                     <!-- Overview -->
                     <div>
@@ -318,10 +318,16 @@
 
                 <div class="flex items-center gap-3">
                     <!-- Notifications -->
-                    <div class="relative" x-data="{ open: false, hasUnread: true }">
+                    @php
+                        $unreadNotifications = Auth::user()->unreadNotifications;
+                        $hasUnread = $unreadNotifications->count() > 0;
+                    @endphp
+                    <div class="relative" x-data="{ open: false, hasUnread: {{ $hasUnread ? 'true' : 'false' }} }">
                         <button @click="open = !open" @click.away="open = false" class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-slate-100 text-slate-500 transition-all hover:bg-slate-50 hover:text-slate-900 hover:shadow-premium hover:-translate-y-0.5 active:scale-95">
                             <i class="far fa-bell text-base"></i>
-                            <span x-show="hasUnread" class="absolute right-4 top-4 h-2 w-2 rounded-full bg-red-500 ring-4 ring-white animate-pulse"></span>
+                            @if($hasUnread)
+                                <span class="absolute right-4 top-4 h-2 w-2 rounded-full bg-red-500 ring-4 ring-white animate-pulse"></span>
+                            @endif
                         </button>
 
                         <div x-show="open" x-cloak 
@@ -331,30 +337,46 @@
                              class="absolute right-0 mt-3 w-80 rounded-3xl bg-white p-6 shadow-soft ring-1 ring-slate-100 z-50">
                             <div class="flex items-center justify-between mb-4">
                                 <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest">Intelligence Feed</h4>
-                                <button @click="hasUnread = false" class="text-[9px] font-bold text-primary-500 uppercase cursor-pointer hover:underline">Clear All</button>
+                                @if($hasUnread)
+                                <form action="{{ route('notifications.mark-all-read') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="text-[9px] font-bold text-primary-500 uppercase cursor-pointer hover:underline">Clear All</button>
+                                </form>
+                                @endif
                             </div>
                             
-                            <div class="space-y-1">
-                                <template x-if="hasUnread">
-                                    <div class="p-3 rounded-2xl bg-primary-50 border border-primary-100/50 group cursor-pointer transition-all hover:bg-white hover:shadow-soft">
+                            <div class="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
+                                @forelse($unreadNotifications->take(5) as $notification)
+                                    <div class="p-3 rounded-2xl bg-primary-50 border border-primary-100/50 group transition-all hover:bg-white hover:shadow-soft">
                                         <div class="flex gap-3">
-                                            <div class="h-8 w-8 rounded-xl bg-white flex items-center justify-center text-primary-500 shadow-sm">
-                                                <i class="fas fa-shield-check text-xs"></i>
+                                            <div class="h-8 w-8 rounded-xl bg-white flex items-center justify-center text-primary-500 shadow-sm shrink-0">
+                                                <i class="fas {{ $notification->data['type'] === 'warning' ? 'fa-exclamation-triangle text-amber-500' : 'fa-info-circle text-primary-500' }} text-xs"></i>
                                             </div>
-                                            <div>
-                                                <p class="text-[11px] font-bold text-slate-900 leading-tight">System Security Audit</p>
-                                                <p class="text-[9px] text-slate-500 mt-1 leading-relaxed">Account permissions for <span class="font-bold text-slate-700">{{ Auth::user()->name }}</span> were recently re-evaluated.</p>
+                                            <div class="flex-1">
+                                                <p class="text-[11px] font-bold text-slate-900 leading-tight">{{ $notification->data['title'] ?? 'New Notification' }}</p>
+                                                <p class="text-[9px] text-slate-500 mt-1 leading-relaxed">{{ $notification->data['message'] ?? '' }}</p>
+                                                <div class="mt-2 flex items-center justify-between">
+                                                    <span class="text-[8px] text-slate-400">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <form action="{{ route('notifications.mark-read', $notification->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="text-[9px] font-bold text-primary-500 hover:underline">Mark Read</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </template>
-
-                                <div x-show="!hasUnread" x-transition class="flex flex-col items-center justify-center py-8 text-center">
+                                @empty
+                                <div class="flex flex-col items-center justify-center py-8 text-center">
                                     <div class="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 mb-3">
-                                        <i class="fas fa-satellite-dish text-xs"></i>
+                                        <i class="fas fa-check-circle text-xs"></i>
                                     </div>
-                                    <p class="text-[11px] font-bold text-slate-900 leading-tight">All systems operational</p>
-                                    <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">No critical financial alerts or intelligence gaps detected at this time.</p>
+                                    <p class="text-[11px] font-bold text-slate-900 leading-tight">All caught up</p>
+                                    <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">No new alerts at this time.</p>
+                                </div>
+                                @endforelse
+                                
+                                <div class="mt-4 text-center">
+                                    <a href="{{ route('notifications.index') }}" class="text-[10px] font-bold text-slate-400 hover:text-primary-500 transition-colors uppercase tracking-widest">View History</a>
                                 </div>
                             </div>
                         </div>
@@ -411,5 +433,22 @@
 
     <!-- Scripts -->
     @stack('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebar = document.getElementById('sidebar-nav');
+            if (sidebar) {
+                // Restore scroll position
+                const scrollPos = sessionStorage.getItem('sidebarScrollPos');
+                if (scrollPos) {
+                    sidebar.scrollTop = scrollPos;
+                }
+
+                // Save scroll position before leaving page
+                window.addEventListener('beforeunload', function() {
+                    sessionStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

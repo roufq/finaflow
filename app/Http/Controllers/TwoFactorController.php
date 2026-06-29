@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\TwoFactorRememberToken;
 use App\Models\User;
 use App\Services\TotpService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class TwoFactorController extends Controller
 {
-    public function showSetup(TotpService $totp): \Illuminate\Contracts\View\View
+    public function showSetup(TotpService $totp): View
     {
         $user = Auth::user();
         $secret = $user->two_factor_secret ?? $totp->generateSecret();
@@ -25,7 +27,7 @@ class TwoFactorController extends Controller
         ]);
     }
 
-    public function enable(Request $request, TotpService $totp): \Illuminate\Http\RedirectResponse
+    public function enable(Request $request, TotpService $totp): RedirectResponse
     {
         $request->validate([
             'code' => 'required|string|size:6',
@@ -51,7 +53,7 @@ class TwoFactorController extends Controller
         return redirect()->route('dashboard')->with('success', '2FA has been enabled. Please save your backup codes.');
     }
 
-    public function disable(Request $request): \Illuminate\Http\RedirectResponse
+    public function disable(Request $request): RedirectResponse
     {
         $user = $request->user();
         $user->update([
@@ -67,7 +69,7 @@ class TwoFactorController extends Controller
         return redirect()->route('dashboard')->with('success', '2FA has been disabled.');
     }
 
-    public function regenerateBackupCodes(Request $request): \Illuminate\Http\RedirectResponse
+    public function regenerateBackupCodes(Request $request): RedirectResponse
     {
         $user = $request->user();
         $backupCodes = $this->generateBackupCodes();
@@ -77,7 +79,7 @@ class TwoFactorController extends Controller
         return back()->with('success', 'New backup codes have been generated. Store them securely.');
     }
 
-    public function showChallenge(): \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+    public function showChallenge(): View|RedirectResponse
     {
         $pendingUserId = session('2fa:user_id');
         if (! $pendingUserId) {
@@ -87,7 +89,7 @@ class TwoFactorController extends Controller
         return view('auth.twofactor-challenge');
     }
 
-    public function verifyChallenge(Request $request, TotpService $totp): \Illuminate\Http\RedirectResponse
+    public function verifyChallenge(Request $request, TotpService $totp): RedirectResponse
     {
         $pendingUserId = session('2fa:user_id');
         if (! $pendingUserId) {

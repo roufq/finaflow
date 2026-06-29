@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class TestScanReceiptEndpoint extends Command
 {
@@ -36,7 +35,7 @@ class TestScanReceiptEndpoint extends Command
         $tempPath = storage_path('app/test-receipt.png');
         file_put_contents($tempPath, $testImageContent);
 
-        $this->info('Created test image at: ' . $tempPath);
+        $this->info('Created test image at: '.$tempPath);
 
         // Test the endpoint
         try {
@@ -46,18 +45,18 @@ class TestScanReceiptEndpoint extends Command
                 'test-receipt.png'
             )->post('http://127.0.0.1:8000/transactions/scan-receipt');
 
-            $this->info('Response status: ' . $response->status());
+            $this->info('Response status: '.$response->status());
 
             if ($response->successful()) {
                 $data = $response->json();
                 $this->info('Response data:');
                 $this->line(json_encode($data, JSON_PRETTY_PRINT));
             } else {
-                $this->error('Request failed: ' . $response->body());
+                $this->error('Request failed: '.$response->body());
             }
 
         } catch (\Exception $e) {
-            $this->error('Exception occurred: ' . $e->getMessage());
+            $this->error('Exception occurred: '.$e->getMessage());
         }
 
         // Clean up

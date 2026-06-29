@@ -11,17 +11,18 @@ class InstallerMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         $installed = file_exists(storage_path('installed'));
-        
+
         // If visiting installer but already installed
         if ($request->is('install*')) {
             if ($installed) {
                 return redirect('/');
             }
+
             return $next($request);
         }
 

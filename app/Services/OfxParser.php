@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+
 class OfxParser
 {
     /**
@@ -26,12 +28,12 @@ class OfxParser
                         $transactions[] = $transaction;
                     }
                 } catch (\Exception $e) {
-                    $errors[] = 'Error parsing transaction: ' . $e->getMessage();
+                    $errors[] = 'Error parsing transaction: '.$e->getMessage();
                 }
             }
 
         } catch (\Exception $e) {
-            $errors[] = 'Error parsing OFX file: ' . $e->getMessage();
+            $errors[] = 'Error parsing OFX file: '.$e->getMessage();
         }
 
         return [
@@ -91,7 +93,7 @@ class OfxParser
                 }
             }
 
-            if (!empty($transaction)) {
+            if (! empty($transaction)) {
                 $transactions[] = $transaction;
             }
         }
@@ -111,7 +113,7 @@ class OfxParser
         }
 
         $date = $this->parseOfxDate($dateStr);
-        if (!$date) {
+        if (! $date) {
             return null;
         }
 
@@ -132,17 +134,17 @@ class OfxParser
 
         // Build description
         $description = '';
-        if (!empty($ofxData['NAME'])) {
+        if (! empty($ofxData['NAME'])) {
             $description = $ofxData['NAME'];
-        } elseif (!empty($ofxData['MEMO'])) {
+        } elseif (! empty($ofxData['MEMO'])) {
             $description = $ofxData['MEMO'];
         } else {
             $description = 'OFX Transaction';
         }
 
         // Add check number if present
-        if (!empty($ofxData['CHECKNUM'])) {
-            $description .= ' (Check #' . $ofxData['CHECKNUM'] . ')';
+        if (! empty($ofxData['CHECKNUM'])) {
+            $description .= ' (Check #'.$ofxData['CHECKNUM'].')';
         }
 
         return [
@@ -158,7 +160,7 @@ class OfxParser
     /**
      * Parse OFX date format (YYYYMMDD or YYYYMMDDHHMMSS)
      */
-    private function parseOfxDate(string $dateStr): ?\Carbon\Carbon
+    private function parseOfxDate(string $dateStr): ?Carbon
     {
         $dateStr = trim($dateStr);
 
@@ -169,7 +171,7 @@ class OfxParser
                 $month = substr($dateStr, 4, 2);
                 $day = substr($dateStr, 6, 2);
 
-                return \Carbon\Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-{$day}");
+                return Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-{$day}");
             }
         } catch (\Exception $e) {
             // Ignore and return null

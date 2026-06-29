@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class SubscriptionController extends Controller
 {
@@ -95,7 +94,7 @@ class SubscriptionController extends Controller
 
         $subscription->update($request->only([
             'name', 'provider', 'amount', 'frequency', 'next_billing_date',
-            'category', 'auto_renewal', 'status', 'notes'
+            'category', 'auto_renewal', 'status', 'notes',
         ]));
 
         return redirect()->route('subscriptions.index')->with('success', __('subscriptions.messages.updated'));

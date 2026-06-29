@@ -149,37 +149,54 @@ class ApiIntegration extends Model
      */
     private function syncFinancialNews(): array
     {
-        // Placeholder for financial news API
-        // Would integrate with NewsAPI, Alpha Vantage News, etc.
-
-        $cacheKey = "financial_news_{$this->user_id}";
+        $cacheKey = "financial_news_rss"; // Shared cache for all users to save bandwidth
         $cached = Cache::get($cacheKey);
 
         if ($cached) {
             return $cached;
         }
 
-        // Simulate news data
-        $news = [
-            [
-                'title' => 'Market Update: Tech Stocks Rally',
-                'summary' => 'Technology stocks showed strong performance today...',
-                'source' => 'Financial Times',
-                'published_at' => now()->subHours(2)->format('Y-m-d H:i:s'),
-                'url' => 'https://example.com/news/1',
-            ],
-            [
-                'title' => 'Federal Reserve Signals Interest Rate Decision',
-                'summary' => 'The Federal Reserve indicated potential changes...',
-                'source' => 'Reuters',
-                'published_at' => now()->subHours(4)->format('Y-m-d H:i:s'),
-                'url' => 'https://example.com/news/2',
-            ],
-        ];
+        try {
+            // Fetch real news from CNBC Indonesia RSS (Market)
+            $response = \Illuminate\Support\Facades\Http::timeout(10)->get('https://www.cnbcindonesia.com/market/rss');
+            
+            if (!$response->successful()) {
+                throw new \Exception('Failed to fetch RSS feed');
+            }
 
-        Cache::put($cacheKey, $news, now()->addHours(1));
+            $xml = simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NOCDATA);
+            $json = json_encode($xml);
+            $array = json_decode($json, true);
+            
+            $items = $array['channel']['item'] ?? [];
+            $news = [];
+            
+            $count = 0;
+            foreach ($items as $item) {
+                if ($count >= 5) break;
+                
+                $news[] = [
+                    'title' => $item['title'] ?? 'Berita Finansial',
+                    'summary' => strip_tags($item['description'] ?? ''),
+                    'source' => 'CNBC Indonesia',
+                    'published_at' => date('Y-m-d H:i:s', strtotime($item['pubDate'] ?? 'now')),
+                    'url' => $item['link'] ?? '#',
+                ];
+                
+                $count++;
+            }
 
-        return $news;
+            if (!empty($news)) {
+                Cache::put($cacheKey, $news, now()->addHours(1));
+            }
+
+            return $news;
+        } catch (\Exception $e) {
+            \Log::error('RSS News Fetch Error: ' . $e->getMessage());
+            
+            // Fallback gracefully
+            return [];
+        }
     }
 
     /**

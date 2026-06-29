@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\TwoFactorRememberToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -71,7 +72,7 @@ class LoginController extends Controller
 
         $hashed = hash('sha256', $rememberToken);
 
-        return \App\Models\TwoFactorRememberToken::where('user_id', $user->id)
+        return TwoFactorRememberToken::where('user_id', $user->id)
             ->where('token_hash', $hashed)
             ->where('expires_at', '>', now())
             ->exists();

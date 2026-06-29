@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reward;
 use App\Models\LoyaltyProgram;
+use App\Models\Reward;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -143,7 +143,7 @@ class RewardController extends Controller
         ]);
 
         $loyaltyProgram->update($request->only([
-            'program_name', 'program_type', 'tier_level', 'membership_number', 'expiry_date'
+            'program_name', 'program_type', 'tier_level', 'membership_number', 'expiry_date',
         ]));
 
         return redirect()->route('rewards.index')->with('success', __('rewards.messages.loyalty_updated'));
