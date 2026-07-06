@@ -199,19 +199,29 @@
                     @csrf
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Bot API Token</label>
-                        <input type="password" name="telegram_bot_token" placeholder="123456:ABC-DEF..." value="{{ $user->telegram_bot_token }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none">
+                        <input type="password" name="telegram_bot_token" placeholder="123456:ABC-DEF..." value="{{ old('telegram_bot_token', $user->telegram_bot_token) }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none @error('telegram_bot_token') border-rose-500 ring-1 ring-rose-500 @enderror">
+                        @error('telegram_bot_token')
+                            <p class="mt-1.5 text-[10px] text-rose-500 font-bold">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Unique Username</label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-300">@</span>
-                            <input type="text" name="telegram_bot_username" placeholder="finaflow_bot" value="{{ $user->telegram_bot_username }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent pl-8 pr-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none">
+                            <input type="text" name="telegram_bot_username" placeholder="finaflow_bot" value="{{ old('telegram_bot_username', $user->telegram_bot_username) }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent pl-8 pr-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none @error('telegram_bot_username') border-rose-500 ring-1 ring-rose-500 @enderror">
                         </div>
+                        @error('telegram_bot_username')
+                            <p class="mt-1.5 text-[10px] text-rose-500 font-bold">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Communication Bridge (Optional)</label>
-                        <input type="text" name="telegram_proxy_url" placeholder="https://gateway.internal/hook" value="{{ $user->telegram_proxy_url }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none">
-                        <p class="mt-1.5 text-[9px] text-slate-400 font-medium leading-tight italic">Redirects transmissions through a secured proxy gateway.</p>
+                        <input type="text" name="telegram_proxy_url" placeholder="https://gateway.internal/hook" value="{{ old('telegram_proxy_url', $user->telegram_proxy_url) }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none @error('telegram_proxy_url') border-rose-500 ring-1 ring-rose-500 @enderror">
+                        @error('telegram_proxy_url')
+                            <p class="mt-1.5 text-[10px] text-rose-500 font-bold">{{ $message }}</p>
+                        @else
+                            <p class="mt-1.5 text-[9px] text-slate-400 font-medium leading-tight italic">Redirects transmissions through a secured proxy gateway.</p>
+                        @enderror
                     </div>
                     <button type="submit" class="w-full h-12 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-soft hover:bg-slate-800 transition-all">Save Parameters</button>
                 </form>
