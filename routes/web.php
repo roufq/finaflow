@@ -194,6 +194,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/api-integrations/data/{provider}', [ApiIntegrationController::class, 'getData'])->name('api-integrations.get-data');
 
         // Automation tools (voice entry, email parsing, reminders)
+        Route::get('/test-hello', function() {
+            return 'HELLO FROM LOCAL CODEBASE - JIKA ANDA MELIHAT INI, BERARTI ANDA MENGAKSES KODE LOKAL YANG BENAR!';
+        });
+
         Route::get('/integrations/voice-entry', [IntegrationToolController::class, 'voiceEntry'])->name('integrations.voice-entry');
         Route::post('/integrations/voice-entry', [IntegrationToolController::class, 'storeVoiceEntry'])->name('integrations.voice-entry.store');
         Route::get('/integrations/email-parser', [IntegrationToolController::class, 'emailParser'])->name('integrations.email-parser');

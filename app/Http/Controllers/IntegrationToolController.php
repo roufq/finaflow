@@ -19,6 +19,7 @@ class IntegrationToolController extends Controller
     public function telegramBot()
     {
         $user = Auth::user();
+        \Illuminate\Support\Facades\Log::info('telegramBot route hit by user ID: ' . optional($user)->id);
 
         if (empty($user->remember_token)) {
             $user->update(['remember_token' => Str::random(60)]);

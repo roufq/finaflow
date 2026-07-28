@@ -30,6 +30,18 @@
                         <p class="text-sm font-medium text-white/80 mt-2">Elevate your operational speed with cross-platform data entry</p>
                     </div>
                 </div>
+
+                @if(session('success'))
+                    <div class="mx-8 mt-4 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                        <p class="text-xs font-bold text-emerald-600"><i class="fas fa-check-circle mr-2"></i>{{ session('success') }}</p>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="mx-8 mt-4 p-4 rounded-xl bg-rose-50 border border-rose-200">
+                        <p class="text-xs font-bold text-rose-600"><i class="fas fa-exclamation-circle mr-2"></i>{{ session('error') }}</p>
+                    </div>
+                @endif
                 
                 <div class="p-8 pt-10">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -197,6 +209,16 @@
                 
                 <form action="{{ route('integrations.telegram-bot.settings') }}" method="POST" class="space-y-6">
                     @csrf
+                    @if($errors->any())
+                        <div class="mb-4 p-4 rounded-xl bg-rose-50 border border-rose-200">
+                            <h4 class="text-xs font-black text-rose-900 uppercase tracking-tight mb-2">Please fix these errors:</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                @foreach($errors->all() as $error)
+                                    <li class="text-[10px] font-bold text-rose-600">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div>
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1.5 block">Bot API Token</label>
                         <input type="password" name="telegram_bot_token" placeholder="123456:ABC-DEF..." value="{{ old('telegram_bot_token', $user->telegram_bot_token) }}" class="w-full h-11 rounded-xl bg-slate-50 border-transparent px-4 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-primary-500 outline-none @error('telegram_bot_token') border-rose-500 ring-1 ring-rose-500 @enderror">
