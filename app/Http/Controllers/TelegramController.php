@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Services\Finance\TransactionService;
 use App\Services\TransactionCategorizer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -41,7 +42,7 @@ class TelegramController extends Controller
             return response()->json([
                 'status' => 'online',
                 'message' => 'FinaFlow Telegram Webhook is active and waiting for updates.',
-                'token_valid' => $token ? \App\Models\User::where('telegram_webhook_token', $token)->exists() : true,
+                'token_valid' => $token ? User::where('telegram_webhook_token', $token)->exists() : true,
             ]);
         }
 
@@ -285,7 +286,7 @@ class TelegramController extends Controller
             try {
                 $day = $matches[1];
                 $month = $matches[2];
-                $date = \Illuminate\Support\Carbon::create(now()->year, $month, $day);
+                $date = Carbon::create(now()->year, $month, $day);
                 if ($date->isFuture()) {
                     $date->subYear();
                 }
@@ -810,7 +811,7 @@ class TelegramController extends Controller
         ]);
     }
 
-    protected function sendMessage($chatId, $text, ?string $botToken = null, ?array $replyMarkup = null)
+    public function sendMessage($chatId, $text, ?string $botToken = null, ?array $replyMarkup = null)
     {
         $token = $botToken ?? config('services.telegram.bot_token');
         if (! $token) {
@@ -830,7 +831,7 @@ class TelegramController extends Controller
                 $payload['reply_markup'] = json_encode($replyMarkup);
             }
 
-            \Illuminate\Support\Facades\Http::withoutVerifying()->post($url, $payload)->throw();
+            Http::withoutVerifying()->post($url, $payload)->throw();
         } catch (\Exception $e) {
             Log::error('Telegram error: '.$e->getMessage());
         }

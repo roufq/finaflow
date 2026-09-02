@@ -64,6 +64,46 @@ class GoalApiController extends Controller
         ]);
     }
 
+    public function update(Request $request, Goal $goal)
+    {
+        if ($goal->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'category' => 'sometimes|required|in:emergency_fund,vacation,house_down_payment,car_purchase,education,retirement,investment,debt_payoff,business,other',
+            'type' => 'sometimes|required|in:short_term,medium_term,long_term',
+            'target_amount' => 'sometimes|required|numeric|min:0',
+            'current_amount' => 'sometimes|required|numeric|min:0',
+            'target_date' => 'sometimes|required|date|after:today',
+            'status' => 'sometimes|required|in:active,completed,paused,cancelled',
+        ]);
+
+        $goal->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Goal updated successfully',
+            'data' => $goal->refresh(),
+        ]);
+    }
+
+    public function destroy(Goal $goal)
+    {
+        if ($goal->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $goal->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Goal deleted successfully',
+        ]);
+    }
+
     public function updateProgress(Request $request, Goal $goal)
     {
         if ($goal->user_id !== Auth::id()) {
