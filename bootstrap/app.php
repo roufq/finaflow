@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\EnsureUserIsActive;
-use App\Http\Middleware\InstallerMiddleware;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -27,7 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
             EnsureUserIsActive::class,
             SetLocale::class,
             SecurityHeaders::class,
-            InstallerMiddleware::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('telegram_proxy_url')->nullable()->after('telegram_webhook_token');
-        });
+        if (! Schema::hasColumn('users', 'telegram_proxy_url')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('telegram_proxy_url')->nullable()->after('telegram_webhook_token');
+            });
+        }
     }
 
     /**

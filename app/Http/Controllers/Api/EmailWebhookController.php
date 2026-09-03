@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TelegramController;
 use App\Services\EmailTransactionParserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -34,6 +35,30 @@ class EmailWebhookController extends Controller
         $transaction = $parser->parseEmailContent($senderEmail, $recipientEmail, $subject, $body);
 
         if ($transaction) {
+            $transaction->load(['user', 'account']);
+            $user = $transaction->user;
+
+            if ($user && $user->telegram_chat_id) {
+                $currency = $transaction->account->setting->currency_symbol ?? 'Rp';
+                $amount = number_format($transaction->amount, 0, ',', '.');
+                $type = $transaction->type === 'income' ? 'Pemasukan' : 'Pengeluaran';
+                $icon = $transaction->type === 'income' ? '📈' : '📉';
+
+                $message = "📧 *Pencatatan Otomatis via Email*\n\n";
+                $message .= "Kami telah mencatat transaksi baru dari email masuk Anda.\n\n";
+                $message .= "{$icon} *Tipe:* {$type}\n";
+                $message .= "📝 *Keterangan:* {$transaction->description}\n";
+                $message .= "💵 *Nominal:* {$currency} {$amount}\n";
+                $message .= "🏦 *Akun:* {$transaction->account->name}\n\n";
+                $message .= "ℹ️ _Email: {$subject}_";
+
+                app(TelegramController::class)->sendMessage(
+                    $user->telegram_chat_id,
+                    $message,
+                    $user->telegram_bot_token
+                );
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Transaction created successfully',

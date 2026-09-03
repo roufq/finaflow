@@ -811,7 +811,7 @@ class TelegramController extends Controller
         ]);
     }
 
-    protected function sendMessage($chatId, $text, ?string $botToken = null, ?array $replyMarkup = null)
+    public function sendMessage($chatId, $text, ?string $botToken = null, ?array $replyMarkup = null)
     {
         $token = $botToken ?? config('services.telegram.bot_token');
         if (! $token) {

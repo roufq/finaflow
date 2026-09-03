@@ -51,4 +51,24 @@ class TransactionTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure(['data']);
     }
+
+    public function test_api_transaction_store_returns_created_status(): void
+    {
+        $user = User::factory()->create();
+        $account = Account::factory()->for($user)->create(['balance' => 100000]);
+        $category = Category::factory()->for($user)->create(['type' => 'expense']);
+
+        $response = $this->actingAs($user)->postJson('/api/v1/transactions', [
+            'account_id' => $account->id,
+            'category_id' => $category->id,
+            'transaction_date' => now()->toDateString(),
+            'type' => 'expense',
+            'amount' => 25000,
+            'description' => 'Lunch',
+        ]);
+
+        $response
+            ->assertCreated()
+            ->assertJsonPath('message', 'Transaction created successfully');
+    }
 }

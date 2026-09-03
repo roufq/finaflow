@@ -74,7 +74,7 @@ class TransactionApiController extends Controller
             'status' => 'success',
             'message' => 'Transaction created successfully',
             'data' => new TransactionResource($transaction->load(['category', 'account'])),
-        ], 210);
+        ], 201);
     }
 
     public function show(Transaction $transaction)
