@@ -1,16 +1,16 @@
-# Graph Report - finaflow  (2026-09-02)
+# Graph Report - finaflow  (2026-09-03)
 
 ## Corpus Check
-- 564 files · ~1,528,831 words
+- 581 files · ~1,539,120 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4324 nodes · 7971 edges · 512 communities (466 shown, 46 thin omitted)
-- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 545 edges (avg confidence: 0.69)
+- 4359 nodes · 8050 edges · 534 communities (482 shown, 52 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 572 edges (avg confidence: 0.7)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9efa7b3c`
+- Built from commit: `a402a98d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -190,7 +190,9 @@
 - brands.js
 - regular.js
 - solid.js
+- Illuminate\Database\Seeder
 - StoreWidgetRequest
+- .index
 - graphify reference: add a URL and watch a folder
 - graphify reference: commit hook and native CLAUDE.md integration
 - graphify reference: incremental update and cluster-only
@@ -209,6 +211,8 @@
 - .log
 - graphify reference: GitHub clone and cross-repo merge
 - graphify reference: transcribe video and audio
+- jt
+- NotificationController
 - 🔄 BACKUP STRATEGY
 - 🏗️ DEPLOYMENT ARCHITECTURE
 - 📞 SUPPORT & MAINTENANCE
@@ -227,6 +231,7 @@
 - resolve
 - toType
 - resolve
+- artisan
 - extraction-spec.md
 - LaunchImage.imageset/README.md
 - service-worker.js
@@ -239,15 +244,20 @@
 - hexDouble
 - initCanvas
 - link
+- Q: pelajari web aplikai ini
 - percentaString
 - camelCase
+- providers.php
+- config/auth.php
 - String?
+- autoload-dev
+- parseFontOptions
 
 ## God Nodes (most connected - your core abstractions)
-1. `User` - 143 edges
+1. `User` - 145 edges
 2. `Transaction` - 73 edges
-3. `Account` - 67 edges
-4. `Controller` - 66 edges
+3. `Controller` - 67 edges
+4. `Account` - 67 edges
 5. `Category` - 45 edges
 6. `Goal` - 44 edges
 7. `isValid()` - 40 edges
@@ -270,7 +280,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (512 total, 46 thin omitted)
+## Communities (534 total, 52 thin omitted)
 
 ### Community 0 - "Chart.bundle.js"
 Cohesion: 0.02
@@ -286,7 +296,7 @@ Nodes (45): a(), ae(), bt(), c(), ce(), d(), de(), di() (+37 more)
 
 ### Community 3 - "Chart.js"
 Cohesion: 0.03
-Nodes (16): defaultClip(), parse(), parseFontOptions(), parseTickFontOptions(), IMPORTANT: after this point, we consider that `this.ticks` will NEVER change!, IMPORTANT: this class is exposed publicly as Chart.Legend, backward…, IMPORTANT: this class is exposed publicly as Chart.Legend, backward…, NOTE: conversions should only return primitive values (i.e. arrays, or (+8 more)
+Nodes (16): defaultClip(), hslaString(), hslString(), parse(), IMPORTANT: after this point, we consider that `this.ticks` will NEVER change!, IMPORTANT: this class is exposed publicly as Chart.Legend, backward compatibilit, IMPORTANT: this class is exposed publicly as Chart.Legend, backward compatibilit, NOTE: conversions should only return primitive values (i.e. arrays, or (+8 more)
 
 ### Community 4 - "Chart.bundle.min.js"
 Cohesion: 0.05
@@ -298,15 +308,15 @@ Nodes (64): aa(), Ab(), B(), ba(), Bb(), ca(), Cb(), D() (+56 more)
 
 ### Community 6 - "isValid"
 Cohesion: 0.06
-Nodes (66): calendar$1(), clone(), cloneWithOffset(), createLocal(), createUnix(), determineUnitForAutoTicks(), determineUnitForFormatting(), diff() (+58 more)
+Nodes (64): addRegexToken(), calendar(), calendar$1(), clone(), cloneWithOffset(), createLocal(), createUnix(), determineUnitForAutoTicks() (+56 more)
 
 ### Community 7 - "User.php"
-Cohesion: 0.06
-Nodes (19): bootUserScope(), AccountFactory, CategoryFactory, UserFactory, DatabaseSeeder, EducationModuleSeeder, RolesAndPermissionsSeeder, Illuminate\Database\Eloquent\Factories\Factory (+11 more)
+Cohesion: 0.09
+Nodes (10): Illuminate\Foundation\Testing\RefreshDatabase, Illuminate\Foundation\Testing\TestCase, AdminUserManagementTest, DashboardTest, EducationPersonalizationTest, ExampleTest, RegisterTest, StorageAccessTest (+2 more)
 
 ### Community 8 - "Illuminate\Database\Eloquent\Model"
-Cohesion: 0.05
-Nodes (13): ActionPlanTask, ActivityLog, EventLog, FinancialJournalEntry, FinancialPersonality, GoalProgress, ImportLog, MicroLearningProgress (+5 more)
+Cohesion: 0.10
+Nodes (7): ActivityLog, EventLog, GoalProgress, ImportLog, Illuminate\Database\Eloquent\Model, Illuminate\Database\Eloquent\Relations\BelongsTo, Illuminate\Database\Eloquent\Relations\BelongsToMany
 
 ### Community 9 - "getParsingFlags"
 Cohesion: 0.10
@@ -318,83 +328,75 @@ Nodes (41): ae(), At(), be(), Bt(), ce(), ct(), d(), dt() (+33 more)
 
 ### Community 11 - "bootstrap.bundle.min.js"
 Cohesion: 0.10
-Nodes (44): a(), at(), B(), bt(), ct(), dt(), et(), F() (+36 more)
+Nodes (45): a(), at(), B(), bt(), ct(), dt(), et(), F() (+37 more)
 
 ### Community 12 - "Laravel Boost Guidelines"
 Cohesion: 0.04
 Nodes (46): APIs & Eloquent Resources, Application Structure & Architecture, Artisan, Authentication & Authorization, Available Search Syntax, Comments, Configuration, Constructors (+38 more)
 
 ### Community 13 - "Illuminate\Http\Request"
-Cohesion: 0.07
-Nodes (13): ActivityLogController, AuthController, EmailWebhookController, ProfileApiController, LoginController, Controller, LanguageController, StorageAccessController (+5 more)
-
-### Community 14 - "Transaction"
 Cohesion: 0.11
-Nodes (3): TransactionApiController, Transaction, DateTimeInterface
+Nodes (5): ActivityLogController, LoginController, LanguageController, Illuminate\Foundation\Auth\Access\AuthorizesRequests, Illuminate\Http\Request
 
 ### Community 15 - "all.min.js"
 Cohesion: 0.11
-Nodes (43): q(), a(), Ac(), bc(), bl(), c(), cl(), dc() (+35 more)
+Nodes (40): a(), Ac(), bc(), bl(), c(), cl(), dc(), ec() (+32 more)
 
 ### Community 16 - "LoyaltyProgram"
-Cohesion: 0.07
-Nodes (3): RewardController, LoyaltyProgram, Reward
+Cohesion: 0.06
+Nodes (4): RewardController, LoyaltyProgram, Reward, Carbon
 
 ### Community 17 - "AppDelegate"
 Cohesion: 0.06
 Nodes (27): Any, Cocoa, Flutter, FlutterAppDelegate, FlutterImplicitEngineBridge, FlutterImplicitEngineDelegate, FlutterMacOS, FlutterPluginRegistry (+19 more)
 
-### Community 18 - "Automation"
-Cohesion: 0.07
-Nodes (5): AutomationController, IntegrationToolController, Automation, EmailReceiptParser, VoiceEntryParser
-
 ### Community 19 - "User"
-Cohesion: 0.08
-Nodes (9): User, DebtPolicy, GoalPolicy, Illuminate\Foundation\Auth\User, Illuminate\Notifications\Notifiable, Laravel\Sanctum\HasApiTokens, Spatie\Permission\Traits\HasRoles, AdminUserManagementTest (+1 more)
+Cohesion: 0.07
+Nodes (9): User, AccountPolicy, BudgetPolicy, GoalPolicy, Illuminate\Foundation\Auth\User, Illuminate\Notifications\Notifiable, Laravel\Sanctum\HasApiTokens, Spatie\Permission\Traits\HasRoles (+1 more)
 
 ### Community 20 - "Habit"
-Cohesion: 0.08
-Nodes (4): BehavioralController, Gamification, Habit, SpendingTrigger
+Cohesion: 0.06
+Nodes (5): BehavioralController, FinancialPersonality, Gamification, Habit, SpendingTrigger
 
 ### Community 21 - "DashboardDataService"
-Cohesion: 0.10
-Nodes (4): DashboardCalculationService, DashboardDataService, Carbon\Carbon, Illuminate\Database\Eloquent\Collection
+Cohesion: 0.08
+Nodes (6): DashboardCalculationService, DashboardChartService, DashboardDataService, OfxParser, Carbon\Carbon, Illuminate\Database\Eloquent\Collection
 
 ### Community 22 - "Debt"
-Cohesion: 0.07
-Nodes (4): AnalyticsController, DebtController, Debt, Carbon
+Cohesion: 0.09
+Nodes (3): DebtController, Debt, DebtPolicy
 
 ### Community 23 - "jquery.js"
 Cohesion: 0.06
-Nodes (10): computeStyleTests(), dataAttr(), finalPropName(), getData(), NOTE: This can be skipped if there are no unmatched elements (i.e.,…, TODO: Now that all calls to _data and _removeData have been replaced, TODO: identify versions, TODO: identify versions (+2 more)
+Nodes (10): computeStyleTests(), dataAttr(), finalPropName(), getData(), NOTE: This can be skipped if there are no unmatched elements (i.e., `matchedCoun, TODO: Now that all calls to _data and _removeData have been replaced, TODO: identify versions, TODO: identify versions (+2 more)
 
 ### Community 24 - "Illuminate\Http\RedirectResponse"
-Cohesion: 0.08
-Nodes (10): EducationAdminController, EducationCategoryAdminController, FinancialNewsAdminController, UserManagementController, ProfileController, EducationCategory, EducationModule, FinancialNews (+2 more)
+Cohesion: 0.09
+Nodes (9): EducationAdminController, EducationCategoryAdminController, FinancialNewsAdminController, UserManagementController, ProfileController, EducationCategory, FinancialNews, Illuminate\Http\RedirectResponse (+1 more)
 
 ### Community 25 - "AIInsightsController"
-Cohesion: 0.08
+Cohesion: 0.07
 Nodes (4): AIInsightsController, Anomaly, Prediction, Recommendation
 
 ### Community 26 - "jquery.slim.js"
 Cohesion: 0.06
-Nodes (12): computeStyleTests(), dataAttr(), finalPropName(), getData(), getDefaultDisplay(), NOTE: This can be skipped if there are no unmatched elements (i.e.,…, TODO: Now that all calls to _data and _removeData have been replaced, TODO: identify versions (+4 more)
+Nodes (12): computeStyleTests(), dataAttr(), finalPropName(), getData(), getDefaultDisplay(), NOTE: This can be skipped if there are no unmatched elements (i.e., `matchedCoun, TODO: Now that all calls to _data and _removeData have been replaced, TODO: identify versions (+4 more)
 
 ### Community 27 - "e"
 Cohesion: 0.17
 Nodes (35): a(), ae(), c(), ce(), cn(), ct(), d(), e() (+27 more)
 
 ### Community 28 - "Illuminate\Console\Command"
-Cohesion: 0.10
-Nodes (10): DebugSeeder, FindMigration, TestScanReceipt, TestScanReceiptEndpoint, TestScanReceiptWithApi, TestScanReceiptWithAuth, TestScanReceiptWithBrowser, TestScanReceiptWithCsrf (+2 more)
+Cohesion: 0.08
+Nodes (12): DebugSeeder, FindMigration, ScheduleBankSyncs, SyncBankIntegrations, TestScanReceipt, TestScanReceiptEndpoint, TestScanReceiptWithApi, TestScanReceiptWithAuth (+4 more)
 
 ### Community 29 - "jquery.min.js"
-Cohesion: 0.08
-Nodes (17): at(), be(), Ee(), fe(), ht(), It(), j(), je() (+9 more)
+Cohesion: 0.10
+Nodes (17): at(), ce(), e(), fe(), ge(), l(), le(), lt() (+9 more)
 
 ### Community 30 - "Budget"
-Cohesion: 0.08
-Nodes (4): BudgetApiController, BudgetController, Budget, BudgetPolicy
+Cohesion: 0.11
+Nodes (3): BudgetApiController, BudgetController, Budget
 
 ### Community 31 - "conflict-detection.js"
 Cohesion: 0.14
@@ -410,19 +412,19 @@ Nodes (11): allowedAttribute(), _createClass(), _defineProperties(), getSpecialT
 
 ### Community 34 - "jquery.slim.min.js"
 Cohesion: 0.10
-Nodes (26): be(), C(), ce(), e(), Ee(), ge(), ht(), I() (+18 more)
+Nodes (30): j(), t(), be(), C(), ce(), d(), e(), Ee() (+22 more)
 
 ### Community 36 - "fontawesome.js"
-Cohesion: 0.11
-Nodes (23): apiObject(), _arrayWithoutHoles(), _classCallCheck(), _createClass(), css(), _defineProperties(), disableObservation(), enableObservation() (+15 more)
+Cohesion: 0.12
+Nodes (16): _arrayWithoutHoles(), _classCallCheck(), _createClass(), _defineProperties(), ensureCss(), findIconDefinition(), iconFromMapping(), insertCss() (+8 more)
 
 ### Community 37 - "createDuration"
 Cohesion: 0.08
-Nodes (27): absCeil(), absFloor(), add$1(), addParseToken(), addSubtract$1(), addWeekParseToken(), as(), bubble() (+19 more)
+Nodes (31): absRound(), add$1(), addParseToken(), addSubtract(), addSubtract$1(), addWeekParseToken(), clone$1(), createDuration() (+23 more)
 
 ### Community 38 - "all.js"
 Cohesion: 0.12
-Nodes (16): _arrayWithoutHoles(), byOldName(), _classCallCheck(), _createClass(), _defineProperties(), findIconDefinition(), getCanonicalIcon(), getIconName() (+8 more)
+Nodes (16): _arrayWithoutHoles(), _classCallCheck(), _createClass(), _defineProperties(), ensureCss(), findIconDefinition(), iconFromMapping(), insertCss() (+8 more)
 
 ### Community 39 - "fontawesome-free/package.json"
 Cohesion: 0.07
@@ -433,11 +435,11 @@ Cohesion: 0.07
 Nodes (28): 1. Authentication & Profile, 2. Dashboard, 3. Transactions, 4. Financial Planning, 5. Metadata (Dropdowns), Authentication, `DELETE /transactions/{id}` (Auth), Error Handling (+20 more)
 
 ### Community 41 - "Account"
-Cohesion: 0.08
-Nodes (4): AccountController, Account, AccountPolicy, TransactionTest
+Cohesion: 0.11
+Nodes (3): AccountController, Account, TransactionTest
 
 ### Community 42 - "Asset"
-Cohesion: 0.11
+Cohesion: 0.12
 Nodes (3): AssetController, Asset, AssetPolicy
 
 ### Community 44 - "my_application.cc"
@@ -449,8 +451,8 @@ Cohesion: 0.11
 Nodes (3): GoalApiController, GoalController, Goal
 
 ### Community 46 - "ReportingController"
-Cohesion: 0.24
-Nodes (5): ReportingController, Report, Widget, Illuminate\Http\JsonResponse, Symfony\Component\HttpFoundation\StreamedResponse
+Cohesion: 0.17
+Nodes (6): ReportingController, StorageAccessController, Report, Widget, Illuminate\Http\JsonResponse, Symfony\Component\HttpFoundation\StreamedResponse
 
 ### Community 48 - "Tag"
 Cohesion: 0.13
@@ -465,8 +467,8 @@ Cohesion: 0.13
 Nodes (16): boundingRects(), computeMonthsParse(), computeWeekdaysParse(), createLocalOrUTC(), createUTC(), handleStrictParse(), handleStrictParse$1(), isObject() (+8 more)
 
 ### Community 52 - "Illuminate\Database\Eloquent\Relations\HasMany"
-Cohesion: 0.09
-Nodes (4): FinancialCoachingController, ActionPlan, MicroLearning, Illuminate\Database\Eloquent\Relations\HasMany
+Cohesion: 0.06
+Nodes (8): FinancialCoachingController, ActionPlan, ActionPlanTask, FinancialJournalEntry, MicroLearning, MicroLearningProgress, Illuminate\Database\Eloquent\Factories\HasFactory, Illuminate\Database\Eloquent\Relations\HasMany
 
 ### Community 53 - "devDependencies"
 Cohesion: 0.09
@@ -481,16 +483,20 @@ Cohesion: 0.09
 Nodes (23): adjustPointPositionForLabelHeight(), computeLabelSizes(), determineLimits(), drawPointLabels(), fillText(), fitWithPointLabels(), garbageCollect(), getBeforeAfterBodyLines() (+15 more)
 
 ### Community 56 - "Category"
-Cohesion: 0.13
-Nodes (5): CategoryController, Category, TransactionFactory, CategoryReportTest, TransactionServiceTest
+Cohesion: 0.15
+Nodes (4): CategoryController, Category, CategoryReportTest, TransactionServiceTest
 
 ### Community 57 - "getLocale"
 Cohesion: 0.11
 Nodes (24): chooseLocale(), compareArrays(), createAdder(), defineLocale(), deprecate(), deprecateSimple(), get$1(), getLocale() (+16 more)
 
 ### Community 58 - "qc"
-Cohesion: 0.19
-Nodes (28): Al(), H(), qc(), U(), xc(), Zc(), a(), C() (+20 more)
+Cohesion: 0.25
+Nodes (22): Al(), qc(), xc(), Zc(), a(), C(), d(), E() (+14 more)
+
+### Community 59 - "TransactionController"
+Cohesion: 0.12
+Nodes (8): AuthController, EmailWebhookController, ProfileApiController, Controller, EmailSourceController, EmailSource, Illuminate\Foundation\Bus\DispatchesJobs, Illuminate\Foundation\Validation\ValidatesRequests
 
 ### Community 60 - "🛠️ FINAFLOW DEVELOPMENT ENVIRONMENT SETUP GUIDE"
 Cohesion: 0.10
@@ -501,8 +507,8 @@ Cohesion: 0.14
 Nodes (17): addListener(), addResizeListener(), createDiv(), createEvent(), createResizer(), fromNativeEvent(), getBarBounds(), getDistanceMetricForAxis() (+9 more)
 
 ### Community 62 - "TwoFactorController"
-Cohesion: 0.19
-Nodes (4): RedirectResponse, View, TwoFactorController, TotpService
+Cohesion: 0.16
+Nodes (4): TwoFactorController, TwoFactorRememberToken, TotpService, Illuminate\Contracts\View\View
 
 ### Community 63 - "main.dart"
 Cohesion: 0.11
@@ -513,8 +519,8 @@ Cohesion: 0.11
 Nodes (19): login_screen.dart, Map, MaterialPageRoute, build, _buildAccountGrid, _buildBalanceCard, _buildHealthSection, _buildTransactionList (+11 more)
 
 ### Community 65 - "Illuminate\Support\Collection"
-Cohesion: 0.10
-Nodes (6): EducationController, LearningPath, BudgetCalculationService, ReportGenerationService, LearningPathPersonalizer, Illuminate\Support\Collection
+Cohesion: 0.07
+Nodes (8): EducationController, EducationModule, LearningPath, BudgetCalculationService, DateTimeInterface, ReportGenerationService, LearningPathPersonalizer, Illuminate\Support\Collection
 
 ### Community 66 - "FinaFlow - Comprehensive Personal Finance Management System"
 Cohesion: 0.11
@@ -523,10 +529,6 @@ Nodes (17): Additional Commands, 📱 API Endpoints, 🔧 Artisan Commands, Auth
 ### Community 67 - "transaction_screen.dart"
 Cohesion: 0.11
 Nodes (18): FormState, _accounts, _amountController, build, _categories, createState, _descriptionController, _formKey (+10 more)
-
-### Community 69 - "UserPrivacySetting"
-Cohesion: 0.16
-Nodes (3): PrivacyController, UserPrivacySetting, PrivacySettingsSeeder
 
 ### Community 70 - "api_service.dart"
 Cohesion: 0.11
@@ -537,8 +539,8 @@ Cohesion: 0.18
 Nodes (14): wchar_t, Scale(), Create, Destroy, UpdateTheme, Win32Window::Win32Window(), WindowClassRegistrar, class_registered_ (+6 more)
 
 ### Community 72 - "addSubtract"
-Cohesion: 0.11
-Nodes (24): absRound(), addSubtract(), createUTCDate(), dayOfYearFromWeeks(), daysInMonth(), daysInYear(), firstWeekOffset(), get() (+16 more)
+Cohesion: 0.24
+Nodes (11): createUTCDate(), dayOfYearFromWeeks(), firstWeekOffset(), getISOWeeksInYear(), getSetISOWeek(), getSetWeekYearHelper(), getWeeksInYear(), localeWeek() (+3 more)
 
 ### Community 73 - "_objectSpread"
 Cohesion: 0.18
@@ -549,32 +551,32 @@ Cohesion: 0.18
 Nodes (18): asIcon(), asSymbol(), attributesParser(), defineIcons(), _defineProperty(), deGroup(), fillBlack(), joinStyles() (+10 more)
 
 ### Community 75 - "Investment"
-Cohesion: 0.10
-Nodes (4): InvestmentController, NetWorthController, Investment, InvestmentPolicy
+Cohesion: 0.11
+Nodes (3): InvestmentController, Investment, InvestmentPolicy
 
 ### Community 76 - "Illuminate\Foundation\Http\FormRequest"
-Cohesion: 0.13
-Nodes (5): RegisterRequest, StoreBankIntegrationRequest, UpdatePasswordRequest, UpdateProfileRequest, Illuminate\Foundation\Http\FormRequest
+Cohesion: 0.15
+Nodes (5): StoreBankIntegrationRequest, UpdateBankIntegrationRequest, UpdateProfileRequest, UpdateWidgetRequest, Illuminate\Foundation\Http\FormRequest
 
 ### Community 77 - "composer.json"
-Cohesion: 0.12
-Nodes (16): autoload-dev, psr-4, description, extra, laravel, keywords, dont-discover, license (+8 more)
-
-### Community 79 - "DashboardChartService"
-Cohesion: 0.30
-Nodes (4): DashboardController, DashboardChartService, Illuminate\Cache\CacheManager, Illuminate\Contracts\Cache\Repository
+Cohesion: 0.14
+Nodes (13): description, extra, laravel, keywords, dont-discover, license, minimum-stability, name (+5 more)
 
 ### Community 80 - "FlutterWindow"
 Cohesion: 0.12
 Nodes (15): DartProject, HWND, LPARAM, LRESULT, UINT, WPARAM, FlutterWindow, flutter_controller_ (+7 more)
 
 ### Community 81 - "FinancialNewsPipeline"
-Cohesion: 0.21
+Cohesion: 0.19
 Nodes (3): SyncFinancialNews, FinancialNewsPipeline, Command
 
 ### Community 82 - "MobileController"
-Cohesion: 0.20
+Cohesion: 0.22
 Nodes (3): MobileController, TransactionResource, Illuminate\Http\Resources\Json\JsonResource
+
+### Community 85 - "TransactionService"
+Cohesion: 0.16
+Nodes (3): TransactionApiController, ReceiptScannerService, TransactionService
 
 ### Community 86 - "scripts"
 Cohesion: 0.12
@@ -585,20 +587,20 @@ Cohesion: 0.15
 Nodes (14): _budgets, BudgetScreen, _BudgetScreenState, build, createState, currencyFormat, _fetchBudgets, initState (+6 more)
 
 ### Community 88 - "hasOwnProp"
-Cohesion: 0.08
-Nodes (24): addRegexToken(), addTimeToArrayFromToken(), calendar(), configFromObject(), Duration(), getParseRegexForToken(), getPrioritizedUnits(), hasOwnProp() (+16 more)
+Cohesion: 0.13
+Nodes (15): addTimeToArrayFromToken(), configFromObject(), Duration(), getParseRegexForToken(), getPrioritizedUnits(), hasOwnProp(), isDurationValid(), monthsRegex() (+7 more)
 
 ### Community 89 - "Win32Window"
 Cohesion: 0.23
 Nodes (12): OnCreate, HWND, Win32Window, child_content_, GetClientArea, OnCreate, quit_on_close_, SetChildContent (+4 more)
 
 ### Community 90 - "resolve"
-Cohesion: 0.23
-Nodes (14): asyncCall(), asyncFlush(), fulfill(), handleThenable(), invokeCallback(), invokeResolver(), P(), publish() (+6 more)
+Cohesion: 0.29
+Nodes (10): asyncCall(), asyncFlush(), fulfill(), handleThenable(), invokeCallback(), publish(), publishFulfillment(), publishRejection() (+2 more)
 
 ### Community 91 - "resolve"
-Cohesion: 0.23
-Nodes (14): asyncCall(), asyncFlush(), fulfill(), handleThenable(), invokeCallback(), invokeResolver(), P(), publish() (+6 more)
+Cohesion: 0.29
+Nodes (10): asyncCall(), asyncFlush(), fulfill(), handleThenable(), invokeCallback(), publish(), publishFulfillment(), publishRejection() (+2 more)
 
 ### Community 92 - "Animation"
 Cohesion: 0.15
@@ -609,20 +611,24 @@ Cohesion: 0.16
 Nodes (14): buildFragment(), buildParams(), cloneCopyEvent(), disableScript(), DOMEval(), domManip(), getAll(), isArrayLike() (+6 more)
 
 ### Community 94 - "xe"
-Cohesion: 0.28
-Nodes (9): b(), he(), le(), Oe(), qe(), ve(), xe(), ye() (+1 more)
+Cohesion: 0.19
+Nodes (14): A(), b(), be(), Ee(), he(), je(), Oe(), qe() (+6 more)
 
 ### Community 95 - "domManip"
 Cohesion: 0.16
 Nodes (14): boxModelAdjustment(), buildFragment(), cloneCopyEvent(), curCSS(), disableScript(), DOMEval(), domManip(), getAll() (+6 more)
+
+### Community 96 - "RegisterController.php"
+Cohesion: 0.19
+Nodes (3): RegisterController, RegisterRequest, DefaultCategoriesCreator
 
 ### Community 97 - "CategoryReportRequest"
 Cohesion: 0.21
 Nodes (3): CategoryReportController, CategoryReportRequest, Illuminate\Http\Response
 
 ### Community 98 - "CategoryReportService"
-Cohesion: 0.27
-Nodes (3): CategoryReportService, DateTimeInterface, Illuminate\Contracts\Pagination\LengthAwarePaginator
+Cohesion: 0.15
+Nodes (6): DashboardController, CategoryReportService, DateTimeInterface, Illuminate\Cache\CacheManager, Illuminate\Contracts\Cache\Repository, Illuminate\Contracts\Pagination\LengthAwarePaginator
 
 ### Community 99 - "**Linux (Ubuntu/Debian) Setup**"
 Cohesion: 0.15
@@ -634,19 +640,15 @@ Nodes (12): clockwise(), enableEventListeners(), findIndex(), flip(), getOpposit
 
 ### Community 101 - "history_screen.dart"
 Cohesion: 0.18
-Nodes (11): List, build, _confirmDelete, createState, currencyFormat, _fetchTransactions, HistoryScreen, _HistoryScreenState (+3 more)
-
-### Community 102 - "UserScope.php"
-Cohesion: 0.09
-Nodes (6): EmailSourceController, SettingController, TaxDocumentController, EmailSource, Setting, TaxDocument
+Nodes (11): api_service.dart, build, _confirmDelete, createState, currencyFormat, _fetchTransactions, HistoryScreen, _HistoryScreenState (+3 more)
 
 ### Community 103 - "Closure"
-Cohesion: 0.32
-Nodes (5): EnsureUserIsActive, SecurityHeaders, SetLocale, Closure, Symfony\Component\HttpFoundation\Response
+Cohesion: 0.26
+Nodes (6): EnsureUserIsActive, InstallerMiddleware, SecurityHeaders, SetLocale, Closure, Symfony\Component\HttpFoundation\Response
 
 ### Community 104 - "ModerateCommunityStory"
-Cohesion: 0.52
-Nodes (6): ModerateCommunityStory, Illuminate\Bus\Queueable, Illuminate\Contracts\Queue\ShouldQueue, Illuminate\Foundation\Bus\Dispatchable, Illuminate\Queue\InteractsWithQueue, Illuminate\Queue\SerializesModels
+Cohesion: 0.26
+Nodes (8): ModerateCommunityStory, SystemAlertNotification, Illuminate\Bus\Queueable, Illuminate\Contracts\Queue\ShouldQueue, Illuminate\Foundation\Bus\Dispatchable, Illuminate\Notifications\Notification, Illuminate\Queue\InteractsWithQueue, Illuminate\Queue\SerializesModels
 
 ### Community 105 - "📁 PROJECT SETUP"
 Cohesion: 0.17
@@ -661,8 +663,8 @@ Cohesion: 0.20
 Nodes (12): boundingRects(), getBarBounds(), getDistanceMetricForAxis(), getIntersectItems(), getNearestItems(), indexMode(), inRange(), isVertical() (+4 more)
 
 ### Community 108 - "replaceForPosition"
-Cohesion: 0.18
-Nodes (14): apiObject(), blankMeta(), byLigature(), byUnicode(), classParser(), css(), ensureCss(), htmlEscape() (+6 more)
+Cohesion: 0.21
+Nodes (12): apiObject(), blankMeta(), byLigature(), byUnicode(), classParser(), css(), htmlEscape(), joinAttributes() (+4 more)
 
 ### Community 109 - "matcherFromTokens"
 Cohesion: 0.20
@@ -671,6 +673,10 @@ Nodes (12): addCombinator(), condense(), createPositionalPseudo(), elementMatche
 ### Community 110 - "matcherFromTokens"
 Cohesion: 0.20
 Nodes (12): addCombinator(), condense(), createPositionalPseudo(), elementMatcher(), markFunction(), matcherFromGroupMatchers(), matcherFromTokens(), multipleContexts() (+4 more)
+
+### Community 111 - "UpdateBankIntegrationRequest"
+Cohesion: 0.12
+Nodes (3): IntegrationToolController, EmailReceiptParser, VoiceEntryParser
 
 ### Community 112 - "config"
 Cohesion: 0.18
@@ -690,7 +696,7 @@ Nodes (11): **10. Install Supervisor (for queue workers)**, **1. Update System**
 
 ### Community 116 - "goals_screen.dart"
 Cohesion: 0.20
-Nodes (10): api_service.dart, build, createState, currencyFormat, _fetchGoals, _goals, GoalsScreen, _GoalsScreenState (+2 more)
+Nodes (10): List, build, createState, currencyFormat, _fetchGoals, _goals, GoalsScreen, _GoalsScreenState (+2 more)
 
 ### Community 117 - "manifest.json"
 Cohesion: 0.18
@@ -705,11 +711,11 @@ Cohesion: 0.24
 Nodes (11): getAlpha(), getHsl(), getHsla(), getHwb(), getRgb(), getRgba(), initConfig(), mergeConfig() (+3 more)
 
 ### Community 121 - "t"
-Cohesion: 0.27
-Nodes (12): ce(), e(), ge(), l(), M(), R(), se(), t() (+4 more)
+Cohesion: 0.18
+Nodes (7): bootUserScope(), AccountFactory, CategoryFactory, TransactionFactory, UserFactory, Illuminate\Database\Eloquent\Factories\Factory, static
 
 ### Community 122 - "require"
-Cohesion: 0.20
+Cohesion: 0.22
 Nodes (9): require, barryvdh/laravel-dompdf, google/cloud-vision, laravel/framework, laravel/sanctum, laravel/tinker, php, spatie/laravel-permission (+1 more)
 
 ### Community 123 - "MessageHandler"
@@ -733,12 +739,16 @@ Cohesion: 0.19
 Nodes (14): bootstrap(), classArray(), disableObservation(), domready(), enableObservation(), getMutator(), isWatched(), observe() (+6 more)
 
 ### Community 128 - "replaceForPosition"
-Cohesion: 0.27
-Nodes (10): blankMeta(), byLigature(), byUnicode(), classArray(), classParser(), isWatched(), observe(), replaceForPosition() (+2 more)
+Cohesion: 0.21
+Nodes (12): apiObject(), blankMeta(), byLigature(), byUnicode(), classParser(), css(), htmlEscape(), joinAttributes() (+4 more)
 
 ### Community 129 - "🚀 Key Features"
 Cohesion: 0.20
 Nodes (10): ⚙️ **Additional Features**, Automation & Integration, 🧠 **Behavioral Finance & Lifestyle**, 👨‍👩‍👧‍👦 **Family Finance**, Financial Coaching & Literacy, Financial Education Hub, 🎯 **Financial Planning & Goals**, 📈 **Investment & Asset Tracking** (+2 more)
+
+### Community 130 - "UpdateWidgetRequest"
+Cohesion: 0.20
+Nodes (11): absCeil(), absFloor(), as(), bubble(), daysToMonths(), makeAs(), monthsToDays(), relativeTime$1() (+3 more)
 
 ### Community 133 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -757,8 +767,8 @@ Cohesion: 0.50
 Nodes (4): post-create-project-cmd, @php artisan key:generate --ansi, @php artisan migrate --graceful --ansi, @php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\
 
 ### Community 137 - "addFormatToken"
-Cohesion: 0.25
-Nodes (9): addFormatToken(), addWeekYearFormatToken(), hexDouble(), hexString(), meridiem(), offset(), ordinal(), toString() (+1 more)
+Cohesion: 0.13
+Nodes (17): addFormatToken(), addWeekYearFormatToken(), getSetDayOfWeek(), getSetISODayOfWeek(), getSetLocaleDayOfWeek(), getSetWeek(), getSetWeekYear(), hexDouble() (+9 more)
 
 ### Community 138 - "re"
 Cohesion: 0.25
@@ -767,10 +777,6 @@ Nodes (9): de(), he(), j(), mn(), ne(), re(), te(), We() (+1 more)
 ### Community 139 - "parseMeta"
 Cohesion: 0.22
 Nodes (9): byOldName(), getCanonicalIcon(), getIconName(), isReserved(), maskParser(), parseMeta(), styleParser(), symbolParser() (+1 more)
-
-### Community 141 - "BankIntegration.php"
-Cohesion: 0.16
-Nodes (3): ScheduleBankSyncs, SyncBankIntegrations, SyncBankIntegrationsCommand
 
 ### Community 144 - "setup"
 Cohesion: 0.25
@@ -789,8 +795,8 @@ Cohesion: 0.32
 Nodes (8): computeStyle(), findCommonOffsetParent(), getOffsetParent(), getRoot(), getRoundedOffsets(), getSupportedPropertyName(), isOffsetContainer(), preventOverflow()
 
 ### Community 148 - "onTree"
-Cohesion: 0.32
-Nodes (8): bootstrap(), domready(), generateLayersText(), generateMutation(), getMutator(), onNode(), onTree(), perform()
+Cohesion: 0.19
+Nodes (14): bootstrap(), classArray(), disableObservation(), domready(), enableObservation(), getMutator(), isWatched(), observe() (+6 more)
 
 ### Community 151 - "**Common Issues & Solutions**"
 Cohesion: 0.29
@@ -801,12 +807,12 @@ Cohesion: 0.29
 Nodes (7): **1. Laravel Debugbar**, **2. Laravel Telescope (Advanced Debugging)**, **3. MailHog (Email Testing)**, **4. Database Management**, 🔧 DEVELOPMENT TOOLS, **Laravel Tinker**, **TablePlus / DBeaver**
 
 ### Community 153 - "findIcon"
-Cohesion: 0.33
-Nodes (7): _arrayWithHoles(), asFoundIcon(), findIcon(), generateSvgReplacementMutation(), _iterableToArrayLimit(), _nonIterableRest(), _slicedToArray()
+Cohesion: 0.27
+Nodes (10): _arrayWithHoles(), asFoundIcon(), findIcon(), generateLayersText(), generateMutation(), generateSvgReplacementMutation(), _iterableToArrayLimit(), _nonIterableRest() (+2 more)
 
 ### Community 154 - "findIcon"
-Cohesion: 0.33
-Nodes (7): _arrayWithHoles(), asFoundIcon(), findIcon(), generateSvgReplacementMutation(), _iterableToArrayLimit(), _nonIterableRest(), _slicedToArray()
+Cohesion: 0.27
+Nodes (10): _arrayWithHoles(), asFoundIcon(), findIcon(), generateLayersText(), generateMutation(), generateSvgReplacementMutation(), _iterableToArrayLimit(), _nonIterableRest() (+2 more)
 
 ### Community 155 - "graphify reference: query, path, explain"
 Cohesion: 0.33
@@ -865,8 +871,8 @@ Cohesion: 0.40
 Nodes (5): adjustPointPositionForLabelHeight(), drawPointLabels(), fillText(), getTextAlignForAngle(), getTickBackdropHeight()
 
 ### Community 172 - "parseMeta"
-Cohesion: 0.33
-Nodes (6): generateLayersText(), generateMutation(), parseMeta(), styleParser(), symbolParser(), transformParser()
+Cohesion: 0.22
+Nodes (9): byOldName(), getCanonicalIcon(), getIconName(), isReserved(), maskParser(), parseMeta(), styleParser(), symbolParser() (+1 more)
 
 ### Community 173 - "brands.js"
 Cohesion: 0.60
@@ -879,6 +885,10 @@ Nodes (3): defineIcons(), _defineProperty(), _objectSpread()
 ### Community 175 - "solid.js"
 Cohesion: 0.60
 Nodes (3): defineIcons(), _defineProperty(), _objectSpread()
+
+### Community 176 - "Illuminate\Database\Seeder"
+Cohesion: 0.24
+Nodes (5): DatabaseSeeder, EducationModuleSeeder, PrivacySettingsSeeder, RolesAndPermissionsSeeder, Illuminate\Database\Seeder
 
 ### Community 179 - "graphify reference: add a URL and watch a folder"
 Cohesion: 0.50
@@ -931,6 +941,10 @@ Nodes (4): expectSync(), leverageNative(), returnTrue(), safeActiveElement()
 ### Community 195 - "expectSync"
 Cohesion: 0.50
 Nodes (4): expectSync(), leverageNative(), returnTrue(), safeActiveElement()
+
+### Community 199 - "jt"
+Cohesion: 0.29
+Nodes (7): H(), M(), U(), v(), Et(), jt(), X()
 
 ### Community 275 - "🔄 BACKUP STRATEGY"
 Cohesion: 0.67
@@ -996,10 +1010,22 @@ Nodes (3): buildParams(), isArrayLike(), toType()
 Cohesion: 0.67
 Nodes (3): Identity(), resolve(), Thrower()
 
+### Community 308 - "Q: pelajari web aplikai ini"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: pelajari web aplikai ini, Source Nodes
+
+### Community 318 - "config/auth.php"
+Cohesion: 0.50
+Nodes (4): ht(), It(), vt(), P()
+
+### Community 517 - "autoload-dev"
+Cohesion: 0.67
+Nodes (3): autoload-dev, psr-4, Tests\\
+
 ## Knowledge Gaps
-- **450 isolated node(s):** `$schema`, `name`, `type`, `description`, `laravel` (+445 more)
+- **453 isolated node(s):** `$schema`, `name`, `type`, `description`, `laravel` (+448 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **46 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -1008,13 +1034,13 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Why does `extend()` connect `getParsingFlags` to `Chart.bundle.js`, `getLocale`, `Chart.min.js`, `hasOwnProp`?**
   _High betweenness centrality (0.046) - this node is a cross-community bridge._
-- **Why does `qc()` connect `qc` to `fontawesome.min.js`, `jquery.slim.min.js`, `jquery.dataTables.min.js`, `all.min.js`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
-- **Are the 27 inferred relationships involving `User` (e.g. with `.handle()` and `.handle()`) actually correct?**
-  _`User` has 27 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `el()` connect `all.min.js` to `bootstrap.bundle.js`, `jt`, `bootstrap/js/bootstrap.js`, `jquery.dataTables.js`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Are the 29 inferred relationships involving `User` (e.g. with `.handle()` and `.handle()`) actually correct?**
+  _`User` has 29 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 36 inferred relationships involving `Transaction` (e.g. with `.calculateBudgetAdherence()` and `.calculateDebtToIncomeRatio()`) actually correct?**
   _`Transaction` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `$schema`, `name`, `type` to the rest of the system?**
-  _450 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _453 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Chart.bundle.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.015533486121721415 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.015416841223292836 - nodes in this community are weakly interconnected._

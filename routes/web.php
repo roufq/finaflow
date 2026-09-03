@@ -8,7 +8,6 @@ use App\Http\Controllers\Admin\FinancialNewsAdminController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AIInsightsController;
 use App\Http\Controllers\AnalyticsController;
-use App\Http\Controllers\Api\TransactionApiController;
 use App\Http\Controllers\ApiIntegrationController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\Auth\LoginController;
@@ -96,7 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/security', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
-    
+
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
@@ -194,7 +193,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/api-integrations/data/{provider}', [ApiIntegrationController::class, 'getData'])->name('api-integrations.get-data');
 
         // Automation tools (voice entry, email parsing, reminders)
-        Route::get('/test-hello', function() {
+        Route::get('/test-hello', function () {
             return 'HELLO FROM LOCAL CODEBASE - JIKA ANDA MELIHAT INI, BERARTI ANDA MENGAKSES KODE LOKAL YANG BENAR!';
         });
 
@@ -268,11 +267,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/reporting/widgets/{widget}', [ReportingController::class, 'destroyWidget'])->name('reporting.widgets.destroy');
     Route::post('/reporting/widgets/positions', [ReportingController::class, 'updateWidgetPositions'])->name('reporting.widgets.positions');
     Route::post('/reporting/reports/{report}/export', [ReportingController::class, 'exportReport'])->name('reporting.reports.export');
-
-    // API v1 (authenticated)
-    Route::prefix('api/v1')->name('api.v1.')->middleware('throttle:60,1')->group(function () {
-        Route::get('/transactions', [TransactionApiController::class, 'index'])->name('transactions.index');
-    });
 
     // Financial Education Routes
     Route::get('/education', [EducationController::class, 'index'])->name('education.index');

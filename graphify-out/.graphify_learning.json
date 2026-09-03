@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-09-03T08:45:53.191545+00:00",
+  "nodes": {
+    "app_http_controllers_api_mobilecontroller_mobilecontroller": {
+      "code_fingerprint": "649b74d9dedeca3be909d4aa680487b23ab82129ccaf041a052b60559c1a0c2d",
+      "label": "MobileController",
+      "last": "2026-09-03T08:45:14.253177+00:00",
+      "provenance": [
+        {
+          "date": "2026-09-03T08:45:14.253177+00:00",
+          "outcome": "useful",
+          "q": "pelajari web aplikai ini"
+        }
+      ],
+      "score": 0.999989587,
+      "source_file": "app/Http/Controllers/Api/MobileController.php",
+      "status": "tentative",
+      "uses": 1
+    },
+    "app_http_controllers_dashboardcontroller_dashboardcontroller": {
+      "code_fingerprint": "daf5a6f7069ffc0f419354d8d2660601e63a88fdef1ba15f6bc48f2c96f17ed5",
+      "label": "DashboardController",
+      "last": "2026-09-03T08:45:14.253177+00:00",
+      "provenance": [
+        {
+          "date": "2026-09-03T08:45:14.253177+00:00",
+          "outcome": "useful",
+          "q": "pelajari web aplikai ini"
+        }
+      ],
+      "score": 0.999989587,
+      "source_file": "app/Http/Controllers/DashboardController.php",
+      "status": "tentative",
+      "uses": 1
+    },
+    "app_models_scopes_userscope": {
+      "code_fingerprint": "1ac25c78a00f77d799bfcc40d33af6c1d447e09fcbc67a0e1742f224ac3fed8e",
+      "label": "UserScope.php",
+      "last": "2026-09-03T08:45:14.253177+00:00",
+      "provenance": [
+        {
+          "date": "2026-09-03T08:45:14.253177+00:00",
+          "outcome": "useful",
+          "q": "pelajari web aplikai ini"
+        }
+      ],
+      "score": 0.999989587,
+      "source_file": "app/Models/Scopes/UserScope.php",
+      "status": "tentative",
+      "uses": 1
+    },
+    "app_services_finance_transactionservice_transactionservice": {
+      "code_fingerprint": "9d4f5e55f1979d4d21a899288a0440907e9a3e347f6ada83b5674768b49da91c",
+      "label": "TransactionService",
+      "last": "2026-09-03T08:45:14.253177+00:00",
+      "provenance": [
+        {
+          "date": "2026-09-03T08:45:14.253177+00:00",
+          "outcome": "useful",
+          "q": "pelajari web aplikai ini"
+        }
+      ],
+      "score": 0.999989587,
+      "source_file": "app/Services/Finance/TransactionService.php",
+      "status": "tentative",
+      "uses": 1
+    }
+  },
+  "version": 1
+}
